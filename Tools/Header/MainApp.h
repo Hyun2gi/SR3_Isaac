@@ -12,8 +12,6 @@ class CManagement;
 
 END
 
-class CImGuiTools;
-
 class CMainApp : public CBase
 {
 private:				// 持失切, 社瑚切 識情
@@ -33,7 +31,6 @@ private:
 private:
 	Engine::CGraphicDev*		m_pDeviceClass;
 	Engine::CManagement*		m_pManagementClass;
-	CImGuiTools*				m_pImGuiTools;
 	LPDIRECT3DDEVICE9			m_pGraphicDev;
 
 public:

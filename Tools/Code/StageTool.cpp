@@ -12,6 +12,8 @@
 #include "SkyBox.h"
 #include "Effect.h"
 
+#include "ImGuiTools.h"
+
 CStageTool::CStageTool(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
 {
@@ -28,12 +30,14 @@ HRESULT CStageTool::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	m_pImGuiTools = new CImGuiTools(g_hWnd, m_pGraphicDev);
 
 	return S_OK;
 }
 
 Engine::_int CStageTool::Update_Scene(const _float& fTimeDelta)
 {	
+	m_pImGuiTools->Update_ImGuiTools();
 	return __super::Update_Scene(fTimeDelta);
 }
 
@@ -45,6 +49,7 @@ void CStageTool::LateUpdate_Scene()
 void CStageTool::Render_Scene()
 {
 	// DEBUG
+	m_pImGuiTools->Render_ImGuiTools();
 }
 
 HRESULT CStageTool::Ready_Layer_Environment(const _tchar * pLayerTag)
@@ -154,5 +159,6 @@ CStageTool * CStageTool::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CStageTool::Free()
 {
+	delete m_pImGuiTools;
 	__super::Free();
 }

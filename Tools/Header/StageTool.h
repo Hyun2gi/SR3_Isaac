@@ -2,6 +2,8 @@
 
 #include "Scene.h"
 
+class CImGuiTools;
+
 class CStageTool : public Engine::CScene
 {
 private:
@@ -21,12 +23,15 @@ private:
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT			Ready_LightInfo();
 
+private:
+	CImGuiTools* m_pImGuiTools;
 
 public:
 	static CStageTool*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void Free() override;
+
 
 };
 

@@ -34,9 +34,6 @@
     <Filter Include="02. GameObject\02. BackGround">
       <UniqueIdentifier>{a33b9444-c987-423f-8b25-4958c5ea216b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\01. Stage">
-      <UniqueIdentifier>{a905bb56-992b-4611-8993-b5a2b03e9d53}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01. Scene\02. Loading">
       <UniqueIdentifier>{89705071-0729-4d54-9f78-76eae7401dd7}</UniqueIdentifier>
     </Filter>
@@ -58,7 +55,10 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{c130f714-311b-4565-b9b7-d86e9fed6b03}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01. Scene\03. Map">
+    <Filter Include="01. Scene\01. StageTool">
+      <UniqueIdentifier>{a905bb56-992b-4611-8993-b5a2b03e9d53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\03. MapTool">
       <UniqueIdentifier>{dc0d7138-b484-4e90-9d16-5418ee6911a6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -133,10 +133,10 @@
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\StageTool.h">
-      <Filter>01. Scene\01. Stage</Filter>
+      <Filter>01. Scene\01. StageTool</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\MapTool.h">
-      <Filter>01. Scene\03. Map</Filter>
+      <Filter>01. Scene\03. MapTool</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -201,10 +201,10 @@
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\StageTool.cpp">
-      <Filter>01. Scene\01. Stage</Filter>
+      <Filter>01. Scene\01. StageTool</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\MapTool.cpp">
-      <Filter>01. Scene\03. Map</Filter>
+      <Filter>01. Scene\03. MapTool</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
