@@ -1,0 +1,164 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="00. GraphicDev">
+      <UniqueIdentifier>{1e3add51-0f93-407c-9f26-3585350f2037}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="99. Export">
+      <UniqueIdentifier>{33dadaf0-89ac-43ef-9cd7-dae2e009e526}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Timer">
+      <UniqueIdentifier>{1a11d4bf-6e28-4928-ad33-38a9a7ebb8f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Timer\Manager">
+      <UniqueIdentifier>{06ef6502-1e7a-4c96-81d5-b44badc762cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Frame">
+      <UniqueIdentifier>{f79f04af-9650-4e5d-ac02-22ea0fd1d472}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. Frame\Manager">
+      <UniqueIdentifier>{7cd6fca9-a1a7-406a-bb46-35ac4dcb4e19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Font">
+      <UniqueIdentifier>{403f4be2-cf6d-4ec2-b1f7-e58466954144}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Font\Manager">
+      <UniqueIdentifier>{6c48fc06-d1d0-4c40-9b48-1543922e98e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04. InputDev">
+      <UniqueIdentifier>{7ee13882-0bab-4d2b-9a7a-39bf2ea45597}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. ImGui">
+      <UniqueIdentifier>{e0cbf6f5-eed0-4c9d-b14e-121e80f854ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. ImGui\lib">
+      <UniqueIdentifier>{c4a915b3-a414-4513-a252-0dcccfc9eb9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. ImGui\lib\imgui">
+      <UniqueIdentifier>{08846458-94a4-4ab6-a1ee-db23071d2145}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05. ImGui\lib\backend">
+      <UniqueIdentifier>{c50ac79e-62b1-469c-9dde-67a9a924af26}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Code\GraphicDev.cpp">
+      <Filter>00. GraphicDev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Timer.cpp">
+      <Filter>01. Timer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TimerMgr.cpp">
+      <Filter>01. Timer\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FrameMgr.cpp">
+      <Filter>02. Frame\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Frame.cpp">
+      <Filter>02. Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FontMgr.cpp">
+      <Filter>03. Font\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MyFont.cpp">
+      <Filter>03. Font</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\InputDev.cpp">
+      <Filter>04. InputDev</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ImGuiMgr.cpp">
+      <Filter>05. ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imgui\imgui\imgui.cpp">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imgui\imgui\imgui_demo.cpp">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imgui\imgui\imgui_draw.cpp">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imgui\imgui\imgui_tables.cpp">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imgui\imgui\imgui_widgets.cpp">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imgui\backend\imgui_impl_win32.cpp">
+      <Filter>05. ImGui\lib\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\imgui\backend\imgui_impl_dx9.cpp">
+      <Filter>05. ImGui\lib\backend</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Header\GraphicDev.h">
+      <Filter>00. GraphicDev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\Export_System.h">
+      <Filter>99. Export</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\Timer.h">
+      <Filter>01. Timer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\TimerMgr.h">
+      <Filter>01. Timer\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\FrameMgr.h">
+      <Filter>02. Frame\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\Frame.h">
+      <Filter>02. Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\FontMgr.h">
+      <Filter>03. Font\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\MyFont.h">
+      <Filter>03. Font</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\InputDev.h">
+      <Filter>04. InputDev</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\ImGuiMgr.h">
+      <Filter>05. ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imgui\imgui\imconfig.h">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imgui\imgui\imgui.h">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imgui\imgui\imgui_internal.h">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imgui\imgui\imstb_rectpack.h">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imgui\imgui\imstb_textedit.h">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imgui\imgui\imstb_truetype.h">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imgui\backend\imgui_impl_win32.h">
+      <Filter>05. ImGui\lib\backend</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\imgui\backend\imgui_impl_dx9.h">
+      <Filter>05. ImGui\lib\backend</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Header\Export_System.inl">
+      <Filter>99. Export</Filter>
+    </None>
+    <None Include="..\..\..\imgui\imgui\.editorconfig">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </None>
+    <None Include="..\..\..\imgui\imgui\.gitattributes">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </None>
+    <None Include="..\..\..\imgui\imgui\.gitignore">
+      <Filter>05. ImGui\lib\imgui</Filter>
+    </None>
+  </ItemGroup>
+</Project>
