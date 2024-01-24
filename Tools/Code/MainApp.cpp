@@ -106,6 +106,7 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
+	delete m_pImGuiTools;
 	Engine::Safe_Release(m_pDeviceClass);
 	Engine::Safe_Release(m_pManagementClass);
 	Engine::Safe_Release(m_pGraphicDev);

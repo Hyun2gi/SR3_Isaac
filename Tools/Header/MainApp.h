@@ -9,10 +9,10 @@ BEGIN(Engine)
 
 class CGraphicDev;
 class CManagement;
-class CImGuiTools;
 
 END
 
+class CImGuiTools;
 
 class CMainApp : public CBase
 {
@@ -33,7 +33,7 @@ private:
 private:
 	Engine::CGraphicDev*		m_pDeviceClass;
 	Engine::CManagement*		m_pManagementClass;
-	Engine::CImGuiTools*		m_pImGuiTools;
+	CImGuiTools*				m_pImGuiTools;
 	LPDIRECT3DDEVICE9			m_pGraphicDev;
 
 public:

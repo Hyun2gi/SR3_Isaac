@@ -2,9 +2,7 @@
 #include "Base.h"
 #include "Engine_Define.h"
 
-BEGIN(Engine)
-class ENGINE_DLL CImGuiTools :
-    public CBase
+class CImGuiTools : public CBase
 {
 public:
     CImGuiTools();
@@ -22,4 +20,3 @@ private:
 private:
     virtual void Free();
 };
-END
