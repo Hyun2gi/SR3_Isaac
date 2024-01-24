@@ -1,5 +1,5 @@
 #include "../Include/stdafx.h"
-#include "..\Header\Stage.h"
+#include "..\Header\StageTool.h"
 
 #include "Export_System.h"
 #include "Export_Utility.h"
@@ -12,16 +12,16 @@
 #include "SkyBox.h"
 #include "Effect.h"
 
-CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
+CStageTool::CStageTool(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
 {
 }
 
-CStage::~CStage()
+CStageTool::~CStageTool()
 {
 }
 
-HRESULT CStage::Ready_Scene()
+HRESULT CStageTool::Ready_Scene()
 {
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
@@ -32,22 +32,22 @@ HRESULT CStage::Ready_Scene()
 	return S_OK;
 }
 
-Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
+Engine::_int CStageTool::Update_Scene(const _float& fTimeDelta)
 {	
 	return __super::Update_Scene(fTimeDelta);
 }
 
-void CStage::LateUpdate_Scene()
+void CStageTool::LateUpdate_Scene()
 {
 	__super::LateUpdate_Scene();
 }
 
-void CStage::Render_Scene()
+void CStageTool::Render_Scene()
 {
 	// DEBUG
 }
 
-HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
+HRESULT CStageTool::Ready_Layer_Environment(const _tchar * pLayerTag)
 {
 	Engine::CLayer*		pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
@@ -76,7 +76,7 @@ HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
+HRESULT CStageTool::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 {
 	Engine::CLayer*		pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
@@ -105,7 +105,7 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CStage::Ready_Layer_UI(const _tchar * pLayerTag)
+HRESULT CStageTool::Ready_Layer_UI(const _tchar * pLayerTag)
 {
 	Engine::CLayer*		pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
@@ -119,7 +119,7 @@ HRESULT CStage::Ready_Layer_UI(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CStage::Ready_LightInfo()
+HRESULT CStageTool::Ready_LightInfo()
 {
 	D3DLIGHT9			tLightInfo;
 	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
@@ -137,9 +137,9 @@ HRESULT CStage::Ready_LightInfo()
 	return S_OK;
 }
 
-CStage * CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CStageTool * CStageTool::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CStage *	pInstance = new CStage(pGraphicDev);
+	CStageTool *	pInstance = new CStageTool(pGraphicDev);
 
 	if (FAILED(pInstance->Ready_Scene()))
 	{
@@ -152,7 +152,7 @@ CStage * CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	return pInstance;
 }
 
-void CStage::Free()
+void CStageTool::Free()
 {
 	__super::Free();
 }

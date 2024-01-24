@@ -2,11 +2,11 @@
 
 #include "Scene.h"
 
-class CStage : public Engine::CScene
+class CStageTool : public Engine::CScene
 {
 private:
-	explicit CStage(LPDIRECT3DDEVICE9 pGraphicDev);
-	virtual ~CStage();
+	explicit CStageTool(LPDIRECT3DDEVICE9 pGraphicDev);
+	virtual ~CStageTool();
 
 public:
 	virtual HRESULT Ready_Scene() override;
@@ -23,7 +23,7 @@ private:
 
 
 public:
-	static CStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CStageTool*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void Free() override;

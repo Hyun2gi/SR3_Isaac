@@ -171,10 +171,11 @@
     <ClInclude Include="..\Header\Loading.h" />
     <ClInclude Include="..\Header\Logo.h" />
     <ClInclude Include="..\Header\MainApp.h" />
+    <ClInclude Include="..\Header\MapTool.h" />
     <ClInclude Include="..\Header\Monster.h" />
     <ClInclude Include="..\Header\Player.h" />
     <ClInclude Include="..\Header\SkyBox.h" />
-    <ClInclude Include="..\Header\Stage.h" />
+    <ClInclude Include="..\Header\StageTool.h" />
     <ClInclude Include="..\Header\Terrain.h" />
     <ClInclude Include="Tools.h" />
     <ClInclude Include="Resource.h" />
@@ -196,10 +197,11 @@
     <ClCompile Include="..\Code\Loading.cpp" />
     <ClCompile Include="..\Code\Logo.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
+    <ClCompile Include="..\Code\MapTool.cpp" />
     <ClCompile Include="..\Code\Monster.cpp" />
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\SkyBox.cpp" />
-    <ClCompile Include="..\Code\Stage.cpp" />
+    <ClCompile Include="..\Code\StageTool.cpp" />
     <ClCompile Include="..\Code\Terrain.cpp" />
     <ClCompile Include="Tools.cpp" />
     <ClCompile Include="stdafx.cpp">
