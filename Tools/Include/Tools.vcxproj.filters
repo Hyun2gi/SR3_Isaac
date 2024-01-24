@@ -58,6 +58,9 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{c130f714-311b-4565-b9b7-d86e9fed6b03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\03. Map">
+      <UniqueIdentifier>{dc0d7138-b484-4e90-9d16-5418ee6911a6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -89,9 +92,6 @@
     </ClInclude>
     <ClInclude Include="..\Header\BackGround.h">
       <Filter>02. GameObject\02. BackGround</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\Stage.h">
-      <Filter>01. Scene\01. Stage</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Loading.h">
       <Filter>01. Scene\02. Loading</Filter>
@@ -132,6 +132,12 @@
     <ClInclude Include="..\Header\ImGuiTools.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\StageTool.h">
+      <Filter>01. Scene\01. Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\MapTool.h">
+      <Filter>01. Scene\03. Map</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -154,9 +160,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\BackGround.cpp">
       <Filter>02. GameObject\02. BackGround</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Stage.cpp">
-      <Filter>01. Scene\01. Stage</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Loading.cpp">
       <Filter>01. Scene\02. Loading</Filter>
@@ -196,6 +199,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\ImGuiTools.cpp">
       <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StageTool.cpp">
+      <Filter>01. Scene\01. Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MapTool.cpp">
+      <Filter>01. Scene\03. Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
