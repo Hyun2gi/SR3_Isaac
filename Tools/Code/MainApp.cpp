@@ -1,8 +1,8 @@
 #include "../Include/stdafx.h"
 #include "..\Header\MainApp.h"
 #include "Logo.h"
-#include "Stage.h"
-#include "ImGuiTools.h"
+#include "StageTool.h"
+
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr)
 {
@@ -17,8 +17,6 @@ HRESULT CMainApp::Ready_MainApp()
 	FAILED_CHECK_RETURN(SetUp_Setting(&m_pGraphicDev), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Scene(m_pGraphicDev, &m_pManagementClass), E_FAIL);
 
-	m_pImGuiTools = new CImGuiTools(g_hWnd, m_pGraphicDev);
-	
 	return S_OK;
 }
 
@@ -31,7 +29,6 @@ int CMainApp::Update_MainApp(const float & fTimeDelta)
 
 	
 	m_pManagementClass->Update_Scene(fTimeDelta);
-	m_pImGuiTools->Update_ImGuiTools();
 	return 0;
 }
 
@@ -45,7 +42,6 @@ void CMainApp::Render_MainApp()
 	Engine::Render_Begin(D3DXCOLOR(0.f, 0.f, 1.f, 1.f));
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
-	m_pImGuiTools->Render_ImGuiTools();
 
 	Engine::Render_End();
 	
@@ -106,7 +102,6 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
-	delete m_pImGuiTools;
 	Engine::Safe_Release(m_pDeviceClass);
 	Engine::Safe_Release(m_pManagementClass);
 	Engine::Safe_Release(m_pGraphicDev);

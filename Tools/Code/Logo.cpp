@@ -6,7 +6,7 @@
 
 
 #include "BackGround.h"
-#include "Stage.h"
+#include "StageTool.h"
 
 CLogo::CLogo(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev), m_pLoading(nullptr)
@@ -38,7 +38,7 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 		{
 			Engine::CScene*		pScene = nullptr;
 
-			pScene = CStage::Create(m_pGraphicDev);
+			pScene = CStageTool::Create(m_pGraphicDev);
 			NULL_CHECK_RETURN(pScene, -1);
 
 			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
