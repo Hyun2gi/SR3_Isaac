@@ -7,6 +7,7 @@
 
 #include "BackGround.h"
 #include "StageTool.h"
+#include "MapTool.h"
 
 CLogo::CLogo(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev), m_pLoading(nullptr)
@@ -34,7 +35,19 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 
 	if (true == m_pLoading->Get_Finish())
 	{
-		if (GetAsyncKeyState(VK_RETURN))
+		if (GetAsyncKeyState('1'))
+		{
+			Engine::CScene* pScene = nullptr;
+
+			pScene = CMapTool::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pScene, -1);
+
+			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			return 0;
+		}
+
+		if (GetAsyncKeyState('2'))
 		{
 			Engine::CScene*		pScene = nullptr;
 
@@ -45,6 +58,7 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 
 			return 0;
 		}		
+
 	}
 
 	return iExit;

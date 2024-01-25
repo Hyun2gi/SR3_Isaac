@@ -129,7 +129,7 @@
     <ClInclude Include="..\..\imgui\backend\imgui_impl_dx9.h">
       <Filter>99. imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\ImGuiTools.h">
+    <ClInclude Include="..\Header\MapToolGui.h">
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\StageTool.h">
@@ -197,7 +197,7 @@
     <ClCompile Include="..\..\imgui\backend\imgui_impl_dx9.cpp">
       <Filter>99. imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\ImGuiTools.cpp">
+    <ClCompile Include="..\Code\MapToolGui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\StageTool.cpp">

@@ -1,5 +1,5 @@
 #pragma once
-#include "ImGuiTools.h"
+#include "MapToolGui.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx9.h"
@@ -7,21 +7,21 @@
 #include "Export_System.h"
 
 
-CImGuiTools::CImGuiTools()
+CMapToolGui::CMapToolGui()
 {
 }
 
-CImGuiTools::CImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
+CMapToolGui::CMapToolGui(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
 {
     Ready_ImGuiTools(hWnd, pGraphicDev);
 }
 
-CImGuiTools::~CImGuiTools()
+CMapToolGui::~CMapToolGui()
 {
     Free();
 }
 
-HRESULT CImGuiTools::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
+HRESULT CMapToolGui::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
 {
     m_bIsOpend = false;
     m_iSelectedStageIndex = 0;
@@ -35,10 +35,10 @@ HRESULT CImGuiTools::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
     string strGetLine = "";
     //코드를 한 줄 읽어온다. (스테이지에 대한 정보는 한줄로 저장하게 만들어뒀기 때문에 가능)
 
-    int iIndex = 0;
     while (getline(fin, strGetLine))
     {
         vector<string> vecStr;
+        int iIndex = 0;
 
         while (true) {
             // , 위치 찾기
@@ -50,14 +50,14 @@ HRESULT CImGuiTools::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
             }
 
             // 분리된 문자열 출력
-            
             vecStr.push_back(strGetLine.substr(iIndex, pos - iIndex));
+            iIndex = pos + 1;
+            vecStr.push_back(strGetLine.substr(iIndex));
 
             // 다음 구분자 위치를 시작 위치로 설정
-            iIndex = pos + 1;
         }
 
-        m_mapStage.emplace(pair<int, string>(stoi(vecStr[1]),  vecStr[0]));
+        m_mapStage.emplace(pair<int, string>(stoi(vecStr[0]),  vecStr[1]));
 
         vecStr.clear();
     }
@@ -86,7 +86,7 @@ HRESULT CImGuiTools::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
 	return S_OK;
 }
 
-void CImGuiTools::Update_ImGuiTools()
+void CMapToolGui::Update_ImGuiTools()
 {
     bool show_demo_window = true;
     bool show_another_window = false;
@@ -141,7 +141,7 @@ void CImGuiTools::Update_ImGuiTools()
             ++i;
         });
 
-    std::vector<const char*> items;
+    vector<const char*> items;
 
     if (0 < vecString.size()) {
         // items 벡터의 요소를 vecString의 요소로 채웁니다.
@@ -155,6 +155,20 @@ void CImGuiTools::Update_ImGuiTools()
 
     if (ImGui::Button("Save"))
     {
+        string strFilePath = "../Dat/MapLevel.dat";
+
+        // 파일 스트림을 엽니다.
+        ofstream fout(strFilePath.c_str(), ios::binary);
+
+        // 파일에 데이터를 씁니다. Key, Name
+        for_each(m_mapStage.begin(), m_mapStage.end(),
+            [strFilePath, &fout](auto& iter) {
+                fout << iter.first << ",";
+                fout << iter.second << endl;
+            });
+
+        // 파일 스트림을 닫습니다.
+        fout.close();
 
     }
     ImGui::SameLine();
@@ -213,7 +227,7 @@ void CImGuiTools::Update_ImGuiTools()
 
 }
 
-void CImGuiTools::Render_ImGuiTools()
+void CMapToolGui::Render_ImGuiTools()
 {
     ImGui::EndFrame();
     ImGui::Render();
@@ -234,7 +248,7 @@ void CImGuiTools::Render_ImGuiTools()
 
 }
 
-void CImGuiTools::Popup_Stage_Connection(const char* items)
+void CMapToolGui::Popup_Stage_Connection(const char* items)
 {
     ImGui::Begin("Stage Connection Relationship");
 
@@ -325,7 +339,7 @@ void CImGuiTools::Popup_Stage_Connection(const char* items)
     ImGui::End();
 }
 
-void CImGuiTools::Free()
+void CMapToolGui::Free()
 {
     ImGui_ImplDX9_Shutdown();
     ImGui_ImplWin32_Shutdown();

@@ -2,8 +2,6 @@
 
 #include "Scene.h"
 
-class CImGuiTools;
-
 class CStageTool : public Engine::CScene
 {
 private:
@@ -17,14 +15,13 @@ public:
 	virtual void Render_Scene() override;
 
 private:
-
 	HRESULT			Ready_Layer_Environment(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_GameLogic(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT			Ready_LightInfo();
 
 private:
-	CImGuiTools* m_pImGuiTools;
+	//CImGuiTools* m_pImGuiTools;
 
 public:
 	static CStageTool*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
