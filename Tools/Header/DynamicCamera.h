@@ -2,6 +2,11 @@
 
 #include "Camera.h"
 
+BEGIN(Engine)
+
+class CCalculator;
+
+END
 
 class CDynamicCamera : public Engine::CCamera
 {
@@ -22,6 +27,8 @@ public:
 	virtual void LateUpdate_GameObject() override;
 
 private:
+	HRESULT			Add_Component();
+
 	void		Key_Input(const _float& fTimeDelta);
 	void		Mouse_Fix();
 	void		Mouse_Move();
@@ -29,6 +36,8 @@ private:
 private:
 	_bool		m_bFix = false;
 	_bool		m_bCheck = false;
+
+	Engine::CCalculator* m_pCalculatorCom;
 
 public:
 	static CDynamicCamera*	Create(LPDIRECT3DDEVICE9 pGraphicDev,

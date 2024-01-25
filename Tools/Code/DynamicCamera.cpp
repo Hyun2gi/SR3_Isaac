@@ -2,6 +2,7 @@
 #include "..\Header\DynamicCamera.h"
 
 #include "Export_System.h"
+#include "Export_Utility.h"
 
 CDynamicCamera::CDynamicCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev)
@@ -27,7 +28,9 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_fFar = fFar;
 
 	FAILED_CHECK_RETURN(CCamera::Ready_GameObject(), E_FAIL);
-	
+	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+
+
 	return S_OK;
 }
 
@@ -49,6 +52,17 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 void CDynamicCamera::LateUpdate_GameObject()
 {
 	Engine::CCamera::LateUpdate_GameObject();
+}
+
+HRESULT CDynamicCamera::Add_Component()
+{
+	CComponent* pComponent = nullptr;
+
+	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
+
+	return S_OK;
 }
 
 void CDynamicCamera::Key_Input(const _float& fTimeDelta)
@@ -115,11 +129,19 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 	else
 		m_bCheck = false;
 
+	if (Engine::Get_DIKeyState(DIK_SPACE) & 0x80)
+	{
+		_vec3		vUp;
+		memcpy(&vUp, &matCamWorld.m[1][0], sizeof(_vec3));
+
+		_vec3	vLength = *D3DXVec3Normalize(&vUp, &vUp) * 5.f * fTimeDelta;
+
+		m_vEye += vLength;
+		m_vAt += vLength;
+	}
+
 	if (false == m_bFix)
 		return;
-	
-
-
 }
 
 void CDynamicCamera::Mouse_Fix()
@@ -128,8 +150,6 @@ void CDynamicCamera::Mouse_Fix()
 
 	ClientToScreen(g_hWnd, &pt);
 	SetCursorPos(pt.x, pt.y);
-
-
 }
 
 void CDynamicCamera::Mouse_Move()

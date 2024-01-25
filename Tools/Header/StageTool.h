@@ -2,7 +2,7 @@
 
 #include "Scene.h"
 
-class CImGuiTools;
+class CStageToolGui;
 
 class CStageTool : public Engine::CScene
 {
@@ -17,14 +17,20 @@ public:
 	virtual void Render_Scene() override;
 
 private:
-
 	HRESULT			Ready_Layer_Environment(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_GameLogic(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT			Ready_LightInfo();
 
 private:
-	CImGuiTools* m_pImGuiTools;
+	void	Key_Input(const _float& fTimeDelta);
+
+	_vec3	Picking_OnTerrain();
+
+private:
+	CStageToolGui* m_pStageTools;
+
+	_vec3	m_vecPickingPos;
 
 public:
 	static CStageTool*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

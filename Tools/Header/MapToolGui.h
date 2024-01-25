@@ -2,7 +2,7 @@
 #include "Base.h"
 #include "Engine_Define.h"
 
-class CImGuiTools : public CBase
+class CMapToolGui : public CBase
 {
     struct StageStruct
     {
@@ -11,9 +11,9 @@ class CImGuiTools : public CBase
     };
 
 public:
-    CImGuiTools();
-    CImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev);
-    virtual ~CImGuiTools();
+    CMapToolGui();
+    CMapToolGui(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev);
+    virtual ~CMapToolGui();
 
 public:
     HRESULT Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev);

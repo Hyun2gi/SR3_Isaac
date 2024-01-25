@@ -129,7 +129,7 @@
     <ClInclude Include="..\..\imgui\backend\imgui_impl_dx9.h">
       <Filter>99. imgui</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\ImGuiTools.h">
+    <ClInclude Include="..\Header\MapToolGui.h">
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\StageTool.h">
@@ -137,6 +137,9 @@
     </ClInclude>
     <ClInclude Include="..\Header\MapTool.h">
       <Filter>01. Scene\03. MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\StageToolGui.h">
+      <Filter>ImGui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -197,7 +200,7 @@
     <ClCompile Include="..\..\imgui\backend\imgui_impl_dx9.cpp">
       <Filter>99. imgui</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\ImGuiTools.cpp">
+    <ClCompile Include="..\Code\MapToolGui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\StageTool.cpp">
@@ -205,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\MapTool.cpp">
       <Filter>01. Scene\03. MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StageToolGui.cpp">
+      <Filter>ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
