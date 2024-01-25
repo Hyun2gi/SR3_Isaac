@@ -64,7 +64,7 @@ HRESULT CStageToolGui::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev
 
     fin.close();
 
-    Load_Folder("../Bin/Resource/Texture/Object/", m_iObjFileCount);
+    Load_Folder("../Bin/Resource/Texture/Object", m_iObjFileCount);
 
 
     IMGUI_CHECKVERSION();
@@ -217,24 +217,9 @@ void CStageToolGui::Popup_Object_Gui()
 
 void CStageToolGui::Load_Folder(string strFolderPath, int& iCount)
 {
-    // 파일 수를 저장할 변수를 선언합니다.
-    int file_count = 0;
+    //폴더 내 파일 갯수 읽어와야하는데 잘 안됨... 시부레
 
-    // 폴더를 엽니다.
-    fstream folder_stream(strFolderPath, ios::in);
 
-    // 파일 스트림이 열려 있는지 확인합니다.
-    if (folder_stream.is_open()) {
-        // 파일 스트림을 반복합니다.
-        for (string line; getline(folder_stream, line);) {
-            file_count++;
-        }
-    }
-
-    // 파일 스트림을 닫습니다.
-    folder_stream.close();
-
-    iCount = file_count;
 
 }
 

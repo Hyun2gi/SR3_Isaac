@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include <ctime>
 
+#include <filesystem>
 #include <iostream>
 #include <fstream>
 
@@ -24,6 +25,7 @@
 
 #define DIRECTINPUT_VERSION	0x0800
 #include <dinput.h>
+#include <sys/types.h>
 
 #pragma warning(disable : 4251)
 

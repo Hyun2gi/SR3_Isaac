@@ -1,6 +1,7 @@
 #pragma once
 #include "Base.h"
 #include "Engine_Define.h"
+#include <filesystem>
 
 class CStageToolGui : public CBase
 {
