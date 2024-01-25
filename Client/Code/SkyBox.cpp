@@ -56,7 +56,7 @@ void CSkyBox::Render_GameObject()
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphicDev ->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-	m_pTextureCom->Set_Texture(3);
+	m_pTextureCom->Set_Texture(0);
 
 	m_pBufferCom->Render_Buffer();
 
