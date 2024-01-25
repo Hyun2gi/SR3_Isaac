@@ -64,6 +64,8 @@ HRESULT CStageToolGui::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev
 
     fin.close();
 
+    Load_Folder("../Bin/Resource/Texture/Object/", m_iObjFileCount);
+
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -121,7 +123,6 @@ void CStageToolGui::Update_ImGuiTools()
     static CHAR szSelectedStage[MAX_PATH] = "";
 
     ImGui::Text("Stage List");
-    ImGui::SameLine();
 
     ImGui::SetNextItemWidth(100.f);
     ImGui::BeginListBox("##");
@@ -137,15 +138,14 @@ void CStageToolGui::Update_ImGuiTools()
      
     if (m_bIsOpend)
     {
-        Load_Stage_Object(vecString[m_iSelectedStageIndex].c_str());
+
+        //Load_Stage_Object(vecString[m_iSelectedStageIndex].c_str());
     }
 
     ImGui::NewLine();
     ImGui::Text("Position: ");
     ImGui::Text("x: %f", m_vecPickingPos.x);
-    ImGui::SameLine();
     ImGui::Text("y: %f", m_vecPickingPos.y);
-    ImGui::SameLine();
     ImGui::Text("z: %f", m_vecPickingPos.z);
 
     // 현재까지 지정한 맵 정보를 저장한다.
@@ -173,6 +173,8 @@ void CStageToolGui::Update_ImGuiTools()
 
     ImGui::End();
 
+    Popup_Object_Gui();
+
 }
 
 void CStageToolGui::Render_ImGuiTools()
@@ -180,6 +182,60 @@ void CStageToolGui::Render_ImGuiTools()
     ImGui::EndFrame();
     ImGui::Render();
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
+}
+
+void CStageToolGui::Popup_Object_Gui()
+{
+    ImGui::Begin("Object Placement");
+
+    ImGui::Text("Please select an object to place.");
+
+
+    //이미지 버튼 만드는 코드
+    //PDIRECT3DTEXTURE9 texture;
+    //HRESULT hr = D3DXCreateTextureFromFileA(m_pGraphicDev, "../Bin/Resource/Texture/Object/Poop/Poop_0.png", &texture);
+
+    //D3DSURFACE_DESC my_image_desc;
+    //texture->GetLevelDesc(0, &my_image_desc);
+    //int width = (int)my_image_desc.Width;
+    //int height = (int)my_image_desc.Height;
+
+    //if (ImGui::ImageButton("##",(void*)texture, ImVec2(width, height)))
+    //{
+
+    //}
+
+    
+
+    //ImGui::BeginListBox("##");
+    //if (0 < vecString.size())
+    //    ImGui::ListBox("##", &m_iSelectedStageIndex, items.data(), vecString.size());
+    //ImGui::EndListBox();
+
+    ImGui::End();
+}
+
+void CStageToolGui::Load_Folder(string strFolderPath, int& iCount)
+{
+    // 파일 수를 저장할 변수를 선언합니다.
+    int file_count = 0;
+
+    // 폴더를 엽니다.
+    fstream folder_stream(strFolderPath, ios::in);
+
+    // 파일 스트림이 열려 있는지 확인합니다.
+    if (folder_stream.is_open()) {
+        // 파일 스트림을 반복합니다.
+        for (string line; getline(folder_stream, line);) {
+            file_count++;
+        }
+    }
+
+    // 파일 스트림을 닫습니다.
+    folder_stream.close();
+
+    iCount = file_count;
+
 }
 
 void CStageToolGui::Load_Stage_Object(const char* items)

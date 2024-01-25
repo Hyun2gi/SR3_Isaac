@@ -22,6 +22,10 @@ public:
 
     void	Set_Picking_Pos(_vec3 vPos) { m_vecPickingPos = vPos; }
 
+    void    Popup_Object_Gui();
+
+    void    Load_Folder(string strFilePath, int& iCount);
+
 private:
     void Load_Stage_Object(const char* items);
 
@@ -29,6 +33,7 @@ private:
     LPDIRECT3DDEVICE9 m_pGraphicDev;
     bool m_bIsOpend;
     int m_iSelectedStageIndex;
+    int m_iObjFileCount;
 
     map<int, string> m_mapStage;
 
