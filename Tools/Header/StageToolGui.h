@@ -20,6 +20,8 @@ public:
     void Update_ImGuiTools();
     void Render_ImGuiTools();
 
+    void	Set_Picking_Pos(_vec3 vPos) { m_vecPickingPos = vPos; }
+
 private:
     void Load_Stage_Object(const char* items);
 
@@ -29,6 +31,8 @@ private:
     int m_iSelectedStageIndex;
 
     map<int, string> m_mapStage;
+
+    _vec3	m_vecPickingPos;
 
 private:
     virtual void Free();

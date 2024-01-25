@@ -123,25 +123,6 @@ void CStageToolGui::Update_ImGuiTools()
     ImGui::Text("Stage List");
     ImGui::SameLine();
 
-    if (ImGui::Button("Save"))
-    {
-        string strFilePath = "../Dat/MapLevel.dat";
-
-        // 파일 스트림을 엽니다.
-        ofstream fout(strFilePath.c_str(), ios::binary);
-
-        // 파일에 데이터를 씁니다. Key, Name
-        for_each(m_mapStage.begin(), m_mapStage.end(),
-            [strFilePath, &fout](auto& iter) {
-                fout << iter.first << ",";
-                fout << iter.second << endl;
-            });
-
-        // 파일 스트림을 닫습니다.
-        fout.close();
-
-    }
-
     ImGui::SetNextItemWidth(100.f);
     ImGui::BeginListBox("##");
     if (0 < vecString.size())
@@ -159,6 +140,37 @@ void CStageToolGui::Update_ImGuiTools()
         Load_Stage_Object(vecString[m_iSelectedStageIndex].c_str());
     }
 
+    ImGui::NewLine();
+    ImGui::Text("Position: ");
+    ImGui::Text("x: %f", m_vecPickingPos.x);
+    ImGui::SameLine();
+    ImGui::Text("y: %f", m_vecPickingPos.y);
+    ImGui::SameLine();
+    ImGui::Text("z: %f", m_vecPickingPos.z);
+
+    // 현재까지 지정한 맵 정보를 저장한다.
+    if (ImGui::Button("Save"))
+    {
+        string strDirPath = "../Dat/";
+        string strFileName = vecString[m_iSelectedStageIndex] + "_Design";
+        string strFileExtension = ".dat";
+
+        strFileName = strDirPath + strFileName + strFileExtension;
+
+        // 파일 스트림을 엽니다.
+        ofstream fout(strFileName, ios::binary);
+
+        // 파일에 데이터를 씁니다. Key, Name
+        //for_each(m_mapStage.begin(), m_mapStage.end(),
+        //    [strFilePath, &fout](auto& iter) {
+        //        fout << iter.first << ",";
+        //        fout << iter.second << endl;
+        //    });
+
+        // 파일 스트림을 닫습니다.
+        fout.close();
+    }
+
     ImGui::End();
 
 }
@@ -168,7 +180,6 @@ void CStageToolGui::Render_ImGuiTools()
     ImGui::EndFrame();
     ImGui::Render();
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-
 }
 
 void CStageToolGui::Load_Stage_Object(const char* items)

@@ -23,7 +23,14 @@ private:
 	HRESULT			Ready_LightInfo();
 
 private:
+	void	Key_Input(const _float& fTimeDelta);
+
+	_vec3	Picking_OnTerrain();
+
+private:
 	CStageToolGui* m_pStageTools;
+
+	_vec3	m_vecPickingPos;
 
 public:
 	static CStageTool*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
