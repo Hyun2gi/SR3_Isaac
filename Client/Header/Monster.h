@@ -14,7 +14,7 @@ END
 
 class CMonster :	public Engine::CGameObject
 {
-private:
+protected:
 	explicit CMonster(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CMonster(const CMonster& rhs);
 	virtual ~CMonster();
@@ -28,13 +28,13 @@ public:
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
-private:
-	HRESULT			Add_Component();
+protected:
+	virtual HRESULT			Add_Component();
 
 	bool			Check_Time(const _float& fTimeDelta);
 	void			Check_Map_Range();
 
-private:
+protected:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
@@ -51,7 +51,7 @@ private:
 public:
 	static CMonster*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
 
-private:
+protected:
 	virtual void Free() override;
 };
 

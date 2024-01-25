@@ -52,6 +52,21 @@
     <Filter Include="02. GameObject\06. Effect">
       <UniqueIdentifier>{69e88a4c-ddb1-4a70-a8a5-7d9df5c571a5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. Monster\00. Fly">
+      <UniqueIdentifier>{cf9f8842-abcf-4808-86f4-70866e924335}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\01. Attack Fly">
+      <UniqueIdentifier>{c6e5643d-9fd8-4852-bff4-5e2c507062b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\02. Dip">
+      <UniqueIdentifier>{cb737400-6da9-44bb-9751-a84d0225c70a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\03. Pacer">
+      <UniqueIdentifier>{5454218f-ac69-4f4b-acb5-a8fb346a6e08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\04. Squirt">
+      <UniqueIdentifier>{02626e64-7156-4199-9087-e1896ca1c9f0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -102,6 +117,21 @@
     <ClInclude Include="..\Header\Effect.h">
       <Filter>02. GameObject\06. Effect</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Fly.h">
+      <Filter>02. GameObject\01. Monster\00. Fly</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\AttackFly.h">
+      <Filter>02. GameObject\01. Monster\01. Attack Fly</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Dip.h">
+      <Filter>02. GameObject\01. Monster\02. Dip</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Pacer.h">
+      <Filter>02. GameObject\01. Monster\03. Pacer</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Squirt.h">
+      <Filter>02. GameObject\01. Monster\04. Squirt</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -142,6 +172,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\Effect.cpp">
       <Filter>02. GameObject\06. Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Fly.cpp">
+      <Filter>02. GameObject\01. Monster\00. Fly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\AttackFly.cpp">
+      <Filter>02. GameObject\01. Monster\01. Attack Fly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Dip.cpp">
+      <Filter>02. GameObject\01. Monster\02. Dip</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Pacer.cpp">
+      <Filter>02. GameObject\01. Monster\03. Pacer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Squirt.cpp">
+      <Filter>02. GameObject\01. Monster\04. Squirt</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
