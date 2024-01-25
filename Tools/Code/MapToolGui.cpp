@@ -73,7 +73,6 @@ HRESULT CMapToolGui::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hWnd);
@@ -171,58 +170,28 @@ void CMapToolGui::Update_ImGuiTools()
         fout.close();
 
     }
-    ImGui::SameLine();
-
-    if (ImGui::Button("Load"))
-    {
-        //TODO: 이 곳에 ADD 클릭 시 스테이지 목록을 추가하는 함수를 작성한다.
-        // 파일 스트림을 엽니다.
-
-        //ifstream fin(strFilePath);
-
-        //string strKeys = "";
-        ////코드를 한 줄 읽어온다. (스테이지에 대한 정보는 한줄로 저장하게 만들어뒀기 때문에 가능)
-        //while (getline(fin, strKeys))
-        //{
-        //    //내용
-        //}
-
-        //fin.close();
-    }
 
     ImGui::SetNextItemWidth(100.f);
-    //TODO: Need ListBox Load
     ImGui::BeginListBox("##");
     if (0 < vecString.size())
         ImGui::ListBox("##", &m_iSelectedStageIndex, items.data(), vecString.size());
     ImGui::EndListBox();
 
     //리스트 박스 클릭 시 실행되는 이벤트(0 = left, 1 = right, 2 = middle)
-    if (ImGui::IsItemClicked())
-    {
-        m_bIsOpend = true;
-    }
-
-    //if (ImGui::Button("Open"))
+    //if (ImGui::IsItemClicked())
     //{
     //    m_bIsOpend = true;
     //}
+    if (ImGui::Button("Open"))
+    {
+        m_bIsOpend = true;
+    }
      
-    ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-    ImGui::Checkbox("Another Window", &show_another_window);
-
-    //ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-    ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
     if (m_bIsOpend)
     {
         Popup_Stage_Connection(vecString[m_iSelectedStageIndex].c_str());
     }
 
-    //ImGui::SameLine();
-    //ImGui::Text("counter = %d", counter);
-
-   // ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
     ImGui::End();
 
 }
@@ -232,19 +201,6 @@ void CMapToolGui::Render_ImGuiTools()
     ImGui::EndFrame();
     ImGui::Render();
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-    //m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
-    //m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-    //m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
-    //D3DCOLOR clear_col_dx = D3DCOLOR_RGBA(255, 255, 255, 255);
-    //m_pGraphicDev->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, clear_col_dx, 1.0f, 0);
-    //if (m_pGraphicDev->BeginScene() >= 0)
-    //{
-    //    ImGui::Render();
-    //    ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-    //    m_pGraphicDev->EndScene();
-    //}
-
-    //HRESULT result = m_pGraphicDev->Present(nullptr, nullptr, nullptr, nullptr);
 
 }
 
