@@ -2,6 +2,8 @@
 
 #include "Scene.h"
 
+class CStageToolGui;
+
 class CStageTool : public Engine::CScene
 {
 private:
@@ -21,7 +23,7 @@ private:
 	HRESULT			Ready_LightInfo();
 
 private:
-	//CImGuiTools* m_pImGuiTools;
+	CStageToolGui* m_pStageTools;
 
 public:
 	static CStageTool*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

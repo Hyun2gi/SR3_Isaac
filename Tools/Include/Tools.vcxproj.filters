@@ -138,6 +138,9 @@
     <ClInclude Include="..\Header\MapTool.h">
       <Filter>01. Scene\03. MapTool</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\StageToolGui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -205,6 +208,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\MapTool.cpp">
       <Filter>01. Scene\03. MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StageToolGui.cpp">
+      <Filter>ImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
