@@ -103,36 +103,43 @@ void CPlayer::Free()
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
+	// W,A,S,D 움직임
 	_vec3		vDir;
 	m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
 
-	if (GetAsyncKeyState(VK_UP))
+	if (Engine::Get_DIKeyState(DIK_W) & 0x80)
 	{
 		D3DXVec3Normalize(&vDir, &vDir);
 		m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
 	}
 
-	if (GetAsyncKeyState(VK_DOWN))
+	if (Engine::Get_DIKeyState(DIK_S) & 0x80)
 	{
 		D3DXVec3Normalize(&vDir, &vDir);
 		m_pTransformCom->Move_Pos(&vDir, -10.f, fTimeDelta);
 	}
 
-	if (GetAsyncKeyState(VK_LEFT))
+	m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
+
+	if (Engine::Get_DIKeyState(DIK_A) & 0x80)
 	{
-		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f * fTimeDelta));
+		D3DXVec3Normalize(&vDir, &vDir);
+		m_pTransformCom->Move_Pos(&vDir, -10.f, fTimeDelta);
 	}
 
-	if (GetAsyncKeyState(VK_RIGHT))
+	if (Engine::Get_DIKeyState(DIK_D) & 0x80)
 	{
-		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(-90.f * fTimeDelta));
-	}	
+		D3DXVec3Normalize(&vDir, &vDir);
+		m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
+	}
 
-	if (Engine::Get_DIMouseState(DIM_LB) & 0x80)
+
+	//마우스 회전으로 플레이어 각도 바꾸기
+	_long	dwMouseMove(0);
+
+	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_X))
 	{
-		_vec3	vPickPos = Picking_OnTerrain();
-
-		m_pTransformCom->Move_Terrain(&vPickPos, fTimeDelta, 5.f);
+		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(dwMouseMove / 10.f));
 	}
 
 }
