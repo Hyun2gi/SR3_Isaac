@@ -10,9 +10,13 @@ private:
 	explicit CDynamicCamera(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CDynamicCamera();
 
+	// PLAYERCHASE : 플레이어 따라다님
+	// WHOLELAND : 전체 맵 보여줌
 	enum DYNAMICCAMERAID
 	{
-
+		C_PLAYERCHASE,
+		C_WHOLELAND,
+		C_END
 	};
 
 public:
@@ -31,6 +35,7 @@ private:
 	void		Key_Input(const _float& fTimeDelta);
 
 	void		Chase_Character();
+	void		Whole_Land_Show();
 	void		Mouse_Fix();
 	void		Mouse_Move();
 
@@ -49,8 +54,12 @@ private:
 	//y로의 길이
 	float		m_fCameraHeight;
 
-
 	CTransform* m_pTarget;
+
+	DYNAMICCAMERAID		m_eCurState;
+
+	//필요없을시 삭제
+	DYNAMICCAMERAID		m_ePreState;
 
 public:
 	static CDynamicCamera* Create(LPDIRECT3DDEVICE9 pGraphicDev,
