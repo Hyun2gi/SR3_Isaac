@@ -194,7 +194,7 @@ void CStageToolGui::Create_Image_Buttons()
             if (ImGui::ImageButton(strButtonName.c_str(), (void*)image, ImVec2(width, height)))
             {
                 //TODO: 버튼 클릭 시 실행할 함수를 작성
-                //Select_Image_Button();
+                m_pTargetScene->Set_Cursor_Image(image);
             }
             ImGui::SameLine();
         }
@@ -216,14 +216,6 @@ string CStageToolGui::Trans_Object_Type_To_String(int iValue)
     default:
         return "";
     }
-}
-
-void CStageToolGui::Select_Image_Button(PDIRECT3DTEXTURE9 texture)
-{
-    //D3DSURFACE_DESC my_image_desc;
-    //texture->GetLevelDesc(0, &my_image_desc);
-    //int width = my_image_desc.Width * TEXTURE_SIZE;
-    //int height = my_image_desc.Height * TEXTURE_SIZE;
 }
 
 //버튼 생성을 위해 불러온다.

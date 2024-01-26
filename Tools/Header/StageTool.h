@@ -16,7 +16,7 @@ public:
 	virtual void LateUpdate_Scene() override;
 	virtual void Render_Scene() override;
 
-	void	Create_Cursor_Image();
+	void	Set_Cursor_Image(PDIRECT3DTEXTURE9 Texture);
 
 private:
 	HRESULT			Ready_Layer_Environment(const _tchar* pLayerTag);

@@ -49,8 +49,6 @@ private:
 
     string Trans_Object_Type_To_String(int iValue);
 
-    void    Select_Image_Button(PDIRECT3DTEXTURE9 texture);
-
 private:
     LPDIRECT3DDEVICE9 m_pGraphicDev;
 

@@ -51,7 +51,7 @@ void CStageTool::Render_Scene()
 	m_pStageTools->Render_ImGuiTools();
 }
 
-void CStageTool::Create_Cursor_Image()
+void CStageTool::Set_Cursor_Image(PDIRECT3DTEXTURE9 Texture)
 {
 
 }
