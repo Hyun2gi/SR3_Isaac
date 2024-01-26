@@ -31,6 +31,10 @@ HRESULT CPlayer::Ready_GameObject()
 
 Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
+	m_fFrame += m_fPicNum * fTimeDelta * 1.5f;
+
+	if (m_fPicNum < m_fFrame)
+		m_fFrame = 0.f;
 
 	Key_Input(fTimeDelta);
 	
@@ -55,7 +59,7 @@ void CPlayer::Render_GameObject()
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	
-	m_pTextureCom->Set_Texture(0);
+	m_pTextureCom->Set_Texture((_uint)m_fFrame);
 
 	m_pBufferCom->Render_Buffer();
 
@@ -133,28 +137,31 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		D3DXVec3Normalize(&vDir, &vDir);
 		m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
 	}
-
-	if (Engine::Get_DIKeyState(DIK_S) & 0x80)
+	else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
 	{
 		m_eCurState = P_IDLEWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
 		m_pTransformCom->Move_Pos(&vDir, -10.f, fTimeDelta);
 	}
-
-	m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
-
-	if (Engine::Get_DIKeyState(DIK_A) & 0x80)
+	else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
 	{
+		m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
+
 		m_eCurState = P_LEFTWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
 		m_pTransformCom->Move_Pos(&vDir, -10.f, fTimeDelta);
 	}
-
-	if (Engine::Get_DIKeyState(DIK_D) & 0x80)
+	else if (Engine::Get_DIKeyState(DIK_D) & 0x80)
 	{
+		m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
+
 		m_eCurState = P_RIGHTWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
 		m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
+	}
+	else
+	{
+		m_eCurState = P_IDLE;
 	}
 
 
@@ -202,29 +209,48 @@ void CPlayer::Motion_Change()
 	*/
 	if (m_ePreState != m_eCurState)
 	{
+		m_fFrame = 0.f;
 		switch (m_eCurState)
 		{
 		case P_IDLE:
+			m_fPicNum = 1;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_IDLE"));
 			break;
 		case P_IDLEWALK:
+			m_fPicNum = 11;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_IDLE"));
 			break;
 		case P_BACKWALK:
+			m_fPicNum = 11;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK"));
 			break;
 		case P_SHOOTWALK:
+			m_fPicNum = 11;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK_SMALL"));
 			break;
 		case P_LEFTWALK:
+			m_fPicNum = 8;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_LEFT"));
 			break;
 		case P_RIGHTWALK:
+			m_fPicNum = 8;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_RIGHT"));
 			break;
-
 		}
 
 		m_ePreState = m_eCurState;
 	}
+}
+
+bool CPlayer::Check_Time(const _float& fTimeDelta)
+{
+	m_fAccTimeDelta += fTimeDelta;
+
+	if (m_fAccTimeDelta >= m_fCallLimit)
+	{
+		m_fAccTimeDelta = 0.f;
+		return true;
+	}
+
+	return false;
 }
