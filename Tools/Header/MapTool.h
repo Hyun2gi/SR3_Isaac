@@ -2,6 +2,8 @@
 
 #include "Scene.h"
 
+class CMapToolGui;
+
 class CMapTool : public Engine::CScene
 {
 private:
@@ -21,6 +23,8 @@ private:
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT			Ready_LightInfo();
 
+private:
+	CMapToolGui* m_pImGuiTools;
 
 public:
 	static CMapTool*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

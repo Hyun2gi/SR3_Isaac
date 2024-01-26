@@ -1,5 +1,5 @@
 #pragma once
-#include "ImGuiTools.h"
+#include "MapToolGui.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx9.h"
@@ -7,21 +7,21 @@
 #include "Export_System.h"
 
 
-CImGuiTools::CImGuiTools()
+CMapToolGui::CMapToolGui()
 {
 }
 
-CImGuiTools::CImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
+CMapToolGui::CMapToolGui(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
 {
     Ready_ImGuiTools(hWnd, pGraphicDev);
 }
 
-CImGuiTools::~CImGuiTools()
+CMapToolGui::~CMapToolGui()
 {
     Free();
 }
 
-HRESULT CImGuiTools::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
+HRESULT CMapToolGui::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
 {
     m_bIsOpend = false;
     m_iSelectedStageIndex = 0;
@@ -35,10 +35,10 @@ HRESULT CImGuiTools::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
     string strGetLine = "";
     //코드를 한 줄 읽어온다. (스테이지에 대한 정보는 한줄로 저장하게 만들어뒀기 때문에 가능)
 
-    int iIndex = 0;
     while (getline(fin, strGetLine))
     {
         vector<string> vecStr;
+        int iIndex = 0;
 
         while (true) {
             // , 위치 찾기
@@ -50,14 +50,14 @@ HRESULT CImGuiTools::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
             }
 
             // 분리된 문자열 출력
-            
             vecStr.push_back(strGetLine.substr(iIndex, pos - iIndex));
+            iIndex = pos + 1;
+            vecStr.push_back(strGetLine.substr(iIndex));
 
             // 다음 구분자 위치를 시작 위치로 설정
-            iIndex = pos + 1;
         }
 
-        m_mapStage.emplace(pair<int, string>(stoi(vecStr[1]),  vecStr[0]));
+        m_mapStage.emplace(pair<int, string>(stoi(vecStr[0]),  vecStr[1]));
 
         vecStr.clear();
     }
@@ -73,7 +73,6 @@ HRESULT CImGuiTools::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
 
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_Init(hWnd);
@@ -86,7 +85,7 @@ HRESULT CImGuiTools::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
 	return S_OK;
 }
 
-void CImGuiTools::Update_ImGuiTools()
+void CMapToolGui::Update_ImGuiTools()
 {
     bool show_demo_window = true;
     bool show_another_window = false;
@@ -141,7 +140,7 @@ void CImGuiTools::Update_ImGuiTools()
             ++i;
         });
 
-    std::vector<const char*> items;
+    vector<const char*> items;
 
     if (0 < vecString.size()) {
         // items 벡터의 요소를 vecString의 요소로 채웁니다.
@@ -155,29 +154,24 @@ void CImGuiTools::Update_ImGuiTools()
 
     if (ImGui::Button("Save"))
     {
+        string strFilePath = "../Dat/MapLevel.dat";
 
-    }
-    ImGui::SameLine();
-
-    if (ImGui::Button("Load"))
-    {
-        //TODO: 이 곳에 ADD 클릭 시 스테이지 목록을 추가하는 함수를 작성한다.
         // 파일 스트림을 엽니다.
+        ofstream fout(strFilePath.c_str(), ios::binary);
 
-        //ifstream fin(strFilePath);
+        // 파일에 데이터를 씁니다. Key, Name
+        for_each(m_mapStage.begin(), m_mapStage.end(),
+            [strFilePath, &fout](auto& iter) {
+                fout << iter.first << ",";
+                fout << iter.second << endl;
+            });
 
-        //string strKeys = "";
-        ////코드를 한 줄 읽어온다. (스테이지에 대한 정보는 한줄로 저장하게 만들어뒀기 때문에 가능)
-        //while (getline(fin, strKeys))
-        //{
-        //    //내용
-        //}
+        // 파일 스트림을 닫습니다.
+        fout.close();
 
-        //fin.close();
     }
 
     ImGui::SetNextItemWidth(100.f);
-    //TODO: Need ListBox Load
     ImGui::BeginListBox("##");
     if (0 < vecString.size())
         ImGui::ListBox("##", &m_iSelectedStageIndex, items.data(), vecString.size());
@@ -188,53 +182,25 @@ void CImGuiTools::Update_ImGuiTools()
     {
         m_bIsOpend = true;
     }
-
-    //if (ImGui::Button("Open"))
-    //{
-    //    m_bIsOpend = true;
-    //}
      
-    ImGui::Checkbox("Demo Window", &show_demo_window);      // Edit bools storing our window open/close state
-    ImGui::Checkbox("Another Window", &show_another_window);
-
-    //ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-    ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
     if (m_bIsOpend)
     {
         Popup_Stage_Connection(vecString[m_iSelectedStageIndex].c_str());
     }
 
-    //ImGui::SameLine();
-    //ImGui::Text("counter = %d", counter);
-
-   // ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / io.Framerate, io.Framerate);
     ImGui::End();
 
 }
 
-void CImGuiTools::Render_ImGuiTools()
+void CMapToolGui::Render_ImGuiTools()
 {
     ImGui::EndFrame();
     ImGui::Render();
     ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-    //m_pGraphicDev->SetRenderState(D3DRS_ZENABLE, FALSE);
-    //m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-    //m_pGraphicDev->SetRenderState(D3DRS_SCISSORTESTENABLE, FALSE);
-    //D3DCOLOR clear_col_dx = D3DCOLOR_RGBA(255, 255, 255, 255);
-    //m_pGraphicDev->Clear(0, nullptr, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, clear_col_dx, 1.0f, 0);
-    //if (m_pGraphicDev->BeginScene() >= 0)
-    //{
-    //    ImGui::Render();
-    //    ImGui_ImplDX9_RenderDrawData(ImGui::GetDrawData());
-    //    m_pGraphicDev->EndScene();
-    //}
-
-    //HRESULT result = m_pGraphicDev->Present(nullptr, nullptr, nullptr, nullptr);
 
 }
 
-void CImGuiTools::Popup_Stage_Connection(const char* items)
+void CMapToolGui::Popup_Stage_Connection(const char* items)
 {
     ImGui::Begin("Stage Connection Relationship");
 
@@ -325,7 +291,7 @@ void CImGuiTools::Popup_Stage_Connection(const char* items)
     ImGui::End();
 }
 
-void CImGuiTools::Free()
+void CMapToolGui::Free()
 {
     ImGui_ImplDX9_Shutdown();
     ImGui_ImplWin32_Shutdown();
