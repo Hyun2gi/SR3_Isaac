@@ -19,7 +19,7 @@ public:
 private:
 	virtual HRESULT		Add_Component()						override;
 
-	void				Change_Dir(const _float& fTimeDelta);
+	void				Change_Dir();
 	void				Sliding(const _float& fTimeDelta);
 
 private:

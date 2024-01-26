@@ -47,7 +47,7 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 
 	if (Check_Time(fTimeDelta))
 	{
-		Change_Dir(fTimeDelta);
+		Change_Dir();
 		m_bSliding = true;
 	}
 
@@ -103,7 +103,7 @@ HRESULT CDip::Add_Component()
 	return S_OK;
 }
 
-void CDip::Change_Dir(const _float& fTimeDelta)
+void CDip::Change_Dir()
 {
 	m_iRandNum = rand() % 180;
 	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(_float(m_iRandNum)));

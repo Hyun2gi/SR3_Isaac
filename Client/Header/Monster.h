@@ -20,9 +20,6 @@ protected:
 	virtual ~CMonster();
 
 public:
-	Engine::CTransform* Get_TransformCom() { return m_pTransformCom; }
-
-public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
 	virtual void LateUpdate_GameObject()					 override;
@@ -37,6 +34,7 @@ protected:
 protected:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
+	Engine::CTransform* m_pTargetTransCom;	// 플레이어 COM 객체
 	Engine::CTexture* m_pTextureCom;
 	Engine::CCalculator* m_pCalculCom;
 

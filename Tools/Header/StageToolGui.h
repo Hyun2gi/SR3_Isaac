@@ -5,10 +5,21 @@
 
 class CStageToolGui : public CBase
 {
+private:
+    const int OBJECT_MAX = 3;
+    const float TEXTURE_SIZE = 0.15f;
+
     struct StageStruct
     {
         string  strStageName;
         int     iKey;
+    };
+
+    enum OBJECT_TYPE
+    {
+        OBJECTS,
+        MONSTERS,
+        BOSSES
     };
 
 public:
@@ -23,20 +34,30 @@ public:
 
     void	Set_Picking_Pos(_vec3 vPos) { m_vecPickingPos = vPos; }
 
-    void    Popup_Object_Gui();
-
-    void    Load_Folder(string strFilePath, int& iCount);
+    
 
 private:
-    void Load_Stage_Object(const char* items);
+    void    Load_Level_Data();
+    void    Load_Stage_Object(const char* items);
+    void    Load_Object_Counts();
+    void    Load_Object_Textures();
+    
+    void    Popup_Object_Gui();
+
+    void    Create_Image_Buttons();
+
+    string Trans_Object_Type_To_String(int iValue);
 
 private:
     LPDIRECT3DDEVICE9 m_pGraphicDev;
+    
     bool m_bIsOpend;
     int m_iSelectedStageIndex;
-    int m_iObjFileCount;
+    
+    vector<int> vecObjCounts;
 
     map<int, string> m_mapStage;
+    unordered_map<int, vector<PDIRECT3DTEXTURE9>> m_umapObjectType;
 
     _vec3	m_vecPickingPos;
 
