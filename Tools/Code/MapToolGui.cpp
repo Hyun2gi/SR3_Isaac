@@ -53,8 +53,6 @@ HRESULT CMapToolGui::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
             vecStr.push_back(strGetLine.substr(iIndex, pos - iIndex));
             iIndex = pos + 1;
             vecStr.push_back(strGetLine.substr(iIndex));
-
-            // 다음 구분자 위치를 시작 위치로 설정
         }
 
         m_mapStage.emplace(pair<int, string>(stoi(vecStr[0]),  vecStr[1]));
