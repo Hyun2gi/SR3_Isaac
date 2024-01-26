@@ -21,7 +21,6 @@ HRESULT CSquirt::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
-	//m_pTransformCom->Set_Pos(3.f, 1.f, 0.f);
 
 	m_iHp = 6;
 

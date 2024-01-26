@@ -12,6 +12,7 @@
 #include "Dip.h"
 #include "Pacer.h"
 #include "Squirt.h"
+#include "Leaper.h"
 
 #include "BackGround.h"
 #include "Terrain.h"
@@ -138,6 +139,10 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	pGameObject = CSquirt::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
+
+	pGameObject = CLeaper::Create(m_pGraphicDev, 0);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Leaper", pGameObject), E_FAIL);
 
 
 	/*for (_int i = 0; i < 50; ++i)
