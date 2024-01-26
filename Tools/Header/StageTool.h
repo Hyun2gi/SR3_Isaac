@@ -16,6 +16,8 @@ public:
 	virtual void LateUpdate_Scene() override;
 	virtual void Render_Scene() override;
 
+	void	Create_Cursor_Image();
+
 private:
 	HRESULT			Ready_Layer_Environment(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_GameLogic(const _tchar* pLayerTag);
@@ -33,7 +35,7 @@ private:
 	_vec3	m_vecPickingPos;
 
 public:
-	static CStageTool*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CStageTool* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void Free() override;
