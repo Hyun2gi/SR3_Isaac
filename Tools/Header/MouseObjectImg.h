@@ -5,9 +5,10 @@
 
 BEGIN(Engine)
 
-class CTerrainTex;
+class CRcTex;
 class CTexture;
 class CTransform;
+class CCalculator;
 
 END
 
@@ -24,14 +25,20 @@ public:
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
-private:
-	HRESULT			Add_Component();
-	HRESULT			SetUp_Material();
+	void Set_Cur_Texture_Name(string wstrTexture) { m_strCurTextureName = wstrTexture; }
+
+	HRESULT Swap_Texture();
 
 private:
-	Engine::CTerrainTex*		m_pBufferCom;
-	Engine::CTransform*	m_pTransformCom;
-	Engine::CTexture*	m_pTextureCom;
+	HRESULT			Add_Component();
+
+private:
+	Engine::CRcTex*			m_pBufferCom;
+	Engine::CTransform*		m_pTransformCom;
+	Engine::CTexture*		m_pTextureCom;
+	Engine::CCalculator*	m_pCalculCom;
+
+	string	m_strCurTextureName;
 
 public:
 	static CMouseObjectImg*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
