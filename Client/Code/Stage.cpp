@@ -13,6 +13,7 @@
 #include "Pacer.h"
 #include "Squirt.h"
 #include "Leaper.h"
+#include "Charger.h"
 
 #include "BackGround.h"
 #include "Terrain.h"
@@ -136,13 +137,20 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pacer", pGameObject), E_FAIL);
 	//}
 
-	pGameObject = CSquirt::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
+	// Squirt
+	//pGameObject = CSquirt::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
 
-	pGameObject = CLeaper::Create(m_pGraphicDev, 0);
+	// Leaper
+	//pGameObject = CLeaper::Create(m_pGraphicDev, 0);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Leaper", pGameObject), E_FAIL);
+
+	// Charger
+	pGameObject = CCharger::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Leaper", pGameObject), E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Charger", pGameObject), E_FAIL);
 
 
 	/*for (_int i = 0; i < 50; ++i)
