@@ -29,6 +29,7 @@ protected:
 	virtual HRESULT			Add_Component();
 
 	bool			Check_Time(const _float& fTimeDelta);
+	bool			Check_Time(const _float& fTimeDelta, float fLimit);
 	void			Check_Map_Range();
 
 protected:

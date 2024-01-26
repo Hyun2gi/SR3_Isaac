@@ -20,6 +20,7 @@ private:
 	virtual HRESULT		Add_Component()						override;
 
 	void				Change_Dir(const _float& fTimeDelta);
+	void				Check_TargetPos();
 	void				MoveTo_Random(const _float& fTimeDelta);
 	void				JumpTo_Player(const _float& fTimeDelta);
 
@@ -30,6 +31,8 @@ private:
 
 	float				m_fPower;
 	float				m_fAccelTime;
+
+	_vec3				m_vTargetPos;
 
 public:
 	static CLeaper* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID);

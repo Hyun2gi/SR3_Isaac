@@ -114,6 +114,14 @@ void CLeaper::Change_Dir(const _float& fTimeDelta)
 	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(_float(m_iRandNum)));
 }
 
+void CLeaper::Check_TargetPos()
+{
+	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+
+	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
+
+}
+
 void CLeaper::MoveTo_Random(const _float& fTimeDelta)
 {
 	_vec3 vPos;

@@ -61,6 +61,19 @@ bool CMonster::Check_Time(const _float& fTimeDelta)
 	return false;
 }
 
+bool CMonster::Check_Time(const _float& fTimeDelta, float fLimit)
+{
+	m_fAccTimeDelta += fTimeDelta;
+
+	if (m_fAccTimeDelta >= fLimit)
+	{
+		m_fAccTimeDelta = 0.f;
+		return true;
+	}
+
+	return false;
+}
+
 void CMonster::Check_Map_Range()
 {
 	// 맵 밖으로 나갈 시 예외 처리
