@@ -27,6 +27,7 @@ private:
 	float				m_fAccel;
 
 	_vec3				m_vTargetPos;
+	_vec3				m_vDir;
 
 public:
 	static CSquirt* Create(LPDIRECT3DDEVICE9 pGraphicDev);

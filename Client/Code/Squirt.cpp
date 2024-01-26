@@ -26,7 +26,7 @@ HRESULT CSquirt::Ready_GameObject()
 	m_iHp = 6;
 
 	m_fCallLimit = 3;
-	m_fSpeed = 1.f;
+	m_fSpeed = 2.f;
 
 	m_bSliding = false;
 	m_fAccel = 10.f;
@@ -43,9 +43,8 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (Check_Time(fTimeDelta))
+	if (Check_Time(fTimeDelta) && !m_bSliding)
 	{
-		//Setting_Direction();
 		Check_TargetPos();
 		m_bSliding = true;
 	}
@@ -104,20 +103,15 @@ HRESULT CSquirt::Add_Component()
 
 void CSquirt::Sliding(const _float& fTimeDelta)
 {
-	_vec3	vDir = m_vTargetPos - m_pTransformCom->m_vInfo[INFO_POS];
-	_vec3	vPos;
-
-	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-	D3DXVec3Normalize(&vDir, &vDir);
-	m_pTransformCom->Move_Pos(&vDir, m_fSpeed * m_fAccel, fTimeDelta);
+	D3DXVec3Normalize(&m_vDir, &m_vDir);
+	m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed * m_fAccel, fTimeDelta);
 
 	m_fAccel -= 0.1;
 
 	if (m_fAccel <= 0.f)
 	{
 		m_bSliding = false;
-		m_fAccel = 1.f;
+		m_fAccel = 10.f;
 	}
 }
 
@@ -126,6 +120,8 @@ void CSquirt::Check_TargetPos()
 	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
 
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
+
+	m_vDir = m_vTargetPos - m_pTransformCom->m_vInfo[INFO_POS];
 }
 
 CSquirt* CSquirt::Create(LPDIRECT3DDEVICE9 pGraphicDev)
