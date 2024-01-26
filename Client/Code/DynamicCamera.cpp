@@ -115,8 +115,9 @@ void CDynamicCamera::Chase_Character()
 	playerInfo->Get_Info(INFO_POS, &playerPos);
 	playerInfo->Get_Info(INFO_LOOK, &playerDir);
 
+	D3DXVec3Normalize(&playerDir, &playerDir);
 	// 바라보는 대상은 플레이어
-	m_vAt = playerPos;
+	m_vAt = playerPos+ playerDir*2;
 
 	// 새로운 카메라 위치
 	if (m_bChaseInit == true)
@@ -124,13 +125,13 @@ void CDynamicCamera::Chase_Character()
 		// 카메라 처음 초기화
 		// 플레이어 뒤로 위치하게끔 하고 높이 조절
 		m_vCameraPosDir = -(playerDir);
-		m_vEye = playerPos + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
+		m_vEye = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
 	}
 	else
 	{
 		// 회전한만큼 길이와 방향이 벡터에 저장되어 있어서
 		// 플레이어에서 해당방향만큼 계산
-		m_vEye = playerPos + m_vCameraPosDir;
+		m_vEye = m_vAt + m_vCameraPosDir;
 	}
 
 }
@@ -186,7 +187,7 @@ void CDynamicCamera::Mouse_Move()
 
 
 
-		D3DXQuaternionRotationAxis(&qRot, &vCross, D3DXToRadian(dwMouseMoveY / 10.f));
+		D3DXQuaternionRotationAxis(&qRot, &vCross, -D3DXToRadian(dwMouseMoveY / 10.f));
 		D3DXMatrixRotationQuaternion(&matRotY, &qRot);
 
 		matTotalRot = matRotX * matRotY;

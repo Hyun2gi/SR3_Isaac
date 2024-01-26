@@ -23,8 +23,8 @@ HRESULT CPlayer::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+	m_ePreState = P_END;
 	//m_pTransformCom->m_vScale = { 2.f, 1.f, 1.f };
-
 
 	return S_OK;
 }
@@ -43,6 +43,8 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 void CPlayer::LateUpdate_GameObject()
 {
+	Motion_Change();
+
 	__super::LateUpdate_GameObject();
 
 	Height_OnTerrain();
@@ -67,9 +69,27 @@ HRESULT CPlayer::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture"));
+
+	//PLAYER ≈ÿΩ∫√≥
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_BACK"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_BACK", pComponent });
+
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_BACK_SMALL"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_BACK_SMALL", pComponent });
+
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_RIGHT"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_RIGHT", pComponent });
+
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_LEFT"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_LEFT", pComponent });
+
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_IDLE"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_IDLE", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -109,12 +129,14 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 	if (Engine::Get_DIKeyState(DIK_W) & 0x80)
 	{
+		m_eCurState = P_BACKWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
 		m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
 	}
 
 	if (Engine::Get_DIKeyState(DIK_S) & 0x80)
 	{
+		m_eCurState = P_IDLEWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
 		m_pTransformCom->Move_Pos(&vDir, -10.f, fTimeDelta);
 	}
@@ -123,12 +145,14 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 	if (Engine::Get_DIKeyState(DIK_A) & 0x80)
 	{
+		m_eCurState = P_LEFTWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
 		m_pTransformCom->Move_Pos(&vDir, -10.f, fTimeDelta);
 	}
 
 	if (Engine::Get_DIKeyState(DIK_D) & 0x80)
 	{
+		m_eCurState = P_RIGHTWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
 		m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
 	}
@@ -166,4 +190,41 @@ _vec3 CPlayer::Picking_OnTerrain()
 	NULL_CHECK_RETURN(pTerrainTransCom, _vec3());
 
 	return m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);
+}
+
+void CPlayer::Motion_Change()
+{
+	/*
+		case START:
+		m_tFrame.iFrameStart = 0;
+		m_tFrame.iFrameEnd = 15;
+		m_tFrame.iMotion = 0;
+	*/
+	if (m_ePreState != m_eCurState)
+	{
+		switch (m_eCurState)
+		{
+		case P_IDLE:
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_IDLE"));
+			break;
+		case P_IDLEWALK:
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_IDLE"));
+			break;
+		case P_BACKWALK:
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK"));
+			break;
+		case P_SHOOTWALK:
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK_SMALL"));
+			break;
+		case P_LEFTWALK:
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_LEFT"));
+			break;
+		case P_RIGHTWALK:
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_RIGHT"));
+			break;
+
+		}
+
+		m_ePreState = m_eCurState;
+	}
 }
