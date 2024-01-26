@@ -21,11 +21,15 @@ HRESULT CSquirt::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
+	//m_pTransformCom->Set_Pos(3.f, 1.f, 0.f);
 
-	m_iHp = 3;
+	m_iHp = 6;
 
-	m_fCallLimit = m_iRandNum % 5 + 2;
-	m_fSpeed = 10.f;
+	m_fCallLimit = 3;
+	m_fSpeed = 1.f;
+
+	m_bSliding = false;
+	m_fAccel = 10.f;
 
 	return S_OK;
 }
@@ -39,8 +43,15 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	// 몇 초간 힘을 모으다가 플레이어 방향으로 빠르게 슬라이드 + 벽 튕김
+	if (Check_Time(fTimeDelta))
+	{
+		Setting_Direction();
+		m_bSliding = true;
+		// 슬라이딩 전에 순간 중앙으로 이동 하는 듯함
+	}
 
+	if (m_bSliding)
+		Sliding(fTimeDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -89,6 +100,61 @@ HRESULT CSquirt::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
 	return S_OK;
+}
+
+void CSquirt::Sliding(const _float& fTimeDelta)
+{
+	_vec3		vDir, vPos;
+	m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	D3DXVec3Normalize(&vDir, &vDir);
+	m_pTransformCom->Move_Pos(&vDir, m_fSpeed * m_fAccel, fTimeDelta);
+
+	m_fAccel -= 0.1;
+
+	if (m_fAccel <= 0.f)
+	{
+		m_bSliding = false;
+		m_fAccel = 1.f;
+	}
+}
+
+void CSquirt::Setting_Direction()
+{
+	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+
+	_vec3 vPlayerPos;
+	m_pTargetTransCom->Get_Info(INFO_POS, &vPlayerPos); // 플레이어의 현재 위치(O)
+
+	//// this의 월드 행렬
+	//_matrix matTrans = *(m_pTransformCom->Get_WorldMatrix());
+
+	//// 플레이어 위치를 향해 바라봄
+	//_matrix matRot = *(m_pTransformCom->Compute_LookAtTarget(&vPlayerPos));
+
+	//// 플레이어를 향해 바라보는 것으로 월드 행렬 연산
+	//m_pTransformCom->Set_WorldMatrix(&(matRot*matTrans));
+
+
+	// Compute_LookAtTarget( ) 내부 코드 옮긴 것
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	_vec3 vUp;
+	m_pTransformCom->Get_Info(INFO_UP, &vUp);
+
+	_vec3 vDir = vPlayerPos - vPos;
+	_vec3 vAxis = *D3DXVec3Cross(&vAxis, &vUp, &vDir);
+
+	_vec3 vUp2;
+	_matrix matRot;
+
+	float fDot = D3DXVec3Dot(D3DXVec3Normalize(&vDir, &vDir), D3DXVec3Normalize(&vUp2, &vPos));
+	float fAngle = acos(fDot);
+
+	D3DXMatrixRotationAxis(&matRot, &vAxis, fAngle);
+	m_pTransformCom->Set_WorldMatrix(&matRot);
 }
 
 CSquirt* CSquirt::Create(LPDIRECT3DDEVICE9 pGraphicDev)
