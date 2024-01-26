@@ -9,6 +9,8 @@
 #include "DynamicCamera.h"
 
 #include "StageToolGui.h"
+#include "ObjectLoad.h"
+#include "MouseObjectImg.h"
 
 CStageTool::CStageTool(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
@@ -37,6 +39,10 @@ Engine::_int CStageTool::Update_Scene(const _float& fTimeDelta)
 	Key_Input(fTimeDelta);
 	m_pStageTools->Set_Picking_Pos(m_vecPickingPos);
 	m_pStageTools->Update_ImGuiTools();
+
+	dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic", L"MouseObjectImg", L"Proto_Transform"))->Set_Pos(m_vecPickingPos);
+
+
 	return __super::Update_Scene(fTimeDelta);
 }
 
@@ -51,8 +57,14 @@ void CStageTool::Render_Scene()
 	m_pStageTools->Render_ImGuiTools();
 }
 
-void CStageTool::Create_Cursor_Image()
+void CStageTool::Set_Cursor_Image(int iObjType, int iIndex)
 {
+	m_pMouseImg = dynamic_cast<CMouseObjectImg*>(Get_GameObject(L"GameLogic", L"MouseObjectImg"));
+
+	string strFileName = "Proto_" + CObjectLoad::GetInstance()->Get_File_Name(iObjType, iIndex);
+
+	m_pMouseImg->Set_Cur_Texture_Name(strFileName);
+	m_pMouseImg->Swap_Texture();
 
 }
 
@@ -90,9 +102,9 @@ HRESULT CStageTool::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
 
-	//pGameObject = CTerrain::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CursorRcTex", pGameObject), E_FAIL);
+	pGameObject = CMouseObjectImg::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MouseObjectImg", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
@@ -135,6 +147,11 @@ void CStageTool::Key_Input(const _float& fTimeDelta)
 {
 	if (Engine::Get_DIMouseState(DIM_LB) & 0x80)
 		m_vecPickingPos = Picking_OnTerrain();
+
+	if (Engine::Get_DIMouseMove(DIMS_X))
+	{
+		m_vecPickingPos = Picking_OnTerrain();
+	}
 }
 
 _vec3 CStageTool::Picking_OnTerrain()

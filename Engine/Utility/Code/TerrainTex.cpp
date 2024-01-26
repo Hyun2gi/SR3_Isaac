@@ -79,8 +79,8 @@ HRESULT CTerrainTex::Ready_Buffer(const _ulong& dwCntX,
 
 			pVertex[dwIndex].vNormal = { 0.f, 0.f, 0.f };
 			pVertex[dwIndex].vTexUV = { 
-				float(j) / (dwCntX - 1) * 20.f,
-				float(i) / (dwCntZ - 1) * 20.f 
+				float(j) / (dwCntX - 1) * 80.f,
+				float(i) / (dwCntZ - 1) * 80.f 
 			};
 		}
 	}
