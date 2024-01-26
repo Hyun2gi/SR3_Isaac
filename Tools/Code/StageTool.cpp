@@ -4,13 +4,9 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
-#include "Player.h"
-#include "Monster.h"
 #include "BackGround.h"
 #include "Terrain.h"
 #include "DynamicCamera.h"
-#include "SkyBox.h"
-#include "Effect.h"
 
 #include "StageToolGui.h"
 
@@ -26,6 +22,7 @@ CStageTool::~CStageTool()
 HRESULT CStageTool::Ready_Scene()
 {
 	m_pStageTools = new CStageToolGui(g_hWnd, m_pGraphicDev);
+	m_pStageTools->Set_Target_Scene(this);
 
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
@@ -36,7 +33,7 @@ HRESULT CStageTool::Ready_Scene()
 }
 
 Engine::_int CStageTool::Update_Scene(const _float& fTimeDelta)
-{	
+{
 	Key_Input(fTimeDelta);
 	m_pStageTools->Set_Picking_Pos(m_vecPickingPos);
 	m_pStageTools->Update_ImGuiTools();
@@ -54,7 +51,12 @@ void CStageTool::Render_Scene()
 	m_pStageTools->Render_ImGuiTools();
 }
 
-HRESULT CStageTool::Ready_Layer_Environment(const _tchar * pLayerTag)
+void CStageTool::Create_Cursor_Image()
+{
+
+}
+
+HRESULT CStageTool::Ready_Layer_Environment(const _tchar* pLayerTag)
 {
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
@@ -77,7 +79,7 @@ HRESULT CStageTool::Ready_Layer_Environment(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CStageTool::Ready_Layer_GameLogic(const _tchar * pLayerTag)
+HRESULT CStageTool::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 {
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
@@ -88,13 +90,17 @@ HRESULT CStageTool::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
 
+	//pGameObject = CTerrain::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CursorRcTex", pGameObject), E_FAIL);
+
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
 
 	return S_OK;
 }
 
-HRESULT CStageTool::Ready_Layer_UI(const _tchar * pLayerTag)
+HRESULT CStageTool::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
@@ -145,9 +151,9 @@ _vec3 CStageTool::Picking_OnTerrain()
 	return pCameraCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);
 }
 
-CStageTool * CStageTool::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CStageTool* CStageTool::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CStageTool *	pInstance = new CStageTool(pGraphicDev);
+	CStageTool* pInstance = new CStageTool(pGraphicDev);
 
 	if (FAILED(pInstance->Ready_Scene()))
 	{
@@ -156,7 +162,7 @@ CStageTool * CStageTool::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 		MSG_BOX("StageTool Create Failed");
 		return nullptr;
 	}
-	
+
 	return pInstance;
 }
 

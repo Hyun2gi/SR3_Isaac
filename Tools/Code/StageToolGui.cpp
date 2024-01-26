@@ -6,6 +6,8 @@
 
 #include "Export_System.h"
 
+#include "StageTool.h"
+
 
 CStageToolGui::CStageToolGui()
 {
@@ -51,7 +53,7 @@ HRESULT CStageToolGui::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev
     ImGui_ImplWin32_NewFrame();
     ImGui::NewFrame();
 
-	return S_OK;
+    return S_OK;
 }
 
 void CStageToolGui::Update_ImGuiTools()
@@ -101,7 +103,7 @@ void CStageToolGui::Update_ImGuiTools()
     {
         m_bIsOpend = true;
     }
-     
+
     if (m_bIsOpend)
     {
 
@@ -157,7 +159,7 @@ void CStageToolGui::Popup_Object_Gui()
     ImGui::Text("Please select an object to place.");
 
     Create_Image_Buttons();
-    
+
 
     //ImGui::BeginListBox("##");
     //if (0 < vecString.size())
@@ -169,6 +171,8 @@ void CStageToolGui::Popup_Object_Gui()
 
 void CStageToolGui::Create_Image_Buttons()
 {
+    static int iTest = 0;
+
     for (auto& item : m_umapObjectType)
     {
         ImGui::NewLine();
@@ -176,20 +180,27 @@ void CStageToolGui::Create_Image_Buttons()
         string str = Trans_Object_Type_To_String(item.first);
         ImGui::Text("%s", str.c_str());
 
+        int i = 0;
+
         for (auto& image : item.second)
         {
+            string strButtonName = str + to_string(i);
+
             D3DSURFACE_DESC my_image_desc;
             image->GetLevelDesc(0, &my_image_desc);
             int width = my_image_desc.Width * TEXTURE_SIZE;
             int height = my_image_desc.Height * TEXTURE_SIZE;
 
-            if (ImGui::ImageButton("##", (void*)image, ImVec2(width, height)))
+            if (ImGui::ImageButton(strButtonName.c_str(), (void*)image, ImVec2(width, height)))
             {
-
+                //TODO: 버튼 클릭 시 실행할 함수를 작성
+                //Select_Image_Button();
             }
             ImGui::SameLine();
         }
     }
+
+    ImGui::Text("%i", iTest);
 }
 
 string CStageToolGui::Trans_Object_Type_To_String(int iValue)
@@ -205,6 +216,14 @@ string CStageToolGui::Trans_Object_Type_To_String(int iValue)
     default:
         return "";
     }
+}
+
+void CStageToolGui::Select_Image_Button(PDIRECT3DTEXTURE9 texture)
+{
+    //D3DSURFACE_DESC my_image_desc;
+    //texture->GetLevelDesc(0, &my_image_desc);
+    //int width = my_image_desc.Width * TEXTURE_SIZE;
+    //int height = my_image_desc.Height * TEXTURE_SIZE;
 }
 
 //버튼 생성을 위해 불러온다.
@@ -238,7 +257,7 @@ void CStageToolGui::Load_Object_Counts()
         vecObjCounts.push_back(stoi(strLine.substr(iIndex, pos - iIndex)));
         iIndex = pos + 1;
     }
- }
+}
 
 void CStageToolGui::Load_Object_Textures()
 {

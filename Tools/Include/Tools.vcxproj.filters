@@ -61,6 +61,9 @@
     <Filter Include="01. Scene\03. MapTool">
       <UniqueIdentifier>{dc0d7138-b484-4e90-9d16-5418ee6911a6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. MouseObjectImg">
+      <UniqueIdentifier>{82a5170b-9863-4441-adf3-854d044f6f9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -141,6 +144,9 @@
     <ClInclude Include="..\Header\StageToolGui.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\MouseObjectImg.h">
+      <Filter>02. GameObject\07. MouseObjectImg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -211,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\StageToolGui.cpp">
       <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MouseObjectImg.cpp">
+      <Filter>02. GameObject\07. MouseObjectImg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

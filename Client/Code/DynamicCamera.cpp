@@ -31,6 +31,8 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_fCameraHeight = 5.f;
 	m_fCameraDistance = 5.f;
 	m_pTarget = nullptr;
+	m_ePreState = C_END;
+	m_eCurState = C_PLAYERCHASE;
 
 	FAILED_CHECK_RETURN(CCamera::Ready_GameObject(), E_FAIL);
 
@@ -53,6 +55,7 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 	{
 		Mouse_Move();
 		Chase_Character();
+		Whole_Land_Show();
 		//마우스 움직임
 		Mouse_Fix();
 	}
@@ -83,6 +86,19 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		}
 	}
 
+	if (Engine::Get_DIKeyState(DIK_T) & 0x80)
+	{
+		if (m_eCurState == C_WHOLELAND)
+		{
+			m_eCurState = C_PLAYERCHASE;
+			m_bChaseInit = true;
+		}
+		else 
+		{
+			m_eCurState = C_WHOLELAND;
+		}
+	}
+
 	if (Engine::Get_DIKeyState(DIK_TAB) & 0x80)
 	{
 		if (m_bCheck)
@@ -104,35 +120,48 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 
 void CDynamicCamera::Chase_Character()
 {
-	CTransform* playerInfo = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
-
-	_vec3		playerPos;
-	_vec3		playerDir;
-	_vec3		cameraDir;
-	_vec3		cameraPos;
-
-
-	playerInfo->Get_Info(INFO_POS, &playerPos);
-	playerInfo->Get_Info(INFO_LOOK, &playerDir);
-
-	// 바라보는 대상은 플레이어
-	m_vAt = playerPos;
-
-	// 새로운 카메라 위치
-	if (m_bChaseInit == true)
+	if (m_eCurState == C_PLAYERCHASE)
 	{
-		// 카메라 처음 초기화
-		// 플레이어 뒤로 위치하게끔 하고 높이 조절
-		m_vCameraPosDir = -(playerDir);
-		m_vEye = playerPos + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
-	}
-	else
-	{
-		// 회전한만큼 길이와 방향이 벡터에 저장되어 있어서
-		// 플레이어에서 해당방향만큼 계산
-		m_vEye = playerPos + m_vCameraPosDir;
-	}
+		CTransform* playerInfo = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
 
+		_vec3		playerPos;
+		_vec3		playerDir;
+		_vec3		cameraDir;
+		_vec3		cameraPos;
+
+
+		playerInfo->Get_Info(INFO_POS, &playerPos);
+		playerInfo->Get_Info(INFO_LOOK, &playerDir);
+
+		D3DXVec3Normalize(&playerDir, &playerDir);
+		// 바라보는 대상은 플레이어
+		m_vAt = playerPos + playerDir * 2;
+
+		// 새로운 카메라 위치
+		if (m_bChaseInit == true)
+		{
+			// 카메라 처음 초기화
+			// 플레이어 뒤로 위치하게끔 하고 높이 조절
+			m_vCameraPosDir = -(playerDir);
+			m_vEye = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
+		}
+		else
+		{
+			// 회전한만큼 길이와 방향이 벡터에 저장되어 있어서
+			// 플레이어에서 해당방향만큼 계산
+			m_vEye = m_vAt + m_vCameraPosDir;
+		}
+	}
+	
+
+}
+
+void CDynamicCamera::Whole_Land_Show()
+{
+	if (m_eCurState == C_WHOLELAND)
+	{
+		m_vEye = _vec3(0,50.f,0);
+	}
 }
 
 void CDynamicCamera::Mouse_Fix()
@@ -186,7 +215,7 @@ void CDynamicCamera::Mouse_Move()
 
 
 
-		D3DXQuaternionRotationAxis(&qRot, &vCross, D3DXToRadian(dwMouseMoveY / 10.f));
+		D3DXQuaternionRotationAxis(&qRot, &vCross, -D3DXToRadian(dwMouseMoveY / 10.f));
 		D3DXMatrixRotationQuaternion(&matRotY, &qRot);
 
 		matTotalRot = matRotX * matRotY;
