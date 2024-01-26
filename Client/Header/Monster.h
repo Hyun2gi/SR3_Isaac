@@ -46,6 +46,7 @@ protected:
 
 	_float					m_fCallLimit;
 	_float					m_fAccTimeDelta;
+	_float					m_fSecAccTimeDelta;
 
 public:
 	static CMonster*		Create(LPDIRECT3DDEVICE9	pGraphicDev);

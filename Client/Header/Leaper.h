@@ -10,6 +10,8 @@ private:
 	explicit CLeaper(const CLeaper& rhs);
 	virtual ~CLeaper();
 
+	enum LEAPERSTATE {LEAPER_IDLE, LEAPER_UP, LEAPER_DOWN, LEAPER_END};
+
 public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
@@ -33,6 +35,8 @@ private:
 	float				m_fAccelTime;
 
 	_vec3				m_vTargetPos;
+
+	LEAPERSTATE			m_eState;
 
 public:
 	static CLeaper* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID);

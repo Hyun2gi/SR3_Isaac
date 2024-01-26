@@ -36,6 +36,8 @@ HRESULT CLeaper::Ready_GameObject()
 	m_fPower = 1.8f;
 	m_fAccelTime = 0.f;
 
+	m_eState = LEAPER_IDLE;
+
 	return S_OK;
 }
 
@@ -48,15 +50,29 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (Check_Time(fTimeDelta) && !m_bMove)
+	if (Check_Time(fTimeDelta, 5.f))
 	{
-		Change_Dir(fTimeDelta);
-		m_bMove = true;
+		m_eState = LEAPER_UP;
+		m_bJump = true;
+		Check_TargetPos();
 	}
-	
-	if (m_bMove)
+
+	if (m_bJump)
 	{
-		MoveTo_Random(fTimeDelta);
+		JumpTo_Player(fTimeDelta);
+	}
+	else
+	{
+		if (Check_Time(fTimeDelta) && !m_bMove)
+		{
+			Change_Dir(fTimeDelta);
+			m_bMove = true;
+		}
+
+		if (m_bMove)
+		{
+			MoveTo_Random(fTimeDelta);
+		}
 	}
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
@@ -146,10 +162,36 @@ void CLeaper::MoveTo_Random(const _float& fTimeDelta)
 
 void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 {
-	// 큰 점프를 해 플레이어 위치로 내려찍기
-	// 사라졌다가 해당 위치 위로 텔레포트하기?
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	
+	if (LEAPER_UP == m_eState)
+	{
+		if (vPos.y >= 10.f)
+		{
+			m_eState = LEAPER_DOWN;
+			vPos = m_vTargetPos;
+			vPos.y = 50.f;
+		}
+		else
+		{
+			vPos.y += 1.f;
+		}
+	}
+	else if (LEAPER_DOWN == m_eState)
+	{
+		if (vPos.y > 1.f)
+		{
+			vPos.y -= 1.f;
+		}
+		else
+		{
+			vPos.y = 1.f;
+			m_eState = LEAPER_IDLE;
+			m_bJump = false;
+		}
+	}
+	m_pTransformCom->Set_Pos(vPos);
 }
 
 CLeaper* CLeaper::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID)

@@ -6,14 +6,14 @@
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev),
 	m_pCalculCom(nullptr),
-	m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f)
+	m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_fSecAccTimeDelta(0.f)
 {
 }
 
 CMonster::CMonster(const CMonster& rhs)
 	: Engine::CGameObject(rhs),
 	m_pCalculCom(nullptr),
-	m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f)
+	m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_fSecAccTimeDelta(0.f)
 {
 
 }
@@ -63,11 +63,11 @@ bool CMonster::Check_Time(const _float& fTimeDelta)
 
 bool CMonster::Check_Time(const _float& fTimeDelta, float fLimit)
 {
-	m_fAccTimeDelta += fTimeDelta;
+	m_fSecAccTimeDelta += fTimeDelta;
 
-	if (m_fAccTimeDelta >= fLimit)
+	if (m_fSecAccTimeDelta >= fLimit)
 	{
-		m_fAccTimeDelta = 0.f;
+		m_fSecAccTimeDelta = 0.f;
 		return true;
 	}
 
