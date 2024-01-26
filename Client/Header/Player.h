@@ -38,6 +38,7 @@ private:
 	void			Height_OnTerrain();
 	_vec3			Picking_OnTerrain();
 	void			Motion_Change();
+	bool			Check_Time(const _float& fTimeDelta);
 
 private:
 	Engine::CRcTex*		m_pBufferCom;
@@ -45,7 +46,10 @@ private:
 	Engine::CTexture*	m_pTextureCom;
 	Engine::CCalculator*	m_pCalculatorCom;
 
-	_float					m_fFrame = 0.f;
+	_float				m_fFrame = 0.f;
+	_float				m_fPicNum; // 이미지 개수
+	_float				m_fCallLimit;
+	_float				m_fAccTimeDelta;
 
 	PLAYERID			m_ePreState;
 	PLAYERID			m_eCurState;
