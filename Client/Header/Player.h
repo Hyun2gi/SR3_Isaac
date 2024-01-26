@@ -19,6 +19,13 @@ private:
 	explicit CPlayer(const CPlayer& rhs);
 	virtual ~CPlayer();
 
+	// IDLE : 안걷고 그냥 서있음
+	// IDLEWALK : 얼굴방향으로 쏨
+	// BACKWALK : 뒷통수보면서 쏨
+	// SHOOTWALK : 쏘는 자세 (머리통이 작아짐)
+	// GOOD : 따봉
+	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_GOOD, P_END  };
+
 public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
@@ -30,12 +37,18 @@ private:
 	void			Key_Input(const _float& fTimeDelta);
 	void			Height_OnTerrain();
 	_vec3			Picking_OnTerrain();
+	void			Motion_Change();
 
 private:
 	Engine::CRcTex*		m_pBufferCom;
 	Engine::CTransform*	m_pTransformCom;
 	Engine::CTexture*	m_pTextureCom;
 	Engine::CCalculator*	m_pCalculatorCom;
+
+	_float					m_fFrame = 0.f;
+
+	PLAYERID			m_ePreState;
+	PLAYERID			m_eCurState;
 
 public:
 	static CPlayer*		Create(LPDIRECT3DDEVICE9	pGraphicDev);

@@ -10,6 +10,11 @@ private:
 	explicit CDynamicCamera(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CDynamicCamera();
 
+	enum DYNAMICCAMERAID
+	{
+
+	};
+
 public:
 	HRESULT Ready_GameObject(const _vec3* pEye,
 		const _vec3* pAt,
