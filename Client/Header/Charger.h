@@ -19,12 +19,17 @@ public:
 	virtual void	Render_GameObject()						 override;
 
 private:
-	virtual HRESULT	Add_Component()							override;
+	virtual HRESULT		Add_Component()						override;
+	virtual void		Motion_Change()						override;
 
 	void			Check_Range();
 
 private:
-	CHARGERSTATE	m_eState;
+	_int				m_iPicNum;
+	_float				m_fFrameSpeed = 1.f;
+
+	CHARGERSTATE		m_ePreState;
+	CHARGERSTATE		m_eCurState;
 
 public:
 	static CCharger* Create(LPDIRECT3DDEVICE9 pGraphicDev);

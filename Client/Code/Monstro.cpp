@@ -107,7 +107,15 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 		JumpTo_Player(fTimeDelta);
 
 	if (m_bBullet)
+	{
 		AttackTo_Player();
+		
+		if (Check_Time(fTimeDelta, 1.f))
+		{
+			m_eState = MONSTRO_IDLE;
+			m_bBullet = false;
+		}
+	}
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -258,8 +266,7 @@ void CMonstro::AttackTo_Player()
 		dynamic_cast<CMstBullet*>(m_BulletList.back())->Set_Dir(vDir);
 	}
 
-	m_eState = MONSTRO_IDLE;
-	m_bBullet = false;
+	
 }
 
 void CMonstro::Check_TargetPos()
