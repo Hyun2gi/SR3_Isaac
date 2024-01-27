@@ -40,7 +40,7 @@ public:
 	static CAttackFly* Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iIndex);
 
 private:
-	virtual void		Free();
+	virtual void		Free()								override;
 
 };
 

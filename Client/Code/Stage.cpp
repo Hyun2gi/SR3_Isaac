@@ -12,6 +12,10 @@
 #include "Dip.h"
 #include "Pacer.h"
 #include "Squirt.h"
+#include "Leaper.h"
+#include "Charger.h"
+
+#include "Monstro.h"
 
 #include "BackGround.h"
 #include "Terrain.h"
@@ -98,6 +102,7 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player", pGameObject), E_FAIL);
 
+
 	// Fly
 	//for (int i = 0; i < 10; ++i)
 	//{
@@ -135,9 +140,25 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pacer", pGameObject), E_FAIL);
 	//}
 
-	pGameObject = CSquirt::Create(m_pGraphicDev);
+	// Squirt
+	//pGameObject = CSquirt::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
+
+	// Leaper
+	//pGameObject = CLeaper::Create(m_pGraphicDev, 0);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Leaper", pGameObject), E_FAIL);
+
+	// Charger
+	//pGameObject = CCharger::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Charger", pGameObject), E_FAIL);
+
+	// Monstro
+	pGameObject = CMonstro::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Monstro", pGameObject), E_FAIL);
 
 
 	/*for (_int i = 0; i < 50; ++i)

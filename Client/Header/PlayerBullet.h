@@ -5,19 +5,20 @@
 
 BEGIN(Engine)
 
-class CTexture;
 class CRcTex;
+class CTexture;
 class CTransform;
 class CCalculator;
+class CBullet;
 
 END
 
-class CMonster :	public Engine::CGameObject
+class CPlayerBullet : public CGameObject
 {
-protected:
-	explicit CMonster(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CMonster(const CMonster& rhs);
-	virtual ~CMonster();
+private:
+	explicit CPlayerBullet(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CPlayerBullet(const CPlayerBullet& rhs);
+	virtual ~CPlayerBullet();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -25,33 +26,31 @@ public:
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
-protected:
-	virtual HRESULT			Add_Component();
+public:
+	static CPlayerBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev);
 
-	bool			Check_Time(const _float& fTimeDelta);
-	bool			Check_Time(const _float& fTimeDelta, float fLimit);
-	void			Check_Map_Range();
+private:
+	virtual HRESULT			Add_Component();
+	bool					Check_Time(const _float& fTimeDelta);
+
+
+private:
+	virtual void Free();
 
 protected:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	Engine::CTransform* m_pTargetTransCom;	// 플레이어 COM 객체
 	Engine::CTexture* m_pTextureCom;
-	Engine::CCalculator* m_pCalculCom;
+	Engine::CCalculator* m_pCalculatorCom;
 
-	_int					m_iHp;
 
-	_float					m_fSpeed;
 	_float					m_fFrame = 0.f;
-
 	_float					m_fCallLimit;
 	_float					m_fAccTimeDelta;
-	_float					m_fSecAccTimeDelta;
 
-public:
-	static CMonster*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
 
-protected:
-	virtual void Free() override;
+private:
+	_vec3		m_vBulletDir;
+	bool		m_bDead = false;
 };
 

@@ -67,6 +67,27 @@
     <Filter Include="02. GameObject\01. Monster\04. Squirt">
       <UniqueIdentifier>{02626e64-7156-4199-9087-e1896ca1c9f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Bullet">
+      <UniqueIdentifier>{bb30728a-480d-4c87-aeb6-ad7927022be9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Bullet\00. PlayerBullet">
+      <UniqueIdentifier>{6f667c1f-8d34-4d98-9977-5514742d0c2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\05. Leaper">
+      <UniqueIdentifier>{6e3cb8ac-c805-42c5-ae87-032c4c2478f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\06. Charger">
+      <UniqueIdentifier>{e842e840-2b28-4603-a45e-082d553d9c1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\99. Boss">
+      <UniqueIdentifier>{4c9ef647-2a6a-469d-a531-dc22b7b6c4f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\99. Boss\00. Monstro">
+      <UniqueIdentifier>{cad0cc39-d196-42d3-a006-a8d556e3fc3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\99. Boss\01. Mom">
+      <UniqueIdentifier>{f31d6d15-a6db-4613-b5ab-d972cca48d1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -132,6 +153,18 @@
     <ClInclude Include="..\Header\Squirt.h">
       <Filter>02. GameObject\01. Monster\04. Squirt</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\PlayerBullet.h">
+      <Filter>02. GameObject\07. Bullet\00. PlayerBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Leaper.h">
+      <Filter>02. GameObject\01. Monster\05. Leaper</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Charger.h">
+      <Filter>02. GameObject\01. Monster\06. Charger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Monstro.h">
+      <Filter>02. GameObject\01. Monster\99. Boss\00. Monstro</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -187,6 +220,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\Squirt.cpp">
       <Filter>02. GameObject\01. Monster\04. Squirt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PlayerBullet.cpp">
+      <Filter>02. GameObject\07. Bullet\00. PlayerBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Leaper.cpp">
+      <Filter>02. GameObject\01. Monster\05. Leaper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Charger.cpp">
+      <Filter>02. GameObject\01. Monster\06. Charger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Monstro.cpp">
+      <Filter>02. GameObject\01. Monster\99. Boss\00. Monstro</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -4,6 +4,8 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
+#include "PlayerBullet.h"
+
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev)
 {
@@ -40,6 +42,29 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	
 	Engine::Add_RenderGroup(RENDER_ALPHA, this);
 
+	// 총알 update
+	if (!m_PlayerBulletList.empty())
+	{
+		int		iResult = 0;
+		for (auto& iter = m_PlayerBulletList.begin();
+			iter != m_PlayerBulletList.end(); )
+		{
+			iResult = dynamic_cast<CPlayerBullet*>(*iter)->Update_GameObject(fTimeDelta);
+
+			if (1 == iResult)
+			{
+				//Safe_Delete<CGameObject*>(*iter);
+				Safe_Release<CGameObject*>(*iter);
+				iter = m_PlayerBulletList.erase(iter);
+			}
+			else
+			{
+				++iter;
+			}
+
+		}
+	}
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	return 0;
@@ -48,6 +73,15 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 void CPlayer::LateUpdate_GameObject()
 {
 	Motion_Change();
+
+	// 총알 late update
+	if (!m_PlayerBulletList.empty())
+	{
+		for (auto& iter : m_PlayerBulletList)
+		{
+			dynamic_cast<CPlayerBullet*>(iter)->LateUpdate_GameObject();
+		}
+	}
 
 	__super::LateUpdate_GameObject();
 
@@ -58,8 +92,17 @@ void CPlayer::Render_GameObject()
 {	
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	
+
 	m_pTextureCom->Set_Texture((_uint)m_fFrame);
+
+	// 총알 출력
+	if (!m_PlayerBulletList.empty())
+	{
+		for (auto& iter : m_PlayerBulletList)
+		{
+			dynamic_cast<CPlayerBullet*>(iter)->LateUpdate_GameObject();
+		}
+	}
 
 	m_pBufferCom->Render_Buffer();
 
@@ -120,11 +163,6 @@ CPlayer * CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	return pInstance;
 }
 
-void CPlayer::Free()
-{	
-	__super::Free();
-}
-
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
 	// W,A,S,D 움직임
@@ -164,6 +202,13 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_eCurState = P_IDLE;
 	}
 
+	// 총알 발사
+	if (Engine::Get_DIMouseState(DIM_LB) & 0x80)
+	{
+		m_eCurState = P_SHOOTWALK;
+		m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev));
+	}
+
 
 	//마우스 회전으로 플레이어 각도 바꾸기
 	_long	dwMouseMove(0);
@@ -172,7 +217,12 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	{
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(dwMouseMove / 10.f));
 	}
+	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_Y))
+	{
+		m_pTransformCom->Rotation(ROT_X, D3DXToRadian(dwMouseMove / 30.f));
+	}
 
+	
 }
 
 void CPlayer::Height_OnTerrain()
@@ -253,4 +303,9 @@ bool CPlayer::Check_Time(const _float& fTimeDelta)
 	}
 
 	return false;
+}
+
+void CPlayer::Free()
+{
+	__super::Free();
 }
