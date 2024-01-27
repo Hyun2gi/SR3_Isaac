@@ -151,7 +151,7 @@ void CStageTool::Create_Placement_Object()
 
 void CStageTool::Key_Input(const _float& fTimeDelta)
 {
-	if (Engine::Key_Pressing(DIM_LB))
+	if (Engine::Key_Down(DIM_LB))
 	{
 		m_vPickingPos = Picking_OnTerrain();
 		Create_Placement_Object();

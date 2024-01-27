@@ -44,5 +44,4 @@
 using namespace std;
 using namespace Engine;
 
-
 #endif // Engine_Define_h__

@@ -100,13 +100,7 @@ void CStageToolGui::Update_ImGuiTools()
     //리스트 박스 클릭 시 실행되는 이벤트(0 = left, 1 = right, 2 = middle)
     if (ImGui::IsItemClicked())
     {
-        m_bIsOpend = true;
-    }
-
-    if (m_bIsOpend)
-    {
-
-        //Load_Stage_Object(vecString[m_iSelectedStageIndex].c_str());
+        //여기에 파일 로드 후 화면에 출력하기
     }
 
     ImGui::NewLine();
@@ -126,6 +120,8 @@ void CStageToolGui::Update_ImGuiTools()
 
         // 파일 스트림을 엽니다.
         ofstream fout(strFileName, ios::binary);
+
+        //m_vecPlacementObj
 
         // 파일에 데이터를 씁니다. Key, Name
         //for_each(m_mapStage.begin(), m_mapStage.end(),
