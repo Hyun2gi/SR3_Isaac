@@ -46,6 +46,12 @@ inline void		Render_Font(const _tchar* pFontTag,
 inline _byte	Get_DIKeyState(_ubyte byKeyID);
 inline _byte	Get_DIMouseState(MOUSEKEYSTATE eMouse);
 inline _long	Get_DIMouseMove(MOUSEMOVESTATE eMouseState);
+inline bool		Key_Pressing(_ubyte byKeyID);
+inline bool		Key_Pressing(MOUSEKEYSTATE eMouse);
+inline bool		Key_Down(_ubyte byKeyID);
+inline bool		Key_Down(MOUSEKEYSTATE eMouse);
+inline bool		Key_Up(_ubyte byKeyID);
+inline bool		Key_Up(MOUSEKEYSTATE eMouse); HRESULT	Ready_InputDev(HINSTANCE hInst, HWND hWnd);
 inline HRESULT	Ready_InputDev(HINSTANCE hInst, HWND hWnd);
 inline void		Update_InputDev(void);
 
