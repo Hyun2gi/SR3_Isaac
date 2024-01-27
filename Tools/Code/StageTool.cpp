@@ -41,7 +41,7 @@ Engine::_int CStageTool::Update_Scene(const _float& fTimeDelta)
 	m_pStageTools->Update_ImGuiTools();
 
 	_vec3 vecTemp = m_vecPickingPos;
-	vecTemp.y += 1.f;
+	vecTemp.y += 0.5f;
 
 	dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic", L"MouseObjectImg", L"Proto_Transform"))->Set_Pos(vecTemp);
 
