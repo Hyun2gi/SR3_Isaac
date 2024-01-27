@@ -40,7 +40,10 @@ Engine::_int CStageTool::Update_Scene(const _float& fTimeDelta)
 	m_pStageTools->Set_Picking_Pos(m_vecPickingPos);
 	m_pStageTools->Update_ImGuiTools();
 
-	dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic", L"MouseObjectImg", L"Proto_Transform"))->Set_Pos(m_vecPickingPos);
+	_vec3 vecTemp = m_vecPickingPos;
+	vecTemp.y += 1.f;
+
+	dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic", L"MouseObjectImg", L"Proto_Transform"))->Set_Pos(vecTemp);
 
 
 	return __super::Update_Scene(fTimeDelta);
