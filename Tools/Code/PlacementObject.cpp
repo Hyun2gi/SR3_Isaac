@@ -33,7 +33,7 @@ HRESULT CPlacementObject::Ready_GameObject(wstring wstrName, int iType, int iInd
 
 Engine::_int CPlacementObject::Update_GameObject(const _float& fTimeDelta)
 {
-	Engine::Add_RenderGroup(RENDER_ALPHA, this);
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
 	CGameObject::Update_GameObject(fTimeDelta);
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
@@ -44,6 +44,10 @@ Engine::_int CPlacementObject::Update_GameObject(const _float& fTimeDelta)
 void CPlacementObject::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
+	
+	_vec3	vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	__super::Compute_ViewZ(&vPos);
 }
 
 void CPlacementObject::Render_GameObject()
