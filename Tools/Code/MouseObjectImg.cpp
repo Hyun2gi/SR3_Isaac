@@ -28,7 +28,7 @@ HRESULT CMouseObjectImg::Ready_GameObject()
 
 Engine::_int CMouseObjectImg::Update_GameObject(const _float& fTimeDelta)
 {
-	Engine::Add_RenderGroup(RENDER_ALPHA, this);
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
 	CGameObject::Update_GameObject(fTimeDelta);
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
@@ -39,17 +39,19 @@ Engine::_int CMouseObjectImg::Update_GameObject(const _float& fTimeDelta)
 void CMouseObjectImg::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
+
+	_vec3	vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	__super::Compute_ViewZ(&vPos);
 }
 
 void CMouseObjectImg::Render_GameObject()
 {	
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	
 	m_pTextureCom->Set_Texture(0);
 
 	m_pBufferCom->Render_Buffer();
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
 HRESULT CMouseObjectImg::Swap_Texture()

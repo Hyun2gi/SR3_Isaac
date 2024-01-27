@@ -34,7 +34,6 @@ private:
 	HRESULT			Ready_Layer_Environment(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_GameLogic(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
-	HRESULT			Ready_LightInfo();
 
 	void			Create_Placement_Object();
 
