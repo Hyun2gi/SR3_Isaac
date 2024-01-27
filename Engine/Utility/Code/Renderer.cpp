@@ -92,7 +92,7 @@ void CRenderer::Render_Alpha_Sorting(LPDIRECT3DDEVICE9& pGraphicDev)
 
 	m_RenderGroup[RENDER_ALPHA_SORTING].sort([](CGameObject* pDst, CGameObject* pSrc)->bool
 		{
-			return pDst->Get_ViewZ() < pSrc->Get_ViewZ();
+			return pDst->Get_ViewZ() > pSrc->Get_ViewZ();
 		});
 
 	for (auto& iter : m_RenderGroup[RENDER_ALPHA_SORTING])

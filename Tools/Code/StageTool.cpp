@@ -31,7 +31,6 @@ HRESULT CStageTool::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
 	return S_OK;
 }
@@ -126,25 +125,6 @@ HRESULT CStageTool::Ready_Layer_UI(const _tchar* pLayerTag)
 	Engine::CGameObject* pGameObject = nullptr;
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
-
-	return S_OK;
-}
-
-HRESULT CStageTool::Ready_LightInfo()
-{
-	D3DLIGHT9			tLightInfo;
-	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
-
-	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
-
-	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-
-	tLightInfo.Direction = _vec3(1.f, -1.f, 1.f);
-
-	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
-
 
 	return S_OK;
 }
