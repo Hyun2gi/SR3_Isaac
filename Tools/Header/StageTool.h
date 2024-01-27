@@ -4,9 +4,20 @@
 
 class CStageToolGui;
 class CMouseObjectImg;
+class CPlacementObject;
 
 class CStageTool : public Engine::CScene
 {
+private:
+	const float SET_Y_POS = 0.8f;
+
+	struct PlacementObj
+	{
+		int iType;
+		int iIndex;
+		wstring wstrName;
+	};
+
 private:
 	explicit CStageTool(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CStageTool();
@@ -25,6 +36,8 @@ private:
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT			Ready_LightInfo();
 
+	void			Create_Placement_Object();
+
 private:
 	void	Key_Input(const _float& fTimeDelta);
 
@@ -34,7 +47,12 @@ private:
 	CStageToolGui* m_pStageTools;
 	CMouseObjectImg* m_pMouseImg;
 
-	_vec3	m_vecPickingPos;
+	_vec3	m_vPickingPos;
+
+	int	m_iCurObjType, m_iCurObjIndex;
+
+	//씬에서 가지고 있을 설치한 오브젝트의 정보를 저장하는 벡터
+	vector<PlacementObj> m_vecPlacementObj;
 
 public:
 	static CStageTool* Create(LPDIRECT3DDEVICE9 pGraphicDev);

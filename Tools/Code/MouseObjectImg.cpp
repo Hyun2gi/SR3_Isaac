@@ -59,11 +59,26 @@ HRESULT CMouseObjectImg::Swap_Texture()
 	wstring wstr;
 	wstr.assign(m_strCurTextureName.begin(), m_strCurTextureName.end());
 
+	int iIndex = 0;
+
+	auto found = find(m_vecTextureNames.begin(), m_vecTextureNames.end(), wstr);
+
+	if (found == m_vecTextureNames.end())
+	{
+		m_vecTextureNames.push_back(wstr);
+
+		iIndex = m_vecTextureNames.size() - 1;
+	}
+	else
+	{
+		iIndex = m_vecTextureNames.end() - found - 1;
+	}
+
 	CComponent* pComponent = nullptr;
 
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(wstr.c_str()));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ wstr.c_str() , pComponent});
+	m_mapComponent[ID_STATIC].insert({ m_vecTextureNames[iIndex].c_str() , pComponent});
 }
 
 HRESULT CMouseObjectImg::Add_Component()
@@ -77,6 +92,7 @@ HRESULT CMouseObjectImg::Add_Component()
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_Object_0"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Object_0", pComponent });
+	m_vecTextureNames.push_back(L"Proto_Object_0");
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);

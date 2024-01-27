@@ -40,6 +40,8 @@ private:
 
 	string	m_strCurTextureName;
 
+	vector<wstring> m_vecTextureNames;
+
 public:
 	static CMouseObjectImg*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
 

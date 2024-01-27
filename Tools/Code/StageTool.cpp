@@ -11,6 +11,7 @@
 #include "StageToolGui.h"
 #include "ObjectLoad.h"
 #include "MouseObjectImg.h"
+#include "PlacementObject.h"
 
 CStageTool::CStageTool(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
@@ -23,6 +24,7 @@ CStageTool::~CStageTool()
 
 HRESULT CStageTool::Ready_Scene()
 {
+	m_iCurObjType = m_iCurObjIndex = 0;
 	m_pStageTools = new CStageToolGui(g_hWnd, m_pGraphicDev);
 	m_pStageTools->Set_Target_Scene(this);
 
@@ -37,11 +39,11 @@ HRESULT CStageTool::Ready_Scene()
 Engine::_int CStageTool::Update_Scene(const _float& fTimeDelta)
 {
 	Key_Input(fTimeDelta);
-	m_pStageTools->Set_Picking_Pos(m_vecPickingPos);
+	m_pStageTools->Set_Picking_Pos(m_vPickingPos);
 	m_pStageTools->Update_ImGuiTools();
 
-	_vec3 vecTemp = m_vecPickingPos;
-	vecTemp.y += 0.5f;
+	_vec3 vecTemp = m_vPickingPos;
+	vecTemp.y += SET_Y_POS;
 
 	dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic", L"MouseObjectImg", L"Proto_Transform"))->Set_Pos(vecTemp);
 
@@ -62,9 +64,10 @@ void CStageTool::Render_Scene()
 
 void CStageTool::Set_Cursor_Image(int iObjType, int iIndex)
 {
-	m_pMouseImg = dynamic_cast<CMouseObjectImg*>(Get_GameObject(L"GameLogic", L"MouseObjectImg"));
+	m_iCurObjType = iObjType;
+	m_iCurObjIndex = iIndex;
 
-	string strFileName = "Proto_" + CObjectLoad::GetInstance()->Get_File_Name(iObjType, iIndex);
+	string strFileName = "Proto_" + CObjectLoad::GetInstance()->Get_File_Name(m_iCurObjType, m_iCurObjIndex);
 
 	m_pMouseImg->Set_Cur_Texture_Name(strFileName);
 	m_pMouseImg->Swap_Texture();
@@ -105,7 +108,7 @@ HRESULT CStageTool::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
 
-	pGameObject = CMouseObjectImg::Create(m_pGraphicDev);
+	pGameObject = m_pMouseImg = CMouseObjectImg::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MouseObjectImg", pGameObject), E_FAIL);
 
@@ -146,14 +149,37 @@ HRESULT CStageTool::Ready_LightInfo()
 	return S_OK;
 }
 
+void CStageTool::Create_Placement_Object()
+{
+	string strFileName = CObjectLoad::GetInstance()->Get_File_Name(m_iCurObjType, m_iCurObjIndex);
+
+	wstring wstr;
+	wstr.assign(strFileName.begin(), strFileName.end());
+
+	PlacementObj tObj = { m_iCurObjType, m_iCurObjIndex, wstr };
+	m_vecPlacementObj.push_back(tObj);
+
+	CGameObject* pPlacementObj;
+	pPlacementObj = CPlacementObject::Create(m_pGraphicDev, tObj.wstrName, m_iCurObjType, m_iCurObjIndex);
+	m_mapLayer[L"GameLogic"]->Add_GameObject(tObj.wstrName.c_str(), pPlacementObj);
+
+
+	_vec3 vTemp = m_vPickingPos;
+	vTemp.y += SET_Y_POS;
+	dynamic_cast<CTransform*>(pPlacementObj->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS] = vTemp;
+}
+
 void CStageTool::Key_Input(const _float& fTimeDelta)
 {
 	if (Engine::Get_DIMouseState(DIM_LB) & 0x80)
-		m_vecPickingPos = Picking_OnTerrain();
+	{
+		m_vPickingPos = Picking_OnTerrain();
+		Create_Placement_Object();
+	}
 
 	if (Engine::Get_DIMouseMove(DIMS_X))
 	{
-		m_vecPickingPos = Picking_OnTerrain();
+		m_vPickingPos = Picking_OnTerrain();
 	}
 }
 
