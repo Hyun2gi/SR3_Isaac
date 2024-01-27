@@ -80,6 +80,27 @@ void CRenderer::Render_Alpha(LPDIRECT3DDEVICE9 & pGraphicDev)
 	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 
+void CRenderer::Render_Alpha_Sorting(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+
+	pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
+	m_RenderGroup[RENDER_ALPHA].sort([](CGameObject* pDst, CGameObject* pSrc)->bool
+		{
+			return pDst->Get_ViewZ() < pSrc->Get_ViewZ();
+		});
+
+	for (auto& iter : m_RenderGroup[RENDER_ALPHA])
+		iter->Render_GameObject();
+
+	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+}
+
 void CRenderer::Render_UI(LPDIRECT3DDEVICE9 & pGraphicDev)
 {
 	for (auto& iter : m_RenderGroup[RENDER_UI])
