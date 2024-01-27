@@ -9,6 +9,7 @@ class CRcTex;
 class CTexture;
 class CTransform;
 class CCalculator;
+class CBullet;
 
 END
 
@@ -41,9 +42,9 @@ private:
 	bool			Check_Time(const _float& fTimeDelta);
 
 private:
-	Engine::CRcTex*		m_pBufferCom;
-	Engine::CTransform*	m_pTransformCom;
-	Engine::CTexture*	m_pTextureCom;
+	Engine::CRcTex*			m_pBufferCom;
+	Engine::CTransform*		m_pTransformCom;
+	Engine::CTexture*		m_pTextureCom;
 	Engine::CCalculator*	m_pCalculatorCom;
 
 	_float				m_fFrame = 0.f;
@@ -53,6 +54,8 @@ private:
 
 	PLAYERID			m_ePreState;
 	PLAYERID			m_eCurState;
+
+	list<CGameObject*>	m_PlayerBulletList;
 
 public:
 	static CPlayer*		Create(LPDIRECT3DDEVICE9	pGraphicDev);

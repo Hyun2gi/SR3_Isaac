@@ -172,6 +172,7 @@
     <ClInclude Include="..\Header\Monstro.h" />
     <ClInclude Include="..\Header\Pacer.h" />
     <ClInclude Include="..\Header\Player.h" />
+    <ClInclude Include="..\Header\PlayerBullet.h" />
     <ClInclude Include="..\Header\SkyBox.h" />
     <ClInclude Include="..\Header\Squirt.h" />
     <ClInclude Include="..\Header\Stage.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="..\Code\Monstro.cpp" />
     <ClCompile Include="..\Code\Pacer.cpp" />
     <ClCompile Include="..\Code\Player.cpp" />
+    <ClCompile Include="..\Code\PlayerBullet.cpp" />
     <ClCompile Include="..\Code\SkyBox.cpp" />
     <ClCompile Include="..\Code\Squirt.cpp" />
     <ClCompile Include="..\Code\Stage.cpp" />
