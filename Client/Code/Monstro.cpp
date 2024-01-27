@@ -1,57 +1,45 @@
 #include "stdafx.h"
-#include "Charger.h"
+#include "Monstro.h"
 
 #include "Export_Utility.h"
 
-CCharger::CCharger(LPDIRECT3DDEVICE9 pGraphicDev)
+CMonstro::CMonstro(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev)
 {
 }
 
-CCharger::CCharger(const CCharger& rhs)
+CMonstro::CMonstro(const CMonstro& rhs)
 	: CMonster(rhs)
 {
 }
 
-CCharger::~CCharger()
+CMonstro::~CMonstro()
 {
 }
 
-HRESULT CCharger::Ready_GameObject()
+HRESULT CMonstro::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(10.f, 0.5f, 10.f);
+	m_pTransformCom->Set_Pos(10.f, 3.2f, 10.f);
+	m_pTransformCom->m_vScale = { 5.f, 5.f, 0.f };
 
-	m_iHp = 3;
+	m_iHp = 5;
 
 	m_fCallLimit = 0.f;
-	m_fSpeed = 2.f;
-
-	m_eState = CHARGER_END;
+	m_fSpeed = 1.f;
 
 	return S_OK;
 }
 
-_int CCharger::Update_GameObject(const _float& fTimeDelta)
+_int CMonstro::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += 4.f * fTimeDelta * 1.5;
+	m_fFrame += 3.f * fTimeDelta * 0.4f;
 
-	if (4.f < m_fFrame)
+	if (3.f < m_fFrame)
 		m_fFrame = 0.f;
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	Check_Range();
-
-	if (CHARGER_IDLE == m_eState)
-		m_fSpeed = 2.f;
-	else if (CHARGER_ATTACK == m_eState)
-		m_fSpeed = 5.f;
-
-	_vec3 vTargetPos;
-	m_pTargetTransCom->Get_Info(INFO_POS, &vTargetPos);
-
-	m_pTransformCom->Chase_Target(&vTargetPos, m_fSpeed, fTimeDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -60,12 +48,12 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 	return 0;
 }
 
-void CCharger::LateUpdate_GameObject()
+void CMonstro::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 }
 
-void CCharger::Render_GameObject()
+void CMonstro::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -79,7 +67,7 @@ void CCharger::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-HRESULT CCharger::Add_Component()
+HRESULT CMonstro::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
@@ -87,9 +75,9 @@ HRESULT CCharger::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ChargerTexture"));
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_MonstroTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_ChargerTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_MonstroTexture", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -102,43 +90,33 @@ HRESULT CCharger::Add_Component()
 	return S_OK;
 }
 
-void CCharger::Check_Range()
+void CMonstro::MoveTo_Player()
 {
-	_vec3 vTargetPos, vPos;
-
-	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
-	m_pTargetTransCom->Get_Info(INFO_POS, &vTargetPos);
-	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-	float fDistance =
-		(fabs(vTargetPos.x - vPos.x) * fabs(vTargetPos.x - vPos.x)) +
-		(fabs(vTargetPos.y - vPos.y) * fabs(vTargetPos.y - vPos.y));
-
-	if (100 < fDistance) // 범위에 속하지 않을 때
-	{
-		m_eState = CHARGER_IDLE;
-	}
-	else // 범위에 속할 때
-	{
-		m_eState = CHARGER_ATTACK;
-	}
 }
 
-CCharger* CCharger::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+void CMonstro::JumpTo_Player()
 {
-	CCharger* pInstance = new CCharger(pGraphicDev);
+}
+
+void CMonstro::AttackTo_Player()
+{
+}
+
+CMonster* CMonstro::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+{
+	CMonstro* pInstance = new CMonstro(pGraphicDev);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("Charger Create Failed");
+		MSG_BOX("Monstro Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
 }
 
-void CCharger::Free()
+void CMonstro::Free()
 {
 	__super::Free();
 }

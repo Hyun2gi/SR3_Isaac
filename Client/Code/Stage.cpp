@@ -15,6 +15,8 @@
 #include "Leaper.h"
 #include "Charger.h"
 
+#include "Monstro.h"
+
 #include "BackGround.h"
 #include "Terrain.h"
 #include "DynamicCamera.h"
@@ -148,9 +150,14 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Leaper", pGameObject), E_FAIL);
 
 	// Charger
-	pGameObject = CCharger::Create(m_pGraphicDev);
+	//pGameObject = CCharger::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Charger", pGameObject), E_FAIL);
+
+	// Monstro
+	pGameObject = CMonstro::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Charger", pGameObject), E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Monstro", pGameObject), E_FAIL);
 
 
 	/*for (_int i = 0; i < 50; ++i)

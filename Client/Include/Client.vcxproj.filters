@@ -73,6 +73,15 @@
     <Filter Include="02. GameObject\01. Monster\06. Charger">
       <UniqueIdentifier>{e842e840-2b28-4603-a45e-082d553d9c1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. Monster\99. Boss">
+      <UniqueIdentifier>{4c9ef647-2a6a-469d-a531-dc22b7b6c4f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\99. Boss\00. Monstro">
+      <UniqueIdentifier>{cad0cc39-d196-42d3-a006-a8d556e3fc3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\99. Boss\01. Mom">
+      <UniqueIdentifier>{f31d6d15-a6db-4613-b5ab-d972cca48d1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -144,6 +153,9 @@
     <ClInclude Include="..\Header\Charger.h">
       <Filter>02. GameObject\01. Monster\06. Charger</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Monstro.h">
+      <Filter>02. GameObject\01. Monster\99. Boss\00. Monstro</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -205,6 +217,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Charger.cpp">
       <Filter>02. GameObject\01. Monster\06. Charger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Monstro.cpp">
+      <Filter>02. GameObject\01. Monster\99. Boss\00. Monstro</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
