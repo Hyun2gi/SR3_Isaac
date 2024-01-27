@@ -100,7 +100,10 @@ void CStageToolGui::Update_ImGuiTools()
     //리스트 박스 클릭 시 실행되는 이벤트(0 = left, 1 = right, 2 = middle)
     if (ImGui::IsItemClicked())
     {
+        //기존에 생성된 정보를 지운당!
+        m_pTargetScene->Clear_Placement_Object();
         //여기에 파일 로드 후 화면에 출력하기
+        Load_Stage_Design();
     }
 
     ImGui::NewLine();
@@ -121,14 +124,14 @@ void CStageToolGui::Update_ImGuiTools()
         // 파일 스트림을 엽니다.
         ofstream fout(strFileName, ios::binary);
 
-        //m_vecPlacementObj
-
-        // 파일에 데이터를 씁니다. Key, Name
-        //for_each(m_mapStage.begin(), m_mapStage.end(),
-        //    [strFilePath, &fout](auto& iter) {
-        //        fout << iter.first << ",";
-        //        fout << iter.second << endl;
-        //    });
+        for_each(m_PlacementObjList.begin(), m_PlacementObjList.end(),
+            [strFileName, &fout](auto& iter) {
+                fout << iter.iType << ",";
+                fout << iter.iIndex << ",";
+                fout << iter.x << ",";
+                fout << iter.y << ",";
+                fout << iter.z << endl;
+            });
 
         // 파일 스트림을 닫습니다.
         fout.close();
@@ -154,12 +157,6 @@ void CStageToolGui::Popup_Object_Gui()
     ImGui::Text("Please select an object to place.");
 
     Create_Image_Buttons();
-
-
-    //ImGui::BeginListBox("##");
-    //if (0 < vecString.size())
-    //    ImGui::ListBox("##", &m_iSelectedStageIndex, items.data(), vecString.size());
-    //ImGui::EndListBox();
 
     ImGui::End();
 }
@@ -189,7 +186,6 @@ void CStageToolGui::Create_Image_Buttons()
             if (ImGui::ImageButton(strButtonName.c_str(), (void*)image, ImVec2(width, height)))
             {
                 iTest = i;
-                //TODO: 버튼 클릭 시 실행할 함수를 작성
                 m_pTargetScene->Set_Cursor_Image(item.first, i);
             }
             ImGui::SameLine();
@@ -199,6 +195,51 @@ void CStageToolGui::Create_Image_Buttons()
     }
 
     ImGui::Text("%i", iTest);
+}
+
+void CStageToolGui::Push_Placement_Obj_List(int iType, int iIndex, float x, float y, float z)
+{
+    PlacementObjInfo tTemp{ iType , iIndex, x, y, z };
+
+    m_PlacementObjList.push_front(tTemp);
+}
+
+void CStageToolGui::Load_Stage_Design()
+{
+    string strFilePath = "../Dat/" + 
+        m_mapStage[m_iSelectedStageIndex] + "_Design.dat";
+
+    ifstream fin(strFilePath);
+
+    string strGetLine = "";
+
+    while (getline(fin, strGetLine))
+    {
+        vector<string> vecStr;
+        int iIndex = 0;
+
+        while (true) {
+            // , 위치 찾기
+            int pos = strGetLine.find_first_of(',', iIndex);
+
+            // ,를 찾지 못하면 종료
+            if (pos == string::npos) {
+                vecStr.push_back(strGetLine.substr(iIndex));
+                break;
+            }
+
+            // 분리된 문자열 출력
+            vecStr.push_back(strGetLine.substr(iIndex, pos - iIndex));
+            iIndex = pos + 1;
+        }
+
+        Push_Placement_Obj_List(stoi(vecStr[0]), stoi(vecStr[1]), stof(vecStr[2]), stof(vecStr[3]), stof(vecStr[4]));
+        m_pTargetScene->Create_Placement_Object(stoi(vecStr[0]), stoi(vecStr[1]), stof(vecStr[2]), stof(vecStr[3]), stof(vecStr[4]));
+
+        vecStr.clear();
+    }
+
+    fin.close();
 }
 
 void CStageToolGui::Free()

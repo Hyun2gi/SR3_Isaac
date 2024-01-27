@@ -31,12 +31,15 @@ public:
 
 	void	Set_Cursor_Image(int iObjType, int iIndex);
 
+	void			Create_Placement_Object();
+	void			Create_Placement_Object(int iObjType, int iIndex, float x, float y, float z);
+
+	void			Clear_Placement_Object();
+
 private:
 	HRESULT			Ready_Layer_Environment(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_GameLogic(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
-
-	void			Create_Placement_Object();
 
 private:
 	void	Key_Input(const _float& fTimeDelta);

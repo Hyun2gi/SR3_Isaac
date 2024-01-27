@@ -28,6 +28,7 @@ HRESULT CStageTool::Ready_Scene()
 	m_pStageTools = new CStageToolGui(g_hWnd, m_pGraphicDev);
 	m_pStageTools->Set_Target_Scene(this);
 
+	//해당 씬은 GameObject 레이어도 있으나, Ready가 필요하지않아 함수는 존재하지 않는다
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
@@ -141,20 +142,45 @@ void CStageTool::Create_Placement_Object()
 
 	CGameObject* pPlacementObj;
 	pPlacementObj = CPlacementObject::Create(m_pGraphicDev, tObj.wstrName, m_iCurObjType, m_iCurObjIndex);
-	m_mapLayer[L"GameLogic"]->Add_GameObject(tObj.wstrName.c_str(), pPlacementObj);
-
+	m_mapLayer[L"GameObject"]->Add_GameObject(tObj.wstrName.c_str(), pPlacementObj);
 
 	_vec3 vTemp = m_vPickingPos;
 	vTemp.y += SET_Y_POS;
 	dynamic_cast<CTransform*>(pPlacementObj->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS] = vTemp;
 }
 
+void CStageTool::Create_Placement_Object(int iObjType, int iIndex, float x, float y, float z)
+{
+	string strFileName = CObjectLoad::GetInstance()->Get_File_Name(iObjType, iIndex);
+
+	wstring wstr;
+	wstr.assign(strFileName.begin(), strFileName.end());
+
+	PlacementObj tObj = { iObjType, iIndex, wstr };
+	m_vecPlacementObj.push_back(tObj);
+
+	CGameObject* pPlacementObj;
+	pPlacementObj = CPlacementObject::Create(m_pGraphicDev, tObj.wstrName, m_iCurObjType, m_iCurObjIndex);
+	m_mapLayer[L"GameLogic"]->Add_GameObject(tObj.wstrName.c_str(), pPlacementObj);
+
+	_vec3 vTemp(x, y, z);
+	dynamic_cast<CTransform*>(pPlacementObj->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS] = vTemp;
+}
+
+void CStageTool::Clear_Placement_Object()
+{
+	m_vecPlacementObj.clear();
+	//TODO: Free를 public으로 바꾸던가, 레이어의 Free를 대신할 무언가를 만들던가 해야함
+	//m_mapLayer[L"GameObject"]->Free();
+}
+
 void CStageTool::Key_Input(const _float& fTimeDelta)
 {
-	if (Engine::Key_Down(DIM_LB))
+	if (Engine::Key_Down(DIM_RB))
 	{
 		m_vPickingPos = Picking_OnTerrain();
 		Create_Placement_Object();
+		m_pStageTools->Push_Placement_Obj_List(m_iCurObjType, m_iCurObjIndex, m_vPickingPos.x, m_vPickingPos.y + SET_Y_POS, m_vPickingPos.z);
 	}
 
 	if (Engine::Get_DIMouseMove(DIMS_X))
