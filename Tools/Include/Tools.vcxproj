@@ -174,6 +174,7 @@
     <ClInclude Include="..\Header\MapTool.h" />
     <ClInclude Include="..\Header\Monster.h" />
     <ClInclude Include="..\Header\MouseObjectImg.h" />
+    <ClInclude Include="..\Header\ObjectLoad.h" />
     <ClInclude Include="..\Header\Player.h" />
     <ClInclude Include="..\Header\SkyBox.h" />
     <ClInclude Include="..\Header\StageTool.h" />
@@ -202,6 +203,7 @@
     <ClCompile Include="..\Code\MapTool.cpp" />
     <ClCompile Include="..\Code\Monster.cpp" />
     <ClCompile Include="..\Code\MouseObjectImg.cpp" />
+    <ClCompile Include="..\Code\ObjectLoad.cpp" />
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\SkyBox.cpp" />
     <ClCompile Include="..\Code\StageTool.cpp" />

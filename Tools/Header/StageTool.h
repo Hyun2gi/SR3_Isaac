@@ -3,6 +3,7 @@
 #include "Scene.h"
 
 class CStageToolGui;
+class CMouseObjectImg;
 
 class CStageTool : public Engine::CScene
 {
@@ -16,7 +17,7 @@ public:
 	virtual void LateUpdate_Scene() override;
 	virtual void Render_Scene() override;
 
-	void	Create_Cursor_Image();
+	void	Set_Cursor_Image(int iObjType, int iIndex);
 
 private:
 	HRESULT			Ready_Layer_Environment(const _tchar* pLayerTag);
@@ -31,6 +32,7 @@ private:
 
 private:
 	CStageToolGui* m_pStageTools;
+	CMouseObjectImg* m_pMouseImg;
 
 	_vec3	m_vecPickingPos;
 

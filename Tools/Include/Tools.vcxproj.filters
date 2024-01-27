@@ -64,6 +64,12 @@
     <Filter Include="02. GameObject\07. MouseObjectImg">
       <UniqueIdentifier>{82a5170b-9863-4441-adf3-854d044f6f9e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. Tool">
+      <UniqueIdentifier>{a9e78e6b-cd5f-458d-b46a-e8a9e44c2442}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03. Tool\00. ObjectLoad">
+      <UniqueIdentifier>{724966bb-ecff-469a-a66f-fb78a2a58246}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -147,6 +153,9 @@
     <ClInclude Include="..\Header\MouseObjectImg.h">
       <Filter>02. GameObject\07. MouseObjectImg</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\ObjectLoad.h">
+      <Filter>03. Tool\00. ObjectLoad</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -220,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\MouseObjectImg.cpp">
       <Filter>02. GameObject\07. MouseObjectImg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ObjectLoad.cpp">
+      <Filter>03. Tool\00. ObjectLoad</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
