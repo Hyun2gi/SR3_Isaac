@@ -234,23 +234,23 @@ void CMonstro::AttackTo_Player()
 
 	vRandPos = m_vTargetPos; // 플레이어의 원래 위치 벡터
 
-	for (int i = 0; i < 20; ++i)
+	for (int i = 0; i < 13; ++i)
 	{
 		DWORD dwSeed = (i << 16) | (time(NULL) % 1000);
 		srand(dwSeed);
 
 		if (0 == (rand() % 2))
 		{
-			vRandPos.x += float(rand() % 3);
-			vRandPos.z += float(rand() % 3);
+			vRandPos.x += float(rand() % 3) + 0.2f;
+			vRandPos.z += float(rand() % 3) + 0.2f;
 		}
 		else
 		{
-			vRandPos.x -= float(rand() % 3);
-			vRandPos.z -= float(rand() % 3);
+			vRandPos.x -= float(rand() % 3) - 0.2f;
+			vRandPos.z -= float(rand() % 3) - 0.2f;
 		}
 
-		vRandPos.y += float(rand() % 2) - 0.4f;
+		vRandPos.y += float(rand() % 2) - 0.2f;
 
 		vDir = vRandPos - vPos;
 

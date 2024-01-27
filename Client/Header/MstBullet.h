@@ -20,10 +20,7 @@ private:
 	virtual ~CMstBullet();
 
 public:
-	void	Set_Dir(_vec3& vDir)
-	{
-		m_vBulletDir = vDir;
-	}
+	void	Set_Dir(_vec3& vDir){ m_vBulletDir = vDir; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -37,7 +34,7 @@ public:
 private:
 	virtual HRESULT			Add_Component();
 	bool					Check_Time(const _float& fTimeDelta);
-
+	void					Curve(const _float& fTimeDelta);
 
 private:
 	virtual void Free();
@@ -52,9 +49,12 @@ private:
 	_float					m_fCallLimit;
 	_float					m_fAccTimeDelta;
 
-private:
-	bool				m_bDead = false;
+	float					m_fPower;
+	float					m_fAccelTime;
 
-	_vec3				m_vBulletDir;
+private:
+	bool					m_bDead = false;
+
+	_vec3					m_vBulletDir;
 };
 

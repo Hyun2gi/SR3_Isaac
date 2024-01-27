@@ -24,6 +24,9 @@ HRESULT CMstBullet::Ready_GameObject()
 	m_fAccTimeDelta = 0.f;
 	m_fCallLimit = 5.f;
 
+    m_fPower = 1.f;
+    m_fAccelTime = 0.f;
+
 	return S_OK;
 }
 
@@ -31,18 +34,13 @@ _int CMstBullet::Update_GameObject(const _float& fTimeDelta)
 {
     CGameObject::Update_GameObject(fTimeDelta);
 
-    if (Check_Time(fTimeDelta))
-    {
-        // 시간 다 되면 삭제
+    if (Check_Time(fTimeDelta)) // 시간 다 되면 삭제
         m_bDead = true;
-    }
 
     if (m_bDead == true)
-    {
         return 1;
-    }
 
-    m_pTransformCom->Move_Pos(&m_vBulletDir, 2.f, fTimeDelta);
+    Curve(fTimeDelta);
 
     Engine::Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -102,7 +100,6 @@ HRESULT CMstBullet::Add_Component()
 
     _vec3   vPos;
     dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Monstro", L"Proto_Transform"))->Get_Info(INFO_POS, &vPos);
-    // 방향은 따로 수정 필요함
     dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Monstro", L"Proto_Transform"))->Get_Info(INFO_LOOK, &m_vBulletDir);
 
     m_pTransformCom->Set_Pos(vPos);
@@ -127,6 +124,20 @@ bool CMstBullet::Check_Time(const _float& fTimeDelta)
     }
 
     return false;
+}
+
+void CMstBullet::Curve(const _float& fTimeDelta)
+{
+    // 총알이 포물선을 그리면서 떨어지도록 수정
+    _vec3 vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+    float fY = vPos.y + (m_fPower * m_fAccelTime) - (9.f * m_fAccelTime * m_fAccelTime * 0.5f);
+    m_fAccelTime += 0.007f;
+
+    m_pTransformCom->Set_Pos(vPos.x, fY, vPos.z);
+
+    m_pTransformCom->Move_Pos(&m_vBulletDir, 1.f, fTimeDelta);
 }
 
 void CMstBullet::Free()
