@@ -27,7 +27,7 @@ HRESULT CMonstro::Ready_GameObject()
 
 	m_iHp = 5;
 
-	m_fCallLimit = 7.f;
+	m_fCallLimit = 5.f;
 	m_fSpeed = 10.f;
 
 	m_fPower = 2.f;
@@ -73,8 +73,23 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 	{
 		if (Check_Time(fTimeDelta)) // 일정 시간마다 기믹3 - 큰 점프 발동
 		{
-			m_bUp = true;
-			m_eState = MONSTRO_JUMP;
+			int iRandBum;
+
+			DWORD dwSeed = (time(NULL) % 1000);
+			srand(dwSeed);
+			iRandBum = rand() % 2;
+
+			if (1 == iRandBum)
+			{
+				m_bUp = true;
+				m_eState = MONSTRO_JUMP;
+			}
+			else
+			{
+				m_bBullet = true;
+				m_eState = MONSTRO_ATTACK;
+			}
+			
 			Check_TargetPos();
 		}
 		else
@@ -167,7 +182,6 @@ void CMonstro::MoveTo_Player(const _float& fTimeDelta)
 		m_fAccelTime = 0.f;
 		fY = 3.2f;
 		m_eState = MONSTRO_IDLE;
-		m_bBullet = true; // 추후 삭제
 	}
 
 	m_pTransformCom->Set_Pos(vPos.x, fY, vPos.z);
@@ -244,6 +258,7 @@ void CMonstro::AttackTo_Player()
 		dynamic_cast<CMstBullet*>(m_BulletList.back())->Set_Dir(vDir);
 	}
 
+	m_eState = MONSTRO_IDLE;
 	m_bBullet = false;
 }
 
