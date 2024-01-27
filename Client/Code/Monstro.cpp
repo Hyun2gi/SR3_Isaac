@@ -3,6 +3,8 @@
 
 #include "Export_Utility.h"
 
+#include "MstBullet.h"
+
 CMonstro::CMonstro(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev)
 {
@@ -32,6 +34,7 @@ HRESULT CMonstro::Ready_GameObject()
 	m_fAccelTime = 0.f;
 
 	m_bUp = false;
+	m_bBullet = false; 
 
 	m_eState = MONSTRO_IDLE;
 
@@ -45,23 +48,34 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 	if (3.f < m_fFrame)
 		m_fFrame = 0.f;
 
-	CGameObject::Update_GameObject(fTimeDelta);
+	// Bullet Update
+	if (!m_BulletList.empty())
+	{
+		int iResult = 0;
+		for (auto& iter = m_BulletList.begin();
+			iter != m_BulletList.end();)
+		{
+			iResult = dynamic_cast<CMstBullet*>(*iter)->Update_GameObject(fTimeDelta);
 
-	// 기믹1 - 작은 점프로 플레이어 추적
-	// 가만히 있다가 일정 시간 후 Move로 State 변경
-	// Move State 에서 일정 시간마다 Move true 후 플레이어 위치 체크
-	// 해당 Pos로 작은 점프
-	// 플레이어와 일정 거리가 되었을 때 기믹3 - 플레이어를 향해 총알 발사
-	// 일정 시간마다 기믹2 - 큰 점프 발동
+			if (1 == iResult)
+			{
+				Safe_Release<CGameObject*>(*iter);
+				iter = m_BulletList.erase(iter);
+			}
+			else
+				++iter;
+		}
+	}
+
+	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (MONSTRO_IDLE == m_eState) // 기본 상태일 때
 	{
-		if (Check_Time(fTimeDelta))// && !m_bMove) // 일정 시간마다 기믹3 - 큰 점프 발동
+		if (Check_Time(fTimeDelta)) // 일정 시간마다 기믹3 - 큰 점프 발동
 		{
 			m_bUp = true;
 			m_eState = MONSTRO_JUMP;
 			Check_TargetPos();
-
 		}
 		else
 		{
@@ -73,13 +87,12 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 	else if (MONSTRO_MOVE == m_eState)
-	{
 		MoveTo_Player(fTimeDelta);
-	}
 	else if (MONSTRO_JUMP == m_eState)
-	{
 		JumpTo_Player(fTimeDelta);
-	}
+
+	if (m_bBullet)
+		AttackTo_Player();
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -90,6 +103,13 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 
 void CMonstro::LateUpdate_GameObject()
 {
+	// Bullet LateUpdate
+	if (!m_BulletList.empty())
+	{
+		for (auto& iter : m_BulletList)
+			dynamic_cast<CMstBullet*>(iter)->LateUpdate_GameObject();
+	}
+
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
@@ -136,10 +156,6 @@ HRESULT CMonstro::Add_Component()
 
 void CMonstro::MoveTo_Player(const _float& fTimeDelta)
 {
-	// 한번씩 점프를 하며 플레이어를 향해 추적
-	// Move 모드일 때 일정 시간마다 현재 플레이어의 위치를 체크 후 그 곳으로 작은 점프
-	
-	// 플레이어 위치를 향한 방향 벡터 구하기
 	_vec3 vPos, vDir;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
@@ -151,6 +167,7 @@ void CMonstro::MoveTo_Player(const _float& fTimeDelta)
 		m_fAccelTime = 0.f;
 		fY = 3.2f;
 		m_eState = MONSTRO_IDLE;
+		m_bBullet = true; // 추후 삭제
 	}
 
 	m_pTransformCom->Set_Pos(vPos.x, fY, vPos.z);
@@ -188,6 +205,8 @@ void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 		{
 			vPos.y = 3.2f;
 			m_eState = MONSTRO_IDLE;
+			m_bBullet = true;
+			Check_TargetPos(); // 이걸로 될지?
 		}
 	}
 	m_pTransformCom->Set_Pos(vPos);
@@ -195,6 +214,37 @@ void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 
 void CMonstro::AttackTo_Player()
 {
+	_vec3 vPos, vDir, vRandPos;
+
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	vRandPos = m_vTargetPos; // 플레이어의 원래 위치 벡터
+
+	for (int i = 0; i < 20; ++i)
+	{
+		DWORD dwSeed = (i << 16) | (time(NULL) % 1000);
+		srand(dwSeed);
+
+		if (0 == (rand() % 2))
+		{
+			vRandPos.x += float(rand() % 3);
+			vRandPos.z += float(rand() % 3);
+		}
+		else
+		{
+			vRandPos.x -= float(rand() % 3);
+			vRandPos.z -= float(rand() % 3);
+		}
+
+		vRandPos.y += float(rand() % 2) - 0.4f;
+
+		vDir = vRandPos - vPos;
+
+		m_BulletList.push_back(CMstBullet::Create(m_pGraphicDev));
+		dynamic_cast<CMstBullet*>(m_BulletList.back())->Set_Dir(vDir);
+	}
+
+	m_bBullet = false;
 }
 
 void CMonstro::Check_TargetPos()

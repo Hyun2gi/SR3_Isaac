@@ -29,12 +29,15 @@ private:
 
 private:
 	bool			m_bUp;
+	bool			m_bBullet;
 	float			m_fPower;
 	float			m_fAccelTime;
 
 	_vec3			m_vTargetPos;
 
 	MONSTROSTATE	m_eState;
+
+	list<CGameObject*> m_BulletList;
 
 public:
 	static CMonster*	Create(LPDIRECT3DDEVICE9 pGraphicDev);
