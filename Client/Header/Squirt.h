@@ -20,12 +20,14 @@ private:
 	virtual HRESULT		Add_Component()						override;
 
 	void				Sliding(const _float& fTimeDelta);
-	void				Setting_Direction();
+	void				Check_TargetPos();
 
 private:
 	bool				m_bSliding;
-	//int					m_iRandNum;
 	float				m_fAccel;
+
+	_vec3				m_vTargetPos;
+	_vec3				m_vDir;
 
 public:
 	static CSquirt* Create(LPDIRECT3DDEVICE9 pGraphicDev);
