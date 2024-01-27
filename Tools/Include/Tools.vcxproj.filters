@@ -70,6 +70,9 @@
     <Filter Include="03. Tool\00. ObjectLoad">
       <UniqueIdentifier>{724966bb-ecff-469a-a66f-fb78a2a58246}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. PlacementObject">
+      <UniqueIdentifier>{8c42e1b7-5e41-4456-bd86-3c902f7dfffd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -156,6 +159,9 @@
     <ClInclude Include="..\Header\ObjectLoad.h">
       <Filter>03. Tool\00. ObjectLoad</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\PlacementObject.h">
+      <Filter>02. GameObject\08. PlacementObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -232,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ObjectLoad.cpp">
       <Filter>03. Tool\00. ObjectLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PlacementObject.cpp">
+      <Filter>02. GameObject\08. PlacementObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

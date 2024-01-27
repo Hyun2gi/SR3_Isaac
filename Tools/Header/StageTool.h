@@ -19,6 +19,8 @@ public:
 
 	void	Set_Cursor_Image(int iObjType, int iIndex);
 
+	void	Placement_Object();
+
 private:
 	HRESULT			Ready_Layer_Environment(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_GameLogic(const _tchar* pLayerTag);
@@ -35,6 +37,8 @@ private:
 	CMouseObjectImg* m_pMouseImg;
 
 	_vec3	m_vecPickingPos;
+
+	int	m_iCurObjType, m_iCurObjIndex;
 
 public:
 	static CStageTool* Create(LPDIRECT3DDEVICE9 pGraphicDev);

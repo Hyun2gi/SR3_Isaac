@@ -23,6 +23,7 @@ CStageTool::~CStageTool()
 
 HRESULT CStageTool::Ready_Scene()
 {
+	m_iCurObjType = m_iCurObjIndex = 0;
 	m_pStageTools = new CStageToolGui(g_hWnd, m_pGraphicDev);
 	m_pStageTools->Set_Target_Scene(this);
 
@@ -41,7 +42,7 @@ Engine::_int CStageTool::Update_Scene(const _float& fTimeDelta)
 	m_pStageTools->Update_ImGuiTools();
 
 	_vec3 vecTemp = m_vecPickingPos;
-	vecTemp.y += 0.5f;
+	vecTemp.y += 0.8f;
 
 	dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic", L"MouseObjectImg", L"Proto_Transform"))->Set_Pos(vecTemp);
 
@@ -62,12 +63,22 @@ void CStageTool::Render_Scene()
 
 void CStageTool::Set_Cursor_Image(int iObjType, int iIndex)
 {
+	m_iCurObjType = iObjType;
+	m_iCurObjIndex = iIndex;
+
 	m_pMouseImg = dynamic_cast<CMouseObjectImg*>(Get_GameObject(L"GameLogic", L"MouseObjectImg"));
 
-	string strFileName = "Proto_" + CObjectLoad::GetInstance()->Get_File_Name(iObjType, iIndex);
+	string strFileName = "Proto_" + CObjectLoad::GetInstance()->Get_File_Name(m_iCurObjType, m_iCurObjIndex);
 
 	m_pMouseImg->Set_Cur_Texture_Name(strFileName);
 	m_pMouseImg->Swap_Texture();
+
+}
+
+void CStageTool::Placement_Object()
+{
+	string strFileName = "Proto_" + CObjectLoad::GetInstance()->Get_File_Name(m_iCurObjType, m_iCurObjIndex);
+
 
 }
 
@@ -149,7 +160,10 @@ HRESULT CStageTool::Ready_LightInfo()
 void CStageTool::Key_Input(const _float& fTimeDelta)
 {
 	if (Engine::Get_DIMouseState(DIM_LB) & 0x80)
+	{
+
 		m_vecPickingPos = Picking_OnTerrain();
+	}
 
 	if (Engine::Get_DIMouseMove(DIMS_X))
 	{
