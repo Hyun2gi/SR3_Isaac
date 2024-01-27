@@ -25,8 +25,15 @@ HRESULT CMonstro::Ready_GameObject()
 
 	m_iHp = 5;
 
-	m_fCallLimit = 0.f;
-	m_fSpeed = 1.f;
+	m_fCallLimit = 7.f;
+	m_fSpeed = 10.f;
+
+	m_fPower = 2.f;
+	m_fAccelTime = 0.f;
+
+	m_bUp = false;
+
+	m_eState = MONSTRO_IDLE;
 
 	return S_OK;
 }
@@ -40,6 +47,39 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
+	// 기믹1 - 작은 점프로 플레이어 추적
+	// 가만히 있다가 일정 시간 후 Move로 State 변경
+	// Move State 에서 일정 시간마다 Move true 후 플레이어 위치 체크
+	// 해당 Pos로 작은 점프
+	// 플레이어와 일정 거리가 되었을 때 기믹3 - 플레이어를 향해 총알 발사
+	// 일정 시간마다 기믹2 - 큰 점프 발동
+
+	if (MONSTRO_IDLE == m_eState) // 기본 상태일 때
+	{
+		if (Check_Time(fTimeDelta))// && !m_bMove) // 일정 시간마다 기믹3 - 큰 점프 발동
+		{
+			m_bUp = true;
+			m_eState = MONSTRO_JUMP;
+			Check_TargetPos();
+
+		}
+		else
+		{
+			if (Check_Time(fTimeDelta, 1.f)) // 일정 시간마다 기믹 1 - 작은 점프 발동
+			{
+				m_eState = MONSTRO_MOVE;
+				Check_TargetPos();
+			}
+		}
+	}
+	else if (MONSTRO_MOVE == m_eState)
+	{
+		MoveTo_Player(fTimeDelta);
+	}
+	else if (MONSTRO_JUMP == m_eState)
+	{
+		JumpTo_Player(fTimeDelta);
+	}
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -94,16 +134,75 @@ HRESULT CMonstro::Add_Component()
 	return S_OK;
 }
 
-void CMonstro::MoveTo_Player()
+void CMonstro::MoveTo_Player(const _float& fTimeDelta)
 {
+	// 한번씩 점프를 하며 플레이어를 향해 추적
+	// Move 모드일 때 일정 시간마다 현재 플레이어의 위치를 체크 후 그 곳으로 작은 점프
+	
+	// 플레이어 위치를 향한 방향 벡터 구하기
+	_vec3 vPos, vDir;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	float fY = vPos.y + (m_fPower * m_fAccelTime) - (9.f * m_fAccelTime * m_fAccelTime * 0.5f);
+	m_fAccelTime += 0.02f;
+
+	if (fY < 3.0f)
+	{
+		m_fAccelTime = 0.f;
+		fY = 3.2f;
+		m_eState = MONSTRO_IDLE;
+	}
+
+	m_pTransformCom->Set_Pos(vPos.x, fY, vPos.z);
+
+	vDir = m_vTargetPos - vPos;
+
+	D3DXVec3Normalize(&vDir, &vDir);
+	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+
 }
 
-void CMonstro::JumpTo_Player()
+void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 {
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	if (m_bUp)
+	{
+		if (vPos.y >= 10.f)
+		{
+			m_bUp = false;
+			vPos = m_vTargetPos;
+			vPos.y = 80.f;
+		}
+		else
+		{
+			vPos.y += 0.9f;
+		}
+	}
+	else
+	{
+		if (vPos.y > 3.2f)
+			vPos.y -= 0.7f;
+		else
+		{
+			vPos.y = 3.2f;
+			m_eState = MONSTRO_IDLE;
+		}
+	}
+	m_pTransformCom->Set_Pos(vPos);
 }
 
 void CMonstro::AttackTo_Player()
 {
+}
+
+void CMonstro::Check_TargetPos()
+{
+	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+
+	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
+
 }
 
 CMonster* CMonstro::Create(LPDIRECT3DDEVICE9 pGraphicDev)
