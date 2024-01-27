@@ -12,25 +12,30 @@ class CCalculator;
 
 END
 
-class CMouseObjectImg :	public Engine::CGameObject
+class CPlacementObject : public Engine::CGameObject
 {
 private:
-	explicit CMouseObjectImg(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CMouseObjectImg(const CMouseObjectImg& rhs);
-	virtual ~CMouseObjectImg();
+	explicit CPlacementObject(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CPlacementObject(const CPlacementObject& rhs);
+	virtual ~CPlacementObject();
 
 public:
-	virtual HRESULT Ready_GameObject()						 override;
+	HRESULT Ready_GameObject(wstring wstrName, int iType, int iIndex);
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
-	void Set_Cur_Texture_Name(string wstrTexture) { m_strCurTextureName = wstrTexture; }
+	void Set_TextureName(wstring wstrName) { m_wstrTextureName = wstrName; }
 
-	HRESULT Swap_Texture();
+	void Set_Obj_State(int iType, int iIndex) 
+	{
+		m_iObjType = iType;
+		m_iIndex = iIndex;
+	}
 
 private:
 	HRESULT			Add_Component();
+	HRESULT			Add_TextureComponent();
 
 private:
 	Engine::CRcTex*			m_pBufferCom;
@@ -38,12 +43,13 @@ private:
 	Engine::CTexture*		m_pTextureCom;
 	Engine::CCalculator*	m_pCalculCom;
 
-	string	m_strCurTextureName;
-
-	vector<wstring> m_vecTextureNames;
+	wstring m_wstrTextureName;
+	wstring m_wstrProtoName;
+	int m_iObjType;
+	int m_iIndex;
 
 public:
-	static CMouseObjectImg*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
+	static CPlacementObject*		Create(LPDIRECT3DDEVICE9	pGraphicDev, wstring wstrName, int iType, int iIndex);
 
 private:
 	virtual void Free() override;

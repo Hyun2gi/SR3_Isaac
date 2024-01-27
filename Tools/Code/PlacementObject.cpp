@@ -1,32 +1,37 @@
 #include "../Include/stdafx.h"
-#include "..\Header\MouseObjectImg.h"
+#include "..\Header\PlacementObject.h"
 
 #include "Export_Utility.h"
 
-CMouseObjectImg::CMouseObjectImg(LPDIRECT3DDEVICE9 pGraphicDev)
+CPlacementObject::CPlacementObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev)
 {
 }
 
-CMouseObjectImg::CMouseObjectImg(const CMouseObjectImg& rhs)
+CPlacementObject::CPlacementObject(const CPlacementObject& rhs)
 	: Engine::CGameObject(rhs)
 {
 
 }
 
-CMouseObjectImg::~CMouseObjectImg()
+CPlacementObject::~CPlacementObject()
 {
 }
 
-HRESULT CMouseObjectImg::Ready_GameObject()
+HRESULT CPlacementObject::Ready_GameObject(wstring wstrName, int iType, int iIndex)
 {
+	m_wstrTextureName = wstrName;
+	m_wstrProtoName = L"Proto_" + wstrName;
+	m_iObjType = iType;
+	m_iIndex = iIndex;
+
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	
+	FAILED_CHECK_RETURN(Add_TextureComponent(), E_FAIL);
 
 	return S_OK;
 }
 
-Engine::_int CMouseObjectImg::Update_GameObject(const _float& fTimeDelta)
+Engine::_int CPlacementObject::Update_GameObject(const _float& fTimeDelta)
 {
 	Engine::Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -36,12 +41,12 @@ Engine::_int CMouseObjectImg::Update_GameObject(const _float& fTimeDelta)
 	return 0;
 }
 
-void CMouseObjectImg::LateUpdate_GameObject()
+void CPlacementObject::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 }
 
-void CMouseObjectImg::Render_GameObject()
+void CPlacementObject::Render_GameObject()
 {	
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
@@ -52,47 +57,13 @@ void CMouseObjectImg::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
-HRESULT CMouseObjectImg::Swap_Texture()
-{
-	Safe_Release(m_pTextureCom);
-
-	wstring wstr;
-	wstr.assign(m_strCurTextureName.begin(), m_strCurTextureName.end());
-
-	int iIndex = 0;
-
-	auto found = find(m_vecTextureNames.begin(), m_vecTextureNames.end(), wstr);
-
-	if (found == m_vecTextureNames.end())
-	{
-		m_vecTextureNames.push_back(wstr);
-
-		iIndex = m_vecTextureNames.size() - 1;
-	}
-	else
-	{
-		iIndex = m_vecTextureNames.end() - found - 1;
-	}
-
-	CComponent* pComponent = nullptr;
-
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(wstr.c_str()));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ m_vecTextureNames[iIndex].c_str() , pComponent});
-}
-
-HRESULT CMouseObjectImg::Add_Component()
+HRESULT CPlacementObject::Add_Component()
 {
 	CComponent*		pComponent = nullptr;
 			
 	pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(Engine::Clone_Proto(L"Proto_RcTex"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
-
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_Object_0"));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_Object_0", pComponent });
-	m_vecTextureNames.push_back(L"Proto_Object_0");
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -105,21 +76,32 @@ HRESULT CMouseObjectImg::Add_Component()
 	return S_OK;
 }
 
-CMouseObjectImg * CMouseObjectImg::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+HRESULT CPlacementObject::Add_TextureComponent()
 {
-	CMouseObjectImg *	pInstance = new CMouseObjectImg(pGraphicDev);
+	CComponent* pComponent = nullptr;
 
-	if (FAILED(pInstance->Ready_GameObject()))
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(m_wstrProtoName.c_str()));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ m_wstrProtoName.c_str(), pComponent});
+
+	return S_OK;
+}
+
+CPlacementObject * CPlacementObject::Create(LPDIRECT3DDEVICE9	pGraphicDev, wstring wstrName, int iType, int iIndex)
+{
+	CPlacementObject *	pInstance = new CPlacementObject(pGraphicDev);
+
+	if (FAILED(pInstance->Ready_GameObject(wstrName, iType, iIndex)))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("MouseObjectImg Create Failed");
+		MSG_BOX("PlacementObject Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
 }
 
-void CMouseObjectImg::Free()
+void CPlacementObject::Free()
 {	
 	__super::Free();
 }

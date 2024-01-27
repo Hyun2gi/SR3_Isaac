@@ -111,9 +111,9 @@ void CStageToolGui::Update_ImGuiTools()
 
     ImGui::NewLine();
     ImGui::Text("Position: ");
-    ImGui::Text("x: %f", m_vecPickingPos.x);
-    ImGui::Text("y: %f", m_vecPickingPos.y);
-    ImGui::Text("z: %f", m_vecPickingPos.z);
+    ImGui::Text("x: %f", m_vPickingPos.x);
+    ImGui::Text("y: %f", m_vPickingPos.y);
+    ImGui::Text("z: %f", m_vPickingPos.z);
 
     // 현재까지 지정한 맵 정보를 저장한다.
     if (ImGui::Button("Save"))

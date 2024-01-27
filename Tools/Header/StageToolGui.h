@@ -19,7 +19,7 @@ public:
     void Update_ImGuiTools();
     void Render_ImGuiTools();
 
-    void	Set_Picking_Pos(_vec3 vPos) { m_vecPickingPos = vPos; }
+    void	Set_Picking_Pos(_vec3 vPos) { m_vPickingPos = vPos; }
     void    Set_Target_Scene(CStageTool* pScene) { m_pTargetScene = pScene; }
     void    Popup_Object_Gui();
     void    Create_Image_Buttons();
@@ -30,7 +30,7 @@ private:
     bool m_bIsOpend;
     int m_iSelectedStageIndex;
 
-    _vec3	m_vecPickingPos;
+    _vec3	m_vPickingPos;
 
     CStageTool* m_pTargetScene;
 
