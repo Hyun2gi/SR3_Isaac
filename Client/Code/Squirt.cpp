@@ -61,6 +61,10 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 void CSquirt::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
+
+	_vec3	vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	__super::Compute_ViewZ(&vPos);
 }
 
 void CSquirt::Render_GameObject()

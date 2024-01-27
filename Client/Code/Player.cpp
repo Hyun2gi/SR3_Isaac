@@ -39,8 +39,6 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		m_fFrame = 0.f;
 
 	Key_Input(fTimeDelta);
-	
-	Engine::Add_RenderGroup(RENDER_ALPHA, this);
 
 	// ÃÑ¾Ë update
 	if (!m_PlayerBulletList.empty())
@@ -67,6 +65,9 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
+
+	Engine::Add_RenderGroup(RENDER_ALPHA, this);
+
 	return 0;
 }
 
@@ -86,12 +87,17 @@ void CPlayer::LateUpdate_GameObject()
 	__super::LateUpdate_GameObject();
 
 	Height_OnTerrain();
+
+	_vec3	vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	__super::Compute_ViewZ(&vPos);
 }
 
 void CPlayer::Render_GameObject()
 {	
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	m_pTextureCom->Set_Texture((_uint)m_fFrame);
 
@@ -103,9 +109,9 @@ void CPlayer::Render_GameObject()
 			dynamic_cast<CPlayerBullet*>(iter)->LateUpdate_GameObject();
 		}
 	}
-
 	m_pBufferCom->Render_Buffer();
-
+	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 HRESULT CPlayer::Add_Component()
