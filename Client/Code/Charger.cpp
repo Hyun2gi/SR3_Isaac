@@ -1,55 +1,57 @@
 #include "stdafx.h"
-#include "Squirt.h"
+#include "Charger.h"
 
 #include "Export_Utility.h"
 
-CSquirt::CSquirt(LPDIRECT3DDEVICE9 pGraphicDev)
+CCharger::CCharger(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev)
 {
 }
 
-CSquirt::CSquirt(const CSquirt& rhs)
+CCharger::CCharger(const CCharger& rhs)
 	: CMonster(rhs)
 {
 }
 
-CSquirt::~CSquirt()
+CCharger::~CCharger()
 {
 }
 
-HRESULT CSquirt::Ready_GameObject()
+HRESULT CCharger::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
+	m_pTransformCom->Set_Pos(10.f, 0.5f, 10.f);
 
-	m_iHp = 6;
+	m_iHp = 3;
 
-	m_fCallLimit = 3;
+	m_fCallLimit = 0.f;
 	m_fSpeed = 2.f;
 
-	m_bSliding = false;
-	m_fAccel = 10.f;
+	m_eState = CHARGER_END;
 
 	return S_OK;
 }
 
-_int CSquirt::Update_GameObject(const _float& fTimeDelta)
+_int CCharger::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += 2.f * fTimeDelta;
+	m_fFrame += 4.f * fTimeDelta * 1.5;
 
-	if (2.f < m_fFrame)
+	if (4.f < m_fFrame)
 		m_fFrame = 0.f;
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (Check_Time(fTimeDelta) && !m_bSliding)
-	{
-		Check_TargetPos();
-		m_bSliding = true;
-	}
+	Check_Range();
 
-	if (m_bSliding)
-		Sliding(fTimeDelta);
+	if (CHARGER_IDLE == m_eState)
+		m_fSpeed = 2.f;
+	else if (CHARGER_ATTACK == m_eState)
+		m_fSpeed = 5.f;
+
+	_vec3 vTargetPos;
+	m_pTargetTransCom->Get_Info(INFO_POS, &vTargetPos);
+
+	m_pTransformCom->Chase_Target(&vTargetPos, m_fSpeed, fTimeDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -58,12 +60,12 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	return 0;
 }
 
-void CSquirt::LateUpdate_GameObject()
+void CCharger::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 }
 
-void CSquirt::Render_GameObject()
+void CCharger::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -77,7 +79,7 @@ void CSquirt::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-HRESULT CSquirt::Add_Component()
+HRESULT CCharger::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
@@ -85,9 +87,9 @@ HRESULT CSquirt::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_SquirtTexture"));
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ChargerTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_SquirtTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_ChargerTexture", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -100,44 +102,43 @@ HRESULT CSquirt::Add_Component()
 	return S_OK;
 }
 
-void CSquirt::Sliding(const _float& fTimeDelta)
+void CCharger::Check_Range()
 {
-	D3DXVec3Normalize(&m_vDir, &m_vDir);
-	m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed * m_fAccel, fTimeDelta);
+	_vec3 vTargetPos, vPos;
 
-	m_fAccel -= 0.1;
+	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+	m_pTargetTransCom->Get_Info(INFO_POS, &vTargetPos);
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	if (m_fAccel <= 0.f)
+	float fDistance =
+		(fabs(vTargetPos.x - vPos.x) * fabs(vTargetPos.x - vPos.x)) +
+		(fabs(vTargetPos.y - vPos.y) * fabs(vTargetPos.y - vPos.y));
+
+	if (100 < fDistance) // 범위에 속하지 않을 때
 	{
-		m_bSliding = false;
-		m_fAccel = 10.f;
+		m_eState = CHARGER_IDLE;
+	}
+	else // 범위에 속할 때
+	{
+		m_eState = CHARGER_ATTACK;
 	}
 }
 
-void CSquirt::Check_TargetPos()
+CCharger* CCharger::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
-
-	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
-
-	m_vDir = m_vTargetPos - m_pTransformCom->m_vInfo[INFO_POS];
-}
-
-CSquirt* CSquirt::Create(LPDIRECT3DDEVICE9 pGraphicDev)
-{
-	CSquirt* pInstance = new CSquirt(pGraphicDev);
+	CCharger* pInstance = new CCharger(pGraphicDev);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("Squirt Create Failed");
+		MSG_BOX("Charger Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
 }
 
-void CSquirt::Free()
+void CCharger::Free()
 {
 	__super::Free();
 }
