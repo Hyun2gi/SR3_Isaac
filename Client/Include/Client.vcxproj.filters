@@ -67,6 +67,12 @@
     <Filter Include="02. GameObject\01. Monster\04. Squirt">
       <UniqueIdentifier>{02626e64-7156-4199-9087-e1896ca1c9f0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Bullet">
+      <UniqueIdentifier>{bb30728a-480d-4c87-aeb6-ad7927022be9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Bullet\00. PlayerBullet">
+      <UniqueIdentifier>{6f667c1f-8d34-4d98-9977-5514742d0c2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -132,6 +138,9 @@
     <ClInclude Include="..\Header\Squirt.h">
       <Filter>02. GameObject\01. Monster\04. Squirt</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\PlayerBullet.h">
+      <Filter>02. GameObject\07. Bullet\00. PlayerBullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -187,6 +196,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Squirt.cpp">
       <Filter>02. GameObject\01. Monster\04. Squirt</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PlayerBullet.cpp">
+      <Filter>02. GameObject\07. Bullet\00. PlayerBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
