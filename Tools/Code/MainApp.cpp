@@ -2,6 +2,7 @@
 #include "..\Header\MainApp.h"
 #include "Logo.h"
 #include "StageTool.h"
+#include "ObjectLoad.h"
 
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr)
@@ -102,6 +103,8 @@ CMainApp * CMainApp::Create()
 
 void CMainApp::Free()
 {
+	CObjectLoad::GetInstance()->DestroyInstance();
+
 	Engine::Safe_Release(m_pDeviceClass);
 	Engine::Safe_Release(m_pManagementClass);
 	Engine::Safe_Release(m_pGraphicDev);

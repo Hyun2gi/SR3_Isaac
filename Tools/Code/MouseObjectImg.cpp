@@ -28,10 +28,10 @@ HRESULT CMouseObjectImg::Ready_GameObject()
 
 Engine::_int CMouseObjectImg::Update_GameObject(const _float& fTimeDelta)
 {
-
-	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+	Engine::Add_RenderGroup(RENDER_ALPHA, this);
 
 	CGameObject::Update_GameObject(fTimeDelta);
+	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
 	return 0;
 }
@@ -47,45 +47,45 @@ void CMouseObjectImg::Render_GameObject()
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	
 	m_pTextureCom->Set_Texture(0);
-	FAILED_CHECK_RETURN(SetUp_Material(), );
 
 	m_pBufferCom->Render_Buffer();
 	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
+}
+
+HRESULT CMouseObjectImg::Swap_Texture()
+{
+	Safe_Release(m_pTextureCom);
+
+	wstring wstr;
+	wstr.assign(m_strCurTextureName.begin(), m_strCurTextureName.end());
+
+	CComponent* pComponent = nullptr;
+
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(wstr.c_str()));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ wstr.c_str() , pComponent});
 }
 
 HRESULT CMouseObjectImg::Add_Component()
 {
 	CComponent*		pComponent = nullptr;
 			
-	pComponent = m_pBufferCom = dynamic_cast<CTerrainTex*>(Engine::Clone_Proto(L"Proto_TerrainTex"));
+	pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(Engine::Clone_Proto(L"Proto_RcTex"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_TerrainTex", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_TerrainTexture"));
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_Object_0"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_TerrainTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_Object_0", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
+
+	pComponent = m_pCalculCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Calculator", pComponent });
 		
-	return S_OK;
-}
-
-HRESULT CMouseObjectImg::SetUp_Material()
-{
-	D3DMATERIAL9			tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
-
-	tMtrl.Diffuse  = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.f);
-	tMtrl.Specular  = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-
-	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 0.f);
-	tMtrl.Power = 0.f;
-
-	m_pGraphicDev->SetMaterial(&tMtrl);
-
 	return S_OK;
 }
 
@@ -96,7 +96,7 @@ CMouseObjectImg * CMouseObjectImg::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("Terrain Create Failed");
+		MSG_BOX("MouseObjectImg Create Failed");
 		return nullptr;
 	}
 
