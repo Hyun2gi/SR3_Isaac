@@ -140,6 +140,17 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		m_vAt += vLength;
 	}
 
+	if (Engine::Get_DIKeyState(DIK_LCONTROL) & 0x80)
+	{
+		_vec3		vUp;
+		memcpy(&vUp, &matCamWorld.m[1][0], sizeof(_vec3));
+
+		_vec3	vLength = *D3DXVec3Normalize(&vUp, &vUp) * -5.f * fTimeDelta;
+
+		m_vEye += vLength;
+		m_vAt += vLength;
+	}
+
 	if (false == m_bFix)
 		return;
 }

@@ -9,14 +9,15 @@ class CPlacementObject;
 class CStageTool : public Engine::CScene
 {
 private:
-	const float SET_Y_POS = 0.8f;
-
 	struct PlacementObj
 	{
 		int iType;
 		int iIndex;
 		wstring wstrName;
 	};
+
+private:
+	const float SET_Y_POS = 0.8f;
 
 private:
 	explicit CStageTool(LPDIRECT3DDEVICE9 pGraphicDev);

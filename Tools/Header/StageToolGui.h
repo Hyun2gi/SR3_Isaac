@@ -24,6 +24,7 @@ public:
     void    Popup_Object_Gui();
     void    Create_Image_Buttons();
 
+
 private:
     LPDIRECT3DDEVICE9 m_pGraphicDev;
 
