@@ -97,15 +97,6 @@ void CStageToolGui::Update_ImGuiTools()
         ImGui::ListBox("##", &m_iSelectedStageIndex, items.data(), vecString.size());
     ImGui::EndListBox();
 
-    //리스트 박스 클릭 시 실행되는 이벤트(0 = left, 1 = right, 2 = middle)
-    if (ImGui::IsItemClicked())
-    {
-        //기존에 생성된 정보를 지운당!
-        m_pTargetScene->Clear_Placement_Object();
-        //여기에 파일 로드 후 화면에 출력하기
-        Load_Stage_Design();
-    }
-
     ImGui::NewLine();
     ImGui::Text("Position: ");
     ImGui::Text("x: %f", m_vPickingPos.x);
@@ -135,6 +126,14 @@ void CStageToolGui::Update_ImGuiTools()
 
         // 파일 스트림을 닫습니다.
         fout.close();
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Load"))
+    {
+        m_pTargetScene->Clear_Placement_Object();
+        Load_Stage_Design();
     }
 
     ImGui::End();

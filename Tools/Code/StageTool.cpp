@@ -28,9 +28,9 @@ HRESULT CStageTool::Ready_Scene()
 	m_pStageTools = new CStageToolGui(g_hWnd, m_pGraphicDev);
 	m_pStageTools->Set_Target_Scene(this);
 
-	//해당 씬은 GameObject 레이어도 있으나, Ready가 필요하지않아 함수는 존재하지 않는다
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"GameObject"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 
 	return S_OK;
@@ -118,6 +118,18 @@ HRESULT CStageTool::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 	return S_OK;
 }
 
+HRESULT CStageTool::Ready_Layer_GameObject(const _tchar* pLayerTag)
+{
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	Engine::CGameObject* pGameObject = nullptr;
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
+
+	return S_OK;
+}
+
 HRESULT CStageTool::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
@@ -132,6 +144,9 @@ HRESULT CStageTool::Ready_Layer_UI(const _tchar* pLayerTag)
 
 void CStageTool::Create_Placement_Object()
 {
+	if (m_mapLayer.find(L"GameObject") == m_mapLayer.end())
+		Ready_Layer_GameObject(L"GameObject");
+
 	string strFileName = CObjectLoad::GetInstance()->Get_File_Name(m_iCurObjType, m_iCurObjIndex);
 
 	wstring wstr;
@@ -142,7 +157,7 @@ void CStageTool::Create_Placement_Object()
 
 	CGameObject* pPlacementObj;
 	pPlacementObj = CPlacementObject::Create(m_pGraphicDev, tObj.wstrName, m_iCurObjType, m_iCurObjIndex);
-	m_mapLayer[L"GameObject"]->Add_GameObject(tObj.wstrName.c_str(), pPlacementObj);
+	m_mapLayer.at(L"GameObject")->Add_GameObject(tObj.wstrName.c_str(), pPlacementObj);
 
 	_vec3 vTemp = m_vPickingPos;
 	vTemp.y += SET_Y_POS;
@@ -151,6 +166,9 @@ void CStageTool::Create_Placement_Object()
 
 void CStageTool::Create_Placement_Object(int iObjType, int iIndex, float x, float y, float z)
 {
+	if (m_mapLayer.find(L"GameObject") == m_mapLayer.end())
+		Ready_Layer_GameObject(L"GameObject");
+
 	string strFileName = CObjectLoad::GetInstance()->Get_File_Name(iObjType, iIndex);
 
 	wstring wstr;
@@ -161,7 +179,7 @@ void CStageTool::Create_Placement_Object(int iObjType, int iIndex, float x, floa
 
 	CGameObject* pPlacementObj;
 	pPlacementObj = CPlacementObject::Create(m_pGraphicDev, tObj.wstrName, m_iCurObjType, m_iCurObjIndex);
-	m_mapLayer[L"GameLogic"]->Add_GameObject(tObj.wstrName.c_str(), pPlacementObj);
+	m_mapLayer.at(L"GameObject")->Add_GameObject(tObj.wstrName.c_str(), pPlacementObj);
 
 	_vec3 vTemp(x, y, z);
 	dynamic_cast<CTransform*>(pPlacementObj->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS] = vTemp;
@@ -170,8 +188,7 @@ void CStageTool::Create_Placement_Object(int iObjType, int iIndex, float x, floa
 void CStageTool::Clear_Placement_Object()
 {
 	m_vecPlacementObj.clear();
-	//TODO: Free를 public으로 바꾸던가, 레이어의 Free를 대신할 무언가를 만들던가 해야함
-	//m_mapLayer[L"GameObject"]->Free();
+	Delete_Layer(L"GameObject");
 }
 
 void CStageTool::Key_Input(const _float& fTimeDelta)
