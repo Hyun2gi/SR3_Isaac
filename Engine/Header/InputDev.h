@@ -23,6 +23,13 @@ public:
 	{	
 		return *(((_long*)&m_tMouseState) + eMouseState);	
 	}
+
+	bool Key_Pressing(_ubyte byKeyID);
+	bool Key_Pressing(MOUSEKEYSTATE eMouse);
+	bool Key_Down(_ubyte byKeyID);
+	bool Key_Down(MOUSEKEYSTATE eMouse);
+	bool Key_Up(_ubyte byKeyID);
+	bool Key_Up(MOUSEKEYSTATE eMouse);
 	
 public:
 	HRESULT Ready_InputDev(HINSTANCE hInst, HWND hWnd);
@@ -37,7 +44,10 @@ private:
 
 private:
 	_byte					m_byKeyState[256];		// 키보드에 있는 모든 키값을 저장하기 위한 변수
+	_byte					m_byOldKeyState[256];		// 키보드에 있는 모든 키값을 저장하기 위한 변수
+	
 	DIMOUSESTATE			m_tMouseState;	
+	DIMOUSESTATE			m_tOldMouseState;	
 
 public:
 	virtual void	Free(void);

@@ -16,7 +16,7 @@ void CRenderer::Add_RenderGroup(RENDERID eID, CGameObject * pGameObject)
 {
 	if (RENDER_END <= eID || nullptr == pGameObject)
 		return;
-
+		
 	m_RenderGroup[eID].push_back(pGameObject);
 	pGameObject->AddRef();
 
@@ -27,6 +27,7 @@ void CRenderer::Render_GameObject(LPDIRECT3DDEVICE9 & pGraphicDev)
 	Render_Priority(pGraphicDev);
 	Render_NonAlpha(pGraphicDev);
 	Render_Alpha(pGraphicDev);
+	Render_Alpha_Sorting(pGraphicDev);
 	Render_UI(pGraphicDev);
 
 	Clear_RenderGroup();
@@ -77,6 +78,27 @@ void CRenderer::Render_Alpha(LPDIRECT3DDEVICE9 & pGraphicDev)
 		iter->Render_GameObject();
 
 	//pGraphicDev->SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+}
+
+void CRenderer::Render_Alpha_Sorting(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+
+	pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
+	m_RenderGroup[RENDER_ALPHA_SORTING].sort([](CGameObject* pDst, CGameObject* pSrc)->bool
+		{
+			return pDst->Get_ViewZ() > pSrc->Get_ViewZ();
+		});
+
+	for (auto& iter : m_RenderGroup[RENDER_ALPHA_SORTING])
+		iter->Render_GameObject();
+
+	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 

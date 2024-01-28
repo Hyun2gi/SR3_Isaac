@@ -57,6 +57,76 @@ void Engine::CInputDev::Update_InputDev(void)
 	m_pMouse->GetDeviceState(sizeof(m_tMouseState), &m_tMouseState);
 }
 
+bool CInputDev::Key_Pressing(_ubyte byKeyID)
+{
+	m_byOldKeyState[byKeyID] = m_byKeyState[byKeyID];
+
+	return (Get_DIKeyState(byKeyID) & 0x80);
+}
+
+bool CInputDev::Key_Pressing(MOUSEKEYSTATE eMouse)
+{
+	m_tOldMouseState.rgbButtons[eMouse] = m_tMouseState.rgbButtons[eMouse];
+
+	return (Get_DIMouseState(eMouse) & 0x80);
+}
+
+bool CInputDev::Key_Down(_ubyte byKeyID)
+{
+	if (!m_byOldKeyState[byKeyID] && (Get_DIKeyState(byKeyID) & 0x80))
+	{
+		m_byOldKeyState[byKeyID] = !m_byOldKeyState[byKeyID];
+
+		return true;
+	}
+
+	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
+
+	return false;
+}
+
+bool CInputDev::Key_Down(MOUSEKEYSTATE eMouse)
+{
+	if (!m_tOldMouseState.rgbButtons[eMouse] && (Get_DIMouseState(eMouse) & 0x80))
+	{
+		m_tOldMouseState.rgbButtons[eMouse] = !m_tOldMouseState.rgbButtons[eMouse];
+
+		return true;
+	}
+
+	m_pMouse->GetDeviceState(sizeof(m_tOldMouseState), &m_tOldMouseState);
+
+	return false;
+}
+
+bool CInputDev::Key_Up(_ubyte byKeyID)
+{
+	if (m_byOldKeyState[byKeyID] && !(Get_DIKeyState(byKeyID) & 0x80))
+	{
+		m_byOldKeyState[byKeyID] = !m_byOldKeyState[byKeyID];
+
+		return true;
+	}
+
+	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
+
+	return false;
+}
+
+bool CInputDev::Key_Up(MOUSEKEYSTATE eMouse)
+{
+	if (m_tOldMouseState.rgbButtons[eMouse] && !(Get_DIMouseState(eMouse) & 0x80))
+	{
+		m_tOldMouseState.rgbButtons[eMouse] = !m_tOldMouseState.rgbButtons[eMouse];
+
+		return true;
+	}
+
+	m_pMouse->GetDeviceState(sizeof(m_tOldMouseState), &m_tOldMouseState);
+
+	return false;
+}
+
 void Engine::CInputDev::Free(void)
 {
 	Safe_Release(m_pKeyBoard);
