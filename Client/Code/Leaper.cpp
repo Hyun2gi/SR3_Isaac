@@ -36,23 +36,23 @@ HRESULT CLeaper::Ready_GameObject()
 	m_fPower = 1.8f;
 	m_fAccelTime = 0.f;
 
-	m_eState = LEAPER_IDLE;
+	m_ePreState = LEAPER_END;
 
 	return S_OK;
 }
 
 _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += 8.f * fTimeDelta * 0.5f;
+	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
 
-	if (8.f < m_fFrame)
+	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (Check_Time(fTimeDelta, 5.f))
 	{
-		m_eState = LEAPER_UP;
+		m_eCurState = LEAPER_UP;
 		m_bJump = true;
 		Check_TargetPos();
 	}
@@ -73,6 +73,7 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 		{
 			MoveTo_Random(fTimeDelta);
 		}
+		m_eCurState = LEAPER_IDLE;
 	}
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
@@ -84,6 +85,8 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 
 void CLeaper::LateUpdate_GameObject()
 {
+	Motion_Change();
+
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
@@ -113,9 +116,24 @@ HRESULT CLeaper::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
+#pragma region Texture
+
+	// IDLE
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_LeaperTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_LeaperTexture", pComponent });
+
+	// UP
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_LeaperUpTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_LeaperUpTexture", pComponent });
+
+	// DOWN
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_LeaperDownTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_LeaperDownTexture", pComponent });
+
+#pragma endregion Texture
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -126,6 +144,37 @@ HRESULT CLeaper::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
 	return S_OK;
+}
+
+void CLeaper::Motion_Change()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		m_fFrame = 0.f;
+
+		switch (m_eCurState)
+		{
+		case CLeaper::LEAPER_IDLE:
+			m_iPicNum = 8;
+			m_fFrameSpeed = 0.5f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Leaper", L"Proto_LeaperTexture"));
+			break;
+
+		case CLeaper::LEAPER_UP:
+			m_iPicNum = 2;
+			m_fFrameSpeed = 0.1f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Leaper", L"Proto_LeaperUpTexture"));
+			break;
+
+		case CLeaper::LEAPER_DOWN:
+			m_iPicNum = 2;
+			m_fFrameSpeed = 0.1f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Leaper", L"Proto_LeaperDownTexture"));
+			break;
+
+		}
+		m_ePreState = m_eCurState;
+	}
 }
 
 void CLeaper::Change_Dir(const _float& fTimeDelta)
@@ -169,11 +218,11 @@ void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	if (LEAPER_UP == m_eState)
+	if (LEAPER_UP == m_eCurState)
 	{
 		if (vPos.y >= 10.f)
 		{
-			m_eState = LEAPER_DOWN;
+			m_eCurState = LEAPER_DOWN;
 			vPos = m_vTargetPos;
 			vPos.y = 50.f;
 		}
@@ -182,7 +231,7 @@ void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 			vPos.y += 1.f;
 		}
 	}
-	else if (LEAPER_DOWN == m_eState)
+	else if (LEAPER_DOWN == m_eCurState)
 	{
 		if (vPos.y > 1.f)
 		{
@@ -191,7 +240,7 @@ void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 		else
 		{
 			vPos.y = 1.f;
-			m_eState = LEAPER_IDLE;
+			m_eCurState = LEAPER_IDLE;
 			m_bJump = false;
 		}
 	}
