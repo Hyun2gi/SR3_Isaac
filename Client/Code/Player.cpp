@@ -26,6 +26,13 @@ HRESULT CPlayer::Ready_GameObject()
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_ePreState = P_END;
+
+	// 딜레이 시간 초기화
+	m_fShootDelayTime = 0;
+	m_fDelayTime = 0; 
+	m_bKeyBlock = false;
+	m_fSpriteSpeed = 1.5f;
+
 	//m_pTransformCom->m_vScale = { 2.f, 1.f, 1.f };
 
 	return S_OK;
@@ -33,13 +40,38 @@ HRESULT CPlayer::Ready_GameObject()
 
 Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += m_fPicNum * fTimeDelta * 1.5f;
+	m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
 
-	if (m_fPicNum < m_fFrame)
-		m_fFrame = 0.f;
+	// P_THUMBS_UP 일때는 처음 스프라이트로 돌아가면 안됨
+	if (m_fPicNum < m_fFrame && m_eCurState != P_THUMBS_UP)
+	{
+		m_fFrame = 0.f;	
+	}
 
-	Key_Input(fTimeDelta);
+	if (m_eCurState == P_THUMBS_UP)
+	{
+		m_fDelayTime += fTimeDelta;
 
+		if (m_fFrame > 1)
+		{
+			m_fFrame = 1;
+		}
+
+		// 2초 동안 따봉
+		if (m_fDelayTime > 2)
+		{
+			m_eCurState = P_IDLE;
+			m_fDelayTime = 0; // 딜레이 시간 초기화
+			m_fFrame = 0.f;
+			m_bKeyBlock = false; // key 입력 활성화
+		}
+	}
+		
+	if (m_bKeyBlock != true)
+	{
+		Key_Input(fTimeDelta);
+	}
+	
 	// 총알 update
 	if (!m_PlayerBulletList.empty())
 	{
@@ -101,14 +133,6 @@ void CPlayer::Render_GameObject()
 
 	m_pTextureCom->Set_Texture((_uint)m_fFrame);
 
-	// 총알 출력
-	if (!m_PlayerBulletList.empty())
-	{
-		for (auto& iter : m_PlayerBulletList)
-		{
-			dynamic_cast<CPlayerBullet*>(iter)->LateUpdate_GameObject();
-		}
-	}
 	m_pBufferCom->Render_Buffer();
 	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
@@ -140,9 +164,14 @@ HRESULT CPlayer::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_LEFT", pComponent });
 
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_THUMBS_UP"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_THUMBS_UP", pComponent });
+
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_IDLE"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_IDLE", pComponent });
+
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -203,18 +232,46 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		D3DXVec3Normalize(&vDir, &vDir);
 		m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
 	}
+	else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
+	{
+		m_eCurState = P_THUMBS_UP;
+	
+	}
 	else
 	{
 		m_eCurState = P_IDLE;
 	}
 
+	//총을 쏘고 있을때 바로 이미지가 바껴서 이미지가 잠깐 안바뀌게
+	if (m_fShootDelayTime > 0 && m_fShootDelayTime < 7)
+	{
+		m_eCurState = P_SHOOTWALK;
+	}
+
+	// 총 delay는 누르지 않고 있어도 카운트 해야하기 때문에 돌려주기
+	if (m_fShootDelayTime != 0)
+	{
+		m_fShootDelayTime++;
+
+		if (m_fShootDelayTime > 10)
+		{
+			m_fShootDelayTime = 0;
+		}
+	}
+
 	// 총알 발사
 	if (Engine::Get_DIMouseState(DIM_LB) & 0x80)
 	{
-		m_eCurState = P_SHOOTWALK;
-		m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev));
+		// m_fShootDelay가 0일때만 쏠 수 있음
+		if (m_fShootDelayTime == 0)
+		{
+			m_eCurState = P_SHOOTWALK;
+			m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev));
+			m_fShootDelayTime++;
+		}
 	}
 
+	
 
 	//마우스 회전으로 플레이어 각도 바꾸기
 	_long	dwMouseMove(0);
@@ -270,27 +327,39 @@ void CPlayer::Motion_Change()
 		{
 		case P_IDLE:
 			m_fPicNum = 1;
+			m_fSpriteSpeed = 1.5f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_IDLE"));
 			break;
 		case P_IDLEWALK:
 			m_fPicNum = 11;
+			m_fSpriteSpeed = 1.5f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_IDLE"));
 			break;
 		case P_BACKWALK:
 			m_fPicNum = 11;
+			m_fSpriteSpeed = 1.5f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK"));
 			break;
 		case P_SHOOTWALK:
 			m_fPicNum = 11;
+			m_fSpriteSpeed = 1.5f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK_SMALL"));
 			break;
 		case P_LEFTWALK:
 			m_fPicNum = 8;
+			m_fSpriteSpeed = 1.5f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_LEFT"));
 			break;
 		case P_RIGHTWALK:
 			m_fPicNum = 8;
+			m_fSpriteSpeed = 1.5f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_RIGHT"));
+			break;
+		case P_THUMBS_UP:
+			m_fPicNum = 2;
+			m_fSpriteSpeed = 2.f;
+			m_bKeyBlock = true; //key 막기
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_THUMBS_UP"));
 			break;
 		}
 

@@ -25,7 +25,7 @@ private:
 	// BACKWALK : 뒷통수보면서 쏨
 	// SHOOTWALK : 쏘는 자세 (머리통이 작아짐)
 	// GOOD : 따봉
-	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_GOOD, P_END  };
+	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_THUMBS_UP, P_END  };
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -52,10 +52,22 @@ private:
 	_float				m_fCallLimit;
 	_float				m_fAccTimeDelta;
 
+	_float				m_fSpriteSpeed; // 스프라이트 변화속도
+
+	_bool				m_bKeyBlock;
+
+	// 총 쏘는 딜레이
+	_float				m_fShootDelayTime;
+	// 임시 delay (thumbs_up에 사용)
+	_float				m_fDelayTime;
+
+	// 플레이어 상태 저장
 	PLAYERID			m_ePreState;
 	PLAYERID			m_eCurState;
 
 	list<CGameObject*>	m_PlayerBulletList;
+
+	
 
 public:
 	static CPlayer*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
