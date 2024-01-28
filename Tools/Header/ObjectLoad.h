@@ -22,7 +22,8 @@ public:
 	{
 		OBJECTS,
 		MONSTERS,
-		BOSSES
+		BOSSES,
+		ITEMS
 	};
 
 private:
