@@ -91,6 +91,12 @@
     <Filter Include="02. GameObject\07. Bullet\01. MonsterBullet">
       <UniqueIdentifier>{f1500b9f-098d-466a-a487-ec428d6bb340}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Item">
+      <UniqueIdentifier>{eb45cc98-9855-4aa7-9194-080905f91f73}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Item\00. Coin">
+      <UniqueIdentifier>{ab0039c1-dba5-4882-87d4-20593ba44646}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -171,6 +177,12 @@
     <ClInclude Include="..\Header\MstBullet.h">
       <Filter>02. GameObject\07. Bullet\01. MonsterBullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Item.h">
+      <Filter>02. GameObject\08. Item</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Coin.h">
+      <Filter>02. GameObject\08. Item\00. Coin</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -241,6 +253,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\MstBullet.cpp">
       <Filter>02. GameObject\07. Bullet\01. MonsterBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Item.cpp">
+      <Filter>02. GameObject\08. Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Coin.cpp">
+      <Filter>02. GameObject\08. Item\00. Coin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
