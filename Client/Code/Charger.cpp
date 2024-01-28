@@ -27,26 +27,21 @@ HRESULT CCharger::Ready_GameObject()
 	m_fCallLimit = 0.f;
 	m_fSpeed = 2.f;
 
-	m_eState = CHARGER_END;
+	m_ePreState = CHARGER_END;
 
 	return S_OK;
 }
 
 _int CCharger::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += 4.f * fTimeDelta * 1.5;
+	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed; // 1.5
 
-	if (4.f < m_fFrame)
+	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	Check_Range();
-
-	if (CHARGER_IDLE == m_eState)
-		m_fSpeed = 2.f;
-	else if (CHARGER_ATTACK == m_eState)
-		m_fSpeed = 5.f;
 
 	_vec3 vTargetPos;
 	m_pTargetTransCom->Get_Info(INFO_POS, &vTargetPos);
@@ -62,6 +57,8 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 
 void CCharger::LateUpdate_GameObject()
 {
+	Motion_Change();
+
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
@@ -91,9 +88,19 @@ HRESULT CCharger::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
+#pragma region Texture
+
+	// IDLE
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ChargerTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_ChargerTexture", pComponent });
+
+	// ATTACK
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ChargerAttackTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_ChargerAttackTexture", pComponent });
+
+#pragma endregion Texture
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -104,6 +111,30 @@ HRESULT CCharger::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
 	return S_OK;
+}
+
+void CCharger::Motion_Change()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		m_fFrame = 0.f;
+
+		switch (m_eCurState)
+		{
+		case CCharger::CHARGER_IDLE:
+			m_iPicNum = 4;
+			m_fFrameSpeed = 1.f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Charger", L"Proto_ChargerTexture"));
+			break;
+
+		case CCharger::CHARGER_ATTACK:
+			m_iPicNum = 1;
+			m_fFrameSpeed = 1.5f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Charger", L"Proto_ChargerAttackTexture"));
+			break;
+		}
+		m_ePreState = m_eCurState;
+	}
 }
 
 void CCharger::Check_Range()
@@ -118,13 +149,15 @@ void CCharger::Check_Range()
 		(fabs(vTargetPos.x - vPos.x) * fabs(vTargetPos.x - vPos.x)) +
 		(fabs(vTargetPos.y - vPos.y) * fabs(vTargetPos.y - vPos.y));
 
-	if (100 < fDistance) // 범위에 속하지 않을 때
+	if (40 < fDistance) // 범위에 속하지 않을 때
 	{
-		m_eState = CHARGER_IDLE;
+		m_eCurState = CHARGER_IDLE;
+		m_fSpeed = 2.f;
 	}
 	else // 범위에 속할 때
 	{
-		m_eState = CHARGER_ATTACK;
+		m_eCurState = CHARGER_ATTACK;
+		m_fSpeed = 6.f;
 	}
 }
 

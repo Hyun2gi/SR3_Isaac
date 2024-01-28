@@ -88,6 +88,9 @@
     <Filter Include="02. GameObject\01. Monster\99. Boss\01. Mom">
       <UniqueIdentifier>{f31d6d15-a6db-4613-b5ab-d972cca48d1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Bullet\01. MonsterBullet">
+      <UniqueIdentifier>{f1500b9f-098d-466a-a487-ec428d6bb340}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -165,6 +168,9 @@
     <ClInclude Include="..\Header\Monstro.h">
       <Filter>02. GameObject\01. Monster\99. Boss\00. Monstro</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\MstBullet.h">
+      <Filter>02. GameObject\07. Bullet\01. MonsterBullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -232,6 +238,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Monstro.cpp">
       <Filter>02. GameObject\01. Monster\99. Boss\00. Monstro</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MstBullet.cpp">
+      <Filter>02. GameObject\07. Bullet\01. MonsterBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

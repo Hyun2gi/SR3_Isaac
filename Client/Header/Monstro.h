@@ -21,12 +21,23 @@ public:
 private:
 	virtual HRESULT	Add_Component()							override;
 
-	void			MoveTo_Player();
-	void			JumpTo_Player();
+	void			MoveTo_Player(const _float& fTimeDelta);
+	void			JumpTo_Player(const _float& fTimeDelta);
 	void			AttackTo_Player();
 
+	void			Check_TargetPos();
+
 private:
-	// º¯¼ö
+	bool			m_bUp;
+	bool			m_bBullet;
+	float			m_fPower;
+	float			m_fAccelTime;
+
+	_vec3			m_vTargetPos;
+
+	MONSTROSTATE	m_eState;
+
+	list<CGameObject*> m_BulletList;
 
 public:
 	static CMonster*	Create(LPDIRECT3DDEVICE9 pGraphicDev);

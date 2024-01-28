@@ -33,14 +33,16 @@ HRESULT CDip::Ready_GameObject()
 	m_bSliding = false;
 	m_fAccel = 1.f;
 
+	m_ePreState = DIP_END;
+
 	return S_OK;
 }
 
 _int CDip::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += 3.f * fTimeDelta;
+	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
 
-	if (3.f < m_fFrame)
+	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
 	CGameObject::Update_GameObject(fTimeDelta);
@@ -51,8 +53,13 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 		m_bSliding = true;
 	}
 
-	if(m_bSliding)
+	if (m_bSliding)
+	{
+		m_eCurState = DIP_SLIDE;
 		Sliding(fTimeDelta);
+	}
+	else
+		m_eCurState = DIP_IDLE;
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -63,6 +70,8 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 
 void CDip::LateUpdate_GameObject()
 {
+	Motion_Change();
+
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
@@ -92,9 +101,19 @@ HRESULT CDip::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
+#pragma region Texture
+
+	// IDLE
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_DipTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_DipTexture", pComponent });
+
+	// JUMP
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_DipSlideTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_DipSlideTexture", pComponent });
+
+#pragma endregion Texture
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -107,6 +126,30 @@ HRESULT CDip::Add_Component()
 	return S_OK;
 }
 
+void CDip::Motion_Change()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		m_fFrame = 0.f;
+
+		switch (m_eCurState)
+		{
+		case CDip::DIP_IDLE:
+			m_iPicNum = 3;
+			m_fFrameSpeed = 1.f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Dip", L"Proto_DipTexture"));
+			break;
+
+		case CDip::DIP_SLIDE:
+			m_iPicNum = 2;
+			m_fFrameSpeed = 2.f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Dip", L"Proto_DipSlideTexture"));
+			break;
+		}
+		m_ePreState = m_eCurState;
+	}
+}
+
 void CDip::Change_Dir()
 {
 	m_iRandNum = rand() % 180;
@@ -115,8 +158,6 @@ void CDip::Change_Dir()
 
 void CDip::Sliding(const _float& fTimeDelta)
 {
-	// 해당 방향 벡터로 빠르게 이동
-	// 일정 시간 동안 움직이고, 실제 슬라이딩처럼 점점 느려지게 구현?
 	_vec3		vDir, vPos;
 	m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
