@@ -30,22 +30,22 @@ HRESULT CMonstro::Ready_GameObject()
 	m_fCallLimit = 5.f;
 	m_fSpeed = 10.f;
 
-	m_fPower = 2.f;
+	m_fPower = 2.7f;
 	m_fAccelTime = 0.f;
 
-	m_bUp = false;
+	m_bJump = false;
 	m_bBullet = false; 
 
-	m_eState = MONSTRO_IDLE;
+	m_eCurState = MONSTRO_END;
 
 	return S_OK;
 }
 
 _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += 3.f * fTimeDelta * 0.4f;
+	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
 
-	if (3.f < m_fFrame)
+	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
 	// Bullet Update
@@ -69,7 +69,7 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (MONSTRO_IDLE == m_eState) // 기본 상태일 때
+	if (MONSTRO_IDLE == m_eCurState || MONSTRO_END == m_eCurState) // 기본 상태일 때
 	{
 		if (Check_Time(fTimeDelta)) // 일정 시간마다 기믹3 - 큰 점프 발동
 		{
@@ -81,41 +81,45 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 
 			if (1 == iRandBum)
 			{
-				m_bUp = true;
-				m_eState = MONSTRO_JUMP;
+				m_bJump = true;
+				m_eCurState = MONSTRO_UP;
 			}
 			else
 			{
 				m_bBullet = true;
-				m_eState = MONSTRO_ATTACK;
+				m_eCurState = MONSTRO_ATTACK;
 			}
-			
 			Check_TargetPos();
 		}
 		else
 		{
 			if (Check_Time(fTimeDelta, 1.f)) // 일정 시간마다 기믹 1 - 작은 점프 발동
 			{
-				m_eState = MONSTRO_MOVE;
+				m_eCurState = MONSTRO_MOVE;
 				Check_TargetPos();
 			}
 		}
 	}
-	else if (MONSTRO_MOVE == m_eState)
+	else if (MONSTRO_MOVE == m_eCurState)
 		MoveTo_Player(fTimeDelta);
-	else if (MONSTRO_JUMP == m_eState)
-		JumpTo_Player(fTimeDelta);
-
-	if (m_bBullet)
+	else if (MONSTRO_ATTACK == m_eCurState)
 	{
-		AttackTo_Player();
-		
-		if (Check_Time(fTimeDelta, 1.f))
+		if (m_bBullet)
 		{
-			m_eState = MONSTRO_IDLE;
+			AttackTo_Player();
+			m_bBullet = false;
+		}
+
+		if (Check_Time(fTimeDelta, 2.5f))
+		{
+			m_eCurState = MONSTRO_IDLE; // 이 부분 수정 필요할지도
 			m_bBullet = false;
 		}
 	}
+
+	if(m_bJump)
+		JumpTo_Player(fTimeDelta);
+
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -126,6 +130,8 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 
 void CMonstro::LateUpdate_GameObject()
 {
+	Motion_Change();
+
 	// Bullet LateUpdate
 	if (!m_BulletList.empty())
 	{
@@ -162,9 +168,34 @@ HRESULT CMonstro::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
+#pragma region Texture
+
+	// IDLE
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_MonstroTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_MonstroTexture", pComponent });
+
+	// ATTACL
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_MonstroAttackTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_MonstroAttackTexture", pComponent });
+
+	// JUMP
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_MonstroJumpTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_MonstroJumpTexture", pComponent });
+
+	// UP
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_MonstroUpTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_MonstroUpTexture", pComponent });
+
+	// DOWN
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_MonstroDownTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_MonstroDownTexture", pComponent });
+
+#pragma endregion Texture
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -175,6 +206,48 @@ HRESULT CMonstro::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
 	return S_OK;
+}
+
+void CMonstro::Motion_Change()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		m_fFrame = 0.f;
+
+		switch (m_eCurState)
+		{
+		case CMonstro::MONSTRO_IDLE:
+			m_iPicNum = 3;
+			m_fFrameSpeed = 0.3f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroTexture"));
+			break;
+
+		case CMonstro::MONSTRO_ATTACK:
+			m_iPicNum = 1;
+			m_fFrameSpeed = 1.f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroAttackTexture"));
+			break;
+
+		case CMonstro::MONSTRO_MOVE:
+			m_iPicNum = 5;
+			m_fFrameSpeed = 1.2f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroJumpTexture"));
+			break;
+
+		case CMonstro::MONSTRO_UP:
+			m_iPicNum = 2;
+			m_fFrameSpeed = 0.1f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroUpTexture"));
+			break;
+
+		case CMonstro::MONSTRO_DOWN:
+			m_iPicNum = 2;
+			m_fFrameSpeed = 0.1f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroDownTexture"));
+			break;
+		}
+		m_ePreState = m_eCurState;
+	}
 }
 
 void CMonstro::MoveTo_Player(const _float& fTimeDelta)
@@ -189,7 +262,7 @@ void CMonstro::MoveTo_Player(const _float& fTimeDelta)
 	{
 		m_fAccelTime = 0.f;
 		fY = 3.2f;
-		m_eState = MONSTRO_IDLE;
+		m_eCurState = MONSTRO_IDLE;
 	}
 
 	m_pTransformCom->Set_Pos(vPos.x, fY, vPos.z);
@@ -206,11 +279,11 @@ void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	if (m_bUp)
+	if (MONSTRO_UP == m_eCurState)
 	{
 		if (vPos.y >= 10.f)
 		{
-			m_bUp = false;
+			m_eCurState = MONSTRO_DOWN;
 			vPos = m_vTargetPos;
 			vPos.y = 80.f;
 		}
@@ -219,15 +292,18 @@ void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 			vPos.y += 0.9f;
 		}
 	}
-	else
+	else if(MONSTRO_DOWN == m_eCurState)
 	{
 		if (vPos.y > 3.2f)
+		{
 			vPos.y -= 0.7f;
+		}
 		else
 		{
 			vPos.y = 3.2f;
-			m_eState = MONSTRO_IDLE;
+			m_bJump = false;
 			m_bBullet = true;
+			m_eCurState = MONSTRO_ATTACK; 
 			Check_TargetPos(); // 이걸로 될지?
 		}
 	}
@@ -240,9 +316,9 @@ void CMonstro::AttackTo_Player()
 
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	vRandPos = m_vTargetPos; // 플레이어의 원래 위치 벡터
+	vRandPos = m_vTargetPos;
 
-	for (int i = 0; i < 13; ++i)
+	for (int i = 0; i < 20; ++i)
 	{
 		DWORD dwSeed = (i << 16) | (time(NULL) % 1000);
 		srand(dwSeed);
@@ -265,8 +341,6 @@ void CMonstro::AttackTo_Player()
 		m_BulletList.push_back(CMstBullet::Create(m_pGraphicDev));
 		dynamic_cast<CMstBullet*>(m_BulletList.back())->Set_Dir(vDir);
 	}
-
-	
 }
 
 void CMonstro::Check_TargetPos()
@@ -274,7 +348,6 @@ void CMonstro::Check_TargetPos()
 	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
 
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
-
 }
 
 CMonster* CMonstro::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -287,7 +360,6 @@ CMonster* CMonstro::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 		MSG_BOX("Monstro Create Failed");
 		return nullptr;
 	}
-
 	return pInstance;
 }
 
