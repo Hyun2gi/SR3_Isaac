@@ -99,6 +99,11 @@ _uint CLoading::Loading_ForStage()
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/Tear_%d.png", 13)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MstTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Monstertear/tear_%d.png", 13)), E_FAIL);
 
+	//Coin ¿ÃπÃ¡ˆ
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinTexture_IDLE", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/coin_%d.png", 6)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinTexture_EFFECT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/coin_effect_%d.png", 5)), E_FAIL);
+
+
 	m_bFinish = true;
 
 	lstrcpy(m_szLoading, L"Loading Complete");
