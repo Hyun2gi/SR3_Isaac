@@ -35,15 +35,18 @@ HRESULT CAttackFly::Ready_GameObject()
 	m_fDistance = 4.f;
 	m_fAngle = 30.f * m_iIndex;
 
+	m_ePreState = FLY_END;
+
 	return S_OK;
 }
 
 _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += 2.f * fTimeDelta * 1.5;
+	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
 
-	if (2.f < m_fFrame)
+	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
+
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
@@ -66,6 +69,8 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 
 void CAttackFly::LateUpdate_GameObject()
 {
+	Motion_Change();
+
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
@@ -102,6 +107,8 @@ void CAttackFly::Revolve_Center()
 		vPos.z - m_fDistance * sin(m_fAngle * (3.14 / 180.f)));
 
 	m_fAngle += 1.f;
+
+	m_eCurState = FLY_IDLE;
 }
 
 HRESULT CAttackFly::Add_Component()
@@ -112,9 +119,19 @@ HRESULT CAttackFly::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
+#pragma region Texture
+
+	// IDLE
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_AttackFlyTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_AttackFlyTexture", pComponent });
+
+	// DEAD
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FlyDeadTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_FlyDeadTexture", pComponent });
+
+#pragma endregion Texture
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -125,6 +142,30 @@ HRESULT CAttackFly::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
 	return S_OK;
+}
+
+void CAttackFly::Motion_Change()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		m_fFrame = 0.f;
+
+		switch (m_eCurState)
+		{
+		case CAttackFly::FLY_IDLE:
+			m_iPicNum = 2;
+			m_fFrameSpeed = 1.5f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"AttackFly", L"Proto_AttackFlyTexture"));
+			break;
+
+		case CAttackFly::FLY_DEAD:
+			m_iPicNum = 11;
+			m_fFrameSpeed = 1.f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"AttackFly", L"Proto_FlyDeadTexture"));
+			break;
+		}
+		m_ePreState = m_eCurState;
+	}
 }
 
 CAttackFly* CAttackFly::Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iIndex)

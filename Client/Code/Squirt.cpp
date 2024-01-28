@@ -30,14 +30,16 @@ HRESULT CSquirt::Ready_GameObject()
 	m_bSliding = false;
 	m_fAccel = 10.f;
 
+	m_ePreState = SQU_END;
+
 	return S_OK;
 }
 
 _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += 2.f * fTimeDelta;
+	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
 
-	if (2.f < m_fFrame)
+	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
 	CGameObject::Update_GameObject(fTimeDelta);
@@ -49,7 +51,12 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	if (m_bSliding)
+	{
 		Sliding(fTimeDelta);
+		m_eCurState = SQU_SLIDE;
+	}
+	else
+		m_eCurState = SQU_IDLE;
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -60,6 +67,8 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 
 void CSquirt::LateUpdate_GameObject()
 {
+	Motion_Change();
+
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
@@ -89,9 +98,19 @@ HRESULT CSquirt::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
+#pragma region Texture
+
+	// IDLE
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_SquirtTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_SquirtTexture", pComponent });
+
+	// SLIDE
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_SquirtSlideTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_SquirtSlideTexture", pComponent });
+
+#pragma endregion Texture
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -102,6 +121,30 @@ HRESULT CSquirt::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
 	return S_OK;
+}
+
+void CSquirt::Motion_Change()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		m_fFrame = 0.f;
+
+		switch (m_eCurState)
+		{
+		case CSquirt::SQU_IDLE:
+			m_iPicNum = 2;
+			m_fFrameSpeed = 1.5f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Squirt", L"Proto_SquirtTexture"));
+			break;
+
+		case CSquirt::SQU_SLIDE:
+			m_iPicNum = 3;
+			m_fFrameSpeed = 0.3f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Squirt", L"Proto_SquirtSlideTexture"));
+			break;
+		}
+		m_ePreState = m_eCurState;
+	}
 }
 
 void CSquirt::Sliding(const _float& fTimeDelta)

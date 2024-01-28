@@ -100,6 +100,10 @@ HRESULT CPacer::Add_Component()
 	return S_OK;
 }
 
+void CPacer::Motion_Change()
+{
+}
+
 void CPacer::Change_Dir(const _float& fTimeDelta)
 {
 	m_iRandNum = rand() % 180;

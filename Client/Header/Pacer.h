@@ -10,6 +10,8 @@ private:
 	explicit CPacer(const CPacer& rhs);
 	virtual ~CPacer();
 
+	enum PACERSTATE { PACER_IDLE, PACER_END };
+
 public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
@@ -17,13 +19,15 @@ public:
 	virtual void	Render_GameObject()						 override;
 
 private:
-	virtual HRESULT Add_Component()							override;
+	virtual HRESULT		Add_Component()						override;
+	virtual void		Motion_Change()						override;
+
 
 	void			Change_Dir(const _float& fTimeDelta);
 	void			Move(const _float& fTimeDelta);
 
 private:
-	int					m_iRandNum;
+	_int				m_iRandNum;
 
 public:
 	static CPacer* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID);

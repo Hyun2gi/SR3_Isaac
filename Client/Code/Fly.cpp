@@ -30,15 +30,20 @@ HRESULT CFly::Ready_GameObject()
 	m_fCallLimit = m_iRandNum % 5 + 2;
 	m_fSpeed = 2.f;
 
+	m_ePreState = FLY_END;
+
 	return S_OK;
 }
 
 _int CFly::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += 2.f * fTimeDelta * 3;
+	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
 
-	if (2.f < m_fFrame)
+	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
+
+	// 추후 사망 처리 추가
+	// m_eState = FLY_DEAD;
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
@@ -56,6 +61,8 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 
 void CFly::LateUpdate_GameObject()
 {
+	Motion_Change();
+
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
@@ -85,9 +92,19 @@ HRESULT CFly::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
+#pragma region Texture
+
+	// IDLE
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FlyTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_FlyTexture", pComponent });
+
+	// DEAD
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FlyDeadTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_FlyDeadTexture", pComponent });
+
+#pragma endregion Texture
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -98,6 +115,30 @@ HRESULT CFly::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
 	return S_OK;
+}
+
+void CFly::Motion_Change()
+{
+	if (m_ePreState != m_eCurState)
+	{
+		m_fFrame = 0.f;
+
+		switch (m_eCurState)
+		{
+		case CFly::FLY_IDLE:
+			m_iPicNum = 2;
+			m_fFrameSpeed = 3.f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Fly", L"Proto_FlyTexture"));
+			break;
+
+		case CFly::FLY_DEAD:
+			m_iPicNum = 11;
+			m_fFrameSpeed = 1.f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Fly", L"Proto_FlyDeadTexture"));
+			break;
+		}
+		m_ePreState = m_eCurState;
+	}
 }
 
 void CFly::Change_Dir(const _float& fTimeDelta)
@@ -113,6 +154,8 @@ void CFly::Move(const _float& fTimeDelta)
 
 	D3DXVec3Normalize(&vDir, &vDir);
 	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+
+	m_eCurState = FLY_IDLE;
 }
 
 CFly* CFly::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
