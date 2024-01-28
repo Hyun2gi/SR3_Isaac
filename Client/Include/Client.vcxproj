@@ -170,6 +170,7 @@
     <ClInclude Include="..\Header\MainApp.h" />
     <ClInclude Include="..\Header\Monster.h" />
     <ClInclude Include="..\Header\Monstro.h" />
+    <ClInclude Include="..\Header\MstBullet.h" />
     <ClInclude Include="..\Header\Pacer.h" />
     <ClInclude Include="..\Header\Player.h" />
     <ClInclude Include="..\Header\PlayerBullet.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\Monster.cpp" />
     <ClCompile Include="..\Code\Monstro.cpp" />
+    <ClCompile Include="..\Code\MstBullet.cpp" />
     <ClCompile Include="..\Code\Pacer.cpp" />
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\PlayerBullet.cpp" />

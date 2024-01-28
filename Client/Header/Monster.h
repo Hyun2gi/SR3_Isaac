@@ -27,6 +27,7 @@ public:
 
 protected:
 	virtual HRESULT			Add_Component();
+	virtual void			Motion_Change() {};
 
 	bool			Check_Time(const _float& fTimeDelta);
 	bool			Check_Time(const _float& fTimeDelta, float fLimit);

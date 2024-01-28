@@ -12,12 +12,15 @@ class CCalculator;
 
 END
 
-class CPlayerBullet : public CGameObject
+class CMstBullet : public CGameObject
 {
 private:
-	explicit CPlayerBullet(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CPlayerBullet(const CPlayerBullet& rhs);
-	virtual ~CPlayerBullet();
+	explicit CMstBullet(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CMstBullet(const CMstBullet& rhs);
+	virtual ~CMstBullet();
+
+public:
+	void	Set_Dir(_vec3& vDir){ m_vBulletDir = vDir; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -26,38 +29,32 @@ public:
 	virtual void Render_GameObject()						 override;
 
 public:
-	static CPlayerBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev);
-
-public:
-	void				Set_BulletSpeed(float _speed)
-	{
-		m_fBulletSpeed += _speed;
-	}
+	static CMstBullet* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual HRESULT			Add_Component();
 	bool					Check_Time(const _float& fTimeDelta);
-
+	void					Curve(const _float& fTimeDelta);
 
 private:
 	virtual void Free();
 
-protected:
-	Engine::CRcTex* m_pBufferCom;
-	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture* m_pTextureCom;
-	Engine::CCalculator* m_pCalculatorCom;
-
+private:
+	Engine::CRcTex*			m_pBufferCom;
+	Engine::CTransform*		m_pTransformCom;
+	Engine::CTexture*		m_pTextureCom;
+	Engine::CCalculator*	m_pCalculatorCom;
 
 	_float					m_fFrame = 0.f;
 	_float					m_fCallLimit;
 	_float					m_fAccTimeDelta;
 
+	float					m_fPower;
+	float					m_fAccelTime;
 
 private:
-	_vec3		m_vBulletDir;
-	bool		m_bDead = false;
+	bool					m_bDead = false;
 
-	float		m_fBulletSpeed;
+	_vec3					m_vBulletDir;
 };
 
