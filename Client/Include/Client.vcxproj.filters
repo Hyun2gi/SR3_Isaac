@@ -97,6 +97,12 @@
     <Filter Include="02. GameObject\08. Item\00. Coin">
       <UniqueIdentifier>{ab0039c1-dba5-4882-87d4-20593ba44646}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Item\01. Pill">
+      <UniqueIdentifier>{3ec328b0-9bf1-4ba9-b8d0-93548ee3ed17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Item\02. BrimStone">
+      <UniqueIdentifier>{a6dad498-0feb-4cd4-9041-e4bde24d429f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -183,6 +189,12 @@
     <ClInclude Include="..\Header\Coin.h">
       <Filter>02. GameObject\08. Item\00. Coin</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\BrimStone.h">
+      <Filter>02. GameObject\08. Item\02. BrimStone</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Pill.h">
+      <Filter>02. GameObject\08. Item\01. Pill</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -259,6 +271,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\Coin.cpp">
       <Filter>02. GameObject\08. Item\00. Coin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\BrimStone.cpp">
+      <Filter>02. GameObject\08. Item\02. BrimStone</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Pill.cpp">
+      <Filter>02. GameObject\08. Item\01. Pill</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
