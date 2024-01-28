@@ -9,7 +9,6 @@ class CRcTex;
 class CTexture;
 class CTransform;
 class CCalculator;
-class CBullet;
 
 END
 
@@ -28,6 +27,12 @@ public:
 
 public:
 	static CPlayerBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev);
+
+public:
+	void				Set_BulletSpeed(float _speed)
+	{
+		m_fBulletSpeed += _speed;
+	}
 
 private:
 	virtual HRESULT			Add_Component();
@@ -52,5 +57,7 @@ protected:
 private:
 	_vec3		m_vBulletDir;
 	bool		m_bDead = false;
+
+	float		m_fBulletSpeed;
 };
 

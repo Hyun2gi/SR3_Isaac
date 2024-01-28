@@ -28,7 +28,7 @@ HRESULT CMouseObjectImg::Ready_GameObject()
 
 Engine::_int CMouseObjectImg::Update_GameObject(const _float& fTimeDelta)
 {
-	Engine::Add_RenderGroup(RENDER_ALPHA, this);
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
 	CGameObject::Update_GameObject(fTimeDelta);
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
@@ -39,17 +39,19 @@ Engine::_int CMouseObjectImg::Update_GameObject(const _float& fTimeDelta)
 void CMouseObjectImg::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
+
+	_vec3	vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	__super::Compute_ViewZ(&vPos);
 }
 
 void CMouseObjectImg::Render_GameObject()
 {	
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, TRUE);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	
 	m_pTextureCom->Set_Texture(0);
 
 	m_pBufferCom->Render_Buffer();
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, FALSE);
 }
 
 HRESULT CMouseObjectImg::Swap_Texture()
@@ -59,11 +61,26 @@ HRESULT CMouseObjectImg::Swap_Texture()
 	wstring wstr;
 	wstr.assign(m_strCurTextureName.begin(), m_strCurTextureName.end());
 
+	int iIndex = 0;
+
+	auto found = find(m_vecTextureNames.begin(), m_vecTextureNames.end(), wstr);
+
+	if (found == m_vecTextureNames.end())
+	{
+		m_vecTextureNames.push_back(wstr);
+
+		iIndex = m_vecTextureNames.size() - 1;
+	}
+	else
+	{
+		iIndex = m_vecTextureNames.end() - found - 1;
+	}
+
 	CComponent* pComponent = nullptr;
 
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(wstr.c_str()));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ wstr.c_str() , pComponent});
+	m_mapComponent[ID_STATIC].insert({ m_vecTextureNames[iIndex].c_str() , pComponent});
 }
 
 HRESULT CMouseObjectImg::Add_Component()
@@ -77,6 +94,7 @@ HRESULT CMouseObjectImg::Add_Component()
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_Object_0"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Object_0", pComponent });
+	m_vecTextureNames.push_back(L"Proto_Object_0");
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);

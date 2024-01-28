@@ -34,6 +34,9 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_ePreState = C_END;
 	m_eCurState = C_PLAYERCHASE;
 
+	m_bShake = false;
+	m_bMove = false;
+
 	FAILED_CHECK_RETURN(CCamera::Ready_GameObject(), E_FAIL);
 
 	return S_OK;
@@ -46,6 +49,12 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_pTarget = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
 	}
+
+	ShakeByPosition(fTimeDelta);
+	ShakeByRotation(fTimeDelta);
+
+	// 해당위치로 이동
+	MoveToTarget(fTimeDelta);
 
 	_int iExit = Engine::CCamera::Update_GameObject(fTimeDelta);
 
@@ -98,6 +107,39 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 			m_eCurState = C_WHOLELAND;
 		}
 	}
+
+	if (Engine::Get_DIKeyState(DIK_N) & 0x80)
+	{
+		if (m_bShake == false)
+		{
+			//OnShakeCameraPos(float shakeTime, float shakeIntensity)
+			//OnShakeCameraPos(5, 2);
+			OnShakeCameraRot(2, 2);
+		}
+	}
+
+	if (Engine::Get_DIKeyState(DIK_M) & 0x80)
+	{
+		if (m_bMove == false)
+		{
+			m_bMove = true;
+			CTransform* playerInfo = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+
+			_vec3		playerPos;
+			_vec3		playerDir;
+			_vec3		targetpos;
+
+			playerInfo->Get_Info(INFO_POS, &playerPos);
+			playerInfo->Get_Info(INFO_LOOK, &playerDir);
+
+			D3DXVec3Normalize(&playerDir, &playerDir);
+			playerDir *= -3;
+			// 바라보는 대상은 플레이어
+			targetpos = playerPos + playerDir;
+			OnMoveTargetCamera(3,7, targetpos, false);
+		}
+	}
+
 
 	if (Engine::Get_DIKeyState(DIK_TAB) & 0x80)
 	{
@@ -206,6 +248,10 @@ void CDynamicCamera::Mouse_Move()
 
 		D3DXMatrixRotationQuaternion(&matRotX, &qRot);
 
+		// 플레이어 - 마우스 X축 이동했을때 회전
+		//dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"))->Rotation(ROT_Y, D3DXToRadian(dwMouseMoveX / 10.f));
+		// 플레이어 - 마우스 Y축 이동했을때 회전
+		//dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"))->Rotation(ROT_Y, D3DXToRadian(dwMouseMoveX / 30.f));
 
 		// 마우스 Y축 이동 처리
 		_vec3		vCross;
@@ -240,6 +286,216 @@ void CDynamicCamera::Mouse_Move()
 			D3DXVec3TransformCoord(&vLook, &vLook, &matTotalRot);
 			m_vCameraPosDir = vLook;
 		}
+	}
+}
+
+// position 변화로 움직이기..
+// 흔들림 짧게 줄때 쓰기 적당하지만 계속적인 쉐이킹에는 사용x
+void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
+{
+	if (m_eCurState == C_SHAKING_POS)
+	{
+		//잠깐 맞았을때 살짝 흔들리는거
+		
+		if (m_fShakeTime > 0.0f)
+		{
+			if (m_vGoalPosition == m_vEye)
+			{
+				float FLOAT_MAX = 1;
+				float FLOAT_MIN = 0;
+
+				srand((unsigned)time(NULL));
+
+				// -1~1 사이의 난수 생성
+
+				/*float randx = (float)(rand()) / ((float)(RAND_MAX / (FLOAT_MAX - FLOAT_MIN)));
+				float randy = (float)(rand()) / ((float)(RAND_MAX / (FLOAT_MAX - FLOAT_MIN)));
+				float randz = (float)(rand()) / ((float)(RAND_MAX / (FLOAT_MAX - FLOAT_MIN)));*/
+
+				float randx = (float)(rand() % 2 - 1);
+				float randy = (float)(rand() % 2 - 1);
+				float randz = (float)(rand() % 2 - 1);
+				_vec3 randompos = _vec3(randx, randy, randz);
+
+				D3DXVec3Normalize(&randompos, &randompos);
+
+				m_vGoalPosition = m_vStartPosition + randompos *m_fShakeIntensity;
+			}
+			else
+			{
+				D3DXVECTOR3 _movevec;
+				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta*10);
+
+				m_vEye = _movevec;
+			}
+			m_fShakeTime -= fTimeDelta;
+		}
+		else
+		{
+			m_vEye = m_vStartPosition;
+			m_eCurState = C_PLAYERCHASE;
+			m_fShakeTime = 0;
+			m_bShake = false;
+			m_bFix = false; //잠금 풀어주기
+		}
+
+	}
+}
+
+// rotation으로 움직임
+void CDynamicCamera::ShakeByRotation(const _float& fTimeDelta)
+{
+	if (m_eCurState == C_SHAKING_ROT)
+	{
+		//잠깐 맞았을때 살짝 흔들리는거
+
+		if (m_fShakeTime > 0.0f)
+		{
+			//m_vEye = m_vStartPosition;
+			srand((unsigned)time(NULL));
+
+			//랜덤각도 움직이고 싶을때
+	
+			float randx = (float)(rand() % 30);
+			//float randy = (float)(rand() % 30);
+			float randz = (float)(rand() % 30);
+
+			// 같은 회전으로 움직일때 사용
+			float randy = 5;
+			
+			if (m_fShakeNum % 2 == 1)
+			{
+
+				randy *= -1;
+
+			}			
+			D3DXQUATERNION qRot;
+
+			_matrix		matRotX, matRotY, matRotZ, matTotalRot;
+			D3DXQuaternionRotationMatrix(&qRot, &matRotX);
+
+			// yaw, pitch, roll 순서
+			// yaw : y축, pitch : x축, roll : z축
+			D3DXQuaternionRotationYawPitchRoll(&qRot, 0, D3DXToRadian(randx), 0);
+			D3DXMatrixRotationQuaternion(&matRotX, &qRot);
+
+			D3DXQuaternionRotationYawPitchRoll(&qRot, D3DXToRadian(randy), 0, 0);
+			D3DXMatrixRotationQuaternion(&matRotY, &qRot);
+
+			D3DXQuaternionRotationYawPitchRoll(&qRot, 0, 0, D3DXToRadian(randz));
+			D3DXMatrixRotationQuaternion(&matRotZ, &qRot);
+
+			//matTotalRot = matRotX * matRotY * matRotZ;
+			matTotalRot = matRotY;
+
+			D3DXVec3TransformCoord(&m_vEye, &m_vEye, &matTotalRot);
+
+			m_fShakeNum++;
+			m_fShakeTime -= fTimeDelta;
+		}
+		else
+		{
+			m_vEye = m_vStartPosition;
+			m_eCurState = C_PLAYERCHASE;
+			m_fShakeTime = 0;
+			m_bShake = false;
+			m_bFix = false; //잠금 풀어주기
+		}
+	}
+}
+
+
+// 지정된 target에 부드럽게 이동
+void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
+{
+	if (m_eCurState == C_MOVE_TO_TARGET)
+	{
+		if (m_fMoveTime > 0.0f)
+		{
+			D3DXVECTOR3 _movevec;
+			D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * m_fMoveSpeed);
+
+			m_vEye = _movevec;
+		}
+		else
+		{
+			m_bMove = false;
+			m_bFix = false; //잠금 풀어주기
+			m_eCurState = C_PLAYERCHASE;
+
+			// goalposition에 고정안하고 원래 position으로 돌아가는 경우
+			if (m_bFixedPos == false)
+			{
+				m_vEye = m_vStartPosition;
+			}
+		}
+
+		m_fMoveTime -= fTimeDelta;
+	}
+}
+
+
+void CDynamicCamera::OnShakeCameraPos(float shakeTime, float shakeIntensity)
+{
+	// 카메라 흔들림 설정
+	// public이어서 object 받아서 사용할까 생각중
+	m_fShakeTime = shakeTime;
+	m_fShakeIntensity = shakeIntensity;
+
+	m_eCurState = C_SHAKING_POS;
+
+	m_vStartPosition = m_vEye;
+
+	m_bShake = true;
+	m_bFix = true; // 사용자 움직임 잠금 
+
+	float randx = (float)(rand() % 2 - 1);
+	float randy = (float)(rand() % 2 - 1);
+	float randz = (float)(rand() % 2 - 1);
+	_vec3 randompos = _vec3(randx, randy, randz);
+
+	D3DXVec3Normalize(&randompos, &randompos);
+
+	m_vGoalPosition = m_vStartPosition + randompos * m_fShakeIntensity;
+}
+
+void CDynamicCamera::OnShakeCameraRot(float shakeTime, float shakeIntensity)
+{
+	// 카메라 흔들림 설정
+	m_fShakeTime = shakeTime;
+	m_fShakeIntensity = shakeIntensity;
+	m_fShakeNum = 0;
+
+	m_eCurState = C_SHAKING_ROT;
+
+	m_vStartPosition = m_vEye;
+	m_vStartAtPosition = m_vAt;
+
+	// 쉐이킹 전 초기화
+	m_fAngleX = 0;
+	m_fAngleY = 0;
+	m_fAngleZ = 0;
+
+	m_bShake = true;
+	m_bFix = true; // 사용자 움직임 잠금 
+}
+
+void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
+{
+	m_eCurState = C_MOVE_TO_TARGET;
+
+	m_bFix = true; // 사용자 움직임 잠금 
+
+	m_fMoveTime = moveTime;
+	m_fMoveSpeed = moveSpeed;
+	m_vGoalPosition = target;
+
+	m_bFixedPos = fixedPosition;
+
+	if (m_bFixedPos == false)
+	{
+		// 다시 돌아가야할 경우 첫 시작점 저장
+		m_vStartPosition = m_vEye;
 	}
 }
 
