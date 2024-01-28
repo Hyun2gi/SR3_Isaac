@@ -151,6 +151,8 @@ string CObjectLoad::Trans_Object_Type_To_String(int iValue)
         return "Monster";
     case BOSSES:
         return "Boss";
+    case ITEMS:
+        return "Item";
     default:
         return "";
     }
