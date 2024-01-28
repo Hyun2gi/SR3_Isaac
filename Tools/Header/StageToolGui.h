@@ -45,7 +45,7 @@ private:
 
     _vec3	m_vPickingPos;
 
-    CStageTool* m_pTargetScene;
+    CStageTool* m_pTargetScenessssssssdddssad;
 
     vector<int> vecObjCounts;
     map<int, string> m_mapStage;
