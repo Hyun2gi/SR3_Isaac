@@ -31,7 +31,7 @@ public:
 public:
 	void				Set_BulletSpeed(float _speed)
 	{
-		m_fBulletSpeed += _speed;
+		m_fBulletSpeed = _speed;
 	}
 
 private:

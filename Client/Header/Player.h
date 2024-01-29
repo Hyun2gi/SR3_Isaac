@@ -43,6 +43,26 @@ public:
 		m_bKeyBlock = keyblock;
 	}
 
+	void		Set_MoveSpeed(float _movespeed)
+	{
+		m_fMoveSpeed += _movespeed;
+	}
+
+	void		Set_BulletSpeed(float _bulletspeed)
+	{
+		m_fBulletSpeed += _bulletspeed;
+	}
+
+	void		Set_AttackSpeed(float _attackspeed)
+	{
+		m_fBulletSpeed -= _attackspeed;
+	}
+
+	void		Set_Hp(int _hp)
+	{
+		m_iHp += _hp;
+	}
+
 private:
 	HRESULT			Add_Component();
 	void			Key_Input(const _float& fTimeDelta);
@@ -66,18 +86,27 @@ private:
 
 	_bool				m_bKeyBlock;
 
-	// 총 쏘는 딜레이
-	_float				m_fShootDelayTime;
-	// 임시 delay (thumbs_up에 사용)
-	_float				m_fDelayTime;
-
 	// 플레이어 상태 저장
 	PLAYERID			m_ePreState;
 	PLAYERID			m_eCurState;
 
 	list<CGameObject*>	m_PlayerBulletList;
 
-	
+	//움직이는 속도
+	float				m_fMoveSpeed;
+
+	//총알 속도(총알 설정위해서)
+	float				m_fBulletSpeed;
+
+	// 총 딜레이 시간 설정
+	float				m_fAttackSpeed;
+
+	// 총 쏘는 딜레이
+	_float				m_fShootDelayTime;
+	// 임시 delay (thumbs_up에 사용)
+	_float				m_fDelayTime;
+
+	int					m_iHp;
 
 public:
 	static CPlayer*		Create(LPDIRECT3DDEVICE9	pGraphicDev);

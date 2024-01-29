@@ -95,19 +95,6 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		}
 	}
 
-	if (Engine::Get_DIKeyState(DIK_T) & 0x80)
-	{
-		if (m_eCurState == C_WHOLELAND)
-		{
-			m_eCurState = C_PLAYERCHASE;
-			m_bChaseInit = true;
-		}
-		else 
-		{
-			m_eCurState = C_WHOLELAND;
-		}
-	}
-
 	if (Engine::Get_DIKeyState(DIK_N) & 0x80)
 	{
 		if (m_bShake == false)
