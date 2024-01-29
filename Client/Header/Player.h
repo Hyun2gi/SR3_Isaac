@@ -33,6 +33,13 @@ public:
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
+public:
+	void		Set_KeyBlock(_bool keyblock)
+	{
+		// keyblock이 true면 key 움직임 막힘
+		m_bKeyBlock = keyblock;
+	}
+
 private:
 	HRESULT			Add_Component();
 	void			Key_Input(const _float& fTimeDelta);

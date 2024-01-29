@@ -33,17 +33,6 @@ HRESULT CCoin::Ready_GameObject()
 
 _int CCoin::Update_GameObject(const _float& fTimeDelta)
 {
-	CTransform* playerInfo = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
-
-	_vec3		playerPos;
-	_vec3		playerDir;
-
-
-	playerInfo->Get_Info(INFO_POS, &playerPos);
-	playerInfo->Get_Info(INFO_LOOK, &playerDir);
-
-	m_pTransformCom->Set_Pos(playerPos+playerDir*2);
-
 	if (m_iDelay == 0)
 	{
 		m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;

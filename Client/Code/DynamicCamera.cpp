@@ -484,7 +484,28 @@ void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 t
 {
 	m_eCurState = C_MOVE_TO_TARGET;
 
-	m_bFix = true; // 사용자 움직임 잠금 
+	m_bFix = true; // 사용자 카메라 움직임 잠금 
+
+	m_fMoveTime = moveTime;
+	m_fMoveSpeed = moveSpeed;
+	m_vGoalPosition = target;
+
+	m_bFixedPos = fixedPosition;
+
+	if (m_bFixedPos == false)
+	{
+		// 다시 돌아가야할 경우 첫 시작점 저장
+		m_vStartPosition = m_vEye;
+	}
+}
+
+void CDynamicCamera::OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
+{
+	m_vAt = atPos;
+
+	m_eCurState = C_MOVE_TO_TARGET;
+
+	m_bFix = true; // 사용자 카메라 움직임 잠금 
 
 	m_fMoveTime = moveTime;
 	m_fMoveSpeed = moveSpeed;
