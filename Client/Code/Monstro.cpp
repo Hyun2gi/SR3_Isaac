@@ -242,31 +242,31 @@ void CMonstro::Motion_Change()
 		case CMonstro::MONSTRO_IDLE:
 			m_iPicNum = 3;
 			m_fFrameSpeed = 0.3f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Monstro", L"Proto_MonstroTexture"));
 			break;
 
 		case CMonstro::MONSTRO_ATTACK:
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroAttackTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Monstro", L"Proto_MonstroAttackTexture"));
 			break;
 
 		case CMonstro::MONSTRO_MOVE:
 			m_iPicNum = 5;
 			m_fFrameSpeed = 1.2f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroJumpTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Monstro", L"Proto_MonstroJumpTexture"));
 			break;
 
 		case CMonstro::MONSTRO_UP:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 0.1f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroUpTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Monstro", L"Proto_MonstroUpTexture"));
 			break;
 
 		case CMonstro::MONSTRO_DOWN:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 0.1f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroDownTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Monstro", L"Proto_MonstroDownTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;
@@ -361,14 +361,14 @@ void CMonstro::AttackTo_Player()
 
 		vDir = vRandPos - vPos;
 
-		m_BulletList.push_back(CMstBullet::Create(m_pGraphicDev));
+		m_BulletList.push_back(CMstBullet::Create(m_pGraphicDev, m_vecMyLayer[0]));
 		dynamic_cast<CMstBullet*>(m_BulletList.back())->Set_Dir(vDir);
 	}
 }
 
 void CMonstro::Check_TargetPos()
 {
-	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
 
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
 }

@@ -54,7 +54,7 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 
 	if (CENTEROBJ == m_iID)
 	{
-		m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+		m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
 		_vec3 vPlayerPos;
 		m_pTargetTransCom->Get_Info(INFO_POS, &vPlayerPos);
 		m_pTransformCom->Chase_Target(&vPlayerPos, 3.f, fTimeDelta);

@@ -124,13 +124,13 @@ void CCharger::Motion_Change()
 		case CCharger::CHARGER_IDLE:
 			m_iPicNum = 4;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Charger", L"Proto_ChargerTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Charger", L"Proto_ChargerTexture"));
 			break;
 
 		case CCharger::CHARGER_ATTACK:
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Charger", L"Proto_ChargerAttackTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Charger", L"Proto_ChargerAttackTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;
@@ -141,7 +141,7 @@ void CCharger::Check_Range()
 {
 	_vec3 vTargetPos, vPos;
 
-	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
 	m_pTargetTransCom->Get_Info(INFO_POS, &vTargetPos);
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 

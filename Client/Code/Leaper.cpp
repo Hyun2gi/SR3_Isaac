@@ -157,19 +157,19 @@ void CLeaper::Motion_Change()
 		case CLeaper::LEAPER_IDLE:
 			m_iPicNum = 8;
 			m_fFrameSpeed = 0.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Leaper", L"Proto_LeaperTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Leaper", L"Proto_LeaperTexture"));
 			break;
 
 		case CLeaper::LEAPER_UP:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 0.1f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Leaper", L"Proto_LeaperUpTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Leaper", L"Proto_LeaperUpTexture"));
 			break;
 
 		case CLeaper::LEAPER_DOWN:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 0.1f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Leaper", L"Proto_LeaperDownTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Leaper", L"Proto_LeaperDownTexture"));
 			break;
 
 		}
@@ -185,7 +185,7 @@ void CLeaper::Change_Dir(const _float& fTimeDelta)
 
 void CLeaper::Check_TargetPos()
 {
-	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
 
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
 

@@ -128,13 +128,13 @@ void CFly::Motion_Change()
 		case CFly::FLY_IDLE:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 3.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Fly", L"Proto_FlyTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Fly", L"Proto_FlyTexture"));
 			break;
 
 		case CFly::FLY_DEAD:
 			m_iPicNum = 11;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Fly", L"Proto_FlyDeadTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Fly", L"Proto_FlyDeadTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;
