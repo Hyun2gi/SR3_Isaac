@@ -91,7 +91,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 			{
 				++iter;
 			}
-
+			 
 		}
 	}
 
@@ -382,5 +382,15 @@ bool CPlayer::Check_Time(const _float& fTimeDelta)
 
 void CPlayer::Free()
 {
+	if (!m_PlayerBulletList.empty())
+	{
+		for (auto& iter = m_PlayerBulletList.begin();
+			iter != m_PlayerBulletList.end(); )
+		{
+			Safe_Release<CGameObject*>(*iter);
+			iter = m_PlayerBulletList.erase(iter);
+		}
+	}
+	
 	__super::Free();
 }
