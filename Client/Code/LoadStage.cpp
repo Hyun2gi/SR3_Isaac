@@ -284,6 +284,9 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			{
 				pGameObject = CFly::Create(m_pGraphicDev, m_vecMonsterCount[FLY]++);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
 
 				break;
