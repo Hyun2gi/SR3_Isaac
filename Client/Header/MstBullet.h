@@ -29,7 +29,7 @@ public:
 	virtual void Render_GameObject()						 override;
 
 public:
-	static CMstBullet* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CMstBullet* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag);
 
 private:
 	virtual HRESULT			Add_Component();

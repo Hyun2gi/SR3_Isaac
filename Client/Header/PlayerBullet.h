@@ -26,7 +26,7 @@ public:
 	virtual void Render_GameObject()						 override;
 
 public:
-	static CPlayerBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev);
+	static CPlayerBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag);
 
 public:
 	void				Set_BulletSpeed(float _speed)

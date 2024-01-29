@@ -261,7 +261,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		if (m_fShootDelayTime == 0)
 		{
 			m_eCurState = P_SHOOTWALK;
-			m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev));
+			m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev, m_vecMyLayer[0]));
 			m_fShootDelayTime++;
 		}
 	}
@@ -298,10 +298,10 @@ void CPlayer::Height_OnTerrain()
 
 _vec3 CPlayer::Picking_OnTerrain()
 {
-	CTerrainTex*		pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
+	CTerrainTex*		pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Terrain", L"Proto_TerrainTex"));
 	NULL_CHECK_RETURN(pTerrainBufferCom, _vec3());
 
-	CTransform*			pTerrainTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Terrain", L"Proto_Transform"));
+	CTransform*			pTerrainTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Terrain", L"Proto_Transform"));
 	NULL_CHECK_RETURN(pTerrainTransCom, _vec3());
 
 	return m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);

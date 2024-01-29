@@ -123,7 +123,7 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		if (m_bMove == false)
 		{
 			m_bMove = true;
-			CTransform* playerInfo = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+			CTransform* playerInfo = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
 
 			_vec3		playerPos;
 			_vec3		playerDir;

@@ -66,8 +66,32 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 				++iter;
 		}
 	}
+	// 플레이어를 향해 회전
+	Check_TargetPos();
+	//m_pTransformCom->Compute_LookAtTarget(&m_vTargetPos);
 
+	//Check_TargetPos();
+	// Player Pos 위치 구한 다음 나와의 벡터 사이 각도 구하기
+	// 나의 look 벡터와 player로의 방향 벡터 사이의 각도 ?
+	// D3DXVec3Dot
+	//m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(dwMouseMove / 10.f));
 	CGameObject::Update_GameObject(fTimeDelta);
+
+	float fAngle;
+	_vec3 vLook, vPlayerPos, vPos, vDir;
+
+	//dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"))->Get_Info(INFO_POS, &vPlayerPos);
+	m_pTransformCom->Get_Info(INFO_POS, &vPos); // vPos 가 0 인 상황 -> Update_GameObject 옮기고 괜찮아짐
+	m_pTransformCom->Get_Info(INFO_LOOK, &vLook); // vLook 이 0 인 상황 -> 애초에 룩벡터가 0 0 0?
+	m_pTargetTransCom->Get_Info(INFO_POS, &vPlayerPos);
+	vDir = vPlayerPos - vPos;
+	/*vDir = _vec3( vDir.x,0, vDir.z );
+	vLook = _vec3(vLook.x, 0, vLook.z);*/
+	fAngle = D3DXVec3Dot(D3DXVec3Normalize(&vDir, &vDir), D3DXVec3Normalize(&vLook, &vLook));
+
+	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(fAngle));
+
+	
 
 	if (MONSTRO_IDLE == m_eCurState || MONSTRO_END == m_eCurState) // 기본 상태일 때
 	{
@@ -120,8 +144,7 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 	if(m_bJump)
 		JumpTo_Player(fTimeDelta);
 
-
-	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+	//m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
 	Engine::Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -142,7 +165,7 @@ void CMonstro::LateUpdate_GameObject()
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
-	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	m_pTransformCom->Get_Info(INFO_POS, &vPos); // 여기서는 0이 아님
 	__super::Compute_ViewZ(&vPos);
 }
 
@@ -219,31 +242,31 @@ void CMonstro::Motion_Change()
 		case CMonstro::MONSTRO_IDLE:
 			m_iPicNum = 3;
 			m_fFrameSpeed = 0.3f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Monstro", L"Proto_MonstroTexture"));
 			break;
 
 		case CMonstro::MONSTRO_ATTACK:
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroAttackTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Monstro", L"Proto_MonstroAttackTexture"));
 			break;
 
 		case CMonstro::MONSTRO_MOVE:
 			m_iPicNum = 5;
 			m_fFrameSpeed = 1.2f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroJumpTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Monstro", L"Proto_MonstroJumpTexture"));
 			break;
 
 		case CMonstro::MONSTRO_UP:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 0.1f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroUpTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Monstro", L"Proto_MonstroUpTexture"));
 			break;
 
 		case CMonstro::MONSTRO_DOWN:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 0.1f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Monstro", L"Proto_MonstroDownTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Monstro", L"Proto_MonstroDownTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;
@@ -338,14 +361,14 @@ void CMonstro::AttackTo_Player()
 
 		vDir = vRandPos - vPos;
 
-		m_BulletList.push_back(CMstBullet::Create(m_pGraphicDev));
+		m_BulletList.push_back(CMstBullet::Create(m_pGraphicDev, m_vecMyLayer[0]));
 		dynamic_cast<CMstBullet*>(m_BulletList.back())->Set_Dir(vDir);
 	}
 }
 
 void CMonstro::Check_TargetPos()
 {
-	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
 
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
 }

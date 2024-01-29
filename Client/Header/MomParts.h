@@ -3,14 +3,14 @@
 #include "Monster.h"
 #include "GameObject.h"
 
-class CMom : public CMonster
+class CMomParts : public CMonster
 {
 private:
-	explicit CMom(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CMom(const CMom& rhs);
-	virtual ~CMom();
+	explicit CMomParts(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex);
+	explicit CMomParts(const CMomParts& rhs);
+	virtual ~CMomParts();
 
-	enum MOMSTATE{}; // 필요 없을 거 같음
+	enum PARTSSTATE{MOM_DOOR, MOM_EYE, MOM_SKIN, MOM_HAND, MOM_END};
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -18,18 +18,29 @@ public:
 	virtual void	LateUpdate_GameObject()					 override;
 	virtual void	Render_GameObject()						 override;
 
+	void				Setting_Value();
+
 private:
 	virtual HRESULT		Add_Component()						override;
 	virtual void		Motion_Change()						override;
 
+	void				Set_RandNum();
+	void				Change_State();
+
+	void				Hit();
+
 private:
 	// 변수
 	_int				m_iRandNum;
+	_int				m_iIndex;
 	_int				m_iPicNum;
 	_float				m_fFrameSpeed = 1.f;
 
+	PARTSSTATE			m_ePreState;
+	PARTSSTATE			m_eCurState;
+
 public:
-	static CMom*	Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CMomParts* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex);
 
 private:
 	virtual void	Free()									override;

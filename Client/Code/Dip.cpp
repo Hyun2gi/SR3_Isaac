@@ -12,7 +12,7 @@ CDip::CDip(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
 }
 
 CDip::CDip(const CDip& rhs)
-	: CMonster(m_pGraphicDev)
+	: CMonster(rhs)
 {
 }
 
@@ -137,13 +137,13 @@ void CDip::Motion_Change()
 		case CDip::DIP_IDLE:
 			m_iPicNum = 3;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Dip", L"Proto_DipTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Dip", L"Proto_DipTexture"));
 			break;
 
 		case CDip::DIP_SLIDE:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 2.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Dip", L"Proto_DipSlideTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Dip", L"Proto_DipSlideTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;

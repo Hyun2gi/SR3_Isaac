@@ -115,6 +115,9 @@
     <Filter Include="01. Scene\03. LoadStage">
       <UniqueIdentifier>{b12f5bdd-c680-426e-b48f-928ea37002b5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\01. Monster\99. Boss\01. Mom\00. MomParts">
+      <UniqueIdentifier>{80ff7e50-0d3d-4122-bddc-f926d4e1004a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -219,6 +222,12 @@
     <ClInclude Include="..\Header\LoadStage.h">
       <Filter>01. Scene\03. LoadStage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Mom.h">
+      <Filter>02. GameObject\01. Monster\99. Boss\01. Mom</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\MomParts.h">
+      <Filter>02. GameObject\01. Monster\99. Boss\01. Mom\00. MomParts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -313,6 +322,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\LoadStage.cpp">
       <Filter>01. Scene\03. LoadStage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Mom.cpp">
+      <Filter>02. GameObject\01. Monster\99. Boss\01. Mom</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MomParts.cpp">
+      <Filter>02. GameObject\01. Monster\99. Boss\01. Mom\00. MomParts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
