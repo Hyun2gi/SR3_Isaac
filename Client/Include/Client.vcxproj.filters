@@ -171,6 +171,9 @@
     <ClInclude Include="..\Header\MstBullet.h">
       <Filter>02. GameObject\07. Bullet\01. MonsterBullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Mom.h">
+      <Filter>02. GameObject\01. Monster\99. Boss\01. Mom</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -241,6 +244,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\MstBullet.cpp">
       <Filter>02. GameObject\07. Bullet\01. MonsterBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Mom.cpp">
+      <Filter>02. GameObject\01. Monster\99. Boss\01. Mom</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
