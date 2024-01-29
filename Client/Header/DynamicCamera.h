@@ -96,7 +96,7 @@ private:
 	// 흔들림
 	float		m_fShakeTime;
 	float		m_fShakeIntensity;
-	int			m_fShakeNum; // -, + 조절
+	int			m_iShakeNum; // -, + 조절
 
 	float		m_fMoveTime;
 
@@ -131,5 +131,7 @@ private:
 	DYNAMICCAMERAID		m_ePreState;
 
 
+
+	_vec3				m_atdir;
 };
 

@@ -26,7 +26,9 @@ private:
 	// SHOOTWALK : 쏘는 자세 (머리통이 작아짐)
 	// GOOD : 따봉
 	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_THUMBS_UP, P_END  };
-
+	
+	enum BULLETID
+	{	P_BULLET_IDLE, P_BULLET_BRIMSTONE,P_BULLET_END};
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
