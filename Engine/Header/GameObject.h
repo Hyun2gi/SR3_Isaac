@@ -16,6 +16,8 @@ public:
 	_float			Get_ViewZ() { return m_fViewZ; }
 	CComponent*		Get_Component(COMPONENTID eID, const _tchar* pComponentTag);
 	void			Compute_ViewZ(const _vec3* pPos);
+	void			Set_MyLayer(const _tchar* pLayerTag) { m_vecMyLayer.push_back(pLayerTag); }
+
 public:
 	virtual HRESULT		Ready_GameObject();
 	virtual _int		Update_GameObject(const _float& fTimeDelta);
@@ -26,6 +28,7 @@ protected:
 	LPDIRECT3DDEVICE9					m_pGraphicDev;
 	map<const _tchar*, CComponent*>		m_mapComponent[ID_END];
 	_float								m_fViewZ;
+	vector<const _tchar*>				m_vecMyLayer;
 
 private:
 	CComponent*		Find_Component(COMPONENTID eID, const _tchar* pComponentTag);

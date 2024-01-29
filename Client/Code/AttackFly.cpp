@@ -37,6 +37,8 @@ HRESULT CAttackFly::Ready_GameObject()
 
 	m_ePreState = FLY_END;
 
+	m_iPicNum = 0;
+
 	return S_OK;
 }
 
@@ -97,7 +99,7 @@ void CAttackFly::Render_GameObject()
 
 void CAttackFly::Revolve_Center()
 {
-	m_pCenterTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"CenterFly", L"Proto_Transform"));
+	m_pCenterTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"CenterFly", L"Proto_Transform"));
 
 	_vec3 vPos;
 	m_pCenterTransCom->Get_Info(INFO_POS, &vPos);
@@ -155,13 +157,13 @@ void CAttackFly::Motion_Change()
 		case CAttackFly::FLY_IDLE:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"AttackFly", L"Proto_AttackFlyTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"AttackFly", L"Proto_AttackFlyTexture"));
 			break;
 
 		case CAttackFly::FLY_DEAD:
 			m_iPicNum = 11;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"AttackFly", L"Proto_FlyDeadTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"AttackFly", L"Proto_FlyDeadTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;
