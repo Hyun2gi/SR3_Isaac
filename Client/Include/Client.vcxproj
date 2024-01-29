@@ -159,13 +159,18 @@
   <ItemGroup>
     <ClInclude Include="..\Header\AttackFly.h" />
     <ClInclude Include="..\Header\BackGround.h" />
+    <ClInclude Include="..\Header\BrimStone.h" />
     <ClInclude Include="..\Header\Charger.h" />
+    <ClInclude Include="..\Header\Coin.h" />
     <ClInclude Include="..\Header\Dip.h" />
     <ClInclude Include="..\Header\DynamicCamera.h" />
     <ClInclude Include="..\Header\Effect.h" />
+    <ClInclude Include="..\Header\Epic.h" />
     <ClInclude Include="..\Header\Fly.h" />
+    <ClInclude Include="..\Header\Item.h" />
     <ClInclude Include="..\Header\Leaper.h" />
     <ClInclude Include="..\Header\Loading.h" />
+    <ClInclude Include="..\Header\LoadStage.h" />
     <ClInclude Include="..\Header\Logo.h" />
     <ClInclude Include="..\Header\MainApp.h" />
     <ClInclude Include="..\Header\Mom.h" />
@@ -173,12 +178,15 @@
     <ClInclude Include="..\Header\Monstro.h" />
     <ClInclude Include="..\Header\MstBullet.h" />
     <ClInclude Include="..\Header\Pacer.h" />
+    <ClInclude Include="..\Header\Pill.h" />
     <ClInclude Include="..\Header\Player.h" />
     <ClInclude Include="..\Header\PlayerBullet.h" />
+    <ClInclude Include="..\Header\SadOnion.h" />
     <ClInclude Include="..\Header\SkyBox.h" />
     <ClInclude Include="..\Header\Squirt.h" />
     <ClInclude Include="..\Header\Stage.h" />
     <ClInclude Include="..\Header\Terrain.h" />
+    <ClInclude Include="..\Header\WhipWorm.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -187,13 +195,18 @@
   <ItemGroup>
     <ClCompile Include="..\Code\AttackFly.cpp" />
     <ClCompile Include="..\Code\BackGround.cpp" />
+    <ClCompile Include="..\Code\BrimStone.cpp" />
     <ClCompile Include="..\Code\Charger.cpp" />
+    <ClCompile Include="..\Code\Coin.cpp" />
     <ClCompile Include="..\Code\Dip.cpp" />
     <ClCompile Include="..\Code\DynamicCamera.cpp" />
     <ClCompile Include="..\Code\Effect.cpp" />
+    <ClCompile Include="..\Code\Epic.cpp" />
     <ClCompile Include="..\Code\Fly.cpp" />
+    <ClCompile Include="..\Code\Item.cpp" />
     <ClCompile Include="..\Code\Leaper.cpp" />
     <ClCompile Include="..\Code\Loading.cpp" />
+    <ClCompile Include="..\Code\LoadStage.cpp" />
     <ClCompile Include="..\Code\Logo.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\Mom.cpp" />
@@ -201,12 +214,15 @@
     <ClCompile Include="..\Code\Monstro.cpp" />
     <ClCompile Include="..\Code\MstBullet.cpp" />
     <ClCompile Include="..\Code\Pacer.cpp" />
+    <ClCompile Include="..\Code\Pill.cpp" />
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\PlayerBullet.cpp" />
+    <ClCompile Include="..\Code\SadOnion.cpp" />
     <ClCompile Include="..\Code\SkyBox.cpp" />
     <ClCompile Include="..\Code\Squirt.cpp" />
     <ClCompile Include="..\Code\Stage.cpp" />
     <ClCompile Include="..\Code\Terrain.cpp" />
+    <ClCompile Include="..\Code\WhipWorm.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -27,11 +27,19 @@ private:
 	// GOOD : µûºÀ
 	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_THUMBS_UP, P_END  };
 
+
 public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
+
+public:
+	void		Set_KeyBlock(_bool keyblock)
+	{
+		// keyblockÀÌ true¸é key ¿òÁ÷ÀÓ ¸·Èû
+		m_bKeyBlock = keyblock;
+	}
 
 private:
 	HRESULT			Add_Component();

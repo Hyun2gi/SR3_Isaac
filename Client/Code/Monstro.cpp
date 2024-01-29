@@ -365,5 +365,15 @@ CMonster* CMonstro::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CMonstro::Free()
 {
+	if (!m_BulletList.empty())
+	{
+		for (auto& iter = m_BulletList.begin();
+			iter != m_BulletList.end(); )
+		{
+			Safe_Release<CGameObject*>(*iter);
+			iter = m_BulletList.erase(iter);
+		}
+	}
+
 	__super::Free();
 }
