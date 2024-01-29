@@ -103,6 +103,20 @@ _uint CLoading::Loading_ForStage()
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinTexture_IDLE", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/coin_%d.png", 6)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinTexture_EFFECT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/coin_effect_%d.png", 5)), E_FAIL);
 
+	//Pill 이미지
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_Pill", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/pill_%d.png", 5)), E_FAIL);
+
+	//우는양파 이미지
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_SadOnion", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/collectibles_001_thesadonion.png", 1)), E_FAIL);
+
+	//BrimStone
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_BrimstoneItem", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/BrimstoneItem.png", 1)), E_FAIL);
+
+	//EpicItem
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_EpicItem", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/EpicItem.png", 1)), E_FAIL);
+
+	//EpicItem
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_Whipworm", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/trinket_027_whipworm.png", 1)), E_FAIL);
 
 	m_bFinish = true;
 

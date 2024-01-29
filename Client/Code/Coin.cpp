@@ -162,4 +162,5 @@ CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CCoin::Free()
 {
+	__super::Free();
 }

@@ -3,22 +3,11 @@
 #include "Item.h"
 #include "GameObject.h"
 
-class CPill : public CItem
+class CSadOnion : public CItem
 {
-private:
-	explicit CPill(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CPill(const CPill& rhs);
-	virtual ~CPill();
-
-	enum PILLSTATE
-	{
-		PILL_0,
-		PILL_1,
-		PILL_2,
-		PILL_3,
-		PILL_4,
-		PILL_END
-	};
+	explicit CSadOnion(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CSadOnion(const CSadOnion& rhs);
+	virtual ~CSadOnion();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -33,15 +22,12 @@ private:
 
 private:
 	// 랜덤값으로 한 이미지 지정하면 계속 유지
-	_int				m_iPicNum;
-
-	PILLSTATE			m_eCurState;
+	_float					m_fPicNum;
 
 public:
-	static CPill* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CSadOnion* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void		Free()									override;
-
 };
 
