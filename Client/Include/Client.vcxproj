@@ -173,6 +173,7 @@
     <ClInclude Include="..\Header\LoadStage.h" />
     <ClInclude Include="..\Header\Logo.h" />
     <ClInclude Include="..\Header\MainApp.h" />
+    <ClInclude Include="..\Header\Mom.h" />
     <ClInclude Include="..\Header\Monster.h" />
     <ClInclude Include="..\Header\Monstro.h" />
     <ClInclude Include="..\Header\MstBullet.h" />
@@ -208,6 +209,7 @@
     <ClCompile Include="..\Code\LoadStage.cpp" />
     <ClCompile Include="..\Code\Logo.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
+    <ClCompile Include="..\Code\Mom.cpp" />
     <ClCompile Include="..\Code\Monster.cpp" />
     <ClCompile Include="..\Code\Monstro.cpp" />
     <ClCompile Include="..\Code\MstBullet.cpp" />

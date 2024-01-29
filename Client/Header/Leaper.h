@@ -20,6 +20,7 @@ public:
 
 private:
 	virtual HRESULT		Add_Component()						override;
+	virtual void		Motion_Change()						override;
 
 	void				Change_Dir(const _float& fTimeDelta);
 	void				Check_TargetPos();
@@ -27,16 +28,19 @@ private:
 	void				JumpTo_Player(const _float& fTimeDelta);
 
 private:
-	bool				m_bMove;
-	bool				m_bJump;
-	int					m_iRandNum;
+	_bool				m_bMove;
+	_bool				m_bJump;
+	_int				m_iRandNum;
+	_int				m_iPicNum;
+	_float				m_fFrameSpeed = 1.f;
 
-	float				m_fPower;
-	float				m_fAccelTime;
+	_float				m_fPower;
+	_float				m_fAccelTime;
 
 	_vec3				m_vTargetPos;
 
-	LEAPERSTATE			m_eState;
+	LEAPERSTATE			m_ePreState;
+	LEAPERSTATE			m_eCurState;
 
 public:
 	static CLeaper* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID);

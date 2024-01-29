@@ -10,7 +10,7 @@ private:
 	explicit CMonstro(const CMonstro& rhs);
 	virtual ~CMonstro();
 
-	enum MONSTROSTATE{MONSTRO_IDLE, MONSTRO_ATTACK, MONSTRO_MOVE, MONSTRO_JUMP, MONSTRO_END};
+	enum MONSTROSTATE{MONSTRO_IDLE, MONSTRO_ATTACK, MONSTRO_MOVE, MONSTRO_UP, MONSTRO_DOWN, MONSTRO_END};
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -20,6 +20,7 @@ public:
 
 private:
 	virtual HRESULT	Add_Component()							override;
+	virtual void	Motion_Change()							override;
 
 	void			MoveTo_Player(const _float& fTimeDelta);
 	void			JumpTo_Player(const _float& fTimeDelta);
@@ -28,14 +29,17 @@ private:
 	void			Check_TargetPos();
 
 private:
-	bool			m_bUp;
-	bool			m_bBullet;
-	float			m_fPower;
-	float			m_fAccelTime;
+	_bool			m_bJump;
+	_bool			m_bBullet;
+	_int			m_iPicNum;
+	_float			m_fFrameSpeed = 1.f;
+	_float			m_fPower;
+	_float			m_fAccelTime;
 
 	_vec3			m_vTargetPos;
 
-	MONSTROSTATE	m_eState;
+	MONSTROSTATE	m_ePreState;
+	MONSTROSTATE	m_eCurState;
 
 	list<CGameObject*> m_BulletList;
 
