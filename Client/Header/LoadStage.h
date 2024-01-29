@@ -9,7 +9,8 @@ class CLoadStage : public Engine::CScene
 private:
 	struct LoadObj
 	{
-		int iType, iIndex, iX, iY, iZ;
+		int iType, iIndex;
+		_float iX, iY, iZ;
 	};
 
 private:
@@ -25,10 +26,12 @@ public:
 private:
 	// 전체 맵의 연결관계를 불러서 m_mapLevel 에 저장해두는 함수
 	HRESULT Load_Level_Data();
-	// 현재 스테이지의 디자인을 불러오는 함수
-	HRESULT Load_Stage_Data(int iType);
+	
+	// 현재 맵의 연결되어있는 방 정보를 불러오는 함수
+	HRESULT Load_Stage_Data();
 
-	void	Create_GameObject(int iObjType, int iIndex, float x, float y, float z);
+	// 현재 스테이지의 디자인을 불러오는 함수
+	HRESULT Load_Stage_Design_Data();
 
 private:
 	HRESULT			Ready_Layer_Environment(const _tchar* pLayerTag);
@@ -52,5 +55,6 @@ private:
 	int m_iCurStageKey;
 
 	vector<int> m_vecMonsterCount;
+	vector<int> m_vecConnectRoom;
 };
 
