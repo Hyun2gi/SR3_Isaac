@@ -70,9 +70,10 @@ void CMstBullet::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
-CMstBullet* CMstBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CMstBullet* CMstBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag)
 {
     CMstBullet* pInstance = new CMstBullet(pGraphicDev);
+    pInstance->Set_MyLayer(pLayerTag);
 
     if (FAILED(pInstance->Ready_GameObject()))
     {
@@ -99,8 +100,8 @@ HRESULT CMstBullet::Add_Component()
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 
     _vec3   vPos;
-    dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Monstro", L"Proto_Transform"))->Get_Info(INFO_POS, &vPos);
-    dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Monstro", L"Proto_Transform"))->Get_Info(INFO_LOOK, &m_vBulletDir);
+    dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Monstro", L"Proto_Transform"))->Get_Info(INFO_POS, &vPos);
+    dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Monstro", L"Proto_Transform"))->Get_Info(INFO_LOOK, &m_vBulletDir);
 
     m_pTransformCom->Set_Pos(vPos);
 

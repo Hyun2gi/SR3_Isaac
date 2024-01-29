@@ -141,12 +141,12 @@ void CCoin::Motion_Change()
 		case COIN_IDLE:
 			m_fPicNum = 6;
 			m_fSpriteSpeed = 2.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Coin", L"Proto_CoinTexture_IDLE"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Coin", L"Proto_CoinTexture_IDLE"));
 			break;
 		case COIN_GET:
 			m_fPicNum = 5;
 			m_fSpriteSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Coin", L"Proto_CoinTexture_EFFECT"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Coin", L"Proto_CoinTexture_EFFECT"));
 			break;
 		}
 

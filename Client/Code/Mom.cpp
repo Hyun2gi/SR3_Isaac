@@ -21,11 +21,14 @@ HRESULT CMom::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	//m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
-	m_pTransformCom->Set_Pos(10.f, 1.f, 10.f);
+	//m_pTransformCom->Set_Pos(10.f, 1.f, 10.f);
 
 	m_iHp = 645; // 조정 필요 할지도
 
-	m_fCallLimit = 2;
+	m_iRandNum = 0;
+	m_iPicNum = 1;
+
+	m_fCallLimit = 3;
 	m_fSpeed = 8.f;
 
 	//m_ePreState = LEAPER_END;
@@ -38,7 +41,17 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 	// eye, skin, hand 가 네 방향 문에서 랜덤하게 나옴
 	// 덮어 씌우기 전의 문이 필요? Mom 을 쓰러뜨리면 문도 사라져야 함
 	// 아니면 텍스쳐 세 개를 다 갖는 오브젝트를 만들어서 랜덤하게 오브젝트 띄우기
-	// 평면인데 손 후려치기는 어떻게?
+	// 평면인데 손 후려치기는 어떻게? -> 리소스로 해결
+	// 총 네 개의 자식 오브젝트 생성
+
+	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
+
+	if (m_iPicNum < m_fFrame)
+		m_fFrame = 0.f;
+
+	CGameObject::Update_GameObject(fTimeDelta);
+
+
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
