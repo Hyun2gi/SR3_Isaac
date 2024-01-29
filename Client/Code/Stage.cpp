@@ -86,8 +86,6 @@ HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
 	
-	
-		
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;

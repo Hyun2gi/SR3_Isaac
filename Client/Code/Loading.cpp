@@ -31,6 +31,14 @@ HRESULT CLoading::Ready_Loading(LOADINGID eID)
 	return S_OK;
 }
 
+_uint CLoading::Loading_ForStage_Load(int iType)
+{
+
+
+
+	return _uint();
+}
+
 _uint CLoading::Loading_ForStage()
 {
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_TriCol", CTriCol::Create(m_pGraphicDev)), E_FAIL);
@@ -135,6 +143,9 @@ unsigned int CLoading::Thread_Main(void * pArg)
 
 	switch (pLoading->Get_LoadingID())
 	{
+	case LOADING_STAGE_0:
+		iFlag = pLoading->Loading_ForStage_Load((int)pLoading->Get_LoadingID());
+		break;
 	case LOADING_STAGE:
 		iFlag = pLoading->Loading_ForStage();
 		break;
