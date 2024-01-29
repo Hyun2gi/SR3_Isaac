@@ -33,32 +33,33 @@ HRESULT CCoin::Ready_GameObject()
 
 _int CCoin::Update_GameObject(const _float& fTimeDelta)
 {
-	CTransform* playerInfo = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+	if (m_eCurState == COIN_IDLE)
+	{
+		if (m_iDelay == 0)
+		{
+			m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
+		}
+		else
+		{
+			m_fFrame = 0.f;
+			m_iDelay--;
+		}
 
-	_vec3		playerPos;
-	_vec3		playerDir;
 
-
-	playerInfo->Get_Info(INFO_POS, &playerPos);
-	playerInfo->Get_Info(INFO_LOOK, &playerDir);
-
-	m_pTransformCom->Set_Pos(playerPos+playerDir*2);
-
-	if (m_iDelay == 0)
+		if (m_fPicNum < m_fFrame)
+		{
+			m_fFrame = 0.f;
+			m_iDelay = 70;
+		}
+	}
+	else if(m_eCurState == COIN_GET)
 	{
 		m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
-	}
-	else
-	{
-		m_fFrame = 0.f;
-		m_iDelay--;
-	}
-	
 
-	if (m_fPicNum < m_fFrame)
-	{
-		m_fFrame = 0.f;
-		m_iDelay = 70;
+		if (m_fPicNum < m_fFrame)
+		{
+			// 없애기
+		}
 	}
 		
 
@@ -94,6 +95,13 @@ void CCoin::Render_GameObject()
 
 	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+}
+
+void CCoin::Run_Item_Effect()
+{
+	m_eCurState = COIN_GET;
+	// 첫 이미지부터 시작
+	m_fFrame = 0;
 }
 
 HRESULT CCoin::Add_Component()

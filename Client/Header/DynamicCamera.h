@@ -54,6 +54,7 @@ public:
 	void	OnShakeCameraRot(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
 
 	void	OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition);
+	void	OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveSpeed, _vec3 target, bool fixedPosition);
 
 private:
 	virtual void Free();

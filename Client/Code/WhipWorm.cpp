@@ -60,6 +60,10 @@ void CWhipWorm::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
+void CWhipWorm::Run_Item_Effect()
+{
+}
+
 HRESULT CWhipWorm::Add_Component()
 {
     CComponent* pComponent = nullptr;

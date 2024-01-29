@@ -82,6 +82,32 @@ void CPill::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
+void CPill::Run_Item_Effect()
+{
+	srand((unsigned)time(NULL));
+	int iEffectNum = rand() % 5;
+
+	// ¾à È¿°ú
+	switch (iEffectNum)
+	{
+	case 0:
+		m_eCurState = PILL_0;
+		break;
+	case 1:
+		m_eCurState = PILL_1;
+		break;
+	case 2:
+		m_eCurState = PILL_2;
+		break;
+	case 3:
+		m_eCurState = PILL_3;
+		break;
+	case 4:
+		m_eCurState = PILL_4;
+		break;
+	}
+}
+
 HRESULT CPill::Add_Component()
 {
 	CComponent * pComponent = nullptr;
