@@ -322,15 +322,23 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 
 				_vec3 templook;
 				templook = _vec3(m_vAt.x, 0, m_vAt.z) - _vec3(m_vStartAtPosition.x, 0, m_vStartAtPosition.x);
+				templook = m_vAt - m_vStartAtPosition;
 
 				D3DXVec3Normalize(&templook, &templook);
 
-				m_atdir = templook;
 
 				_vec3 moveDir;
 				D3DXVec3Cross(&moveDir, &(_vec3(0, 1, 0)), &templook);
+				
+				//테스트추가
+				//moveDir = _vec3(moveDir.x, 0, moveDir.z);
+				// x축으로 직선일때는 양옆으로
+				// moveDir = _vec3(1, 0, 0);
+				//moveDir = _vec3(0.5, 0, 0.5);
 
 				D3DXVec3Normalize(&moveDir, &moveDir);
+
+				
 
 				if (m_iShakeNum % 2 == 0)
 				{
@@ -338,8 +346,10 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 				}
 				m_iShakeNum++;
 				
+				// 목표위치
 				// moveDir과 곱해주는 값은 작아야함!!
-				m_vGoalPosition = m_vStartPosition + moveDir*0.7;
+				//m_vGoalPosition = m_vStartEyePosition + moveDir*0.2;
+				m_vGoalPosition = m_vStartEyePosition + moveDir * 0.2;
 			}
 			else
 			{
@@ -354,7 +364,10 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 		}
 		else
 		{
-			m_vEye = m_vStartPosition;
+			m_vEye = m_vStartEyePosition;
+			//m_vAt = m_vStartAtPosition;
+
+			//다시 플레이어 향하게
 			m_eCurState = C_PLAYERCHASE;
 			m_fShakeTime = 0;
 			m_bShake = false;
@@ -417,7 +430,7 @@ void CDynamicCamera::ShakeByRotation(const _float& fTimeDelta)
 		}
 		else
 		{
-			m_vEye = m_vStartPosition;
+			m_vEye = m_vStartEyePosition;
 			m_eCurState = C_PLAYERCHASE;
 			m_fShakeTime = 0;
 			m_bShake = false;
@@ -448,7 +461,7 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 			// goalposition에 고정안하고 원래 position으로 돌아가는 경우
 			if (m_bFixedPos == false)
 			{
-				m_vEye = m_vStartPosition;
+				m_vEye = m_vStartEyePosition;
 			}
 		}
 
@@ -463,10 +476,11 @@ void CDynamicCamera::OnShakeCameraPos(float shakeTime, float shakeIntensity)
 	// public이어서 object 받아서 사용할까 생각중
 	m_fShakeTime = shakeTime;
 	m_fShakeIntensity = shakeIntensity;
+	m_iShakeNum = 0;
 
 	m_eCurState = C_SHAKING_POS;
 
-	m_vStartPosition = m_vEye;
+	m_vStartEyePosition = m_vEye;
 
 	m_bShake = true;
 	m_bFix = true; // 사용자 움직임 잠금 
@@ -483,7 +497,7 @@ void CDynamicCamera::OnShakeCameraRot(float shakeTime, float shakeIntensity)
 
 	m_eCurState = C_SHAKING_ROT;
 
-	m_vStartPosition = m_vEye;
+	m_vStartEyePosition = m_vEye;
 	m_vStartAtPosition = m_vAt;
 
 	// 쉐이킹 전 초기화
@@ -510,7 +524,7 @@ void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 t
 	if (m_bFixedPos == false)
 	{
 		// 다시 돌아가야할 경우 첫 시작점 저장
-		m_vStartPosition = m_vEye;
+		m_vStartEyePosition = m_vEye;
 	}
 }
 
@@ -531,7 +545,7 @@ void CDynamicCamera::OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveS
 	if (m_bFixedPos == false)
 	{
 		// 다시 돌아가야할 경우 첫 시작점 저장
-		m_vStartPosition = m_vEye;
+		m_vStartEyePosition = m_vEye;
 	}
 }
 
