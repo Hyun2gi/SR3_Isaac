@@ -90,6 +90,9 @@ private:
 	PLAYERID			m_ePreState;
 	PLAYERID			m_eCurState;
 
+	// Bullet 상태 저장
+	BULLETID			m_eCurBulletState;
+
 	list<CGameObject*>	m_PlayerBulletList;
 
 	//움직이는 속도

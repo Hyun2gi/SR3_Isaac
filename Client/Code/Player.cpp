@@ -32,6 +32,8 @@ HRESULT CPlayer::Ready_GameObject()
 	m_fDelayTime = 0; 
 	m_bKeyBlock = false;
 	m_fSpriteSpeed = 1.5f;
+
+	m_eCurBulletState = P_BULLET_IDLE;
 	
 	// 20 될 동안 한발
 	m_fAttackSpeed = 20;
@@ -90,7 +92,12 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		for (auto& iter = m_PlayerBulletList.begin();
 			iter != m_PlayerBulletList.end(); )
 		{
-			dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletSpeed(m_fBulletSpeed);
+			// BrimStone 때는 속도 설정이 없어서
+			if (m_eCurBulletState == P_BULLET_IDLE)
+			{
+				dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletSpeed(m_fBulletSpeed);
+			}
+			
 			iResult = dynamic_cast<CPlayerBullet*>(*iter)->Update_GameObject(fTimeDelta);
 
 			if (1 == iResult)

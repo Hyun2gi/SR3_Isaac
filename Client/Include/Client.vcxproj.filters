@@ -118,6 +118,9 @@
     <Filter Include="02. GameObject\01. Monster\99. Boss\01. Mom\00. MomParts">
       <UniqueIdentifier>{80ff7e50-0d3d-4122-bddc-f926d4e1004a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Bullet\02. BrimStoneBullet">
+      <UniqueIdentifier>{694ca79b-71ac-40ec-b92c-6bcacb0e009a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -228,6 +231,9 @@
     <ClInclude Include="..\Header\MomParts.h">
       <Filter>02. GameObject\01. Monster\99. Boss\01. Mom\00. MomParts</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\BrimStoneBullet.h">
+      <Filter>02. GameObject\07. Bullet\02. BrimStoneBullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -328,6 +334,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\MomParts.cpp">
       <Filter>02. GameObject\01. Monster\99. Boss\01. Mom\00. MomParts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\BrimStoneBullet.cpp">
+      <Filter>02. GameObject\07. Bullet\02. BrimStoneBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
