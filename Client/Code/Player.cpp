@@ -242,18 +242,12 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_eCurState = P_IDLE;
 	}
 
-	//총을 쏘고 있을때 바로 이미지가 바껴서 이미지가 잠깐 안바뀌게
-	if (m_fShootDelayTime > 0 && m_fShootDelayTime < 7)
-	{
-		m_eCurState = P_SHOOTWALK;
-	}
-
 	// 총 delay는 누르지 않고 있어도 카운트 해야하기 때문에 돌려주기
 	if (m_fShootDelayTime != 0)
 	{
 		m_fShootDelayTime++;
 
-		if (m_fShootDelayTime > 10)
+		if (m_fShootDelayTime > 20)
 		{
 			m_fShootDelayTime = 0;
 		}
@@ -262,6 +256,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	// 총알 발사
 	if (Engine::Get_DIMouseState(DIM_LB) & 0x80)
 	{
+		m_eCurState = P_SHOOTWALK;
 		// m_fShootDelay가 0일때만 쏠 수 있음
 		if (m_fShootDelayTime == 0)
 		{

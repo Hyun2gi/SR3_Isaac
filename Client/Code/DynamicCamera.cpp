@@ -113,8 +113,8 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		if (m_bShake == false)
 		{
 			//OnShakeCameraPos(float shakeTime, float shakeIntensity)
-			//OnShakeCameraPos(5, 2);
-			OnShakeCameraRot(2, 2);
+			OnShakeCameraPos(5, 2);
+			//OnShakeCameraRot(2, 2);
 		}
 	}
 
@@ -299,6 +299,7 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 		
 		if (m_fShakeTime > 0.0f)
 		{
+			/*
 			if (m_vGoalPosition == m_vEye)
 			{
 				float FLOAT_MAX = 1;
@@ -308,9 +309,9 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 
 				// -1~1 사이의 난수 생성
 
-				/*float randx = (float)(rand()) / ((float)(RAND_MAX / (FLOAT_MAX - FLOAT_MIN)));
+				float randx = (float)(rand()) / ((float)(RAND_MAX / (FLOAT_MAX - FLOAT_MIN)));
 				float randy = (float)(rand()) / ((float)(RAND_MAX / (FLOAT_MAX - FLOAT_MIN)));
-				float randz = (float)(rand()) / ((float)(RAND_MAX / (FLOAT_MAX - FLOAT_MIN)));*/
+				float randz = (float)(rand()) / ((float)(RAND_MAX / (FLOAT_MAX - FLOAT_MIN)));
 
 				float randx = (float)(rand() % 2 - 1);
 				float randy = (float)(rand() % 2 - 1);
@@ -328,6 +329,9 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 
 				m_vEye = _movevec;
 			}
+			
+			*/
+			
 			m_fShakeTime -= fTimeDelta;
 		}
 		else

@@ -60,6 +60,10 @@ void CSadOnion::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
+void CSadOnion::Run_Item_Effect()
+{
+}
+
 HRESULT CSadOnion::Add_Component()
 {
 	CComponent* pComponent = nullptr;

@@ -85,6 +85,10 @@ void CBrimStone::Motion_Change()
 {
 }
 
+void CBrimStone::Run_Item_Effect()
+{
+}
+
 CBrimStone* CBrimStone::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	CBrimStone* pInstance = new CBrimStone(pGraphicDev);

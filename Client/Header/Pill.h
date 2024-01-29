@@ -26,6 +26,9 @@ public:
 	virtual void	LateUpdate_GameObject()					 override;
 	virtual void	Render_GameObject()						 override;
 
+public:
+	void			Run_Item_Effect();
+
 private:
 	virtual HRESULT		Add_Component()						override;
 	virtual void		Motion_Change()						override;

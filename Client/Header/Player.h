@@ -27,6 +27,7 @@ private:
 	// GOOD : µûºÀ
 	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_THUMBS_UP, P_END  };
 
+
 public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
