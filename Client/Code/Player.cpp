@@ -33,6 +33,9 @@ HRESULT CPlayer::Ready_GameObject()
 	m_bKeyBlock = false;
 	m_fSpriteSpeed = 1.5f;
 
+	m_fFrame = 0.f;
+	m_fPicNum = 0.f;
+
 	//m_pTransformCom->m_vScale = { 2.f, 1.f, 1.f };
 
 	return S_OK;
