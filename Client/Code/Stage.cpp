@@ -16,6 +16,8 @@
 #include "Charger.h"
 
 #include "Monstro.h"
+#include "Mom.h"
+#include "MomParts.h"
 
 #include "BackGround.h"
 #include "Terrain.h"
@@ -156,9 +158,23 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Charger", pGameObject), E_FAIL);
 
 	// Monstro
-	pGameObject = CMonstro::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Monstro", pGameObject), E_FAIL);
+	//pGameObject = CMonstro::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Monstro", pGameObject), E_FAIL);
+
+	// Mom
+
+	// Mom's Parts
+	for (int i = 0; i < 4; ++i)
+	{
+		pGameObject = CMomParts::Create(m_pGraphicDev, i);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
+		dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
+	}
+
+
+
 
 	// Coin
 	pGameObject = CCoin::Create(m_pGraphicDev);

@@ -12,7 +12,7 @@ CDip::CDip(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
 }
 
 CDip::CDip(const CDip& rhs)
-	: CMonster(m_pGraphicDev)
+	: CMonster(rhs)
 {
 }
 
