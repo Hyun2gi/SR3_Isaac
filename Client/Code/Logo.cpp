@@ -7,6 +7,7 @@
 
 #include "BackGround.h"
 #include "Stage.h"
+#include "LoadStage.h"
 
 CLogo::CLogo(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev), m_pLoading(nullptr)
@@ -22,7 +23,8 @@ HRESULT CLogo::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Prototype(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	
-	m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE);
+	//m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE);
+	m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE_0);
 	NULL_CHECK_RETURN(m_pLoading, E_FAIL);
 
 	return S_OK;
@@ -39,6 +41,18 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 			Engine::CScene*		pScene = nullptr;
 
 			pScene = CStage::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pScene, -1);
+
+			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			return 0;
+		}
+		
+		if (GetAsyncKeyState('0'))
+		{
+			Engine::CScene*		pScene = nullptr;
+
+			pScene = CLoadStage::Create(m_pGraphicDev, 0);
 			NULL_CHECK_RETURN(pScene, -1);
 
 			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
