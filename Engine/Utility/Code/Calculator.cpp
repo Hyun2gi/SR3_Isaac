@@ -207,8 +207,6 @@ bool CCalculator::Compute_Vill_Matrix(CTransform* _pTransformCom)
 {
 	if (!_pTransformCom) return false;
 
-	int i = 0;
-
 	_matrix	matWorld, matView, matBill;
 
 	_pTransformCom->Get_WorldMatrix(&matWorld);

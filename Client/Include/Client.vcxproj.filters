@@ -112,6 +112,9 @@
     <Filter Include="02. GameObject\08. Item\05. WhipWorm">
       <UniqueIdentifier>{6370de06-7fad-4ffb-900f-38d4f559e3e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\03. LoadStage">
+      <UniqueIdentifier>{b12f5bdd-c680-426e-b48f-928ea37002b5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -213,6 +216,9 @@
     <ClInclude Include="..\Header\WhipWorm.h">
       <Filter>02. GameObject\08. Item\05. WhipWorm</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\LoadStage.h">
+      <Filter>01. Scene\03. LoadStage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -304,6 +310,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\WhipWorm.cpp">
       <Filter>02. GameObject\08. Item\05. WhipWorm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LoadStage.cpp">
+      <Filter>01. Scene\03. LoadStage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
