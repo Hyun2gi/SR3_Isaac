@@ -21,6 +21,7 @@ HRESULT CBrimStoneBullet::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+    m_eCurState = BRIM_HEAD;
 	m_fAccTimeDelta = 0;
 
     // 지속시간

@@ -34,7 +34,7 @@ HRESULT CPlayer::Ready_GameObject()
 	m_bKeyBlock = false;
 	m_fSpriteSpeed = 1.5f;
 
-	m_eCurBulletState = P_BULLET_IDLE;
+	m_eCurBulletState = P_BULLET_BRIMSTONE;
 	
 	// 20 될 동안 한발
 	m_fAttackSpeed = 20;
