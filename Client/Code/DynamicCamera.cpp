@@ -252,7 +252,7 @@ void CDynamicCamera::Mouse_Move()
 		D3DXQuaternionRotationMatrix(&qRot, &matRotY);
 		D3DXVec3Cross(&vCross, &m_vUp, &vLook);
 		
-		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20)
+		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f)  < 50)
 		{
 			m_fAngleY -= (dwMouseMoveY / 10.f);
 			D3DXQuaternionRotationAxis(&qRot, &vCross, -D3DXToRadian(dwMouseMoveY / 10.f));

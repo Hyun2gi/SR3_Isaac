@@ -23,7 +23,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pGraphicDev = pGraphicDev;
 
-
+	m_eCurBulletState = P_BULLET_IDLE;
 	m_ePreState = P_END;
 
 	// 딜레이 시간 초기화
@@ -34,6 +34,9 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 
 	m_fFrame = 0.f;
 	m_fPicNum = 0.f;
+
+	m_iHp = 3;
+	m_iCoin = 0;
 
 	//m_pTransformCom->m_vScale = { 2.f, 1.f, 1.f };
 
@@ -262,7 +265,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		if (m_fShootDelayTime == 0)
 		{
 			m_eCurState = P_SHOOTWALK;
-			m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev, m_vecMyLayer[0]));
+			m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev, m_pLayerTag));
 			m_fShootDelayTime++;
 		}
 	}

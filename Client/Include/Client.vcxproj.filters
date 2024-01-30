@@ -133,6 +133,12 @@
     <Filter Include="02. GameObject\01. Monster\01. Attack Fly\01. NormalFly">
       <UniqueIdentifier>{2e228a1d-8597-4624-9d1c-51cd9ee76b72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\08. Item\07. Heart">
+      <UniqueIdentifier>{3863af4e-c73c-497e-9e58-f0d8ff890264}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Item\06. HeartHalf">
+      <UniqueIdentifier>{f77ef53a-6136-4f61-aba4-2784838e08a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -258,6 +264,12 @@
     <ClInclude Include="..\Header\Poop.h">
       <Filter>02. GameObject\09. MapObject\00. Poop</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\HeartHalf.h">
+      <Filter>02. GameObject\08. Item\06. HeartHalf</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Heart.h">
+      <Filter>02. GameObject\08. Item\07. Heart</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -373,6 +385,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\Poop.cpp">
       <Filter>02. GameObject\09. MapObject\00. Poop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\HeartHalf.cpp">
+      <Filter>02. GameObject\08. Item\06. HeartHalf</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Heart.cpp">
+      <Filter>02. GameObject\08. Item\07. Heart</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

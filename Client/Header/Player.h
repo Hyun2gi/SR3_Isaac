@@ -86,6 +86,8 @@ public:
 		m_iHp += _hp;
 	}
 
+	void		Set_LayerTag(_tchar* pLayerTag) { m_pLayerTag = pLayerTag; }
+
 public:
 	void		Bullet_Change_To_Brim();
 
@@ -97,6 +99,8 @@ private:
 	bool			Check_Time(const _float& fTimeDelta);
 
 private:
+	//bullet을 위한 layer 저장해놓는 변수
+	_tchar*				m_pLayerTag;
 	Engine::CRcTex*			m_pBufferCom;
 	Engine::CTransform*		m_pTransformCom;
 	Engine::CTexture*		m_pTextureCom;
@@ -135,6 +139,7 @@ private:
 	_float				m_fDelayTime;
 
 	int					m_iHp;
+	int					m_iCoin;
 
 public:
 	/*static CPlayer*		Create(LPDIRECT3DDEVICE9	pGraphicDev);*/
