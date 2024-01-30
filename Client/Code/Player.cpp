@@ -6,24 +6,23 @@
 
 #include "PlayerBullet.h"
 
-CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CGameObject(pGraphicDev)
+IMPLEMENT_SINGLETON(CPlayer)
+
+CPlayer::CPlayer()
 {
 }
 
-CPlayer::CPlayer(const CPlayer& rhs)
-	: Engine::CGameObject(rhs)
-{
-
-}
 
 CPlayer::~CPlayer()
 {
+	Free();
 }
 
-HRESULT CPlayer::Ready_GameObject()
+HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+	m_pGraphicDev = pGraphicDev;
+
 
 	m_ePreState = P_END;
 
@@ -186,19 +185,19 @@ HRESULT CPlayer::Add_Component()
 	return S_OK;
 }
 
-CPlayer * CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
-{
-	CPlayer *	pInstance = new CPlayer(pGraphicDev);
-
-	if (FAILED(pInstance->Ready_GameObject()))
-	{
-		Safe_Release(pInstance);
-		MSG_BOX("Player Create Failed");
-		return nullptr;
-	}
-
-	return pInstance;
-}
+//CPlayer * CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+//{
+//	CPlayer *	pInstance = new CPlayer(pGraphicDev);
+//
+//	if (FAILED(pInstance->Ready_GameObject(pGraphicDev)))
+//	{
+//		Safe_Release(pInstance);
+//		MSG_BOX("Player Create Failed");
+//		return nullptr;
+//	}
+//
+//	return pInstance;
+//}
 
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
@@ -325,38 +324,44 @@ void CPlayer::Motion_Change()
 		case P_IDLE:
 			m_fPicNum = 1;
 			m_fSpriteSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_IDLE"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_IDLE"));
 			break;
 		case P_IDLEWALK:
 			m_fPicNum = 11;
 			m_fSpriteSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_IDLE"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_IDLE"));
+			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_IDLE"));
 			break;
 		case P_BACKWALK:
 			m_fPicNum = 11;
 			m_fSpriteSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK"));
+			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK"));
 			break;
 		case P_SHOOTWALK:
 			m_fPicNum = 11;
 			m_fSpriteSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK_SMALL"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK_SMALL"));
+			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK_SMALL"));
 			break;
 		case P_LEFTWALK:
 			m_fPicNum = 8;
 			m_fSpriteSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_LEFT"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_LEFT"));
+			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_LEFT"));
 			break;
 		case P_RIGHTWALK:
 			m_fPicNum = 8;
 			m_fSpriteSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_RIGHT"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_RIGHT"));
+			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_RIGHT"));
 			break;
 		case P_THUMBS_UP:
 			m_fPicNum = 2;
 			m_fSpriteSpeed = 2.f;
 			m_bKeyBlock = true; //key ¸·±â
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_THUMBS_UP"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_THUMBS_UP"));
+			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_THUMBS_UP"));
 			break;
 		}
 

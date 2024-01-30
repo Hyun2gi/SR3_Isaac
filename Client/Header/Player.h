@@ -15,9 +15,10 @@ END
 
 class CPlayer :	public Engine::CGameObject
 {
+	DECLARE_SINGLETON(CPlayer)
+
 private:
-	explicit CPlayer(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CPlayer(const CPlayer& rhs);
+	explicit CPlayer();
 	virtual ~CPlayer();
 
 	// IDLE : 안걷고 그냥 서있음
@@ -31,12 +32,34 @@ private:
 	{	P_BULLET_IDLE, P_BULLET_BRIMSTONE,P_BULLET_END};
 
 public:
-	virtual HRESULT Ready_GameObject()						 override;
+	virtual HRESULT Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
+	HRESULT			Add_Component();
+
 public:
+	CComponent*		Get_Component_Player(COMPONENTID eID, const _tchar* pComponentTag)
+	{
+		auto	iter = find_if(m_mapComponent[eID].begin(), m_mapComponent[eID].end(), CTag_Finder(pComponentTag));
+
+		if (iter == m_mapComponent[eID].end())
+			return nullptr;
+
+		return iter->second;
+	}
+
+	CComponent* Get_Component_Player_Transform()
+	{
+		auto	iter = find_if(m_mapComponent[ID_DYNAMIC].begin(), m_mapComponent[ID_DYNAMIC].end(), CTag_Finder(L"Proto_Transform"));
+
+		if (iter == m_mapComponent[ID_DYNAMIC].end())
+			return nullptr;
+
+		return iter->second;
+	}
+
 	void		Set_KeyBlock(_bool keyblock)
 	{
 		// keyblock이 true면 key 움직임 막힘
@@ -67,7 +90,6 @@ public:
 	void		Bullet_Change_To_Brim();
 
 private:
-	HRESULT			Add_Component();
 	void			Key_Input(const _float& fTimeDelta);
 	void			Height_OnTerrain();
 	_vec3			Picking_OnTerrain();
@@ -115,7 +137,7 @@ private:
 	int					m_iHp;
 
 public:
-	static CPlayer*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
+	/*static CPlayer*		Create(LPDIRECT3DDEVICE9	pGraphicDev);*/
 
 private:
 	virtual void Free() override;

@@ -2,6 +2,7 @@
 #include "..\Header\Loading.h"
 #include "Export_System.h"
 #include "Export_Utility.h"
+#include "Player.h"
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev)
 	: m_pGraphicDev(pGraphicDev)
@@ -261,7 +262,7 @@ unsigned int CLoading::Thread_Main(void * pArg)
 	case LOADING_BOSS:
 		break;
 	}
-	
+
 	LeaveCriticalSection(pLoading->Get_Crt());
 
 	//_endthreadex(0);

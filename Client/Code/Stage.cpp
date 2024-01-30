@@ -31,6 +31,7 @@
 #include "WhipWorm.h"
 #include "Epic.h"
 
+
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
 {
@@ -47,17 +48,20 @@ HRESULT CStage::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 
 	return S_OK;
 }
 
 Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 {	
+	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
 	return __super::Update_Scene(fTimeDelta);
 }
 
 void CStage::LateUpdate_Scene()
 {
+	CPlayer::GetInstance()->LateUpdate_GameObject();
 	__super::LateUpdate_Scene();
 }
 
@@ -119,7 +123,7 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//}
 
 	// Attack Fly
-	pGameObject = CAttackFly::Create(m_pGraphicDev, 0);
+	/*pGameObject = CAttackFly::Create(m_pGraphicDev, 0);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pGameObject->Set_MyLayer(pLayerTag);
 	dynamic_cast<CAttackFly*>(pGameObject)->Set_CenterObj();
@@ -131,7 +135,7 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
 		pGameObject->Set_MyLayer(pLayerTag);
 		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
-	}
+	}*/
 
 	//// Dip
 	//for (int i = 0; i < 5; ++i)
@@ -245,11 +249,6 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//pGameObject->Set_MyLayer(pLayerTag);
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Epic", pGameObject), E_FAIL);
 
-
-	pGameObject = CPlayer::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player", pGameObject), E_FAIL);
 
 	/*for (_int i = 0; i < 50; ++i)
 	{
