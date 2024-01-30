@@ -2,6 +2,7 @@
 #include "..\Header\Loading.h"
 #include "Export_System.h"
 #include "Export_Utility.h"
+#include "Player.h"
 
 CLoading::CLoading(LPDIRECT3DDEVICE9 pGraphicDev)
 	: m_pGraphicDev(pGraphicDev)
@@ -106,6 +107,12 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/Tear_%d.png", 13)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MstTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Monstertear/tear_%d.png", 13)), E_FAIL);
 
+	//BrimCenter
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_BrimCenter", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/BrimCenter_%d.png", 4)), E_FAIL);
+	//BrimHead
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_BrimHead", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/BrimHead.png", 1)), E_FAIL);
+
+
 	//Coin 이미지
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinTexture_IDLE", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/coin_%d.png", 6)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinTexture_EFFECT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/coin_effect_%d.png", 5)), E_FAIL);
@@ -125,10 +132,11 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	//EpicItem
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_Whipworm", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/trinket_027_whipworm.png", 1)), E_FAIL);
 
-	//BrimCenter
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_BrimCenter", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/BrimCenter_%d.png", 4)), E_FAIL);
-	//BrimHead
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_BrimHead", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/BrimHead.png", 1)), E_FAIL);
+	//pickup_heart
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_Heart", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/pickup_heart.png", 1)), E_FAIL);
+
+	//pickup_heart_half
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_HeartHalf", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/pickup_heart_half.png", 1)), E_FAIL);
 
 	m_bFinish = true;
 
@@ -215,6 +223,11 @@ _uint CLoading::Loading_ForStage()
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/Tear_%d.png", 13)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MstTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Monstertear/tear_%d.png", 13)), E_FAIL);
 
+	//BrimCenter
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_BrimCenter", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/BrimCenter_%d.png", 4)), E_FAIL);
+	//BrimHead
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_BrimHead", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/BrimHead.png", 1)), E_FAIL);
+
 	//Coin 이미지
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinTexture_IDLE", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/coin_%d.png", 6)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinTexture_EFFECT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/coin_effect_%d.png", 5)), E_FAIL);
@@ -231,8 +244,14 @@ _uint CLoading::Loading_ForStage()
 	//EpicItem
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_EpicItem", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/EpicItem.png", 1)), E_FAIL);
 
-	//EpicItem
+	//whipworm
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_Whipworm", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/trinket_027_whipworm.png", 1)), E_FAIL);
+
+	//pickup_heart
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_Heart", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/pickup_heart.png", 1)), E_FAIL);
+
+	//pickup_heart_half
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_HeartHalf", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/pickup_heart_half.png", 1)), E_FAIL);
 
 	m_bFinish = true;
 
@@ -261,7 +280,7 @@ unsigned int CLoading::Thread_Main(void * pArg)
 	case LOADING_BOSS:
 		break;
 	}
-	
+
 	LeaveCriticalSection(pLoading->Get_Crt());
 
 	//_endthreadex(0);

@@ -8,6 +8,7 @@ BEGIN(Engine)
 class ENGINE_DLL CGameObject : public CBase
 {
 protected:
+	explicit CGameObject();
 	explicit CGameObject(LPDIRECT3DDEVICE9	pGraphicDev);
 	explicit CGameObject(const CGameObject& rhs);
 	virtual ~CGameObject();
