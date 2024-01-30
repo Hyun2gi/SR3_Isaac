@@ -414,7 +414,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 				break;
 			}
-			case COLLECTIBLES:
+			case SAD_ONION:
 			{
 
 				break;
