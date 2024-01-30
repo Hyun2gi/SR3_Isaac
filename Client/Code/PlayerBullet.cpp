@@ -23,7 +23,7 @@ HRESULT CPlayerBullet::Ready_GameObject()
 
     m_fAccTimeDelta = 0;
     m_fCallLimit = 1.5;
-    m_fBulletSpeed = 30.f;
+    m_fBulletSpeed = 70.f;
 
     return S_OK;
 }

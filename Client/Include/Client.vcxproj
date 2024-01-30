@@ -160,6 +160,7 @@
     <ClInclude Include="..\Header\AttackFly.h" />
     <ClInclude Include="..\Header\BackGround.h" />
     <ClInclude Include="..\Header\BrimStone.h" />
+    <ClInclude Include="..\Header\BrimStoneBullet.h" />
     <ClInclude Include="..\Header\Charger.h" />
     <ClInclude Include="..\Header\Coin.h" />
     <ClInclude Include="..\Header\Dip.h" />
@@ -197,6 +198,7 @@
     <ClCompile Include="..\Code\AttackFly.cpp" />
     <ClCompile Include="..\Code\BackGround.cpp" />
     <ClCompile Include="..\Code\BrimStone.cpp" />
+    <ClCompile Include="..\Code\BrimStoneBullet.cpp" />
     <ClCompile Include="..\Code\Charger.cpp" />
     <ClCompile Include="..\Code\Coin.cpp" />
     <ClCompile Include="..\Code\Dip.cpp" />
