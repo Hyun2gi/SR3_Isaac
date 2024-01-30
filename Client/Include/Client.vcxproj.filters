@@ -121,6 +121,18 @@
     <Filter Include="02. GameObject\07. Bullet\02. BrimStoneBullet">
       <UniqueIdentifier>{694ca79b-71ac-40ec-b92c-6bcacb0e009a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. MapObject">
+      <UniqueIdentifier>{17e10d6f-8b9f-4e2d-be88-6d94dba8b892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\00. Poop">
+      <UniqueIdentifier>{ed25b73d-a199-4b69-a9a8-db2c4fd13a34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\01. Attack Fly\00. CenterFly">
+      <UniqueIdentifier>{c3779ab9-8679-48c3-8aa1-a4f9234e662b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\01. Monster\01. Attack Fly\01. NormalFly">
+      <UniqueIdentifier>{2e228a1d-8597-4624-9d1c-51cd9ee76b72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -234,6 +246,9 @@
     <ClInclude Include="..\Header\BrimStoneBullet.h">
       <Filter>02. GameObject\07. Bullet\02. BrimStoneBullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\MapObj.h">
+      <Filter>02. GameObject\09. MapObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -337,6 +352,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\BrimStoneBullet.cpp">
       <Filter>02. GameObject\07. Bullet\02. BrimStoneBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MapObj.cpp">
+      <Filter>02. GameObject\09. MapObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

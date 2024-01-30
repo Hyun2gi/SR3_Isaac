@@ -64,7 +64,7 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
-	Engine::Add_RenderGroup(RENDER_ALPHA, this);
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
 	return 0;
 }
@@ -86,14 +86,10 @@ void CAttackFly::Render_GameObject()
 	{
 		m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 		m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-		m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 		m_pTextureCom->Set_Texture((_uint)m_fFrame);
 
 		m_pBufferCom->Render_Buffer();
-
-		m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-		m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 	}
 }
 
