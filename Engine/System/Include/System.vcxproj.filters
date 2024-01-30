@@ -40,6 +40,9 @@
     <Filter Include="05. ImGui\lib\backend">
       <UniqueIdentifier>{c50ac79e-62b1-469c-9dde-67a9a924af26}</UniqueIdentifier>
     </Filter>
+    <Filter Include="06. CollisionMgr">
+      <UniqueIdentifier>{4cb57df2-4f2c-4ed2-bd7d-1095ace6be13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\GraphicDev.cpp">
@@ -89,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\imgui\backend\imgui_impl_dx9.cpp">
       <Filter>05. ImGui\lib\backend</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CollisionMgr.cpp">
+      <Filter>06. CollisionMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -145,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\imgui\backend\imgui_impl_dx9.h">
       <Filter>05. ImGui\lib\backend</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\CollisionMgr.h">
+      <Filter>06. CollisionMgr</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
