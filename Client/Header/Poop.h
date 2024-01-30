@@ -1,17 +1,14 @@
 #pragma once
 
-#include "Monster.h"
+#include "MapObj.h"
 #include "GameObject.h"
 
-#include "CenterFly.h"
-#include "NormalFly.h"
-
-class CAttackFly : public CMonster
+class CPoop : public CMapObj
 {
 private:
-	explicit CAttackFly(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CAttackFly(const CAttackFly& rhs);
-	virtual ~CAttackFly();
+	explicit CPoop(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CPoop(const CPoop& rhs);
+	virtual ~CPoop();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -21,21 +18,15 @@ public:
 
 private:
 	virtual HRESULT		Add_Component()						override;
-
-	void				Create_AttackFly();
+	virtual	void		Motion_Change()						override;
+	virtual void		Hit()								override;
 
 private:
-	// º¯¼ö
-	_bool				m_bCreate;
-
-	CCenterFly*			m_CenterFly;
-	vector<CNormalFly*>	m_NormalFlyList;
 
 public:
-	static CAttackFly* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CPoop*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void		Free()								override;
-
 };
 

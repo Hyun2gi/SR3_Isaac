@@ -40,6 +40,7 @@ protected:
 	Engine::CTexture* m_pTextureCom;
 	Engine::CCalculator* m_pCalculCom;
 
+	_bool					m_bDead;
 	_int					m_iHp;
 
 	_float					m_fSpeed;

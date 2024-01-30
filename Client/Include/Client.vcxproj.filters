@@ -249,6 +249,15 @@
     <ClInclude Include="..\Header\MapObj.h">
       <Filter>02. GameObject\09. MapObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CenterFly.h">
+      <Filter>02. GameObject\01. Monster\01. Attack Fly\00. CenterFly</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\NormalFly.h">
+      <Filter>02. GameObject\01. Monster\01. Attack Fly\01. NormalFly</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Poop.h">
+      <Filter>02. GameObject\09. MapObject\00. Poop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -355,6 +364,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\MapObj.cpp">
       <Filter>02. GameObject\09. MapObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CenterFly.cpp">
+      <Filter>02. GameObject\01. Monster\01. Attack Fly\00. CenterFly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\NormalFly.cpp">
+      <Filter>02. GameObject\01. Monster\01. Attack Fly\01. NormalFly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Poop.cpp">
+      <Filter>02. GameObject\09. MapObject\00. Poop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
