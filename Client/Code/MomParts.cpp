@@ -39,9 +39,14 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_iPicNum < m_fFrame)
 	{
-		m_fFrame = 0.f;
 		if (MOM_HAND == m_eCurState)
-			m_eCurState = MOM_DOOR;
+		{
+			//m_eCurState = MOM_DOOR;
+			m_fFrame = 2.9f;
+		}
+		else
+			m_fFrame = 0.f;
+
 	}
 
 	Set_RandNum();
@@ -59,7 +64,7 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 	// Look 벡터가 애초에 이상해서 밑 함수 활용 결과도 이상한가 싶은
 	//m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
-	Engine::Add_RenderGroup(RENDER_ALPHA, this);
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
 	return 0;
 }
@@ -79,14 +84,14 @@ void CMomParts::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	//m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	m_pTextureCom->Set_Texture((_uint)m_fFrame);
 
 	m_pBufferCom->Render_Buffer();
 
-	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	//m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	//m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 HRESULT CMomParts::Add_Component()
@@ -160,7 +165,7 @@ void CMomParts::Motion_Change()
 
 		case CMomParts::MOM_HAND:
 			m_iPicNum = 3;
-			m_fFrameSpeed = 1.f;
+			m_fFrameSpeed = 1.5f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"MomParts", L"Proto_MomHandTexture"));
 			break;
 		}
