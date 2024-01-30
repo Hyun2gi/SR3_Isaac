@@ -107,6 +107,7 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	pGameObject->Set_MyLayer(pLayerTag);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
 
+#pragma region Monster
 
 	//// Fly
 	//for (int i = 0; i < 10; ++i)
@@ -168,28 +169,44 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//pGameObject->Set_MyLayer(pLayerTag);
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Charger", pGameObject), E_FAIL);
 
-	// Monstro
-	pGameObject = CMonstro::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Monstro", pGameObject), E_FAIL);
+	//// Monstro
+	//pGameObject = CMonstro::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Monstro", pGameObject), E_FAIL);
 
-	// Mom
-	pGameObject = CMom::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Mom", pGameObject), E_FAIL);
+	//// Mom
+	//pGameObject = CMom::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Mom", pGameObject), E_FAIL);
 
-	// Mom's Parts
-	for (int i = 0; i < 4; ++i)
-	{
-		pGameObject = CMomParts::Create(m_pGraphicDev, i);
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		pGameObject->Set_MyLayer(pLayerTag);
-		dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
-		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
+	//// Mom's Parts
+	//for (int i = 0; i < 4; ++i)
+	//{
+	//	pGameObject = CMomParts::Create(m_pGraphicDev, i);
+	//	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//	pGameObject->Set_MyLayer(pLayerTag);
+	//	dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
+	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
 
-	}
+	//}
+
+#pragma endregion Monster
+
+#pragma region Object
+
+	// Poop
+
+
+	// CampFire
+
+	// Spike
+
+
+#pragma endregion Object
+
+
 
 	// Coin
 	pGameObject = CCoin::Create(m_pGraphicDev);
