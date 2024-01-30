@@ -30,6 +30,9 @@
 #include "SadOnion.h"
 #include "WhipWorm.h"
 #include "Epic.h"
+#include "Heart.h"
+#include "HeartHalf.h"
+
 
 CStage::CStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
@@ -47,28 +50,20 @@ HRESULT CStage::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 
 	return S_OK;
 }
 
 Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
-{	
+{
+	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
 	return __super::Update_Scene(fTimeDelta);
 }
 
 void CStage::LateUpdate_Scene()
 {
-	CGameObject* pSrc = m_mapLayer.at(L"GameLogic")->Get_GameObject(L"Player");
-	CTransform* pSrcTrans = dynamic_cast<CTransform*>(pSrc->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
-
-	CGameObject* pDst = m_mapLayer.at(L"GameLogic")->Collision_GameObject(pSrc);
-
-	if (pDst)
-	{
-		//Ãæµ¹!
-		int i = 0;
-	}
-
+	CPlayer::GetInstance()->LateUpdate_GameObject();
 	__super::LateUpdate_Scene();
 }
 
@@ -77,19 +72,19 @@ void CStage::Render_Scene()
 	// DEBUG
 }
 
-HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
+HRESULT CStage::Ready_Layer_Environment(const _tchar* pLayerTag)
 {
-	Engine::CLayer*		pLayer = Engine::CLayer::Create();
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
-	
-	Engine::CGameObject*		pGameObject = nullptr;
 
-	pGameObject = CDynamicCamera::Create(m_pGraphicDev, 
+	Engine::CGameObject* pGameObject = nullptr;
+
+	pGameObject = CDynamicCamera::Create(m_pGraphicDev,
 		&_vec3(0.f, 10.f, -5.f),
-		&_vec3(0.f, 0.f, 1.f), 
+		&_vec3(0.f, 0.f, 1.f),
 		&_vec3(0.f, 1.f, 0.f),
 		D3DXToRadian(60.f),
-		(_float)WINCX / WINCY, 
+		(_float)WINCX / WINCY,
 		0.1f,
 		1000.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -100,18 +95,20 @@ HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pGameObject->Set_MyLayer(pLayerTag);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
-	
+
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
 }
 
-HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
+HRESULT CStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 {
-	Engine::CLayer*		pLayer = Engine::CLayer::Create();
+	CPlayer::GetInstance()->Set_LayerTag((_tchar*)pLayerTag);
+
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
-	Engine::CGameObject*		pGameObject = nullptr;
+	Engine::CGameObject* pGameObject = nullptr;
 
 	pGameObject = CTerrain::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -130,19 +127,19 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//}
 
 	// Attack Fly
-	//pGameObject = CAttackFly::Create(m_pGraphicDev, 0);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//dynamic_cast<CAttackFly*>(pGameObject)->Set_CenterObj();
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CenterFly", pGameObject), E_FAIL);
+	/*pGameObject = CAttackFly::Create(m_pGraphicDev, 0);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	dynamic_cast<CAttackFly*>(pGameObject)->Set_CenterObj();
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CenterFly", pGameObject), E_FAIL);
 
-	//for (int i = 1; i < 13; ++i)
-	//{
-	//	pGameObject = CAttackFly::Create(m_pGraphicDev, i);
-	//	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//	pGameObject->Set_MyLayer(pLayerTag);
-	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
-	//}
+	for (int i = 1; i < 13; ++i)
+	{
+		pGameObject = CAttackFly::Create(m_pGraphicDev, i);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		pGameObject->Set_MyLayer(pLayerTag);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
+	}*/
 
 	//// Dip
 	//for (int i = 0; i < 5; ++i)
@@ -169,10 +166,10 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
 
 	// //Leaper
-	pGameObject = CLeaper::Create(m_pGraphicDev, 0);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Leaper", pGameObject), E_FAIL);
+	//pGameObject = CLeaper::Create(m_pGraphicDev, 0);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Leaper", pGameObject), E_FAIL);
 
 	//// Charger
 	//pGameObject = CCharger::Create(m_pGraphicDev);
@@ -225,6 +222,18 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	pGameObject->Set_MyLayer(pLayerTag);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Coin", pGameObject), E_FAIL);
 
+	// Heart
+	pGameObject = CHeart::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Heart", pGameObject), E_FAIL);
+
+	// HeartHalf
+	pGameObject = CHeartHalf::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"HeartHalf", pGameObject), E_FAIL);
+
 
 	//// Pill
 	//pGameObject = CPill::Create(m_pGraphicDev);
@@ -257,30 +266,25 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Epic", pGameObject), E_FAIL);
 
 
-	pGameObject = CPlayer::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player", pGameObject), E_FAIL);
-
 	/*for (_int i = 0; i < 50; ++i)
 	{
 		pGameObject = CEffect::Create(m_pGraphicDev);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
 		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Effect", pGameObject), E_FAIL);
 	}*/
-	
+
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
 
 	return S_OK;
 }
 
-HRESULT CStage::Ready_Layer_UI(const _tchar * pLayerTag)
+HRESULT CStage::Ready_Layer_UI(const _tchar* pLayerTag)
 {
-	Engine::CLayer*		pLayer = Engine::CLayer::Create();
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
-	Engine::CGameObject*		pGameObject = nullptr;
+	Engine::CGameObject* pGameObject = nullptr;
 
 
 
@@ -296,9 +300,9 @@ HRESULT CStage::Ready_LightInfo()
 
 	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
 
-	tLightInfo.Diffuse   = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Specular  = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Ambient	 = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Diffuse = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Specular = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+	tLightInfo.Ambient = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 
 	tLightInfo.Direction = _vec3(1.f, -1.f, 1.f);
 
@@ -307,9 +311,9 @@ HRESULT CStage::Ready_LightInfo()
 	return S_OK;
 }
 
-CStage * CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CStage *	pInstance = new CStage(pGraphicDev);
+	CStage* pInstance = new CStage(pGraphicDev);
 
 	if (FAILED(pInstance->Ready_Scene()))
 	{
@@ -318,7 +322,7 @@ CStage * CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 		MSG_BOX("Stage Create Failed");
 		return nullptr;
 	}
-	
+
 	return pInstance;
 }
 

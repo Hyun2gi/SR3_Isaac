@@ -2,6 +2,7 @@
 #include "..\Header\MainApp.h"
 #include "Logo.h"
 #include "Stage.h"
+#include "Player.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr)
 {
@@ -16,7 +17,7 @@ HRESULT CMainApp::Ready_MainApp()
 	//hyunjeong test
 	FAILED_CHECK_RETURN(SetUp_Setting(&m_pGraphicDev), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Scene(m_pGraphicDev, &m_pManagementClass), E_FAIL);
-	
+
 	return S_OK;
 }
 
@@ -110,6 +111,5 @@ void CMainApp::Free()
 	Engine::Release_Utility();
 	Engine::Release_System();
 
-	
-
+	CPlayer::GetInstance()->DestroyInstance();
 }
