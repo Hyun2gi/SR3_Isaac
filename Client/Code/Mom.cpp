@@ -6,6 +6,8 @@
 CMom::CMom(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev)
 {
+	DWORD dwSeed = time(NULL) % 1000;
+	srand(dwSeed);
 }
 
 CMom::CMom(const CMom& rhs)
@@ -20,8 +22,9 @@ CMom::~CMom()
 HRESULT CMom::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+	m_pTransformCom->m_vScale = { 10.f, 10.f, 0.f };
 	//m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
-	//m_pTransformCom->Set_Pos(10.f, 1.f, 10.f);
+	m_pTransformCom->Set_Pos(10.f, 50.f, 10.f);
 
 	m_iHp = 645; // 조정 필요 할지도
 
@@ -29,21 +32,17 @@ HRESULT CMom::Ready_GameObject()
 	m_iPicNum = 1;
 
 	m_fCallLimit = 3;
-	m_fSpeed = 8.f;
+	m_fSpeed = 3.f;
 
-	//m_ePreState = LEAPER_END;
+	m_bReduce = true;
+	
+	m_eState = MOM_IDLE;
 
 	return S_OK;
 }
 
 _int CMom::Update_GameObject(const _float& fTimeDelta)
 {
-	// eye, skin, hand 가 네 방향 문에서 랜덤하게 나옴
-	// 덮어 씌우기 전의 문이 필요? Mom 을 쓰러뜨리면 문도 사라져야 함
-	// 아니면 텍스쳐 세 개를 다 갖는 오브젝트를 만들어서 랜덤하게 오브젝트 띄우기
-	// 평면인데 손 후려치기는 어떻게? -> 리소스로 해결
-	// 총 네 개의 자식 오브젝트 생성
-
 	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
@@ -51,7 +50,40 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
+	// 상태에 따라 callLimit을 바꾸는 것은?
+	switch (m_eState)
+	{
+	case CMom::MOM_IDLE:
+		m_fCallLimit = (_float)(rand() % 10) + 3.f;
+		break;
 
+	case CMom::MOM_WAIT:
+		m_fCallLimit = 3.f;
+		break;
+	}
+
+	if (MOM_IDLE == m_eState)
+	{
+		if (Check_Time(fTimeDelta))
+		{
+			int iX, iZ;
+			iX = rand() % 30;
+			iZ = rand() % 30;
+
+			m_pTransformCom->Set_Pos(iX, 50.f, iZ);
+
+			m_eState = MOM_ATTACK;
+		}
+	}
+	else if (MOM_WAIT == m_eState)
+	{
+		if (Check_Time(fTimeDelta))
+		{
+			m_eState = MOM_UP;
+		}
+	}
+	else if (MOM_ATTACK == m_eState || MOM_UP == m_eState) // 
+		Attack(fTimeDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -93,7 +125,10 @@ HRESULT CMom::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	// 텍스쳐 추가 필요
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_MomTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_MomTexture", pComponent });
+
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -109,6 +144,62 @@ HRESULT CMom::Add_Component()
 
 void CMom::Motion_Change()
 {
+}
+
+void CMom::Attack(const _float& fTimeDelta)
+{
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	if (MOM_ATTACK == m_eState)
+	{
+		if (vPos.y <= 9.f)
+		{
+			vPos.y = 9.f;
+			m_eState = MOM_WAIT;
+		}
+		else
+			vPos.y -= m_fSpeed;
+	}
+	else if(MOM_UP)
+	{
+		Scale_Change();
+
+		if (vPos.y >= 50.f)
+		{
+			m_eState = MOM_IDLE;
+			vPos.y = 50.f;
+		}
+		else
+			vPos.y += m_fSpeed;
+	}
+	m_pTransformCom->Set_Pos(vPos);
+}
+
+void CMom::Scale_Change()
+{
+	
+	if (m_bReduce)
+	{
+		if (m_pTransformCom->m_vScale.y <= 9.f)
+		{
+			m_bReduce = false;
+		}
+		else
+			m_pTransformCom->m_vScale.y -= 0.1f;
+	}
+	else
+	{
+		if (m_pTransformCom->m_vScale.y >= 10.f)
+		{
+			m_bReduce = true;
+		}
+		else
+			m_pTransformCom->m_vScale.y += 0.1f;
+	}
+
+	m_pTransformCom->m_vScale = { m_pTransformCom->m_vScale.x,
+	m_pTransformCom->m_vScale.y, m_pTransformCom->m_vScale.z };
 }
 
 CMom* CMom::Create(LPDIRECT3DDEVICE9 pGraphicDev)
