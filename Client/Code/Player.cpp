@@ -5,7 +5,6 @@
 #include "Export_Utility.h"
 
 #include "PlayerBullet.h"
-#include "BrimStoneBullet.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev)
@@ -34,18 +33,8 @@ HRESULT CPlayer::Ready_GameObject()
 	m_bKeyBlock = false;
 	m_fSpriteSpeed = 1.5f;
 
-	m_eCurBulletState = P_BULLET_BRIMSTONE;
-	
-	// 20 될 동안 한발
-	m_fAttackSpeed = 20;
-
-	// bullet 속도 조정위해 70으로 초기화
-	m_fBulletSpeed = 70;
-
-	// 이동속도
-	m_fMoveSpeed = 10;
-
-	m_iHp = 3;
+	m_fFrame = 0.f;
+	m_fPicNum = 0.f;
 
 	//m_pTransformCom->m_vScale = { 2.f, 1.f, 1.f };
 
@@ -93,12 +82,6 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		for (auto& iter = m_PlayerBulletList.begin();
 			iter != m_PlayerBulletList.end(); )
 		{
-			// BrimStone 때는 속도 설정이 없어서 (아이템 먹고 속도 빨라질수 있으니까)
-			if (m_eCurBulletState == P_BULLET_IDLE)
-			{
-				dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletSpeed(m_fBulletSpeed);
-			}
-			
 			iResult = dynamic_cast<CPlayerBullet*>(*iter)->Update_GameObject(fTimeDelta);
 
 			if (1 == iResult)
@@ -156,21 +139,6 @@ void CPlayer::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-}
-
-void CPlayer::Bullet_Change_To_Brim()
-{
-	if (!m_PlayerBulletList.empty())
-	{
-		for (auto& iter = m_PlayerBulletList.begin();
-			iter != m_PlayerBulletList.end(); )
-		{
-			Safe_Release<CGameObject*>(*iter);
-			iter = m_PlayerBulletList.erase(iter);
-		}
-	}
-
-	m_eCurBulletState = P_BULLET_BRIMSTONE;
 }
 
 HRESULT CPlayer::Add_Component()
@@ -243,13 +211,13 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	{
 		m_eCurState = P_BACKWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
-		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+		m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
 	}
 	else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
 	{
 		m_eCurState = P_IDLEWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
-		m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+		m_pTransformCom->Move_Pos(&vDir, -10.f, fTimeDelta);
 	}
 	else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
 	{
@@ -257,7 +225,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		m_eCurState = P_LEFTWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
-		m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+		m_pTransformCom->Move_Pos(&vDir, -10.f, fTimeDelta);
 	}
 	else if (Engine::Get_DIKeyState(DIK_D) & 0x80)
 	{
@@ -265,7 +233,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		m_eCurState = P_RIGHTWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
-		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+		m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
 	}
 	else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
 	{
@@ -277,20 +245,12 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_eCurState = P_IDLE;
 	}
 
-
-	if (Engine::Get_DIKeyState(DIK_T) & 0x80)
-	{
-		m_eCurState = P_THUMBS_UP;
-	}
-
-
-
 	// 총 delay는 누르지 않고 있어도 카운트 해야하기 때문에 돌려주기
 	if (m_fShootDelayTime != 0)
 	{
 		m_fShootDelayTime++;
 
-		if (m_fShootDelayTime > m_fAttackSpeed)
+		if (m_fShootDelayTime > 20)
 		{
 			m_fShootDelayTime = 0;
 		}
@@ -304,17 +264,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		if (m_fShootDelayTime == 0)
 		{
 			m_eCurState = P_SHOOTWALK;
-
-			// 일반 총알
-			if (m_eCurBulletState == P_BULLET_IDLE)
-			{
-				m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev, m_vecMyLayer[0]));
-			}
-			else
-			{
-				m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_vecMyLayer[0]));
-			}
-			
+			m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev, m_vecMyLayer[0]));
 			m_fShootDelayTime++;
 		}
 	}

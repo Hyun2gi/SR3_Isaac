@@ -251,7 +251,7 @@ unsigned int CLoading::Thread_Main(void * pArg)
 
 	switch (pLoading->Get_LoadingID())
 	{
-	case LOADING_STAGE_0:
+	case LOADING_STAGE_1:
 		iFlag = pLoading->Loading_ForStage_Load((int)pLoading->Get_LoadingID());
 		break;
 	case LOADING_STAGE:

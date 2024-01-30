@@ -24,7 +24,7 @@ HRESULT CObjectLoad::Ready_Object(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CObjectLoad::Load_Level_Data()
 {
-    string strFilePath = "../Dat/MapLevel.dat";
+    string strFilePath = "../../Dat/MapLevel.dat";
 
     ifstream fin(strFilePath);
 
@@ -62,7 +62,7 @@ void CObjectLoad::Load_Level_Data()
 void CObjectLoad::Load_Stage_Object(const char* items)
 {
     //.dat 파일을 불려올 경로를 설정해준다.
-    string strFilePath = "../Dat/";
+    string strFilePath = "../../Dat/";
     string strExtension = ".dat";
     strFilePath = strFilePath + items + strExtension;
 
@@ -79,7 +79,7 @@ void CObjectLoad::Load_Object_Counts()
 {
     //폴더 내 파일 갯수 읽어와야하는데 잘 안되서, 총 작업할 Object 갯수와 몬스터 갯수를 저장하는 .txt 파일을 직접 만들어서 사용할 예정
     // 파일명 고정, 값에 변동 있을 시 메모작 켜서 직접 수정해야함!!!
-    ifstream fin("../Dat/ObjectCount.txt");
+    ifstream fin("../../Dat/ObjectCount.txt");
 
     string strLine = "";
     //코드를 한 줄 읽어온다. (스테이지에 대한 정보는 한줄로 저장하게 만들어뒀기 때문에 가능)

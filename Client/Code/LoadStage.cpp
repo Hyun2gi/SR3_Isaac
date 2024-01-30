@@ -9,6 +9,7 @@
 //환경
 #include "Terrain.h"
 #include "DynamicCamera.h"
+#include "SkyBox.h"
 
 //몬스터
 #include "Fly.h"
@@ -45,7 +46,8 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	m_vecMonsterCount.resize(MONSTER_TYPE_END);
 
 	FAILED_CHECK_RETURN(Load_Level_Data(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_Stage_Data(iType), E_FAIL);
+	FAILED_CHECK_RETURN(Load_Stage_Data(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_Stage_Design_Data(), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
@@ -59,7 +61,45 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 
 Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 {	
-	return __super::Update_Scene(fTimeDelta);
+	_int	iExit = __super::Update_Scene(fTimeDelta);
+
+	if (GetAsyncKeyState('1'))
+	{
+		Engine::CScene* pScene = nullptr;
+
+		pScene = CLoadStage::Create(m_pGraphicDev, 1);
+		NULL_CHECK_RETURN(pScene, -1);
+
+		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+		return 0;
+	}
+
+	if (GetAsyncKeyState('2'))
+	{
+		Engine::CScene* pScene = nullptr;
+
+		pScene = CLoadStage::Create(m_pGraphicDev, 2);
+		NULL_CHECK_RETURN(pScene, -1);
+
+		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+		return 0;
+	}
+
+	if (GetAsyncKeyState('3'))
+	{
+		Engine::CScene* pScene = nullptr;
+
+		pScene = CLoadStage::Create(m_pGraphicDev, 3);
+		NULL_CHECK_RETURN(pScene, -1);
+
+		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+		return 0;
+	}
+
+	return iExit;
 }
 
 void CLoadStage::LateUpdate_Scene()
@@ -74,7 +114,7 @@ void CLoadStage::Render_Scene()
 
 HRESULT CLoadStage::Load_Level_Data()
 {
-	string strFilePath = "../Dat/MapLevel.dat";
+	string strFilePath = "../../Dat/MapLevel.dat";
 
 	ifstream fin(strFilePath);
 
@@ -112,21 +152,56 @@ HRESULT CLoadStage::Load_Level_Data()
 	return S_OK;
 }
 
-HRESULT CLoadStage::Load_Stage_Data(int iType)
+HRESULT CLoadStage::Load_Stage_Data()
 {
-	string strFilePath = "../Dat/" +
-		m_mapLevel[iType] + "_Design.dat";
+	//.dat 파일을 불려올 경로를 설정해준다.
+	string strFilePath = "../../Dat/" + m_mapLevel.at(m_iCurStageKey) + ".dat";
 
 	ifstream fin(strFilePath);
 
 	string strGetLine = "";
+	//코드를 한 줄 읽어온다. (스테이지에 대한 정보는 한줄로 저장하게 만들어뒀기 때문에 가능)
+
+	while (getline(fin, strGetLine))
+	{
+		int iIndex = 0;
+
+		while (true) {
+			// , 위치 찾기
+			int pos = strGetLine.find_first_of(',', iIndex);
+
+			// ,를 찾지 못하면 종료
+			if (pos == string::npos) {
+				m_vecConnectRoom.push_back(stoi(strGetLine.substr(iIndex)));
+				break;
+			}
+
+			// 분리된 문자열 출력
+			m_vecConnectRoom.push_back(stoi(strGetLine.substr(iIndex, pos - iIndex)));
+			iIndex = pos + 1;
+		}
+	}
+
+	fin.close();
+
+	return S_OK;
+}
+
+HRESULT CLoadStage::Load_Stage_Design_Data()
+{
+	string strFilePath = "../../Dat/" +
+		m_mapLevel[m_iCurStageKey] + "_Design.dat";
+
+	ifstream fin(strFilePath);
+
+	string strGetLine = "";
+	
+	int iMapKey = 0;
 
 	while (getline(fin, strGetLine))
 	{
 		vector<string> vecStr;
 		int iIndex = 0;
-
-		int iMapKey = 0;
 
 		while (true) {
 			// , 위치 찾기
@@ -143,7 +218,7 @@ HRESULT CLoadStage::Load_Stage_Data(int iType)
 			iIndex = pos + 1;
 		}
 
-		LoadObj tTemp = { stoi(vecStr[0]), stoi(vecStr[1]), stoi(vecStr[2]), stoi(vecStr[3]), stoi(vecStr[4]) };
+		LoadObj tTemp = { stoi(vecStr[0]), stoi(vecStr[1]), stof(vecStr[2]), stof(vecStr[3]), stof(vecStr[4]) };
 
 		m_mapLoadObj.insert({ iMapKey, tTemp });
 		//int iType, int iIndex, float x, float y, float z
@@ -209,16 +284,21 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			{
 				pGameObject = CFly::Create(m_pGraphicDev, m_vecMonsterCount[FLY]++);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
 
 				break;
 			}
 			case ATTACK_FLY:
 			{
-				pGameObject = CAttackFly::Create(m_pGraphicDev, m_vecMonsterCount[ATTACK_FLY]);
+				pGameObject = CAttackFly::Create(m_pGraphicDev, m_vecMonsterCount[ATTACK_FLY] * 13);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				dynamic_cast<CAttackFly*>(pGameObject)->Set_CenterObj();
 				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS] 
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CenterFly", pGameObject), E_FAIL);
 
 				int iCount = m_vecMonsterCount[ATTACK_FLY] * 12 + 1;
@@ -412,6 +492,10 @@ HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"DynamicCamera", pGameObject), E_FAIL);
 		
+	pGameObject = CSkyBox::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
+
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;

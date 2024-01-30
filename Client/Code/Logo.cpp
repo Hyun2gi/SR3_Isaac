@@ -24,7 +24,7 @@ HRESULT CLogo::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	
 	//m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE);
-	m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE_0);
+	m_pLoading = CLoading::Create(m_pGraphicDev, CLoading::LOADING_STAGE_1);
 	NULL_CHECK_RETURN(m_pLoading, E_FAIL);
 
 	return S_OK;
@@ -48,17 +48,29 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 			return 0;
 		}
 		
-		if (GetAsyncKeyState('0'))
+		if (GetAsyncKeyState('1'))
 		{
 			Engine::CScene*		pScene = nullptr;
 
-			pScene = CLoadStage::Create(m_pGraphicDev, 0);
+			pScene = CLoadStage::Create(m_pGraphicDev, 1);
 			NULL_CHECK_RETURN(pScene, -1);
 
 			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
 
 			return 0;
 		}		
+
+		if (GetAsyncKeyState('2'))
+		{
+			Engine::CScene* pScene = nullptr;
+
+			pScene = CLoadStage::Create(m_pGraphicDev, 2);
+			NULL_CHECK_RETURN(pScene, -1);
+
+			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			return 0;
+		}
 	}
 
 	return iExit;
