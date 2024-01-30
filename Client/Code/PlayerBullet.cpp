@@ -46,8 +46,7 @@ _int CPlayerBullet::Update_GameObject(const _float& fTimeDelta)
 
     m_pTransformCom->Move_Pos(&m_vBulletDir, m_fBulletSpeed, fTimeDelta);
 
-    Engine::Add_RenderGroup(RENDER_ALPHA, this);
-    
+    Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
     return 0;
 }
@@ -71,8 +70,8 @@ void CPlayerBullet::Render_GameObject()
 
     m_pBufferCom->Render_Buffer();
 
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+    /*m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);*/
 }
 
 HRESULT CPlayerBullet::Add_Component()
