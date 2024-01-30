@@ -101,7 +101,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	CGameObject::Update_GameObject(fTimeDelta);
 
 
-	Engine::Add_RenderGroup(RENDER_ALPHA, this);
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
 	return 0;
 }
@@ -137,8 +137,8 @@ void CPlayer::Render_GameObject()
 	m_pTextureCom->Set_Texture((_uint)m_fFrame);
 
 	m_pBufferCom->Render_Buffer();
-	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	/*m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);*/
 }
 
 HRESULT CPlayer::Add_Component()
@@ -148,7 +148,6 @@ HRESULT CPlayer::Add_Component()
 	pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(Engine::Clone_Proto(L"Proto_RcTex"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
-
 
 	//PLAYER ≈ÿΩ∫√≥
 	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_BACK"));
@@ -280,7 +279,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	}
 	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_Y))
 	{
-		m_pTransformCom->Rotation(ROT_X, D3DXToRadian(dwMouseMove / 30.f));
+		//m_pTransformCom->Rotation(ROT_X, D3DXToRadian(dwMouseMove / 30.f));
 	}
 
 	
