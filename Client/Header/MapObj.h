@@ -5,9 +5,9 @@
 
 BEGIN(Engine)
 
-class CTexture;
 class CRcTex;
 class CTransform;
+class CTexture;
 // class CCalculator; // 필요할 지?
 
 END
@@ -28,6 +28,7 @@ public:
 protected:
 	virtual HRESULT			Add_Component();
 	virtual void			Motion_Change() {};
+	virtual void			Hit() {};
 
 protected:
 	Engine::CRcTex*			m_pBufferCom;
