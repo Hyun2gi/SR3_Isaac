@@ -149,7 +149,6 @@ HRESULT CPlayer::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-
 	//PLAYER ≈ÿΩ∫√≥
 	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_BACK"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -280,7 +279,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	}
 	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_Y))
 	{
-		m_pTransformCom->Rotation(ROT_X, D3DXToRadian(dwMouseMove / 30.f));
+		//m_pTransformCom->Rotation(ROT_X, D3DXToRadian(dwMouseMove / 30.f));
 	}
 
 	
