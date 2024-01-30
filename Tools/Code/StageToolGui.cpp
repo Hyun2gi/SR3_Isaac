@@ -106,7 +106,7 @@ void CStageToolGui::Update_ImGuiTools()
     // 현재까지 지정한 맵 정보를 저장한다.
     if (ImGui::Button("Save"))
     {
-        string strDirPath = "../Dat/";
+        string strDirPath = "../../Dat/";
         string strFileName = vecString[m_iSelectedStageIndex] + "_Design";
         string strFileExtension = ".dat";
 
@@ -205,8 +205,9 @@ void CStageToolGui::Push_Placement_Obj_List(int iType, int iIndex, float x, floa
 
 void CStageToolGui::Load_Stage_Design()
 {
-    string strFilePath = "../Dat/" + 
-        m_mapStage[m_iSelectedStageIndex] + "_Design.dat";
+    // 0번은 사용하지 않는 방을 의미하며, 인덱스로 처리하기 때문에 1번부터 시작하니 +1 해줬음
+    string strFilePath = "../../Dat/" + 
+        m_mapStage[m_iSelectedStageIndex + 1] + "_Design.dat";
 
     ifstream fin(strFilePath);
 

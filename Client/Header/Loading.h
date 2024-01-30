@@ -7,7 +7,6 @@ class CLoading : public CBase
 {
 public:
 	enum LOADINGID { 
-		LOADING_STAGE_0,
 		LOADING_STAGE_1,
 		LOADING_STAGE_2,
 		LOADING_STAGE_3,

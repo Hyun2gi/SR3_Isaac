@@ -30,6 +30,7 @@ private:
 	virtual HRESULT		Add_Component()						override;
 	virtual void		Motion_Change()						override;
 
+	void				Key_Input();
 
 private:
 	_float					m_fPicNum;

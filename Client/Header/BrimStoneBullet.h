@@ -12,12 +12,14 @@ class CCalculator;
 
 END
 
-class CPlayerBullet : public CGameObject
+class CBrimStoneBullet : public CGameObject
 {
 private:
-	explicit CPlayerBullet(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CPlayerBullet(const CPlayerBullet& rhs);
-	virtual ~CPlayerBullet();
+	explicit CBrimStoneBullet(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CBrimStoneBullet(const CBrimStoneBullet& rhs);
+	virtual ~CBrimStoneBullet();
+
+	enum BRIMSTATE { BRIM_HEAD, BRIM_CENTER, BRIM_END};
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -26,12 +28,20 @@ public:
 	virtual void Render_GameObject()						 override;
 
 public:
-	static CPlayerBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag);
+	static CBrimStoneBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag);
 
 public:
-	void				Set_BulletSpeed(float _speed)
+	void					Set_Bullet(int _num)
 	{
-		m_fBulletSpeed = _speed;
+		switch (_num)
+		{
+		case 1:
+			m_eCurState = BRIM_HEAD;
+			break;
+		case 2:
+			m_eCurState = BRIM_CENTER;
+			break;
+		}
 	}
 
 private:
@@ -57,7 +67,6 @@ protected:
 private:
 	_vec3		m_vBulletDir;
 	bool		m_bDead = false;
-
-	float		m_fBulletSpeed;
+	BRIMSTATE	m_eCurState;
 };
 

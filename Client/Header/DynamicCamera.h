@@ -79,9 +79,10 @@ private:
 
 	// 필요없을 경우 삭제하기
 	// 카메라 흔들림 주기 전에 position
-	_vec3		m_vStartPosition;
+	_vec3		m_vStartEyePosition;
 	_vec3		m_vStartAtPosition;
 	_vec3		m_vGoalPosition;
+	_vec3		m_vOriginAtPosition;
 
 
 	// X,Y,Z 회전각
@@ -96,7 +97,7 @@ private:
 	// 흔들림
 	float		m_fShakeTime;
 	float		m_fShakeIntensity;
-	int			m_fShakeNum; // -, + 조절
+	int			m_iShakeNum; // -, + 조절
 
 	float		m_fMoveTime;
 
@@ -129,7 +130,6 @@ private:
 
 	//필요없을시 삭제
 	DYNAMICCAMERAID		m_ePreState;
-
 
 };
 

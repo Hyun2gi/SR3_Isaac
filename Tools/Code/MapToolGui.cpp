@@ -28,7 +28,7 @@ HRESULT CMapToolGui::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
 
     m_pGraphicDev = pGraphicDev;
 
-    string strFilePath = "../Dat/MapLevel.dat";
+    string strFilePath = "../../Dat/MapLevel.dat";
 
     ifstream fin(strFilePath);
 
@@ -152,7 +152,7 @@ void CMapToolGui::Update_ImGuiTools()
 
     if (ImGui::Button("Save"))
     {
-        string strFilePath = "../Dat/MapLevel.dat";
+        string strFilePath = "../../Dat/MapLevel.dat";
 
         // 파일 스트림을 엽니다.
         ofstream fout(strFilePath.c_str(), ios::binary);
@@ -209,7 +209,7 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     static CHAR	szSKeyBottomRoom[MAX_PATH] = "";
 
     //.dat 파일을 불려올 경로를 설정해준다.
-    string strFilePath = "../Dat/";
+    string strFilePath = "../../Dat/";
     string strExtension = ".dat";
     strFilePath = strFilePath + items + strExtension;
 

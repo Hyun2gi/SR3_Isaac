@@ -125,6 +125,11 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	//EpicItem
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_Whipworm", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/trinket_027_whipworm.png", 1)), E_FAIL);
 
+	//BrimCenter
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_BrimCenter", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/BrimCenter_%d.png", 4)), E_FAIL);
+	//BrimHead
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_BrimHead", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/BrimHead.png", 1)), E_FAIL);
+
 	m_bFinish = true;
 
 	lstrcpy(m_szLoading, L"Loading Complete");
@@ -246,7 +251,7 @@ unsigned int CLoading::Thread_Main(void * pArg)
 
 	switch (pLoading->Get_LoadingID())
 	{
-	case LOADING_STAGE_0:
+	case LOADING_STAGE_1:
 		iFlag = pLoading->Loading_ForStage_Load((int)pLoading->Get_LoadingID());
 		break;
 	case LOADING_STAGE:
