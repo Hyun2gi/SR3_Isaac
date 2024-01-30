@@ -117,20 +117,20 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
 	//}
 
-	//// Attack Fly
-	//pGameObject = CAttackFly::Create(m_pGraphicDev, 0);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//dynamic_cast<CAttackFly*>(pGameObject)->Set_CenterObj();
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CenterFly", pGameObject), E_FAIL);
+	// Attack Fly
+	pGameObject = CAttackFly::Create(m_pGraphicDev, 0);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	dynamic_cast<CAttackFly*>(pGameObject)->Set_CenterObj();
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CenterFly", pGameObject), E_FAIL);
 
-	//for (int i = 1; i < 13; ++i)
-	//{
-	//	pGameObject = CAttackFly::Create(m_pGraphicDev, i);
-	//	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//	pGameObject->Set_MyLayer(pLayerTag);
-	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
-	//}
+	for (int i = 1; i < 13; ++i)
+	{
+		pGameObject = CAttackFly::Create(m_pGraphicDev, i);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		pGameObject->Set_MyLayer(pLayerTag);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
+	}
 
 	//// Dip
 	//for (int i = 0; i < 5; ++i)
@@ -168,11 +168,28 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//pGameObject->Set_MyLayer(pLayerTag);
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Charger", pGameObject), E_FAIL);
 
-	//// Monstro
-	//pGameObject = CMonstro::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Monstro", pGameObject), E_FAIL);
+	// Monstro
+	pGameObject = CMonstro::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Monstro", pGameObject), E_FAIL);
+
+	// Mom
+	pGameObject = CMom::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Mom", pGameObject), E_FAIL);
+
+	// Mom's Parts
+	for (int i = 0; i < 4; ++i)
+	{
+		pGameObject = CMomParts::Create(m_pGraphicDev, i);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		pGameObject->Set_MyLayer(pLayerTag);
+		dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
+
+	}
 
 	// Coin
 	pGameObject = CCoin::Create(m_pGraphicDev);
