@@ -58,7 +58,6 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 
 void CStage::LateUpdate_Scene()
 {
-	//이거를 기준으로
 	CGameObject* pSrc = m_mapLayer.at(L"GameLogic")->Get_GameObject(L"Player");
 	CTransform* pSrcTrans = dynamic_cast<CTransform*>(pSrc->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
 
@@ -131,19 +130,19 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//}
 
 	// Attack Fly
-	//pGameObject = CAttackFly::Create(m_pGraphicDev, 0);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//dynamic_cast<CAttackFly*>(pGameObject)->Set_CenterObj();
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CenterFly", pGameObject), E_FAIL);
+	pGameObject = CAttackFly::Create(m_pGraphicDev, 0);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	dynamic_cast<CAttackFly*>(pGameObject)->Set_CenterObj();
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CenterFly", pGameObject), E_FAIL);
 
-	//for (int i = 1; i < 13; ++i)
-	//{
-	//	pGameObject = CAttackFly::Create(m_pGraphicDev, i);
-	//	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//	pGameObject->Set_MyLayer(pLayerTag);
-	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
-	//}
+	for (int i = 1; i < 13; ++i)
+	{
+		pGameObject = CAttackFly::Create(m_pGraphicDev, i);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		pGameObject->Set_MyLayer(pLayerTag);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
+	}
 
 	//// Dip
 	//for (int i = 0; i < 5; ++i)

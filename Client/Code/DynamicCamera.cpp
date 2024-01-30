@@ -37,6 +37,9 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_bShake = false;
 	m_bMove = false;
 
+
+	m_fAngleY = 0;
+
 	FAILED_CHECK_RETURN(CCamera::Ready_GameObject(), E_FAIL);
 
 	return S_OK;
@@ -76,6 +79,7 @@ void CDynamicCamera::LateUpdate_GameObject()
 {
 	Engine::CCamera::LateUpdate_GameObject();
 }
+
 
 void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 {
@@ -245,19 +249,28 @@ void CDynamicCamera::Mouse_Move()
 
 		D3DXQuaternionRotationMatrix(&qRot, &matRotY);
 		D3DXVec3Cross(&vCross, &m_vUp, &vLook);
+		
+		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20)
+		{
+			m_fAngleY -= (dwMouseMoveY / 10.f);
+			D3DXQuaternionRotationAxis(&qRot, &vCross, -D3DXToRadian(dwMouseMoveY / 10.f));
+			D3DXMatrixRotationQuaternion(&matRotY, &qRot);
 
-
-
-		D3DXQuaternionRotationAxis(&qRot, &vCross, -D3DXToRadian(dwMouseMoveY / 10.f));
-		D3DXMatrixRotationQuaternion(&matRotY, &qRot);
-
-		matTotalRot = matRotX * matRotY;
+			matTotalRot = matRotX * matRotY;
+		}
+		else
+		{
+			matTotalRot = matRotX;
+		}
+		
 
 		D3DXVec3TransformCoord(&vLook, &vLook, &matTotalRot);
 		m_vCameraPosDir = vLook;
 
 		// 90도 이상 회전 못하게 하는
 		_vec3		newCameraDir = vLook;
+
+		D3DXVec3Normalize(&playerDir, &playerDir);
 		playerDir *= -1;
 		D3DXVec3Normalize(&newCameraDir, &newCameraDir);
 
