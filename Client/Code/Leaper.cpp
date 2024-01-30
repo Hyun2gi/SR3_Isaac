@@ -43,10 +43,15 @@ HRESULT CLeaper::Ready_GameObject()
 
 _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 {
+	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
+
 	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
+
+	_vec3 vAngle = m_pCalculCom->Compute_Vill_Angle(m_pTransformCom, m_pTargetTransCom);
+	m_pTransformCom->m_vAngle.y = vAngle.y;
 
 	CGameObject::Update_GameObject(fTimeDelta);
 

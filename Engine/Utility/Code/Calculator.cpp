@@ -202,6 +202,34 @@ _vec3 CCalculator::Get_Picking_Dir(HWND hWnd, CTransform* pTransform)
 	return vDir;
 }
 
+_vec3 CCalculator::Compute_Vill_Angle(CTransform* pSrcTrans, CTransform* pDstTrans)
+{
+	_vec3 vSrcPos = pSrcTrans->m_vInfo[INFO_POS];
+	_vec3 vDstPos = pDstTrans->m_vInfo[INFO_POS];
+
+	_vec3 vDir = vDstPos - vSrcPos;
+	D3DXVec3Normalize(&vDir, &vDir);
+
+	_vec3 vVlaue;
+
+	_vec3 vTemp = pSrcTrans->m_vInfo[INFO_RIGHT];
+	D3DXVec3Normalize(&vTemp, &vTemp);
+
+	vVlaue.x = D3DXVec3Dot(&vDir, &vTemp);
+
+	vTemp = pSrcTrans->m_vInfo[INFO_UP];
+	D3DXVec3Normalize(&vTemp, &vTemp);
+
+	vVlaue.y = D3DXVec3Dot(&vDir, &vTemp);
+
+	vTemp = pSrcTrans->m_vInfo[INFO_LOOK];
+	D3DXVec3Normalize(&vTemp, &vTemp);
+
+	vVlaue.z = D3DXVec3Dot(&vDir, &vTemp);
+
+	return vVlaue;
+}
+
 //넘겨준 트랜스폼 객체의 월드행렬을 빌보드형식으로 바꿔준다.
 bool CCalculator::Compute_Vill_Matrix(CTransform* _pTransformCom)
 {
