@@ -22,7 +22,9 @@ HRESULT CBrimStoneBullet::Ready_GameObject()
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_fAccTimeDelta = 0;
-	m_fCallLimit = 1.5;
+
+    // 지속시간
+	m_fCallLimit = 2;
 
 	return S_OK;
 }
@@ -94,9 +96,13 @@ HRESULT CBrimStoneBullet::Add_Component()
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTear"));
+    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BulletTexture_BrimHead"));
     NULL_CHECK_RETURN(pComponent, E_FAIL);
-    m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTear", pComponent });
+    m_mapComponent[ID_STATIC].insert({ L"Proto_BulletTexture_BrimHead", pComponent });
+
+    pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BulletTexture_BrimCenter"));
+    NULL_CHECK_RETURN(pComponent, E_FAIL);
+    m_mapComponent[ID_STATIC].insert({ L"Proto_BulletTexture_BrimCenter", pComponent });
 
     pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
     NULL_CHECK_RETURN(pComponent, E_FAIL);

@@ -5,6 +5,7 @@
 #include "Export_Utility.h"
 
 #include "PlayerBullet.h"
+#include "BrimStoneBullet.h"
 
 CPlayer::CPlayer(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev)
@@ -92,7 +93,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		for (auto& iter = m_PlayerBulletList.begin();
 			iter != m_PlayerBulletList.end(); )
 		{
-			// BrimStone 때는 속도 설정이 없어서
+			// BrimStone 때는 속도 설정이 없어서 (아이템 먹고 속도 빨라질수 있으니까)
 			if (m_eCurBulletState == P_BULLET_IDLE)
 			{
 				dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletSpeed(m_fBulletSpeed);
@@ -155,6 +156,21 @@ void CPlayer::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+}
+
+void CPlayer::Bullet_Change_To_Brim()
+{
+	if (!m_PlayerBulletList.empty())
+	{
+		for (auto& iter = m_PlayerBulletList.begin();
+			iter != m_PlayerBulletList.end(); )
+		{
+			Safe_Release<CGameObject*>(*iter);
+			iter = m_PlayerBulletList.erase(iter);
+		}
+	}
+
+	m_eCurBulletState = P_BULLET_BRIMSTONE;
 }
 
 HRESULT CPlayer::Add_Component()
@@ -288,7 +304,17 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		if (m_fShootDelayTime == 0)
 		{
 			m_eCurState = P_SHOOTWALK;
-			m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev, m_vecMyLayer[0]));
+
+			// 일반 총알
+			if (m_eCurBulletState == P_BULLET_IDLE)
+			{
+				m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev, m_vecMyLayer[0]));
+			}
+			else
+			{
+				m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_vecMyLayer[0]));
+			}
+			
 			m_fShootDelayTime++;
 		}
 	}

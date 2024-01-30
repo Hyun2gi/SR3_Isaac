@@ -63,6 +63,9 @@ public:
 		m_iHp += _hp;
 	}
 
+public:
+	void		Bullet_Change_To_Brim();
+
 private:
 	HRESULT			Add_Component();
 	void			Key_Input(const _float& fTimeDelta);
