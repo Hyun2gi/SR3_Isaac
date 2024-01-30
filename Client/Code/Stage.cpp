@@ -58,6 +58,17 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 
 void CStage::LateUpdate_Scene()
 {
+	CGameObject* pSrc = m_mapLayer.at(L"GameLogic")->Get_GameObject(L"Player");
+	CTransform* pSrcTrans = dynamic_cast<CTransform*>(pSrc->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+
+	CGameObject* pDst = m_mapLayer.at(L"GameLogic")->Collision_GameObject(pSrc);
+
+	if (pDst)
+	{
+		//Ãæµ¹!
+		int i = 0;
+	}
+
 	__super::LateUpdate_Scene();
 }
 
@@ -118,7 +129,7 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
 	//}
 
-	//// Attack Fly
+	// Attack Fly
 	//pGameObject = CAttackFly::Create(m_pGraphicDev, 0);
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	//pGameObject->Set_MyLayer(pLayerTag);
@@ -132,12 +143,6 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//	pGameObject->Set_MyLayer(pLayerTag);
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
 	//}
-
-	//// Attack Fly
-	//pGameObject = CAttackFly::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
 
 	//// Dip
 	//for (int i = 0; i < 5; ++i)
@@ -164,10 +169,10 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
 
 	// //Leaper
-	//pGameObject = CLeaper::Create(m_pGraphicDev, 0);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Leaper", pGameObject), E_FAIL);
+	pGameObject = CLeaper::Create(m_pGraphicDev, 0);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Leaper", pGameObject), E_FAIL);
 
 	//// Charger
 	//pGameObject = CCharger::Create(m_pGraphicDev);
