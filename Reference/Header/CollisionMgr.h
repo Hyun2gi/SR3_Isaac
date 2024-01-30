@@ -5,7 +5,7 @@
 
 BEGIN(Engine)
 
-class CGameObject;
+class CTransform;
 
 class ENGINE_DLL CCollisionMgr
 {
@@ -14,7 +14,7 @@ public:
 	~CCollisionMgr();
 
 public:
-	//static CGameObject* Collision_GameObject(CGameObject* pSrc, CGameObject* pDst);
+	static bool Check_Intersect(CTransform* pSrcTrans, CTransform* pDstTrans);
 
 };
 

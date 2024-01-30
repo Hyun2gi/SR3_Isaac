@@ -15,6 +15,8 @@ public:
 	CComponent*		Get_Component(COMPONENTID eID, const _tchar* pObjTag, const _tchar* pComponentTag);
 	CGameObject*	Get_GameObject(const _tchar* pObjTag);
 
+	CGameObject* Collision_GameObject(CGameObject* pSrc);
+
 public:
 	HRESULT		Add_GameObject(const _tchar* pObjTag, CGameObject* pGameObject);
 

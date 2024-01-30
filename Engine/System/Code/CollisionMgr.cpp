@@ -1,5 +1,4 @@
 #include "..\..\Header\CollisionMgr.h"
-#include "GameObject.h"
 #include "Transform.h"
 
 CCollisionMgr::CCollisionMgr()
@@ -10,19 +9,39 @@ CCollisionMgr::~CCollisionMgr()
 {
 }
 
-//CGameObject* CCollisionMgr::Collision_GameObject(CGameObject* pSrc, CGameObject* pDst)
-//{
-//	// pSrc 본인
-//	// pDst 상대
-//
-//	CTransform* pSrcTrans = dynamic_cast<CTransform*>(pSrc->Get_Component(ID_DYNAMIC, L"Transform"));
-//	CTransform* pDstTrans = dynamic_cast<CTransform*>(pDst->Get_Component(ID_DYNAMIC, L"Transform"));
-//	
-//	// z의 크기는 존재하지 않기 때문에 x와 동일한 임의의 값을 가지게 할 예정.
-//	//pSrcTrans->m_vScale.x
-//
-//	//if()
-//
-//
-//	return CGameObject();
-//}
+bool CCollisionMgr::Check_Intersect(CTransform* pSrcTrans, CTransform* pDstTrans)
+{
+	_vec3 vSrcPos = pSrcTrans->m_vInfo[INFO_POS];
+	_vec3 vDstPos = pDstTrans->m_vInfo[INFO_POS];
+
+	_vec3 vSrcScale = pSrcTrans->m_vScale;
+	_vec3 vDstScale = pDstTrans->m_vScale;
+
+	_vec3 vSrcMin, vSrcMax;
+	vSrcMin.x = vSrcPos.x - vSrcScale.x * 0.5f;
+	vSrcMin.y = vSrcPos.y - vSrcScale.y * 0.5f;
+	vSrcMin.z = vSrcPos.z - vSrcScale.z * 0.5f;
+	vSrcMax.x = vSrcPos.x + vSrcScale.x * 0.5f;
+	vSrcMax.y = vSrcPos.y + vSrcScale.y * 0.5f;
+	vSrcMax.z = vSrcPos.z + vSrcScale.z * 0.5f;
+
+	_vec3 vDstMin, vDstMax;
+	vDstMin.x = vDstPos.x - vDstScale.x * 0.5f;
+	vDstMin.y = vDstPos.y - vDstScale.y * 0.5f;
+	vDstMin.z = vDstPos.z - vDstScale.z * 0.5f;
+	vDstMax.x = vDstPos.x + vDstScale.x * 0.5f;
+	vDstMax.y = vDstPos.y + vDstScale.y * 0.5f;
+	vDstMax.z = vDstPos.z + vDstScale.z * 0.5f;
+
+	if (vSrcMin.x <= vDstMax.x && vSrcMax.x >= vDstMin.x &&
+		vSrcMin.y <= vDstMax.y && vSrcMax.y >= vDstMin.y &&
+		vSrcMin.z <= vDstMax.z && vSrcMax.z >= vDstMin.z)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+}
