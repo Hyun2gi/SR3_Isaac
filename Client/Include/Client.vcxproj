@@ -161,6 +161,7 @@
     <ClInclude Include="..\Header\BackGround.h" />
     <ClInclude Include="..\Header\BrimStone.h" />
     <ClInclude Include="..\Header\BrimStoneBullet.h" />
+    <ClInclude Include="..\Header\CenterFly.h" />
     <ClInclude Include="..\Header\Charger.h" />
     <ClInclude Include="..\Header\Coin.h" />
     <ClInclude Include="..\Header\Dip.h" />
@@ -180,10 +181,12 @@
     <ClInclude Include="..\Header\Monster.h" />
     <ClInclude Include="..\Header\Monstro.h" />
     <ClInclude Include="..\Header\MstBullet.h" />
+    <ClInclude Include="..\Header\NormalFly.h" />
     <ClInclude Include="..\Header\Pacer.h" />
     <ClInclude Include="..\Header\Pill.h" />
     <ClInclude Include="..\Header\Player.h" />
     <ClInclude Include="..\Header\PlayerBullet.h" />
+    <ClInclude Include="..\Header\Poop.h" />
     <ClInclude Include="..\Header\SadOnion.h" />
     <ClInclude Include="..\Header\SkyBox.h" />
     <ClInclude Include="..\Header\Squirt.h" />
@@ -200,6 +203,7 @@
     <ClCompile Include="..\Code\BackGround.cpp" />
     <ClCompile Include="..\Code\BrimStone.cpp" />
     <ClCompile Include="..\Code\BrimStoneBullet.cpp" />
+    <ClCompile Include="..\Code\CenterFly.cpp" />
     <ClCompile Include="..\Code\Charger.cpp" />
     <ClCompile Include="..\Code\Coin.cpp" />
     <ClCompile Include="..\Code\Dip.cpp" />
@@ -219,10 +223,12 @@
     <ClCompile Include="..\Code\Monster.cpp" />
     <ClCompile Include="..\Code\Monstro.cpp" />
     <ClCompile Include="..\Code\MstBullet.cpp" />
+    <ClCompile Include="..\Code\NormalFly.cpp" />
     <ClCompile Include="..\Code\Pacer.cpp" />
     <ClCompile Include="..\Code\Pill.cpp" />
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\PlayerBullet.cpp" />
+    <ClCompile Include="..\Code\Poop.cpp" />
     <ClCompile Include="..\Code\SadOnion.cpp" />
     <ClCompile Include="..\Code\SkyBox.cpp" />
     <ClCompile Include="..\Code\Squirt.cpp" />

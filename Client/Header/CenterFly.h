@@ -3,15 +3,21 @@
 #include "Monster.h"
 #include "GameObject.h"
 
-#include "CenterFly.h"
-#include "NormalFly.h"
+BEGIN(Engine)
 
-class CAttackFly : public CMonster
+class CTransform;
+
+END
+
+class CCenterFly : public CMonster
 {
 private:
-	explicit CAttackFly(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CAttackFly(const CAttackFly& rhs);
-	virtual ~CAttackFly();
+	explicit CCenterFly(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CCenterFly(const CCenterFly& rhs);
+	virtual ~CCenterFly();
+
+public:
+	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -22,20 +28,13 @@ public:
 private:
 	virtual HRESULT		Add_Component()						override;
 
-	void				Create_AttackFly();
-
 private:
-	// º¯¼ö
-	_bool				m_bCreate;
-
-	CCenterFly*			m_CenterFly;
-	vector<CNormalFly*>	m_NormalFlyList;
+	Engine::CTransform* m_pTargetTransCom;
 
 public:
-	static CAttackFly* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CCenterFly* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void		Free()								override;
-
 };
 

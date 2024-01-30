@@ -293,7 +293,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			}
 			case ATTACK_FLY:
 			{
-				pGameObject = CAttackFly::Create(m_pGraphicDev, m_vecMonsterCount[ATTACK_FLY] * 13);
+				/*pGameObject = CAttackFly::Create(m_pGraphicDev, m_vecMonsterCount[ATTACK_FLY] * 13);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				dynamic_cast<CAttackFly*>(pGameObject)->Set_CenterObj();
 				pGameObject->Set_MyLayer(pLayerTag);
@@ -310,7 +310,16 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
 				}
 
-				++m_vecMonsterCount[ATTACK_FLY];
+				++m_vecMonsterCount[ATTACK_FLY];*/
+
+				/*pGameObject = CAttackFly::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
+
+				++m_vecMonsterCount[ATTACK_FLY];*/
 
 				break;
 			}
