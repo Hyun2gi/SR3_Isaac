@@ -3,12 +3,12 @@
 #include "MapObj.h"
 #include "GameObject.h"
 
-class CPoop : public CMapObj
+class CFire : public CMapObj
 {
 private:
-	explicit CPoop(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CPoop(const CPoop& rhs);
-	virtual ~CPoop();
+	explicit CFire(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CFire(const CFire& rhs);
+	virtual ~CFire();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -20,15 +20,12 @@ public:
 
 private:
 	virtual HRESULT		Add_Component()						override;
-	virtual	void		Motion_Change()						override;
 	virtual void		Hit()								override;
 
 private:
-	_bool				m_bAni;
-	_bool				m_bReduce;
 
 public:
-	static CPoop*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CFire*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void		Free()								override;

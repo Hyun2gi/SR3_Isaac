@@ -4,12 +4,15 @@
 #include "Export_Utility.h"
 
 CAttackFly::CAttackFly(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CMonster(pGraphicDev)
+	: CMonster(pGraphicDev),
+	m_CenterFly(nullptr)
 {
+	//ZeroMemory(&m_NormalFlyList, sizeof(m_NormalFlyList));
 }
 
 CAttackFly::CAttackFly(const CAttackFly& rhs)
-	: CMonster(rhs)
+	: CMonster(rhs),
+	m_CenterFly(rhs.m_CenterFly)
 {
 }
 
@@ -28,8 +31,6 @@ HRESULT CAttackFly::Ready_GameObject()
 
 _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 {
-	CGameObject::Update_GameObject(fTimeDelta);
-
 	if (!m_bCreate)
 	{
 		Create_AttackFly();
@@ -49,6 +50,8 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
+	CGameObject::Update_GameObject(fTimeDelta);
+
 	return 0;
 }
 
@@ -56,8 +59,8 @@ void CAttackFly::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 
-	/*if (m_CenterFly != nullptr)
-		m_CenterFly->LateUpdate_GameObject();*/ // 이건 왜 하지 말래?
+	if (m_CenterFly != nullptr)
+		m_CenterFly->LateUpdate_GameObject();
 
 	if (!m_NormalFlyList.empty())
 	{
@@ -112,6 +115,7 @@ HRESULT CAttackFly::Add_Component()
 void CAttackFly::Create_AttackFly()
 {
 	m_CenterFly = CCenterFly::Create(m_pGraphicDev);
+	m_CenterFly->Get_Transform()->m_vInfo[INFO_POS] = m_pTransformCom->m_vInfo[INFO_POS];
 	m_CenterFly->Set_MyLayer(m_vecMyLayer[0]);
 
 	if (m_CenterFly == nullptr)

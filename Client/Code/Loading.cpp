@@ -85,6 +85,21 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 
 #pragma endregion MonsterTexture
 
+#pragma region MapObject
+
+	// Poop
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PoopTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Poop/Poop_%d.png", 5)), E_FAIL);
+
+	// CampFire
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_WoodTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Campfire/Campfire.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_FireTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Campfire/Fire_%d.png", 6)), E_FAIL);
+
+	// Spike
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SpikeTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Spike/Spike.png")), E_FAIL);
+
+#pragma endregion MapObject
+
+
 
 	//FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_EffectTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SkyBoxTexture", CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/Terrain/StageCube.dds")), E_FAIL);

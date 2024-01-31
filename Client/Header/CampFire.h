@@ -3,12 +3,15 @@
 #include "MapObj.h"
 #include "GameObject.h"
 
-class CPoop : public CMapObj
+#include "Wood.h"
+#include "Fire.h"
+
+class CCampFire : public CMapObj
 {
 private:
-	explicit CPoop(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CPoop(const CPoop& rhs);
-	virtual ~CPoop();
+	explicit CCampFire(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CCampFire(const CCampFire& rhs);
+	virtual ~CCampFire();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -16,19 +19,21 @@ public:
 	virtual void	LateUpdate_GameObject()					 override;
 	virtual void	Render_GameObject()						 override;
 
-	void			Change_Scale();
-
 private:
 	virtual HRESULT		Add_Component()						override;
-	virtual	void		Motion_Change()						override;
-	virtual void		Hit()								override;
+
+	void				Create_Wood();
+	void				Create_Fire();
 
 private:
-	_bool				m_bAni;
-	_bool				m_bReduce;
+	// º¯¼ö
+	_bool				m_bCreate;
+
+	CWood*				m_pWood;
+	CFire*				m_pFire;
 
 public:
-	static CPoop*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CCampFire* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void		Free()								override;

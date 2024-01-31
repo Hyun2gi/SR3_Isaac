@@ -133,11 +133,23 @@
     <Filter Include="02. GameObject\01. Monster\01. Attack Fly\01. NormalFly">
       <UniqueIdentifier>{2e228a1d-8597-4624-9d1c-51cd9ee76b72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\08. Item\07. Heart">
-      <UniqueIdentifier>{3863af4e-c73c-497e-9e58-f0d8ff890264}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\08. Item\06. HeartHalf">
-      <UniqueIdentifier>{f77ef53a-6136-4f61-aba4-2784838e08a5}</UniqueIdentifier>
+      <UniqueIdentifier>{b2542603-c2f4-4ccf-aa9d-9dc19a566388}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\08. Item\07. Heart">
+      <UniqueIdentifier>{4811452a-c3aa-4c65-9d86-47014a8c7a4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\01. CampFire">
+      <UniqueIdentifier>{0fa2de16-7a62-4c9b-a5e6-10db14c198a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\01. CampFire\00. Wood">
+      <UniqueIdentifier>{ad81e5ff-c432-4592-9f8e-3693d146b6a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\01. CampFire\01. Fire">
+      <UniqueIdentifier>{a24dbfb2-22fa-4ac4-9ed6-941266e452bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\02. Spike">
+      <UniqueIdentifier>{bca512b5-7d3d-44a0-b8c7-dea189fb2fd5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -270,6 +282,18 @@
     <ClInclude Include="..\Header\Heart.h">
       <Filter>02. GameObject\08. Item\07. Heart</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CampFire.h">
+      <Filter>02. GameObject\09. MapObject\01. CampFire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Fire.h">
+      <Filter>02. GameObject\09. MapObject\01. CampFire\01. Fire</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Wood.h">
+      <Filter>02. GameObject\09. MapObject\01. CampFire\00. Wood</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Spike.h">
+      <Filter>02. GameObject\09. MapObject\02. Spike</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -391,6 +415,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\Heart.cpp">
       <Filter>02. GameObject\08. Item\07. Heart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CampFire.cpp">
+      <Filter>02. GameObject\09. MapObject\01. CampFire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Fire.cpp">
+      <Filter>02. GameObject\09. MapObject\01. CampFire\01. Fire</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Wood.cpp">
+      <Filter>02. GameObject\09. MapObject\01. CampFire\00. Wood</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Spike.cpp">
+      <Filter>02. GameObject\09. MapObject\02. Spike</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
