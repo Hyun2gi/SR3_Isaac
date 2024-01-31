@@ -11,6 +11,8 @@ protected:
 	explicit CGameObject();
 	explicit CGameObject(LPDIRECT3DDEVICE9	pGraphicDev);
 	explicit CGameObject(const CGameObject& rhs);
+
+public:
 	virtual ~CGameObject();
 
 public:

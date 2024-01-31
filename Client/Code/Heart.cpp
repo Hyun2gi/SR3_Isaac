@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Heart.h"
 #include "Export_Utility.h"
+#include "Player.h"
 
 CHeart::CHeart(LPDIRECT3DDEVICE9 pGraphicDev)
     : CItem(pGraphicDev)
@@ -19,8 +20,9 @@ CHeart::~CHeart()
 HRESULT CHeart::Ready_GameObject()
 {
     FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-    m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+    m_pTransformCom->Set_Pos(3.f, 2.f, 3.f);
 
+    m_bDead = false;
     m_fFrame = 0;
 
     return S_OK;
@@ -31,6 +33,12 @@ _int CHeart::Update_GameObject(const _float& fTimeDelta)
     CGameObject::Update_GameObject(fTimeDelta);
 
     m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+    if (m_bDead == true)
+    {
+        // Á×À½ Ã³¸®
+        return 1;
+    }
 
     Engine::Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -62,6 +70,8 @@ void CHeart::Render_GameObject()
 
 void CHeart::Run_Item_Effect()
 {
+    m_bDead = true;
+    CPlayer::GetInstance()->Set_Hp(1);
 }
 
 HRESULT CHeart::Add_Component()

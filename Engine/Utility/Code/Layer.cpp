@@ -3,6 +3,9 @@
 
 #include "Transform.h"
 
+#include "Export_System.h"
+#include "Export_Utility.h"
+
 CLayer::CLayer()
 {
 }
@@ -68,12 +71,31 @@ _int CLayer::Update_Layer(const _float & fTimeDelta)
 {
 	int		iResult = 0;
 
-	for (auto& iter : m_mapObject)
+	/*for (auto& iter : m_mapObject)
 	{
 		iResult = iter.second->Update_GameObject(fTimeDelta);
 
 		if (iResult & 0x80000000)
 			return iResult;
+	}*/
+
+	for (auto& iter = m_mapObject.begin();
+		iter != m_mapObject.end(); )
+	{
+		iResult = (*iter).second->Update_GameObject(fTimeDelta);
+
+		if (1 == iResult)
+		{
+			//Safe_Delete<CGameObject*>(*iter);
+			//CDeleteMap(iter);
+			Safe_Delete<CGameObject*>(iter->second);
+			m_mapObject.erase(iter++);
+		}
+		else
+		{
+			++iter;
+		}
+
 	}
 	
 	return iResult;

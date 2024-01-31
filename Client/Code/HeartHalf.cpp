@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "HeartHalf.h"
 #include "Export_Utility.h"
+#include "Player.h"
 
 CHeartHalf::CHeartHalf(LPDIRECT3DDEVICE9 pGraphicDev)
     : CItem(pGraphicDev)
@@ -19,8 +20,9 @@ CHeartHalf::~CHeartHalf()
 HRESULT CHeartHalf::Ready_GameObject()
 {
     FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-    m_pTransformCom->Set_Pos(10.f, 5.f, 10.f);
+    m_pTransformCom->Set_Pos(8.f, 1.f, 10.f);
 
+    m_bDead = false;
     m_fFrame = 0;
 
     return S_OK;
@@ -31,6 +33,12 @@ _int CHeartHalf::Update_GameObject(const _float& fTimeDelta)
     CGameObject::Update_GameObject(fTimeDelta);
 
     m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+    if (m_bDead == true)
+    {
+        // Á×À½ Ã³¸®
+        return 1;
+    }
 
     Engine::Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -62,6 +70,8 @@ void CHeartHalf::Render_GameObject()
 
 void CHeartHalf::Run_Item_Effect()
 {
+    m_bDead = true;
+    CPlayer::GetInstance()->Set_Hp(0.5);
 }
 
 HRESULT CHeartHalf::Add_Component()

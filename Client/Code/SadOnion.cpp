@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "SadOnion.h"
 #include "Export_Utility.h"
+#include "Player.h"
 
 CSadOnion::CSadOnion(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CItem(pGraphicDev)
@@ -19,8 +20,9 @@ CSadOnion::~CSadOnion()
 HRESULT CSadOnion::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+	m_pTransformCom->Set_Pos(12.f, 1.f, 12.f);
 
+	m_bDead = false;
 	m_fFrame = 0;
 
 	return S_OK;
@@ -31,6 +33,13 @@ _int CSadOnion::Update_GameObject(const _float& fTimeDelta)
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+	if (m_bDead == true)
+	{
+		// Á×À½ Ã³¸®
+		return 1;
+	}
+
 
 	Engine::Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -62,6 +71,8 @@ void CSadOnion::Render_GameObject()
 
 void CSadOnion::Run_Item_Effect()
 {
+	CPlayer::GetInstance()->Set_AttackSpeed(-6);
+	m_bDead = true;
 }
 
 HRESULT CSadOnion::Add_Component()
