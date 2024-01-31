@@ -4,12 +4,15 @@
 #include "Export_Utility.h"
 
 CAttackFly::CAttackFly(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CMonster(pGraphicDev)
+	: CMonster(pGraphicDev),
+	m_CenterFly(nullptr)
 {
+	ZeroMemory(&m_NormalFlyList, sizeof(m_NormalFlyList));
 }
 
 CAttackFly::CAttackFly(const CAttackFly& rhs)
-	: CMonster(rhs)
+	: CMonster(rhs),
+	m_CenterFly(rhs.m_CenterFly)
 {
 }
 
@@ -56,8 +59,8 @@ void CAttackFly::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 
-	/*if (m_CenterFly != nullptr)
-		m_CenterFly->LateUpdate_GameObject();*/ // 이건 왜 하지 말래?
+	if (m_CenterFly != nullptr)
+		m_CenterFly->LateUpdate_GameObject();
 
 	if (!m_NormalFlyList.empty())
 	{
