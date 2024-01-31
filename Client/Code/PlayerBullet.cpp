@@ -24,7 +24,7 @@ HRESULT CPlayerBullet::Ready_GameObject()
 
     m_fAccTimeDelta = 0;
     m_fCallLimit = 1.5;
-    m_fBulletSpeed = 70.f;
+    m_fBulletSpeed = CPlayer::GetInstance()->Get_BulletSpeed();
 
     return S_OK;
 }
@@ -44,6 +44,8 @@ _int CPlayerBullet::Update_GameObject(const _float& fTimeDelta)
     {
         return 1;
     }
+
+    m_fBulletSpeed += 0.2 * fTimeDelta;
 
     m_pTransformCom->Move_Pos(&m_vBulletDir, m_fBulletSpeed, fTimeDelta);
 
@@ -102,6 +104,8 @@ HRESULT CPlayerBullet::Add_Component()
     dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_POS, &playerPos);
     dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_LOOK, &m_vBulletDir);
 
+    m_vBulletDir = _vec3(m_vBulletDir.x, m_vBulletDir.y/3, m_vBulletDir.z);
+    D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);
 
     playerPos += m_vBulletDir * 0.2;
     m_pTransformCom->Set_Pos(playerPos);

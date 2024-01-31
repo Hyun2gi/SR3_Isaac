@@ -27,7 +27,7 @@ public:
 	virtual void	Render_GameObject()						 override;
 
 public:
-	void			Run_Item_Effect();
+	void			Run_Item_Effect()						override;
 
 private:
 	virtual HRESULT		Add_Component()						override;

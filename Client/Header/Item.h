@@ -24,6 +24,9 @@ public:
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
+public:
+	virtual void Run_Item_Effect();
+
 protected:
 	virtual HRESULT			Add_Component();
 	virtual void			Motion_Change() {};
@@ -44,6 +47,7 @@ protected:
 	_float					m_fCallLimit;
 	_float					m_fAccTimeDelta;
 	_float					m_fSpriteSpeed;
+	bool					m_bDead;
 
 public:
 	static CItem* Create(LPDIRECT3DDEVICE9	pGraphicDev);
