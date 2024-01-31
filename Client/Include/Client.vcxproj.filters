@@ -151,6 +151,21 @@
     <Filter Include="02. GameObject\09. MapObject\02. Spike">
       <UniqueIdentifier>{bca512b5-7d3d-44a0-b8c7-dea189fb2fd5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. MapObject\03. SlotMC">
+      <UniqueIdentifier>{28213457-a9b3-4985-8bdf-3870d3a155da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\03. SlotMC\00. Machine">
+      <UniqueIdentifier>{8529eed9-ebbc-40a9-908c-7a18f4fd34b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\03. SlotMC\01. FirstCard">
+      <UniqueIdentifier>{1ef1ded9-0c2d-4fdb-b90f-b351b18809dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\03. SlotMC\02. SecCard">
+      <UniqueIdentifier>{e5abe2fe-0a16-4486-9ddb-484b70667258}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\03. SlotMC\03. ThirdCard">
+      <UniqueIdentifier>{7c19dc1a-a028-4c03-9fed-c695745a06a9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -294,6 +309,9 @@
     <ClInclude Include="..\Header\Spike.h">
       <Filter>02. GameObject\09. MapObject\02. Spike</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\SlotMC.h">
+      <Filter>02. GameObject\09. MapObject\03. SlotMC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -427,6 +445,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Spike.cpp">
       <Filter>02. GameObject\09. MapObject\02. Spike</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SlotMC.cpp">
+      <Filter>02. GameObject\09. MapObject\03. SlotMC</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

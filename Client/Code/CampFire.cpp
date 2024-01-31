@@ -62,7 +62,7 @@ void CCampFire::LateUpdate_GameObject()
 		m_pWood->LateUpdate_GameObject();
 
 	if (m_pFire != nullptr)
-		m_pFire->LateUpdate_GameObject(); // 진입 자체를 못함
+		m_pFire->LateUpdate_GameObject();
 }
 
 void CCampFire::Render_GameObject()
