@@ -22,6 +22,8 @@ CWall::~CWall()
 
 HRESULT CWall::Ready_GameObject()
 {
+	m_bIsDeleted = false;
+
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	return S_OK;
@@ -29,6 +31,12 @@ HRESULT CWall::Ready_GameObject()
 
 Engine::_int CWall::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsDeleted && Get_Arrived())
+	{
+		m_bIsDeleted = true;
+		Free_Cubes();
+	}
+
 
 	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
 
@@ -36,6 +44,7 @@ Engine::_int CWall::Update_GameObject(const _float& fTimeDelta)
 		iter->Update_GameObject(fTimeDelta);
 
 	CGameObject::Update_GameObject(fTimeDelta);
+
 
 	return 0;
 }
@@ -50,7 +59,13 @@ void CWall::LateUpdate_GameObject()
 
 void CWall::Render_GameObject()
 {	
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
+	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	m_pTextureCom->Set_Texture(0);
 
+	m_pBufferCom->Render_Buffer();
+
+	//m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 }
 
@@ -98,6 +113,37 @@ HRESULT CWall::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag, int iAxis)
 	return S_OK;
 }
 
+HRESULT CWall::Set_Texture_Tag(const _tchar* pTextureTag, int iAxis)
+{
+	CComponent* pComponent = nullptr;
+
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(pTextureTag));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ pTextureTag, pComponent });
+
+	switch (iAxis)
+	{
+	case WALL_LEFT:
+		m_pTransformCom->m_vInfo[INFO_POS] = { 0.f, VTXCNTZ * 0.13f, VTXCNTX * 0.5f };
+		m_pTransformCom->m_vAngle.y = D3DXToRadian(-90.f);
+		break;
+	case WALL_RIGHT:
+		m_pTransformCom->m_vInfo[INFO_POS] = { VTXCNTX, VTXCNTZ * 0.13f, VTXCNTX * 0.5f };
+		m_pTransformCom->m_vAngle.y = D3DXToRadian(90.f);
+		break;
+	case WALL_TOP:
+		m_pTransformCom->m_vInfo[INFO_POS] = { VTXCNTX * 0.5f, VTXCNTZ * 0.13f, VTXCNTX};
+		//m_pTransformCom->m_vAngle.y = D3DXToRadian(90.f);
+		break;
+	case WALL_BOTTOM:
+		m_pTransformCom->m_vInfo[INFO_POS] = { VTXCNTX * 0.5f, VTXCNTZ * 0.13f, 0.f };
+		m_pTransformCom->m_vAngle.y = D3DXToRadian(180.f);
+		break;
+	}
+
+
+}
+
 bool CWall::Get_Arrived()
 {
 	//하나라도 도착하지 않았다면 false를 return 한다
@@ -112,17 +158,24 @@ bool CWall::Get_Arrived()
 
 HRESULT CWall::Add_Component()
 {
-	//CComponent*		pComponent = nullptr;
-	//	
-	//pComponent = m_pBufferCom = dynamic_cast<CCubeTex*>(Engine::Clone_Proto(L"Proto_CubeTex"));
-	//NULL_CHECK_RETURN(pComponent, E_FAIL);
-	//m_mapComponent[ID_STATIC].insert({ L"Proto_CubeTex", pComponent });
+	CComponent*		pComponent = nullptr;
 
-	//pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
-	//NULL_CHECK_RETURN(pComponent, E_FAIL);
-	//m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
-	//	
+	pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(Engine::Clone_Proto(L"Proto_RcTex"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
+
+	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
+	m_pTransformCom->m_vScale = { 21.f, 6.f, 10.f };
+
 	return S_OK;
+}
+
+void CWall::Free_Cubes()
+{
+	for_each(m_vecCubes.begin(), m_vecCubes.end(), CDeleteObj());
+	m_vecCubes.clear();
 }
 
 CWall * CWall::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -141,7 +194,7 @@ CWall * CWall::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CWall::Free()
 {	
-	for_each(m_vecCubes.begin(), m_vecCubes.end(), CDeleteObj());
+	Free_Cubes();
 	__super::Free();
 }
 
