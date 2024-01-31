@@ -3,8 +3,6 @@
 #include "MapObj.h"
 #include "GameObject.h"
 
-#include "Stage.h"
-
 class CPoop : public CMapObj
 {
 private:

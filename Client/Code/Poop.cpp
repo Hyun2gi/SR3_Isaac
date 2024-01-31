@@ -131,10 +131,6 @@ void CPoop::Hit()
 	}
 	else
 	{
-		// 아이템 드랍
-		CStage* pStage = CStage::Create(m_pGraphicDev);
-		pStage = pStage->Get_Stage();
-		pStage->Create_Item();
 	}
 }
 
