@@ -23,7 +23,7 @@ CSlotMC::~CSlotMC()
 HRESULT CSlotMC::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(15.f, 1.f, 5.f);
+	m_pTransformCom->Set_Pos(3.f, 2.f, 5.f);
 
 	m_iLimitHit = 4;
 
@@ -46,9 +46,22 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 	if (m_pMachine != nullptr)
 		m_pMachine->Update_GameObject(fTimeDelta);
 
-	if (Engine::Key_Down(DIK_G))
+	if (!m_pCardList.empty())
+	{
+		for (auto& iter : m_pCardList)
+		{
+			iter->Update_GameObject(fTimeDelta);
+		}
+	}
+
+	if (Engine::Get_DIKeyState(DIK_G) & 0x80)//Engine::Key_Down(DIK_G))
 	{
 		m_pMachine->Set_Game();
+		
+		for (auto& iter : m_pCardList)
+		{
+			iter->Set_Random();
+		}
 	}
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
@@ -62,12 +75,28 @@ void CSlotMC::LateUpdate_GameObject()
 
 	if (m_pMachine != nullptr)
 		m_pMachine->LateUpdate_GameObject();
+
+	if (!m_pCardList.empty())
+	{
+		for (auto& iter : m_pCardList)
+		{
+			iter->LateUpdate_GameObject();
+		}
+	}
 }
 
 void CSlotMC::Render_GameObject()
 {
 	if (m_pMachine != nullptr)
 		m_pMachine->Render_GameObject();
+
+	if (!m_pCardList.empty())
+	{
+		for (auto& iter : m_pCardList)
+		{
+			iter->Render_GameObject();
+		}
+	}
 }
 
 HRESULT CSlotMC::Add_Component()
@@ -132,6 +161,20 @@ void CSlotMC::Create_Machine()
 
 void CSlotMC::Create_Card()
 {
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	float fScalar = SCALAR_X;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		CSlotCard* pCard = CSlotCard::Create(m_pGraphicDev);
+		pCard->Set_MyLayer(m_vecMyLayer[0]);
+		pCard->Get_TransformCom()->Set_Pos(vPos.x + fScalar, vPos.y - SCALAR_Y, vPos.z);
+		pCard->Set_Index(i);
+		m_pCardList.push_back(pCard);
+		fScalar += 0.73f;
+	}
 }
 
 CSlotMC* CSlotMC::Create(LPDIRECT3DDEVICE9 pGraphicDev)

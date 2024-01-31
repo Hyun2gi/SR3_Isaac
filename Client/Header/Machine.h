@@ -26,6 +26,8 @@ private:
 	virtual HRESULT		Add_Component()						override;
 	virtual void		Motion_Change()						override;
 
+	void				Change_Scale();
+
 private:
 	_bool				m_bGame;
 	_bool				m_bBroken;

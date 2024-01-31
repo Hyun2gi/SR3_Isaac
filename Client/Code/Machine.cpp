@@ -20,6 +20,7 @@ CMachine::~CMachine()
 HRESULT CMachine::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+	m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
 
 	m_bGame = false;
 	m_bBroken = false;
@@ -57,7 +58,7 @@ _int CMachine::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
+	//m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -114,7 +115,7 @@ void CMachine::Motion_Change()
 		{
 		case CMachine::MC_IDLE:
 			m_iPicNum = 3;
-			m_fFrameSpeed = 1.f;
+			m_fFrameSpeed = 2.f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"SlotMC", L"Proto_SlotMCTexture"));
 			break;
 

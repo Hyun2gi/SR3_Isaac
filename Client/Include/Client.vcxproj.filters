@@ -160,12 +160,6 @@
     <Filter Include="02. GameObject\09. MapObject\03. SlotMC\01. FirstCard">
       <UniqueIdentifier>{1ef1ded9-0c2d-4fdb-b90f-b351b18809dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\09. MapObject\03. SlotMC\02. SecCard">
-      <UniqueIdentifier>{e5abe2fe-0a16-4486-9ddb-484b70667258}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\09. MapObject\03. SlotMC\03. ThirdCard">
-      <UniqueIdentifier>{7c19dc1a-a028-4c03-9fed-c695745a06a9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\10. Room">
       <UniqueIdentifier>{b6a081a9-4e20-4301-9ee7-0e06f27c0d38}</UniqueIdentifier>
     </Filter>
@@ -336,6 +330,9 @@
     <ClInclude Include="..\Header\Machine.h">
       <Filter>02. GameObject\09. MapObject\03. SlotMC\00. Machine</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\SlotCard.h">
+      <Filter>02. GameObject\09. MapObject\03. SlotMC\01. FirstCard</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -484,6 +481,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Machine.cpp">
       <Filter>02. GameObject\09. MapObject\03. SlotMC\00. Machine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SlotCard.cpp">
+      <Filter>02. GameObject\09. MapObject\03. SlotMC\01. FirstCard</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

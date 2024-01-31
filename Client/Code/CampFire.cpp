@@ -49,7 +49,7 @@ _int CCampFire::Update_GameObject(const _float& fTimeDelta)
 	if (m_pFire != nullptr)
 		m_pFire->Update_GameObject(fTimeDelta);
 
-	if (Engine::Key_Down(DIK_X))
+	if (Engine::Get_DIKeyState(DIK_Z) & 0x80)//Engine::Key_Down(DIK_X))
 		m_pFire->Set_Hit();
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
