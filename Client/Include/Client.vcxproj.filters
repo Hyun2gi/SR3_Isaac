@@ -133,21 +133,6 @@
     <Filter Include="02. GameObject\01. Monster\01. Attack Fly\01. NormalFly">
       <UniqueIdentifier>{2e228a1d-8597-4624-9d1c-51cd9ee76b72}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\09. MapObject\01. CampFire">
-      <UniqueIdentifier>{3c6ab708-a260-4a9d-ba8e-dfd33bd2578a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\09. MapObject\02. Spike">
-      <UniqueIdentifier>{aa9d045a-8f13-472a-886b-97517e27849e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\09. MapObject\01. CampFire\00. Wood">
-      <UniqueIdentifier>{8e50270d-2dbe-4bce-8c99-1cb5555c6660}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\09. MapObject\01. CampFire\01. Fire">
-      <UniqueIdentifier>{aa5a22be-0cbe-4a45-b686-a653466c2b36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\09. MapObject\02. Spike\00. SpikeParts">
-      <UniqueIdentifier>{8757067e-8230-47c9-aa1a-e918e4e1bf09}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -273,18 +258,6 @@
     <ClInclude Include="..\Header\Poop.h">
       <Filter>02. GameObject\09. MapObject\00. Poop</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\CampFire.h">
-      <Filter>02. GameObject\09. MapObject\01. CampFire</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\Wood.h">
-      <Filter>02. GameObject\09. MapObject\01. CampFire\00. Wood</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\Fire.h">
-      <Filter>02. GameObject\09. MapObject\01. CampFire\01. Fire</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\Spike.h">
-      <Filter>02. GameObject\09. MapObject\02. Spike</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -400,18 +373,6 @@
     </ClCompile>
     <ClCompile Include="..\Code\Poop.cpp">
       <Filter>02. GameObject\09. MapObject\00. Poop</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\CampFire.cpp">
-      <Filter>02. GameObject\09. MapObject\01. CampFire</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Wood.cpp">
-      <Filter>02. GameObject\09. MapObject\01. CampFire\00. Wood</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Fire.cpp">
-      <Filter>02. GameObject\09. MapObject\01. CampFire\01. Fire</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Spike.cpp">
-      <Filter>02. GameObject\09. MapObject\02. Spike</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

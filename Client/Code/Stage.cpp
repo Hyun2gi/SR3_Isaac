@@ -76,7 +76,7 @@ void CStage::Render_Scene()
 	// DEBUG
 }
 
-HRESULT CStage::Ready_Layer_Environment(const _tchar* pLayerTag)
+HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 {
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
