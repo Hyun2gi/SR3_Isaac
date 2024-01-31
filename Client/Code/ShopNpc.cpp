@@ -20,7 +20,8 @@ CShopNpc::~CShopNpc()
 HRESULT CShopNpc::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(10.f, 1.f, 10.f);
+	m_pTransformCom->Set_Pos(10.f, 1.f, 5.f);
+	m_pTransformCom->m_vScale = { 1.5f, 1.5f, 1.5f };
 
 	m_iPicNum = 2;
 	m_fFrameSpeed = 1.f;
@@ -121,15 +122,15 @@ void CShopNpc::Motion_Change()
 		switch (m_eCurState)
 		{
 		case CShopNpc::NPC_IDLE:
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Shop", L"Proto_ShopNpcTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShopNpc", L"Proto_ShopNpcTexture"));
 			break;
 
 		case CShopNpc::NPC_GOOD:
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Shop", L"Proto_ShopNpcThumbsTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShopNpc", L"Proto_ShopNpcThumbsTexture"));
 			break;
 
 		case CShopNpc::NPC_DEAD:
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Shop", L"Proto_ShopNpcDeadTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShopNpc", L"Proto_ShopNpcDeadTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;

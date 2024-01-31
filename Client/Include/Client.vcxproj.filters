@@ -178,6 +178,9 @@
     <Filter Include="02. GameObject\09. MapObject\04. Shop\01. Npc">
       <UniqueIdentifier>{bcd8ebdb-ba64-4b52-a7be-c7675b1b7d64}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. MapObject\04. Shop\01. ShopItem">
+      <UniqueIdentifier>{1fbbcebe-be4e-431b-a381-5b0bfda6c8fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -327,11 +330,20 @@
     <ClInclude Include="..\Header\Floor.h">
       <Filter>02. GameObject\10. Room\01. Floor</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Wall.h">
+      <Filter>02. GameObject\10. Room\02. Wall</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\CubeObject.h">
       <Filter>02. GameObject\10. Room\00. Cube</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\Wall.h">
-      <Filter>02. GameObject\10. Room\02. Wall</Filter>
+    <ClInclude Include="..\Header\Machine.h">
+      <Filter>02. GameObject\09. MapObject\03. SlotMC\00. Machine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\SlotCard.h">
+      <Filter>02. GameObject\09. MapObject\03. SlotMC\01. FirstCard</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\ShopNpc.h">
+      <Filter>02. GameObject\09. MapObject\04. Shop\01. Npc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -473,14 +485,20 @@
     <ClCompile Include="..\Code\Floor.cpp">
       <Filter>02. GameObject\10. Room\01. Floor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\CubeObject.cpp">
-      <Filter>02. GameObject\10. Room\00. Cube</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\Wall.cpp">
       <Filter>02. GameObject\10. Room\02. Wall</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CubeObject.cpp">
       <Filter>02. GameObject\10. Room\00. Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Machine.cpp">
+      <Filter>02. GameObject\09. MapObject\03. SlotMC\00. Machine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SlotCard.cpp">
+      <Filter>02. GameObject\09. MapObject\03. SlotMC\01. FirstCard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ShopNpc.cpp">
+      <Filter>02. GameObject\09. MapObject\04. Shop\01. Npc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
