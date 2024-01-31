@@ -193,6 +193,7 @@
     <ClInclude Include="..\Header\Poop.h" />
     <ClInclude Include="..\Header\SadOnion.h" />
     <ClInclude Include="..\Header\SkyBox.h" />
+    <ClInclude Include="..\Header\SlotMC.h" />
     <ClInclude Include="..\Header\Spike.h" />
     <ClInclude Include="..\Header\Squirt.h" />
     <ClInclude Include="..\Header\Stage.h" />
@@ -241,6 +242,7 @@
     <ClCompile Include="..\Code\Poop.cpp" />
     <ClCompile Include="..\Code\SadOnion.cpp" />
     <ClCompile Include="..\Code\SkyBox.cpp" />
+    <ClCompile Include="..\Code\SlotMC.cpp" />
     <ClCompile Include="..\Code\Spike.cpp" />
     <ClCompile Include="..\Code\Squirt.cpp" />
     <ClCompile Include="..\Code\Stage.cpp" />
