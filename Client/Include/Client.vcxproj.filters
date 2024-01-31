@@ -312,6 +312,9 @@
     <ClInclude Include="..\Header\SlotMC.h">
       <Filter>02. GameObject\09. MapObject\03. SlotMC</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Machine.h">
+      <Filter>02. GameObject\09. MapObject\03. SlotMC\00. Machine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -448,6 +451,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\SlotMC.cpp">
       <Filter>02. GameObject\09. MapObject\03. SlotMC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Machine.cpp">
+      <Filter>02. GameObject\09. MapObject\03. SlotMC\00. Machine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

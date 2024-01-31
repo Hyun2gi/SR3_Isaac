@@ -3,6 +3,8 @@
 #include "MapObj.h"
 #include "GameObject.h"
 
+#include "Machine.h"
+
 class CSlotMC : public CMapObj
 {
 private:
@@ -25,6 +27,8 @@ private:
 private:
 	// º¯¼ö
 	_bool				m_bCreate;
+
+	CMachine*			m_pMachine;
 
 public:
 	static CSlotMC*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

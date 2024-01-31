@@ -135,5 +135,11 @@ CCampFire* CCampFire::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CCampFire::Free()
 {
+	Safe_Release<CWood*>(m_pWood);
+	m_pWood = nullptr;
+
+	Safe_Release<CFire*>(m_pFire);
+	m_pFire = nullptr;
+
 	__super::Free();
 }

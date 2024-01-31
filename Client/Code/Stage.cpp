@@ -22,6 +22,7 @@
 #include "Poop.h"
 #include "CampFire.h"
 #include "Spike.h"
+#include "SlotMC.h"
 
 #include "BackGround.h"
 #include "Terrain.h"
@@ -235,6 +236,12 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pGameObject->Set_MyLayer(pLayerTag);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
+
+	// SlotMC
+	pGameObject = CSlotMC::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
 
 
 #pragma endregion Object

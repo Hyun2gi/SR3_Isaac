@@ -97,6 +97,13 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	// Spike
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SpikeTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Spike/Spike.png")), E_FAIL);
 
+	// SlotMC
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SlotMCTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/SlotMC/SlotMC_%d.png", 3)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BrokenSlotMCTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/SlotMC/BrokenSlotMC.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SlotCardTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/SlotMC/SlotCard_%d.png", 7)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SlotCardRandTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/SlotMC/SlotRandom_%d.png", 6)), E_FAIL);
+
+
 #pragma endregion MapObject
 
 

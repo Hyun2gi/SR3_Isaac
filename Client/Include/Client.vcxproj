@@ -178,6 +178,7 @@
     <ClInclude Include="..\Header\Loading.h" />
     <ClInclude Include="..\Header\LoadStage.h" />
     <ClInclude Include="..\Header\Logo.h" />
+    <ClInclude Include="..\Header\Machine.h" />
     <ClInclude Include="..\Header\MainApp.h" />
     <ClInclude Include="..\Header\MapObj.h" />
     <ClInclude Include="..\Header\Mom.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="..\Code\Loading.cpp" />
     <ClCompile Include="..\Code\LoadStage.cpp" />
     <ClCompile Include="..\Code\Logo.cpp" />
+    <ClCompile Include="..\Code\Machine.cpp" />
     <ClCompile Include="..\Code\MainApp.cpp" />
     <ClCompile Include="..\Code\MapObj.cpp" />
     <ClCompile Include="..\Code\Mom.cpp" />

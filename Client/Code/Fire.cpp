@@ -40,7 +40,7 @@ _int CFire::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (Engine::Get_DIKeyState(DIK_X) & 0x80)
+	if (Engine::Key_Down(DIK_X))
 	{
 		Hit();
 	}
