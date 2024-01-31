@@ -3,6 +3,7 @@
 
 #include "Export_System.h"
 #include "Export_Utility.h"
+#include "Player.h"
 
 CDynamicCamera::CDynamicCamera(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CCamera(pGraphicDev)
@@ -29,7 +30,7 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_fFar = fFar;
 
 	m_fCameraHeight = 5.f;
-	m_fCameraDistance = 4.f;
+	m_fCameraDistance = 8.f;
 	m_pTarget = nullptr;
 	m_ePreState = C_END;
 	m_eCurState = C_PLAYERCHASE;
@@ -50,7 +51,8 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_pTarget == nullptr)
 	{
-		m_pTarget = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+		//m_pTarget = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+		m_pTarget = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 	}
 
 	ShakeByPosition(fTimeDelta);
@@ -114,7 +116,7 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		if (m_bMove == false)
 		{
 			m_bMove = true;
-			CTransform* playerInfo = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
+			CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 			_vec3		playerPos;
 			_vec3		playerDir;
@@ -155,7 +157,7 @@ void CDynamicCamera::Chase_Character()
 {
 	if (m_eCurState == C_PLAYERCHASE)
 	{
-		CTransform* playerInfo = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
+		CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 		_vec3		playerPos;
 		_vec3		playerDir;
@@ -250,7 +252,7 @@ void CDynamicCamera::Mouse_Move()
 		D3DXQuaternionRotationMatrix(&qRot, &matRotY);
 		D3DXVec3Cross(&vCross, &m_vUp, &vLook);
 		
-		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20)
+		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f)  < 50)
 		{
 			m_fAngleY -= (dwMouseMoveY / 10.f);
 			D3DXQuaternionRotationAxis(&qRot, &vCross, -D3DXToRadian(dwMouseMoveY / 10.f));

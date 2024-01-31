@@ -1,5 +1,9 @@
 #include "..\..\Header\GameObject.h"
 
+CGameObject::CGameObject()
+{
+}
+
 CGameObject::CGameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	: m_pGraphicDev(pGraphicDev), m_fViewZ(0.f)
 {

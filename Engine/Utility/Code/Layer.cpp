@@ -1,4 +1,7 @@
 #include "..\..\Header\Layer.h"
+#include "..\..\Header\CollisionMgr.h"
+
+#include "Transform.h"
 
 CLayer::CLayer()
 {
@@ -26,6 +29,24 @@ CGameObject* CLayer::Get_GameObject(const _tchar* pObjTag)
 		return nullptr;
 
 	return iter->second;
+}
+
+CGameObject* CLayer::Collision_GameObject(CGameObject* pSrc)
+{
+	CTransform* pSrcTrans = dynamic_cast<CTransform*>(pSrc->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+
+	for (auto& iter : m_mapObject)
+	{
+		if (iter.second == pSrc) continue;
+
+		CGameObject* pDst = iter.second;
+		CTransform* pDstTrans = dynamic_cast<CTransform*>(pDst->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+
+		if (CCollisionMgr::Check_Intersect(pSrcTrans, pDstTrans))
+			return pDst;
+	}
+
+	return nullptr;
 }
 
 HRESULT CLayer::Add_GameObject(const _tchar * pObjTag, CGameObject * pGameObject)

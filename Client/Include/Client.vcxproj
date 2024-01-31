@@ -171,6 +171,8 @@
     <ClInclude Include="..\Header\Epic.h" />
     <ClInclude Include="..\Header\Fire.h" />
     <ClInclude Include="..\Header\Fly.h" />
+    <ClInclude Include="..\Header\Heart.h" />
+    <ClInclude Include="..\Header\HeartHalf.h" />
     <ClInclude Include="..\Header\Item.h" />
     <ClInclude Include="..\Header\Leaper.h" />
     <ClInclude Include="..\Header\Loading.h" />
@@ -217,6 +219,8 @@
     <ClCompile Include="..\Code\Epic.cpp" />
     <ClCompile Include="..\Code\Fire.cpp" />
     <ClCompile Include="..\Code\Fly.cpp" />
+    <ClCompile Include="..\Code\Heart.cpp" />
+    <ClCompile Include="..\Code\HeartHalf.cpp" />
     <ClCompile Include="..\Code\Item.cpp" />
     <ClCompile Include="..\Code\Leaper.cpp" />
     <ClCompile Include="..\Code\Loading.cpp" />

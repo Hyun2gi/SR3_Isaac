@@ -8,6 +8,7 @@
 #include "BackGround.h"
 #include "Stage.h"
 #include "LoadStage.h"
+#include "Player.h"
 
 CLogo::CLogo(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev), m_pLoading(nullptr)
