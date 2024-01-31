@@ -20,13 +20,14 @@ public:
 
 	HRESULT			Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag);
 
+	bool	Get_Arrived();
+
 private:
 	HRESULT			Add_Component();
 
 private:
+	// 벽을 하나로해서 여러개의 큐브를 띄우기 위해 큐브를 가지고 있게하려고 만든 벡터배열
 	vector<CCubeObject*> m_vecCubes;
-
-	//vector<const _tchar*> m_vecTextureTag;
 
 public:
 	static CFloor*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
