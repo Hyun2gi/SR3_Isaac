@@ -39,6 +39,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_iCoin = 0;
 
 	//m_pTransformCom->m_vScale = { 2.f, 1.f, 1.f };
+	m_bMouseYRotataion = true;
 
 	return S_OK;
 }
@@ -188,6 +189,7 @@ HRESULT CPlayer::Add_Component()
 	return S_OK;
 }
 
+
 //CPlayer * CPlayer::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 //{
 //	CPlayer *	pInstance = new CPlayer(pGraphicDev);
@@ -279,9 +281,14 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	{
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(dwMouseMove / 10.f));
 	}
+
+
 	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_Y))
 	{
-		//m_pTransformCom->Rotation(ROT_X, D3DXToRadian(dwMouseMove / 30.f));
+		if (m_bMouseYRotataion)
+		{
+			m_pTransformCom->Rotation(ROT_X, D3DXToRadian(dwMouseMove / 20.f));
+		}
 	}
 
 	

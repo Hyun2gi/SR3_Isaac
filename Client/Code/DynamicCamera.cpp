@@ -259,35 +259,17 @@ void CDynamicCamera::Mouse_Move()
 			D3DXMatrixRotationQuaternion(&matRotY, &qRot);
 
 			matTotalRot = matRotX * matRotY;
+
+			CPlayer::GetInstance()->Set_Bool_MouseYRotation(true);
 		}
 		else
 		{
+			CPlayer::GetInstance()->Set_Bool_MouseYRotation(false);
 			matTotalRot = matRotX;
 		}
 		
-
 		D3DXVec3TransformCoord(&vLook, &vLook, &matTotalRot);
 		m_vCameraPosDir = vLook;
-
-		// 90도 이상 회전 못하게 하는
-		_vec3		newCameraDir = vLook;
-
-		D3DXVec3Normalize(&playerDir, &playerDir);
-		playerDir *= -1;
-		D3DXVec3Normalize(&newCameraDir, &newCameraDir);
-
-		float fangle = D3DXToDegree(acos(D3DXVec3Dot(&newCameraDir, &playerDir)));
-
-		if (fangle <= 80 && fangle > 0)
-		{
-			m_vCameraPosDir = vLook;
-		}
-		else
-		{
-			matTotalRot = matRotX;
-			D3DXVec3TransformCoord(&vLook, &vLook, &matTotalRot);
-			m_vCameraPosDir = vLook;
-		}
 	}
 }
 

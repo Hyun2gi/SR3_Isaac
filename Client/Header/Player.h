@@ -86,7 +86,11 @@ public:
 		m_iHp += _hp;
 	}
 
+	void		Set_Coin(int _coin) { m_iCoin += _coin; }
+
 	void		Set_LayerTag(_tchar* pLayerTag) { m_pLayerTag = pLayerTag; }
+
+	void		Set_Bool_MouseYRotation(bool checkY) { m_bMouseYRotataion = checkY; }
 
 public:
 	void		Bullet_Change_To_Brim();
@@ -140,6 +144,8 @@ private:
 
 	int					m_iHp;
 	int					m_iCoin;
+
+	bool				m_bMouseYRotataion;
 
 public:
 	/*static CPlayer*		Create(LPDIRECT3DDEVICE9	pGraphicDev);*/

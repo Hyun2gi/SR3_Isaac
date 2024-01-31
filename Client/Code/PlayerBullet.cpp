@@ -102,6 +102,8 @@ HRESULT CPlayerBullet::Add_Component()
     dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_POS, &playerPos);
     dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_LOOK, &m_vBulletDir);
 
+    m_vBulletDir = _vec3(m_vBulletDir.x, m_vBulletDir.y/3, m_vBulletDir.z);
+    D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);
 
     playerPos += m_vBulletDir * 0.2;
     m_pTransformCom->Set_Pos(playerPos);
