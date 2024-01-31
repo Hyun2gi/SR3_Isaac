@@ -9,7 +9,7 @@
 //환경
 #include "Terrain.h"
 #include "DynamicCamera.h"
-#include "SkyBox.h"
+#include "CubeObject.h"
 
 //몬스터
 #include "Fly.h"
@@ -67,7 +67,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
 
-	if (GetAsyncKeyState('1'))
+	if (Engine::Key_Down(DIK_1))
 	{
 		Engine::CScene* pScene = nullptr;
 
@@ -79,7 +79,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		return 0;
 	}
 
-	if (GetAsyncKeyState('2'))
+	if (Engine::Key_Down(DIK_2))
 	{
 		Engine::CScene* pScene = nullptr;
 
@@ -91,7 +91,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		return 0;
 	}
 
-	if (GetAsyncKeyState('3'))
+	if (Engine::Key_Down(DIK_3))
 	{
 		Engine::CScene* pScene = nullptr;
 
@@ -508,10 +508,6 @@ HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"DynamicCamera", pGameObject), E_FAIL);
 		
-	pGameObject = CSkyBox::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
-
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
@@ -527,6 +523,10 @@ HRESULT CLoadStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	pGameObject = CTerrain::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
+	
+	//pGameObject = CCubeObject::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CubeObject", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 

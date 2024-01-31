@@ -165,11 +165,13 @@
     <ClInclude Include="..\Header\CenterFly.h" />
     <ClInclude Include="..\Header\Charger.h" />
     <ClInclude Include="..\Header\Coin.h" />
+    <ClInclude Include="..\Header\CubeObject.h" />
     <ClInclude Include="..\Header\Dip.h" />
     <ClInclude Include="..\Header\DynamicCamera.h" />
     <ClInclude Include="..\Header\Effect.h" />
     <ClInclude Include="..\Header\Epic.h" />
     <ClInclude Include="..\Header\Fire.h" />
+    <ClInclude Include="..\Header\Floor.h" />
     <ClInclude Include="..\Header\Fly.h" />
     <ClInclude Include="..\Header\Heart.h" />
     <ClInclude Include="..\Header\HeartHalf.h" />
@@ -199,6 +201,7 @@
     <ClInclude Include="..\Header\Squirt.h" />
     <ClInclude Include="..\Header\Stage.h" />
     <ClInclude Include="..\Header\Terrain.h" />
+    <ClInclude Include="..\Header\Wall.h" />
     <ClInclude Include="..\Header\WhipWorm.h" />
     <ClInclude Include="..\Header\Wood.h" />
     <ClInclude Include="Client.h" />
@@ -215,11 +218,13 @@
     <ClCompile Include="..\Code\CenterFly.cpp" />
     <ClCompile Include="..\Code\Charger.cpp" />
     <ClCompile Include="..\Code\Coin.cpp" />
+    <ClCompile Include="..\Code\CubeObject.cpp" />
     <ClCompile Include="..\Code\Dip.cpp" />
     <ClCompile Include="..\Code\DynamicCamera.cpp" />
     <ClCompile Include="..\Code\Effect.cpp" />
     <ClCompile Include="..\Code\Epic.cpp" />
     <ClCompile Include="..\Code\Fire.cpp" />
+    <ClCompile Include="..\Code\Floor.cpp" />
     <ClCompile Include="..\Code\Fly.cpp" />
     <ClCompile Include="..\Code\Heart.cpp" />
     <ClCompile Include="..\Code\HeartHalf.cpp" />
@@ -249,6 +254,7 @@
     <ClCompile Include="..\Code\Squirt.cpp" />
     <ClCompile Include="..\Code\Stage.cpp" />
     <ClCompile Include="..\Code\Terrain.cpp" />
+    <ClCompile Include="..\Code\Wall.cpp" />
     <ClCompile Include="..\Code\WhipWorm.cpp" />
     <ClCompile Include="..\Code\Wood.cpp" />
     <ClCompile Include="Client.cpp" />

@@ -166,6 +166,18 @@
     <Filter Include="02. GameObject\09. MapObject\03. SlotMC\03. ThirdCard">
       <UniqueIdentifier>{7c19dc1a-a028-4c03-9fed-c695745a06a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. Room">
+      <UniqueIdentifier>{b6a081a9-4e20-4301-9ee7-0e06f27c0d38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Room\01. Floor">
+      <UniqueIdentifier>{352424ed-33e6-478e-a419-ead405d35f0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Room\00. Cube">
+      <UniqueIdentifier>{6ac94962-0451-4389-ab1a-c60ee08198ef}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Room\02. Wall">
+      <UniqueIdentifier>{dcbfa838-2ff8-4b3f-a7e7-6e869f72a261}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -312,8 +324,14 @@
     <ClInclude Include="..\Header\SlotMC.h">
       <Filter>02. GameObject\09. MapObject\03. SlotMC</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\Machine.h">
-      <Filter>02. GameObject\09. MapObject\03. SlotMC\00. Machine</Filter>
+    <ClInclude Include="..\Header\Floor.h">
+      <Filter>02. GameObject\10. Room\01. Floor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Wall.h">
+      <Filter>02. GameObject\10. Room\02. Wall</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\CubeObject.h">
+      <Filter>02. GameObject\10. Room\00. Cube</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -452,8 +470,14 @@
     <ClCompile Include="..\Code\SlotMC.cpp">
       <Filter>02. GameObject\09. MapObject\03. SlotMC</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\Machine.cpp">
-      <Filter>02. GameObject\09. MapObject\03. SlotMC\00. Machine</Filter>
+    <ClCompile Include="..\Code\Floor.cpp">
+      <Filter>02. GameObject\10. Room\01. Floor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Wall.cpp">
+      <Filter>02. GameObject\10. Room\02. Wall</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CubeObject.cpp">
+      <Filter>02. GameObject\10. Room\00. Cube</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

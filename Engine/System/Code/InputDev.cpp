@@ -80,7 +80,7 @@ bool CInputDev::Key_Down(_ubyte byKeyID)
 		return true;
 	}
 
-	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
+	m_pKeyBoard->GetDeviceState(256, m_byOldKeyState);
 
 	return false;
 }
@@ -108,7 +108,7 @@ bool CInputDev::Key_Up(_ubyte byKeyID)
 		return true;
 	}
 
-	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
+	m_pKeyBoard->GetDeviceState(256, m_byOldKeyState);
 
 	return false;
 }
