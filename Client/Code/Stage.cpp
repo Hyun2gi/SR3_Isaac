@@ -61,6 +61,16 @@ HRESULT CStage::Ready_Scene()
 
 Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 {
+	// TODO: 충돌 함수 사용 예
+	// 이렇게 사용하면 GameLogic 내에 있는 모든 게임오브젝트랑
+	// 대상과 충돌했는지를 검사하고 충돌이 되었다면 충돌된 GameObject 객체를 반환해준다.'
+	// 충돌한 객체가 없으면 nullptr을 반환해준다
+	//CGameObject* pObj = m_mapLayer.at(L"GameLogic")->Collision_GameObject(/*대상*/);
+	//if (pObj)
+	//{
+	//	//충돌됨
+	//}
+	
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
 	return __super::Update_Scene(fTimeDelta);
 }
