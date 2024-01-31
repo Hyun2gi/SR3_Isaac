@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Pill.h"
 #include "Export_Utility.h"
+#include "Player.h"
 
 CPill::CPill(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CItem(pGraphicDev)
@@ -19,7 +20,9 @@ CPill::~CPill()
 HRESULT CPill::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(7.f, 7.f, 7.f);
+	m_pTransformCom->Set_Pos(7.f, 2.f, 7.f);
+
+	m_bDead = false;
 
 	// 랜덤으로 설정
 	srand((unsigned)time(NULL));
@@ -53,6 +56,12 @@ _int CPill::Update_GameObject(const _float& fTimeDelta)
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+	if (m_bDead == true)
+	{
+		// 죽음 처리
+		return 1;
+	}
 
 	Engine::Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -91,21 +100,24 @@ void CPill::Run_Item_Effect()
 	switch (iEffectNum)
 	{
 	case 0:
-		
+		// 최대피
+		CPlayer::GetInstance()->Set_To_MaxHp();
 		break;
 	case 1:
-		
+		CPlayer::GetInstance()->Set_Hp(-1);
 		break;
 	case 2:
-		
+		// 무적 상태
 		break;
 	case 3:
-		
+		CPlayer::GetInstance()->Set_MoveSpeed(4);
 		break;
 	case 4:
-		
+		CPlayer::GetInstance()->Set_MoveSpeed(-2);
 		break;
 	}
+
+	m_bDead = true;
 }
 
 HRESULT CPill::Add_Component()

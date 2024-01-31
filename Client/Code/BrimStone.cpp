@@ -19,8 +19,9 @@ CBrimStone::~CBrimStone()
 HRESULT CBrimStone::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+	m_pTransformCom->Set_Pos(7.f, 1.f, 10.f);
 
+	m_bDead = false;
 	m_fFrame = 0;
 
 	return S_OK;
@@ -31,6 +32,12 @@ _int CBrimStone::Update_GameObject(const _float& fTimeDelta)
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+	if (m_bDead == true)
+	{
+		// Á×À½ Ã³¸®
+		return 1;
+	}
 
 	Engine::Add_RenderGroup(RENDER_ALPHA, this);
 
@@ -87,6 +94,7 @@ void CBrimStone::Motion_Change()
 
 void CBrimStone::Run_Item_Effect()
 {
+	m_bDead = true;
 }
 
 CBrimStone* CBrimStone::Create(LPDIRECT3DDEVICE9 pGraphicDev)

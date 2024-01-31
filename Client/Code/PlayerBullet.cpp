@@ -24,7 +24,7 @@ HRESULT CPlayerBullet::Ready_GameObject()
 
     m_fAccTimeDelta = 0;
     m_fCallLimit = 1.5;
-    m_fBulletSpeed = 70.f;
+    m_fBulletSpeed = CPlayer::GetInstance()->Get_BulletSpeed();
 
     return S_OK;
 }
@@ -44,6 +44,8 @@ _int CPlayerBullet::Update_GameObject(const _float& fTimeDelta)
     {
         return 1;
     }
+
+    m_fBulletSpeed += 0.2 * fTimeDelta;
 
     m_pTransformCom->Move_Pos(&m_vBulletDir, m_fBulletSpeed, fTimeDelta);
 

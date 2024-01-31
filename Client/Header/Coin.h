@@ -24,13 +24,11 @@ public:
 	virtual void	Render_GameObject()						 override;
 
 public:
-	void			Run_Item_Effect();
+	void			Run_Item_Effect()						override;
 
 private:
 	virtual HRESULT		Add_Component()						override;
 	virtual void		Motion_Change()						override;
-
-	void				Key_Input();
 
 private:
 	_float					m_fPicNum;

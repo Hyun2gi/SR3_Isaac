@@ -60,37 +60,19 @@ public:
 		return iter->second;
 	}
 
-	void		Set_KeyBlock(_bool keyblock)
-	{
-		// keyblock이 true면 key 움직임 막힘
-		m_bKeyBlock = keyblock;
-	}
-
-	void		Set_MoveSpeed(float _movespeed)
-	{
-		m_fMoveSpeed += _movespeed;
-	}
-
-	void		Set_BulletSpeed(float _bulletspeed)
-	{
-		m_fBulletSpeed += _bulletspeed;
-	}
-
-	void		Set_AttackSpeed(float _attackspeed)
-	{
-		m_fBulletSpeed -= _attackspeed;
-	}
-
-	void		Set_Hp(int _hp)
-	{
-		m_iHp += _hp;
-	}
-
+	// keyblock이 true면 key 움직임 막힘
+	void		Set_KeyBlock(_bool keyblock) { m_bKeyBlock = keyblock;}
+	void		Set_MoveSpeed(float _movespeed){ m_fMoveSpeed += _movespeed; }
+	void		Set_BulletSpeed(float _bulletspeed){ m_fBulletSpeed += _bulletspeed; }
+	void		Set_AttackSpeed(float _attackspeed){ m_fAttackSpeed += _attackspeed; }
+	void		Set_Hp(float _hp) { if (m_fHp + _hp <= m_fMaxHp){ m_fHp += _hp;} }
+	void		Set_To_MaxHp() { m_fHp = m_fMaxHp; }
 	void		Set_Coin(int _coin) { m_iCoin += _coin; }
-
 	void		Set_LayerTag(_tchar* pLayerTag) { m_pLayerTag = pLayerTag; }
-
 	void		Set_Bool_MouseYRotation(bool checkY) { m_bMouseYRotataion = checkY; }
+
+
+	float		Get_BulletSpeed() { return m_fBulletSpeed; }
 
 public:
 	void		Bullet_Change_To_Brim();
@@ -129,20 +111,23 @@ private:
 	list<CGameObject*>	m_PlayerBulletList;
 
 	//움직이는 속도
-	float				m_fMoveSpeed;
+	_float				m_fMoveSpeed;
 
 	//총알 속도(총알 설정위해서)
-	float				m_fBulletSpeed;
+	_float				m_fBulletSpeed;
 
 	// 총 딜레이 시간 설정
-	float				m_fAttackSpeed;
+	_float				m_fAttackSpeed;
 
 	// 총 쏘는 딜레이
 	_float				m_fShootDelayTime;
 	// 임시 delay (thumbs_up에 사용)
 	_float				m_fDelayTime;
 
-	int					m_iHp;
+	_float				m_fHp;
+	_float				m_fMaxHp;
+
+
 	int					m_iCoin;
 
 	bool				m_bMouseYRotataion;

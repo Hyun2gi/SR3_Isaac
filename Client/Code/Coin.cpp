@@ -3,6 +3,7 @@
 
 #include "Export_System.h"
 #include "Export_Utility.h"
+#include "Player.h"
 
 CCoin::CCoin(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CItem(pGraphicDev)
@@ -21,13 +22,15 @@ CCoin::~CCoin()
 HRESULT CCoin::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(10.f, 5.f, 10.f);
+	m_pTransformCom->Set_Pos(6.f, 1.f, 10.f);
 
 	m_ePreState = COIN_END;
 	m_eCurState = COIN_IDLE;
 	m_fFrame = 0;
 	m_fSpriteSpeed = 2;
 	m_iDelay = 0;
+
+	m_bDead = false;
 
 	return S_OK;
 }
@@ -46,7 +49,6 @@ _int CCoin::Update_GameObject(const _float& fTimeDelta)
 			m_iDelay--;
 		}
 
-
 		if (m_fPicNum < m_fFrame)
 		{
 			m_fFrame = 0.f;
@@ -60,20 +62,23 @@ _int CCoin::Update_GameObject(const _float& fTimeDelta)
 		if (m_fPicNum < m_fFrame)
 		{
 			// 없애기
-
-			//임의적용
-			m_fFrame = m_fPicNum-1;
+			m_bDead = true;
 		}
 	}
 	
-	Key_Input();
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
-	Engine::Add_RenderGroup(RENDER_ALPHA, this);
+	
+	if (m_bDead == true)
+	{
+		// 죽음 처리
+		return 1;
+	}
 
+	Engine::Add_RenderGroup(RENDER_ALPHA, this);
 	return 0;
 }
 
@@ -107,6 +112,8 @@ void CCoin::Run_Item_Effect()
 	m_eCurState = COIN_GET;
 	// 첫 이미지부터 시작
 	m_fFrame = 0;
+
+	CPlayer::GetInstance()->Set_Coin(1);
 }
 
 HRESULT CCoin::Add_Component()
@@ -156,14 +163,6 @@ void CCoin::Motion_Change()
 		}
 
 		m_ePreState = m_eCurState;
-	}
-}
-
-void CCoin::Key_Input()
-{
-	if (Engine::Get_DIKeyState(DIK_U) & 0x80)
-	{
-		Run_Item_Effect();
 	}
 }
 

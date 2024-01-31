@@ -35,8 +35,15 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fFrame = 0.f;
 	m_fPicNum = 0.f;
 
-	m_iHp = 3;
+	m_fMaxHp = 3;
+	m_fHp = 3;
 	m_iCoin = 0;
+
+	m_fMoveSpeed = 10;
+	m_fBulletSpeed = 60;
+
+	// 총알 장전 시간
+	m_fAttackSpeed = 20; 
 
 	//m_pTransformCom->m_vScale = { 2.f, 1.f, 1.f };
 	m_bMouseYRotataion = true;
@@ -214,13 +221,13 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	{
 		m_eCurState = P_BACKWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
-		m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
+		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
 	}
 	else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
 	{
 		m_eCurState = P_IDLEWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
-		m_pTransformCom->Move_Pos(&vDir, -10.f, fTimeDelta);
+		m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
 	}
 	else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
 	{
@@ -228,7 +235,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		m_eCurState = P_LEFTWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
-		m_pTransformCom->Move_Pos(&vDir, -10.f, fTimeDelta);
+		m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
 	}
 	else if (Engine::Get_DIKeyState(DIK_D) & 0x80)
 	{
@@ -236,7 +243,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		m_eCurState = P_RIGHTWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
-		m_pTransformCom->Move_Pos(&vDir, 10.f, fTimeDelta);
+		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
 	}
 	else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
 	{
@@ -253,7 +260,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	{
 		m_fShootDelayTime++;
 
-		if (m_fShootDelayTime > 20)
+		if (m_fShootDelayTime > m_fAttackSpeed)
 		{
 			m_fShootDelayTime = 0;
 		}
