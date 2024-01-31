@@ -161,6 +161,7 @@
     <ClInclude Include="..\Header\BackGround.h" />
     <ClInclude Include="..\Header\BrimStone.h" />
     <ClInclude Include="..\Header\BrimStoneBullet.h" />
+    <ClInclude Include="..\Header\CampFire.h" />
     <ClInclude Include="..\Header\CenterFly.h" />
     <ClInclude Include="..\Header\Charger.h" />
     <ClInclude Include="..\Header\Coin.h" />
@@ -168,6 +169,7 @@
     <ClInclude Include="..\Header\DynamicCamera.h" />
     <ClInclude Include="..\Header\Effect.h" />
     <ClInclude Include="..\Header\Epic.h" />
+    <ClInclude Include="..\Header\Fire.h" />
     <ClInclude Include="..\Header\Fly.h" />
     <ClInclude Include="..\Header\Heart.h" />
     <ClInclude Include="..\Header\HeartHalf.h" />
@@ -191,10 +193,12 @@
     <ClInclude Include="..\Header\Poop.h" />
     <ClInclude Include="..\Header\SadOnion.h" />
     <ClInclude Include="..\Header\SkyBox.h" />
+    <ClInclude Include="..\Header\Spike.h" />
     <ClInclude Include="..\Header\Squirt.h" />
     <ClInclude Include="..\Header\Stage.h" />
     <ClInclude Include="..\Header\Terrain.h" />
     <ClInclude Include="..\Header\WhipWorm.h" />
+    <ClInclude Include="..\Header\Wood.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
@@ -205,6 +209,7 @@
     <ClCompile Include="..\Code\BackGround.cpp" />
     <ClCompile Include="..\Code\BrimStone.cpp" />
     <ClCompile Include="..\Code\BrimStoneBullet.cpp" />
+    <ClCompile Include="..\Code\CampFire.cpp" />
     <ClCompile Include="..\Code\CenterFly.cpp" />
     <ClCompile Include="..\Code\Charger.cpp" />
     <ClCompile Include="..\Code\Coin.cpp" />
@@ -212,6 +217,7 @@
     <ClCompile Include="..\Code\DynamicCamera.cpp" />
     <ClCompile Include="..\Code\Effect.cpp" />
     <ClCompile Include="..\Code\Epic.cpp" />
+    <ClCompile Include="..\Code\Fire.cpp" />
     <ClCompile Include="..\Code\Fly.cpp" />
     <ClCompile Include="..\Code\Heart.cpp" />
     <ClCompile Include="..\Code\HeartHalf.cpp" />
@@ -235,10 +241,12 @@
     <ClCompile Include="..\Code\Poop.cpp" />
     <ClCompile Include="..\Code\SadOnion.cpp" />
     <ClCompile Include="..\Code\SkyBox.cpp" />
+    <ClCompile Include="..\Code\Spike.cpp" />
     <ClCompile Include="..\Code\Squirt.cpp" />
     <ClCompile Include="..\Code\Stage.cpp" />
     <ClCompile Include="..\Code\Terrain.cpp" />
     <ClCompile Include="..\Code\WhipWorm.cpp" />
+    <ClCompile Include="..\Code\Wood.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

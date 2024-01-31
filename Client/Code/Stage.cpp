@@ -19,6 +19,10 @@
 #include "Mom.h"
 #include "MomParts.h"
 
+#include "Poop.h"
+#include "CampFire.h"
+#include "Spike.h"
+
 #include "BackGround.h"
 #include "Terrain.h"
 #include "DynamicCamera.h"
@@ -205,11 +209,22 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 #pragma region Object
 
 	// Poop
-
+	pGameObject = CPoop::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
 
 	// CampFire
+	pGameObject = CCampFire::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
 
 	// Spike
+	pGameObject = CSpike::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
 
 
 #pragma endregion Object

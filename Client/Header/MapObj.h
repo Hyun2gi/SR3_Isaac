@@ -8,7 +8,7 @@ BEGIN(Engine)
 class CRcTex;
 class CTransform;
 class CTexture;
-// class CCalculator; // 필요할 지?
+class CCalculator;
 
 END
 
@@ -18,6 +18,9 @@ protected:
 	explicit CMapObj(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CMapObj(const CMapObj& rhs);
 	virtual ~CMapObj();
+
+public:
+	Engine::CTransform* Get_TransformCom() { return m_pTransformCom; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -35,11 +38,14 @@ protected:
 	Engine::CTransform*		m_pTransformCom;
 	Engine::CTransform*		m_pTargetTransCom;
 	Engine::CTexture*		m_pTextureCom;
+	Engine::CCalculator*	m_pCalculator;
 	
 	_int					m_iHitCount;
 	_int					m_iLimitHit;
 
+	_int					m_iPicNum;
 	_float					m_fFrame = 0.f;
+	_float					m_fFrameSpeed;
 
 public:
 	static CMapObj* Create(LPDIRECT3DDEVICE9 pGraphicDev);
