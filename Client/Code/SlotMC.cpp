@@ -46,7 +46,7 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 	if (m_pMachine != nullptr)
 		m_pMachine->Update_GameObject(fTimeDelta);
 
-	if (Engine::Get_DIKeyState(DIK_Z) & 0x80)
+	if (Engine::Key_Down(DIK_G))
 	{
 		m_pMachine->Set_Game();
 	}

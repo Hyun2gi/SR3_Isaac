@@ -333,6 +333,9 @@
     <ClInclude Include="..\Header\CubeObject.h">
       <Filter>02. GameObject\10. Room\00. Cube</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Machine.h">
+      <Filter>02. GameObject\09. MapObject\03. SlotMC\00. Machine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -478,6 +481,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CubeObject.cpp">
       <Filter>02. GameObject\10. Room\00. Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Machine.cpp">
+      <Filter>02. GameObject\09. MapObject\03. SlotMC\00. Machine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

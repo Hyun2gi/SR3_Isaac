@@ -28,6 +28,8 @@ HRESULT CFire::Ready_GameObject()
 	m_iPicNum = 6;
 	m_fFrameSpeed = 1.f;
 
+	m_bHit = false;
+
 	return S_OK;
 }
 
@@ -40,9 +42,10 @@ _int CFire::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (Engine::Key_Down(DIK_X))
+	if (m_bHit)
 	{
 		Hit();
+		m_bHit = false;
 	}
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
@@ -111,7 +114,7 @@ HRESULT CFire::Add_Component()
 
 void CFire::Hit()
 {
-	if (m_iHitCount < m_iLimitHit) // 
+	if (m_iHitCount < m_iLimitHit)
 	{
 		m_iHitCount += 1;
 		Change_Scale();

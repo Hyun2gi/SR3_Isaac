@@ -35,11 +35,6 @@ _int CPoop::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	/*if (Engine::Get_DIKeyState(DIK_Z) & 0x80)
-	{
-		Hit();
-	}*/
-
 	if (Engine::Key_Down(DIK_Z))
 		Hit();
 

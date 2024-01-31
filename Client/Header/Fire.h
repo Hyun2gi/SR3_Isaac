@@ -11,6 +11,9 @@ private:
 	virtual ~CFire();
 
 public:
+	void			Set_Hit() { m_bHit = true; }
+
+public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
 	virtual void	LateUpdate_GameObject()					 override;
@@ -23,6 +26,7 @@ private:
 	virtual void		Hit()								override;
 
 private:
+	_bool				m_bHit;
 
 public:
 	static CFire*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
