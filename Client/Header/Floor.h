@@ -3,13 +3,7 @@
 #include "Base.h"
 #include "GameObject.h"
 
-BEGIN(Engine)
-
-class CCubeTex;
-class CTexture;
-class CTransform;
-
-END
+class CCubeObject;
 
 class CFloor :	public Engine::CGameObject
 {
@@ -24,13 +18,15 @@ public:
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
+	HRESULT			Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag);
+
 private:
 	HRESULT			Add_Component();
 
 private:
-	Engine::CCubeTex*		m_pBufferCom;
-	Engine::CTransform*	m_pTransformCom;
-	Engine::CTexture*	m_pTextureCom;
+	vector<CCubeObject*> m_vecCubes;
+
+	//vector<const _tchar*> m_vecTextureTag;
 
 public:
 	static CFloor*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
