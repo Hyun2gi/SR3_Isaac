@@ -45,6 +45,8 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	m_iCurStageKey = iType;
 	m_vecMonsterCount.resize(MONSTER_TYPE_END);
 
+	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
+	
 	FAILED_CHECK_RETURN(Load_Level_Data(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_Stage_Data(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_Stage_Design_Data(), E_FAIL);
@@ -55,13 +57,15 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
-
 	return S_OK;
 }
 
 Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 {	
+	
 	_int	iExit = __super::Update_Scene(fTimeDelta);
+
+	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
 
 	if (GetAsyncKeyState('1'))
 	{
@@ -105,6 +109,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 void CLoadStage::LateUpdate_Scene()
 {
 	__super::LateUpdate_Scene();
+	CPlayer::GetInstance()->LateUpdate_GameObject();
 }
 
 void CLoadStage::Render_Scene()
@@ -235,6 +240,8 @@ HRESULT CLoadStage::Load_Stage_Design_Data()
 
 HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 {
+	CPlayer::GetInstance()->Set_LayerTag((_tchar*)pLayerTag);
+
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
@@ -312,14 +319,14 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 				++m_vecMonsterCount[ATTACK_FLY];*/
 
-				/*pGameObject = CAttackFly::Create(m_pGraphicDev);
+				pGameObject = CAttackFly::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
 				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
 					= { iter.second.iX, iter.second.iY, iter.second.iZ };
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
 
-				++m_vecMonsterCount[ATTACK_FLY];*/
+				++m_vecMonsterCount[ATTACK_FLY];
 
 				break;
 			}
@@ -520,11 +527,6 @@ HRESULT CLoadStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	pGameObject = CTerrain::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
-
-
-	/*pGameObject = CPlayer::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Player", pGameObject), E_FAIL);*/
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 

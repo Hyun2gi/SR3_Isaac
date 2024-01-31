@@ -2,6 +2,7 @@
 #include "CenterFly.h"
 
 #include "Export_Utility.h"
+#include "Player.h"
 
 CCenterFly::CCenterFly(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
@@ -22,7 +23,7 @@ CCenterFly::~CCenterFly()
 HRESULT CCenterFly::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(0.f, 10.f, 30.f); // 추후 필요 X
+	//m_pTransformCom->Set_Pos(0.f, 10.f, 30.f); // 추후 필요 X
 
 	m_fSpeed = 1.f;
 
@@ -33,7 +34,8 @@ _int CCenterFly::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
+	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+	
 	_vec3 vPlayerPos;
 	m_pTargetTransCom->Get_Info(INFO_POS, &vPlayerPos);
 	m_pTransformCom->Chase_Target(&vPlayerPos, 3.f, fTimeDelta);
