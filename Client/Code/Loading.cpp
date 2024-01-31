@@ -95,7 +95,7 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_FireTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Campfire/Fire_%d.png", 6)), E_FAIL);
 
 	// Spike
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SpikeTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Spike/Spike3.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SpikeTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Spike/Spike.png")), E_FAIL);
 
 #pragma endregion MapObject
 
