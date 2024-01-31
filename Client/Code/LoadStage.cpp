@@ -9,7 +9,7 @@
 //환경
 #include "Terrain.h"
 #include "DynamicCamera.h"
-#include "CubeObject.h"
+#include "Floor.h"
 
 //몬스터
 #include "Fly.h"
@@ -524,9 +524,10 @@ HRESULT CLoadStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
 	
-	//pGameObject = CCubeObject::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CubeObject", pGameObject), E_FAIL);
+	pGameObject = CFloor::Create(m_pGraphicDev);
+	dynamic_cast<CFloor*>(pGameObject)->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture");
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Floor", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 

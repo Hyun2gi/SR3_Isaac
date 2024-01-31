@@ -30,7 +30,10 @@ HRESULT CFloor::Ready_GameObject()
 Engine::_int CFloor::Update_GameObject(const _float& fTimeDelta)
 {
 
-	Engine::Add_RenderGroup(RENDER_PRIORITY, this);
+	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+
+	for (auto& iter : m_vecCubes)
+		iter->Update_GameObject(fTimeDelta);
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
@@ -39,6 +42,9 @@ Engine::_int CFloor::Update_GameObject(const _float& fTimeDelta)
 
 void CFloor::LateUpdate_GameObject()
 {
+	for (auto& iter : m_vecCubes)
+		iter->LateUpdate_GameObject();
+
 	__super::LateUpdate_GameObject();
 }
 
@@ -64,15 +70,17 @@ HRESULT CFloor::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag)
 
 	//m_vecMyLayer.push_back(pCubeTextureTag);
 
-	for (int i = 0; i > VTXCNTZ; ++i)
+	for (int i = 0; i < VTXCNTZ; ++i)
 	{
-		for (int j = 0; j > VTXCNTX; ++j)
+		for (int j = 0; j < VTXCNTX; ++j)
 		{
 			int iIdx = i * VTXCNTZ + j;
 
 			pCube = CCubeObject::Create(m_pGraphicDev);
 			NULL_CHECK_RETURN(pCube, E_FAIL);
-
+			pCube->Set_Cute_Texture(pCubeTextureTag);
+			CTransform* pTemp = dynamic_cast<CTransform*>(pCube->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+			pTemp->m_vInfo[INFO_POS] = { (_float)(j * pTemp->m_vScale.x + (pTemp->m_vScale.x * 0.5)), 0.f,(_float) (i * pTemp->m_vScale.z + (pTemp->m_vScale.z * 0.5)) };
 			m_vecCubes[iIdx] = pCube;
 
 		}
@@ -113,6 +121,7 @@ CFloor * CFloor::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CFloor::Free()
 {	
+	for_each(m_vecCubes.begin(), m_vecCubes.end(), CDeleteObj());
 	__super::Free();
 }
 
