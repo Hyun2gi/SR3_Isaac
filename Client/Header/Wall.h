@@ -3,6 +3,15 @@
 #include "Base.h"
 #include "GameObject.h"
 
+BEGIN(Engine)
+
+class CRcTex;
+class CTransform;
+class CTexture;
+
+END
+
+
 class CCubeObject;
 
 class CWall :	public Engine::CGameObject
@@ -30,15 +39,24 @@ public:
 	virtual void Render_GameObject()						 override;
 
 	HRESULT			Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag, int iAxis);
+	HRESULT			Set_Texture_Tag(const _tchar* pTextureTag, int iAxis);
 
 	bool Get_Arrived();
 
 private:
 	HRESULT			Add_Component();
 
+	void	Free_Cubes();
+
 private:
 	// 벽을 하나로해서 여러개의 큐브를 띄우기 위해 큐브를 가지고 있게하려고 만든 벡터배열
 	vector<CCubeObject*> m_vecCubes;
+
+	Engine::CRcTex* m_pBufferCom;
+	Engine::CTransform* m_pTransformCom;
+	Engine::CTexture* m_pTextureCom;
+
+	bool m_bIsDeleted;
 
 public:
 	static CWall*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
