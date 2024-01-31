@@ -172,6 +172,12 @@
     <Filter Include="02. GameObject\10. Room\02. Wall">
       <UniqueIdentifier>{dcbfa838-2ff8-4b3f-a7e7-6e869f72a261}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. MapObject\04. Shop">
+      <UniqueIdentifier>{452a13b4-9ba7-4eb0-8465-7c9a7ef44d75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\04. Shop\01. Npc">
+      <UniqueIdentifier>{bcd8ebdb-ba64-4b52-a7be-c7675b1b7d64}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -333,6 +339,9 @@
     <ClInclude Include="..\Header\SlotCard.h">
       <Filter>02. GameObject\09. MapObject\03. SlotMC\01. FirstCard</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\ShopNpc.h">
+      <Filter>02. GameObject\09. MapObject\04. Shop\01. Npc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -484,6 +493,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\SlotCard.cpp">
       <Filter>02. GameObject\09. MapObject\03. SlotMC\01. FirstCard</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ShopNpc.cpp">
+      <Filter>02. GameObject\09. MapObject\04. Shop\01. Npc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
