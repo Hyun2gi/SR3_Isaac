@@ -62,13 +62,12 @@ void CFloor::Render_GameObject()
 
 }
 
+// 큐브 텍스쳐 태그를 지정해주면, 그 태그에 맞는 큐브 오브젝트를 타일 개수만큼 생성시키고 포지션을 지정해준다.
 HRESULT CFloor::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag)
 {
 	CCubeObject* pCube = nullptr;
 
 	m_vecCubes.resize(VTXCNTZ * VTXCNTX);
-
-	//m_vecMyLayer.push_back(pCubeTextureTag);
 
 	for (int i = 0; i < VTXCNTZ; ++i)
 	{
@@ -80,14 +79,26 @@ HRESULT CFloor::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag)
 			NULL_CHECK_RETURN(pCube, E_FAIL);
 			pCube->Set_Cute_Texture(pCubeTextureTag);
 			CTransform* pTemp = dynamic_cast<CTransform*>(pCube->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
-			pTemp->m_vInfo[INFO_POS] = { (_float)(j * pTemp->m_vScale.x + (pTemp->m_vScale.x * 0.5)), 0.f,(_float) (i * pTemp->m_vScale.z + (pTemp->m_vScale.z * 0.5)) };
+			pCube->Set_Dst_Pos({ (_float)(j * pTemp->m_vScale.x + (pTemp->m_vScale.x * 0.5)), -	pTemp->m_vScale.y, (_float)(i * pTemp->m_vScale.z + (pTemp->m_vScale.z * 0.5)) });
 			m_vecCubes[iIdx] = pCube;
-
 		}
 
 	}
 
 	return S_OK;
+}
+
+bool CFloor::Get_Arrived()
+{
+	//하나라도 도착하지 않았다면 false를 return 한다
+	for (auto& iter : m_vecCubes)
+	{
+		if (!iter->Get_Arrived())
+			return false;
+	}
+
+	return true;
+
 }
 
 HRESULT CFloor::Add_Component()
