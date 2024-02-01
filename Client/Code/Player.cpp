@@ -253,23 +253,6 @@ HRESULT CPlayer::Add_Component()
 //	return pInstance;
 //}
 
-bool CPlayer::Get_Camera_WallBlock_Sub()
-{
-	_vec3	vPos, vScale;
-	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-	vScale = m_pTransformCom->m_vScale;
-
-	if (vPos.x < VTXCNTX - 5 && vPos.z < VTXCNTX - 5
-		&& vPos.x > 5 && vPos.z > 5)
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
-}
-
 void CPlayer::Set_Player_Pos(_vec3 pos)
 {
 	m_pTransformCom->Set_Pos(pos); 
