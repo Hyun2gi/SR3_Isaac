@@ -33,8 +33,10 @@ public:
 
 private:
 	virtual HRESULT			Add_Component();
+
 	bool					Check_Time(const _float& fTimeDelta);
 	void					Curve(const _float& fTimeDelta);
+	void					Face_Camera();
 
 private:
 	virtual void Free();

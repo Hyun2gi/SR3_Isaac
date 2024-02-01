@@ -3,6 +3,8 @@
 
 #include "Export_Utility.h"
 
+#include "Player.h"
+
 CMstBullet::CMstBullet(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 {
@@ -32,6 +34,8 @@ HRESULT CMstBullet::Ready_GameObject()
 
 _int CMstBullet::Update_GameObject(const _float& fTimeDelta)
 {
+    Face_Camera();
+
     CGameObject::Update_GameObject(fTimeDelta);
 
     if (Check_Time(fTimeDelta)) // 시간 다 되면 삭제
@@ -42,7 +46,9 @@ _int CMstBullet::Update_GameObject(const _float& fTimeDelta)
 
     Curve(fTimeDelta);
 
-    Engine::Add_RenderGroup(RENDER_ALPHA, this);
+    m_pCalculatorCom->Compute_Vill_Matrix(m_pTransformCom);
+
+    Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
     return 0;
 }
@@ -60,14 +66,10 @@ void CMstBullet::Render_GameObject()
 {
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
     m_pTextureCom->Set_Texture((_uint)7);
 
     m_pBufferCom->Render_Buffer();
-
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 CMstBullet* CMstBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag)
@@ -111,6 +113,11 @@ HRESULT CMstBullet::Add_Component()
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
+    pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
+    NULL_CHECK_RETURN(pComponent, E_FAIL);
+    m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
+
+
     return S_OK;
 }
 
@@ -139,6 +146,15 @@ void CMstBullet::Curve(const _float& fTimeDelta)
     m_pTransformCom->Set_Pos(vPos.x, fY, vPos.z);
 
     m_pTransformCom->Move_Pos(&m_vBulletDir, 1.f, fTimeDelta);
+}
+
+void CMstBullet::Face_Camera()
+{
+    CTransform* PlayerTransform =
+        dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+    _vec3 vAngle = m_pCalculatorCom->Compute_Vill_Angle(m_pTransformCom, PlayerTransform);
+    m_pTransformCom->m_vAngle.y = vAngle.y;
 }
 
 void CMstBullet::Free()

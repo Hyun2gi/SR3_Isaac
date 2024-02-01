@@ -43,15 +43,14 @@ HRESULT CLeaper::Ready_GameObject()
 
 _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 {
-	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
+	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
-	_vec3 vAngle = m_pCalculCom->Compute_Vill_Angle(m_pTransformCom, m_pTargetTransCom);
-	m_pTransformCom->m_vAngle.y = vAngle.y;
+	Face_Camera();
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
@@ -178,6 +177,15 @@ void CLeaper::Motion_Change()
 	}
 }
 
+void CLeaper::Face_Camera()
+{
+	CTransform* PlayerTransform =
+		dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3 vAngle = m_pCalculCom->Compute_Vill_Angle(m_pTransformCom, PlayerTransform);
+	m_pTransformCom->m_vAngle.y = vAngle.y;
+}
+
 void CLeaper::Change_Dir(const _float& fTimeDelta)
 {
 	m_iRandNum = rand() % 180;
@@ -186,7 +194,7 @@ void CLeaper::Change_Dir(const _float& fTimeDelta)
 
 void CLeaper::Check_TargetPos()
 {
-	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
+	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
 

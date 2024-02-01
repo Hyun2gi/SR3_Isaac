@@ -40,6 +40,8 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 	if (10.f < m_fFrame)
 		m_fFrame = 0.f;
 
+	Face_Camera();
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (Check_Time(fTimeDelta))
@@ -98,6 +100,15 @@ HRESULT CPacer::Add_Component()
 
 void CPacer::Motion_Change()
 {
+}
+
+void CPacer::Face_Camera()
+{
+	CTransform* PlayerTransform =
+		dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3 vAngle = m_pCalculCom->Compute_Vill_Angle(m_pTransformCom, PlayerTransform);
+	m_pTransformCom->m_vAngle.y = vAngle.y;
 }
 
 void CPacer::Change_Dir(const _float& fTimeDelta)
