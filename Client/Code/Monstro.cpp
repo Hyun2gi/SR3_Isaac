@@ -23,7 +23,7 @@ HRESULT CMonstro::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->Set_Pos(10.f, 3.2f, 10.f);
-	m_pTransformCom->m_vScale = { 5.f, 5.f, 0.f };
+	m_pTransformCom->m_vScale = { 5.f, 5.f, 5.f };
 
 	m_iHp = 5;
 
@@ -66,32 +66,12 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 				++iter;
 		}
 	}
-	// 플레이어를 향해 회전
-	Check_TargetPos();
-	//m_pTransformCom->Compute_LookAtTarget(&m_vTargetPos);
-
-	//Check_TargetPos();
-	// Player Pos 위치 구한 다음 나와의 벡터 사이 각도 구하기
-	// 나의 look 벡터와 player로의 방향 벡터 사이의 각도 ?
-	// D3DXVec3Dot
-	//m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(dwMouseMove / 10.f));
-	CGameObject::Update_GameObject(fTimeDelta);
-
-	float fAngle;
-	_vec3 vLook, vPlayerPos, vPos, vDir;
-
-	//dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"))->Get_Info(INFO_POS, &vPlayerPos);
-	m_pTransformCom->Get_Info(INFO_POS, &vPos); // vPos 가 0 인 상황 -> Update_GameObject 옮기고 괜찮아짐
-	m_pTransformCom->Get_Info(INFO_LOOK, &vLook); // vLook 이 0 인 상황 -> 애초에 룩벡터가 0 0 0?
-	m_pTargetTransCom->Get_Info(INFO_POS, &vPlayerPos);
-	vDir = vPlayerPos - vPos;
-	/*vDir = _vec3( vDir.x,0, vDir.z );
-	vLook = _vec3(vLook.x, 0, vLook.z);*/
-	fAngle = D3DXVec3Dot(D3DXVec3Normalize(&vDir, &vDir), D3DXVec3Normalize(&vLook, &vLook));
-
-	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(fAngle));
-
 	
+	//Check_TargetPos();
+
+	//Face_Camera();
+
+	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (MONSTRO_IDLE == m_eCurState || MONSTRO_END == m_eCurState) // 기본 상태일 때
 	{
@@ -125,7 +105,9 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 	else if (MONSTRO_MOVE == m_eCurState)
+	{
 		MoveTo_Player(fTimeDelta);
+	}
 	else if (MONSTRO_ATTACK == m_eCurState)
 	{
 		if (m_bBullet)
@@ -144,7 +126,7 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 	if(m_bJump)
 		JumpTo_Player(fTimeDelta);
 
-	//m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -269,6 +251,15 @@ void CMonstro::Motion_Change()
 	}
 }
 
+void CMonstro::Face_Camera()
+{
+	CTransform* PlayerTransform =
+		dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3 vAngle = m_pCalculCom->Compute_Vill_Angle(m_pTransformCom, PlayerTransform);
+	m_pTransformCom->m_vAngle.y = vAngle.y;
+}
+
 void CMonstro::MoveTo_Player(const _float& fTimeDelta)
 {
 	_vec3 vPos, vDir;
@@ -364,7 +355,7 @@ void CMonstro::AttackTo_Player()
 
 void CMonstro::Check_TargetPos()
 {
-	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
+	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
 }

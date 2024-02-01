@@ -50,8 +50,6 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
-
 	return 0;
 }
 

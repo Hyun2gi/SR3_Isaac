@@ -21,8 +21,9 @@ public:
 private:
 	virtual HRESULT		Add_Component()						override;
 	virtual void		Motion_Change()						override;
+	virtual void		Face_Camera()						override;
 
-	void			Check_Range();
+	void				Check_Range();
 
 private:
 	_int				m_iPicNum;

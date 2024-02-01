@@ -45,6 +45,8 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 	// 추후 사망 처리 추가
 	// m_eState = FLY_DEAD;
 
+	Face_Camera();
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (Check_Time(fTimeDelta))
@@ -152,6 +154,15 @@ void CFly::Move(const _float& fTimeDelta)
 	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
 
 	m_eCurState = FLY_IDLE;
+}
+
+void CFly::Face_Camera()
+{
+	CTransform* PlayerTransform =
+		dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3 vAngle = m_pCalculCom->Compute_Vill_Angle(m_pTransformCom, PlayerTransform);
+	m_pTransformCom->m_vAngle.y = vAngle.y;
 }
 
 CFly* CFly::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID)

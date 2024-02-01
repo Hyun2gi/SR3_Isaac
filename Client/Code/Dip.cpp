@@ -45,6 +45,8 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
+	Face_Camera();
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (Check_Time(fTimeDelta))
@@ -168,6 +170,16 @@ void CDip::Sliding(const _float& fTimeDelta)
 		m_bSliding = false;
 		m_fAccel = 1.f;
 	}
+}
+
+void CDip::Face_Camera()
+{
+	CTransform* PlayerTransform =
+		dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3 vAngle = m_pCalculCom->Compute_Vill_Angle(m_pTransformCom, PlayerTransform);
+	m_pTransformCom->m_vAngle.y = vAngle.y;
+
 }
 
 CDip* CDip::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID)

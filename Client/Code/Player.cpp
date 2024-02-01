@@ -69,8 +69,11 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		m_bStartScene = false;
 	}
 
-	m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
-
+	if(!m_bKeyBlock)
+	{
+		m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
+	}
+	
 	// P_THUMBS_UP 일때는 처음 스프라이트로 돌아가면 안됨
 	if (m_fPicNum < m_fFrame && m_eCurState != P_THUMBS_UP)
 	{
@@ -99,6 +102,15 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	if (m_bKeyBlock != true)
 	{
 		Key_Input(fTimeDelta);
+	}
+	else
+	{
+		//block일때 player가 계속 움직이는거 막기
+		if (m_eCurState == P_IDLEWALK || m_eCurState == P_LEFTWALK || m_eCurState == P_RIGHTWALK || m_eCurState == P_SHOOTWALK)
+		{
+			m_eCurState = P_BACKWALK;
+			m_fFrame = 0;
+		}
 	}
 	
 	// 총알 update
@@ -246,6 +258,28 @@ void CPlayer::Set_Player_Pos(_vec3 pos)
 	m_pTransformCom->Set_Pos(pos); 
 }
 
+void CPlayer::Set_MouseRotation(float xRad, float yRad)
+{
+	m_pTransformCom->Rotation(ROT_Y, xRad);
+}
+
+bool CPlayer::Get_Camera_WallBlock()
+{
+	_vec3	vPos, vScale;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	vScale = m_pTransformCom->m_vScale;
+
+	if (vPos.x < VTXCNTX - 5 && vPos.z < VTXCNTX - 5
+		&& vPos.x > 5 && vPos.z > 5)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
 void CPlayer::Bullet_Change_To_Brim()
 {
 	if (!m_PlayerBulletList.empty())
@@ -372,26 +406,36 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag));
 				dynamic_cast<CBrimStoneBullet*>(m_PlayerBulletList.back())->Set_HeadTexture(true,0);
 				
-				m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag));
-				dynamic_cast<CBrimStoneBullet*>(m_PlayerBulletList.back())->Set_HeadTexture(false, 1);
+				for (int i = 1; i < 50; i++)
+				{
+					m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag));
+					dynamic_cast<CBrimStoneBullet*>(m_PlayerBulletList.back())->Set_HeadTexture(false, i);
+				}
+				
 			}
 			m_fShootDelayTime++;
 		}
 	}
+
+	if (m_eCurBulletState == P_BULLET_BRIMSTONE && !m_PlayerBulletList.empty())
+	{
+		m_eCurState = P_SHOOTWALK;
+	}
+
 
 	//마우스 회전으로 플레이어 각도 바꾸기
 	_long	dwMouseMove(0);
 
 	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_X))
 	{
-		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(dwMouseMove / 10.f));
+		//m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(dwMouseMove / 10.f));
 	}
 
 	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_Y))
 	{
 		if (m_bMouseYRotataion)
 		{
-			m_pTransformCom->Rotation(ROT_X, D3DXToRadian(dwMouseMove / 20.f));
+			//m_pTransformCom->Rotation(ROT_X, D3DXToRadian(dwMouseMove / 20.f));
 		}
 	}
 }

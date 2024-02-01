@@ -22,7 +22,7 @@ CMom::~CMom()
 HRESULT CMom::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->m_vScale = { 10.f, 10.f, 0.f };
+	m_pTransformCom->m_vScale = { 10.f, 10.f, 10.f };
 	//m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
 	m_pTransformCom->Set_Pos(10.f, 50.f, 10.f);
 
@@ -47,6 +47,8 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
+
+	Face_Camera();
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
@@ -140,6 +142,15 @@ HRESULT CMom::Add_Component()
 
 void CMom::Motion_Change()
 {
+}
+
+void CMom::Face_Camera()
+{
+	CTransform* PlayerTransform =
+		dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3 vAngle = m_pCalculCom->Compute_Vill_Angle(m_pTransformCom, PlayerTransform);
+	m_pTransformCom->m_vAngle.y = vAngle.y;
 }
 
 void CMom::Attack(const _float& fTimeDelta)

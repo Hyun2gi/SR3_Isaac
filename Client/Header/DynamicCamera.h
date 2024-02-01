@@ -118,10 +118,12 @@ private:
 	// 눈과 바로보는 지점의 거리
 	// 바로보는 지점으로부터 눈까지 가는 방향벡터
 	float		m_fCameraDistance;
-
 	// y로의 길이
 	float		m_fCameraHeight;
+	float		m_fCameraShortDistance;
+	float		m_fCameraShortHeight;
 
+	bool		m_bCollisionWall;
 
 	// target position
 	CTransform*			m_pTarget;

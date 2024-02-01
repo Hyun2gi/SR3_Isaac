@@ -5,12 +5,12 @@
 #include "Player.h"
 
 CBrimStoneBullet::CBrimStoneBullet(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CGameObject(pGraphicDev)
+    : CGameObject(pGraphicDev)
 {
 }
 
 CBrimStoneBullet::CBrimStoneBullet(const CBrimStoneBullet& rhs)
-	: CGameObject(rhs)
+    : CGameObject(rhs)
 {
 }
 
@@ -20,22 +20,22 @@ CBrimStoneBullet::~CBrimStoneBullet()
 
 HRESULT CBrimStoneBullet::Ready_GameObject()
 {
-	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+    FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
     m_eCurState = BRIM_HEAD;
-	m_fAccTimeDelta = 0;
+    m_fAccTimeDelta = 0;
 
     // 지속시간
-	m_fCallLimit = 2;
+    m_fCallLimit = 2;
     m_bRotate = false;
 
     m_pTransformCom->m_vScale = { 0.8f,0.8f,0.8f };
 
-	return S_OK;
+    return S_OK;
 }
 
 _int CBrimStoneBullet::Update_GameObject(const _float& fTimeDelta)
-{   
+{
     CGameObject::Update_GameObject(fTimeDelta);
     m_pCalculatorCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -52,49 +52,13 @@ _int CBrimStoneBullet::Update_GameObject(const _float& fTimeDelta)
     m_vBulletDir = _vec3(playerDir.x, 0, playerDir.z);
     D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);
 
-    bulletPos = playerPos + ((m_iBulletIndex+1) * m_pTransformCom->m_vScale.x) * m_vBulletDir;
+    bulletPos = playerPos + ((m_iBulletIndex + 1) * m_pTransformCom->m_vScale.x) * m_vBulletDir;
     m_pTransformCom->Set_Pos(bulletPos);
-    m_pTransformCom->Rotation(ROT_X, 90);
-    m_bRotate = true;
-    
-
-
-    
-    /*if (m_bRotate == false)
-    {
-        _vec3 tempaxis;
-        _vec3 tempup = _vec3(0, 1, 0);
-
-        D3DXVec3Cross(&m_vPicDir, &tempup, &m_vBulletDir);
-        m_bRotate = true;
-    }*/
-
-    /*_vec3 tempaxis;
-    _vec3 tempup = _vec3(0, 1, 0);
-
-    D3DXVec3Cross(&m_vPicDir, &tempup, &m_vBulletDir);
+    m_pTransformCom->Rotation(ROT_X, 95);
+    m_pTransformCom->Rotation(ROT_Z, 95);
     m_bRotate = true;
 
-    m_pTransformCom->Rotate_Set_Axis(&m_vPicDir, 90);*/
 
-    /*_vec3 tempdir = _vec3(m_pTransformCom->m_vInfo[INFO_RIGHT].x, 0, m_pTransformCom->m_vInfo[INFO_RIGHT].z);
-    m_pTransformCom->Rotate_Set_Axis(&m_pTransformCom->m_vInfo[INFO_RIGHT], 90);
-    
-    _matrix matWorld, matView, matBill;
-    m_pTransformCom->Get_WorldMatrix(&matWorld);
-    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
-    D3DXMatrixIdentity(&matBill);
-
-    matBill._11 = matView._11;
-    matBill._13 = matView._13;
-    matBill._31 = matView._31;
-    matBill._33 = matView._33;
-
-    D3DXMatrixInverse(&matBill, NULL, &matBill);
-
-    m_pTransformCom->Set_WorldMatrix(&(matBill * matWorld));*/
-
-    
     if (Check_Time(fTimeDelta))
     {
         // 시간 다 되면 삭제
@@ -133,7 +97,7 @@ void CBrimStoneBullet::Render_GameObject()
 
     /*m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);*/
-    
+
 }
 
 CBrimStoneBullet* CBrimStoneBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag)
@@ -192,21 +156,6 @@ HRESULT CBrimStoneBullet::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
-    //플레이어 첫 시작 위치 받아와서 거기서부터 시작
-    _vec3   playerPos, playerDir;
-
-
-
-    dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_POS, &playerPos);
-    dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_LOOK, &playerDir);
-
-    _vec3 tempup = _vec3(0, 1, 0);
-
-    D3DXVec3Cross(&m_vPicDir, &tempup, &playerDir);
-
-    m_pTransformCom->Rotate_Set_Axis(&m_vPicDir, 90);
-
-    
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
