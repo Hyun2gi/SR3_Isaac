@@ -327,11 +327,11 @@
     <ClInclude Include="..\Header\Floor.h">
       <Filter>02. GameObject\10. Room\01. Floor</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\Wall.h">
-      <Filter>02. GameObject\10. Room\02. Wall</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CubeObject.h">
       <Filter>02. GameObject\10. Room\00. Cube</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Wall.h">
+      <Filter>02. GameObject\10. Room\02. Wall</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -473,11 +473,11 @@
     <ClCompile Include="..\Code\Floor.cpp">
       <Filter>02. GameObject\10. Room\01. Floor</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\Wall.cpp">
-      <Filter>02. GameObject\10. Room\02. Wall</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CubeObject.cpp">
       <Filter>02. GameObject\10. Room\00. Cube</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Wall.cpp">
+      <Filter>02. GameObject\10. Room\02. Wall</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

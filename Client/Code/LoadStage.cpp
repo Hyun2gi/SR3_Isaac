@@ -9,7 +9,8 @@
 //환경
 #include "Terrain.h"
 #include "DynamicCamera.h"
-#include "CubeObject.h"
+#include "Floor.h"
+#include "Wall.h"
 
 //몬스터
 #include "Fly.h"
@@ -44,6 +45,7 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 {
 	m_iCurStageKey = iType;
 	m_vecMonsterCount.resize(MONSTER_TYPE_END);
+	m_bIsCreated = false;
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 	
@@ -52,10 +54,11 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	FAILED_CHECK_RETURN(Load_Stage_Design_Data(), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_RoomObject(L"RoomObject"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"GameObject"), E_FAIL);
+	
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
-	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
+	//FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
 	return S_OK;
 }
@@ -66,6 +69,12 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
+
+	if (Check_Cube_Arrived() && !m_bIsCreated)
+	{
+		m_bIsCreated = true;
+		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"GameObject"), E_FAIL);
+	}
 
 	if (Engine::Key_Down(DIK_1))
 	{
@@ -524,12 +533,51 @@ HRESULT CLoadStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
 	
-	//pGameObject = CCubeObject::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CubeObject", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
+
+	return S_OK;
+}
+
+HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
+{
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	Engine::CGameObject* pGameObject = nullptr;
+
+	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev);
+	dynamic_cast<CFloor*>(pGameObject)->Set_Cube_Texture_Tag(L"Proto_StageFloorCubeTexture");
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Floor", pGameObject), E_FAIL);
+
+
+	pGameObject = m_pLeftWall = CWall::Create(m_pGraphicDev);
+	m_pLeftWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_LEFT);
+	m_pLeftWall->Set_Texture_Tag(L"Proto_StageWall", WALL_LEFT);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
+
+	pGameObject = m_pRightWall = CWall::Create(m_pGraphicDev);
+	m_pRightWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_RIGHT);
+	m_pRightWall->Set_Texture_Tag(L"Proto_StageWall", WALL_RIGHT);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
+
+	pGameObject = m_pTopWall = CWall::Create(m_pGraphicDev);
+	m_pTopWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_TOP);
+	m_pTopWall->Set_Texture_Tag(L"Proto_StageWall", WALL_TOP);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
+
+	pGameObject = m_pBottomWall = CWall::Create(m_pGraphicDev);
+	m_pBottomWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_BOTTOM);
+	m_pBottomWall->Set_Texture_Tag(L"Proto_StageWall", WALL_BOTTOM);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
 }
@@ -564,6 +612,14 @@ HRESULT CLoadStage::Ready_LightInfo()
 	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
 
 	return S_OK;
+}
+
+bool CLoadStage::Check_Cube_Arrived()
+{
+	return m_pLeftWall->Get_Arrived() && m_pRightWall->Get_Arrived()
+		&& m_pTopWall->Get_Arrived() && m_pBottomWall->Get_Arrived()
+		&& m_pFloor->Get_Arrived();
+	
 }
 
 CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType)
