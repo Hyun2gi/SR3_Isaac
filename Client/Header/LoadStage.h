@@ -71,6 +71,7 @@ private:
 	CWall* m_pBottomWall;
 
 	int m_iCurStageKey;
+	string m_strCurStageTheme;
 
 	bool m_bIsCreated;
 

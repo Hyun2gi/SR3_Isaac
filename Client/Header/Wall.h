@@ -17,7 +17,7 @@ class CCubeObject;
 class CWall :	public Engine::CGameObject
 {
 private:
-	const int MAX_Y = 6;
+	const int MAX_Y = 10;
 
 	enum Wall_Axis
 	{

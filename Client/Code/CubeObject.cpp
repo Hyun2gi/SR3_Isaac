@@ -22,6 +22,7 @@ HRESULT CCubeObject::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_fS = 1.f;
+	m_pTransformCom->m_vScale = { 0.5f, 0.5f, 0.5f };
 
 	return S_OK;
 }
@@ -58,6 +59,7 @@ void CCubeObject::LateUpdate_GameObject()
 void CCubeObject::Render_GameObject()
 {	
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
+	
 	m_pTextureCom->Set_Texture(0);
 
 	m_pBufferCom->Render_Buffer();

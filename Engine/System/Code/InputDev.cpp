@@ -54,7 +54,9 @@ HRESULT Engine::CInputDev::Ready_InputDev(HINSTANCE hInst, HWND hWnd)
 void Engine::CInputDev::Update_InputDev(void)
 {
 	m_pKeyBoard->GetDeviceState(256, m_byKeyState);
+	m_pKeyBoard->GetDeviceState(256, m_byOldKeyState);
 	m_pMouse->GetDeviceState(sizeof(m_tMouseState), &m_tMouseState);
+	m_pMouse->GetDeviceState(sizeof(m_tOldMouseState), &m_tOldMouseState);
 }
 
 bool CInputDev::Key_Pressing(_ubyte byKeyID)

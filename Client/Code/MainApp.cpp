@@ -41,7 +41,7 @@ void CMainApp::LateUpdate_MainApp()
 
 void CMainApp::Render_MainApp()
 {
-	Engine::Render_Begin(D3DXCOLOR(0.1f, 0.1f, 0.1f, 1.f));
+	Engine::Render_Begin(D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.f));
 
 	m_pManagementClass->Render_Scene(m_pGraphicDev);
 
@@ -111,5 +111,5 @@ void CMainApp::Free()
 	Engine::Release_Utility();
 	Engine::Release_System();
 
-	CPlayer::GetInstance()->DestroyInstance();
+	//CPlayer::GetInstance()->DestroyInstance();
 }

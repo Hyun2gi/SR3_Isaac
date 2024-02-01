@@ -44,8 +44,12 @@ void CRenderer::Clear_RenderGroup()
 
 void CRenderer::Render_Priority(LPDIRECT3DDEVICE9 & pGraphicDev)
 {
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+
 	for (auto& iter : m_RenderGroup[RENDER_PRIORITY])
 		iter->Render_GameObject();
+
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 
 }
 

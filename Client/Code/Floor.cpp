@@ -79,7 +79,10 @@ HRESULT CFloor::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag)
 			NULL_CHECK_RETURN(pCube, E_FAIL);
 			pCube->Set_Cute_Texture(pCubeTextureTag);
 			CTransform* pTemp = dynamic_cast<CTransform*>(pCube->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
-			pCube->Set_Dst_Pos({ (_float)(j * pTemp->m_vScale.x + (pTemp->m_vScale.x * 0.5)), -	pTemp->m_vScale.y, (_float)(i * pTemp->m_vScale.z + (pTemp->m_vScale.z * 0.5)) });
+
+			_vec3 vScale(pTemp->m_vScale.x * 2, pTemp->m_vScale.y * 2, pTemp->m_vScale.z * 2);
+
+			pCube->Set_Dst_Pos({ (_float)(j * vScale.x), -vScale.y * 0.5f, (_float)(i * vScale.z) });
 			m_vecCubes[iIdx] = pCube;
 		}
 
