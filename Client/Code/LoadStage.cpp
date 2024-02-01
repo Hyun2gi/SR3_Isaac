@@ -174,7 +174,6 @@ HRESULT CLoadStage::Load_Stage_Data()
 	ifstream fin(strFilePath);
 
 	string strGetLine = "";
-	//코드를 한 줄 읽어온다. (스테이지에 대한 정보는 한줄로 저장하게 만들어뒀기 때문에 가능)
 
 	while (getline(fin, strGetLine))
 	{

@@ -28,40 +28,8 @@ HRESULT CMapToolGui::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
 
     m_pGraphicDev = pGraphicDev;
 
-    string strFilePath = "../../Dat/MapLevel.dat";
-
-    ifstream fin(strFilePath);
-
-    string strGetLine = "";
-    //코드를 한 줄 읽어온다. (스테이지에 대한 정보는 한줄로 저장하게 만들어뒀기 때문에 가능)
-
-    while (getline(fin, strGetLine))
-    {
-        vector<string> vecStr;
-        int iIndex = 0;
-
-        while (true) {
-            // , 위치 찾기
-            int pos = strGetLine.find_first_of(',', iIndex);
-
-            // ,를 찾지 못하면 종료
-            if (pos == string::npos) {
-                break;
-            }
-
-            // 분리된 문자열 출력
-            vecStr.push_back(strGetLine.substr(iIndex, pos - iIndex));
-            iIndex = pos + 1;
-            vecStr.push_back(strGetLine.substr(iIndex));
-        }
-
-        m_mapStage.emplace(pair<int, string>(stoi(vecStr[0]),  vecStr[1]));
-
-        vecStr.clear();
-    }
-
-    fin.close();
-
+    Load_MapLevel();
+    Load_Room_Theme();
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -108,7 +76,21 @@ void CMapToolGui::Update_ImGuiTools()
     ImGui::SameLine();
     ImGui::SetNextItemWidth(100.f);
     ImGui::InputText("##Key", szStageKey, MAX_PATH);
+
+    vector<const char*> vecRoomText;
+
+    if (0 < m_vecRoomTheme.size())
+    {
+        for (const string& str : m_vecRoomTheme)
+            vecRoomText.push_back(str.c_str());
+    }
+
+    ImGui::Text("Room Theme: ");
     ImGui::SameLine();
+
+    ImGui::SetNextItemWidth(100.f);
+    ImGui::Combo("##", &m_iSelectedRommThemeIndex, vecRoomText.data(), m_vecRoomTheme.size());
+
 
     //스테이지 리스트를 보여주는 map에 방금 작성한 스테이지를 Add한다.
     // Key값이 중복되지 않을 경우에만 emplace가 실행되게 예외처리 적용
@@ -140,34 +122,17 @@ void CMapToolGui::Update_ImGuiTools()
 
     vector<const char*> items;
 
-    if (0 < vecString.size()) {
-        // items 벡터의 요소를 vecString의 요소로 채웁니다.
-        for (const string& str : vecString) {
+    if (0 < vecString.size()) 
+    {
+        for (const string& str : vecString) 
             items.push_back(str.c_str());
-        }
     }
 
     ImGui::Text("Stage List");
     ImGui::SameLine();
 
     if (ImGui::Button("Save"))
-    {
-        string strFilePath = "../../Dat/MapLevel.dat";
-
-        // 파일 스트림을 엽니다.
-        ofstream fout(strFilePath.c_str(), ios::binary);
-
-        // 파일에 데이터를 씁니다. Key, Name
-        for_each(m_mapStage.begin(), m_mapStage.end(),
-            [strFilePath, &fout](auto& iter) {
-                fout << iter.first << ",";
-                fout << iter.second << endl;
-            });
-
-        // 파일 스트림을 닫습니다.
-        fout.close();
-
-    }
+        Save_Stage_List();
 
     ImGui::SetNextItemWidth(100.f);
     ImGui::BeginListBox("##");
@@ -177,14 +142,10 @@ void CMapToolGui::Update_ImGuiTools()
 
     //리스트 박스 클릭 시 실행되는 이벤트(0 = left, 1 = right, 2 = middle)
     if (ImGui::IsItemClicked())
-    {
         m_bIsOpend = true;
-    }
      
     if (m_bIsOpend)
-    {
         Popup_Stage_Connection(vecString[m_iSelectedStageIndex].c_str());
-    }
 
     ImGui::End();
 
@@ -268,6 +229,8 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     ImGui::SetNextItemWidth(30.f);
     ImGui::InputText("##Bottom", szSKeyBottomRoom, MAX_PATH);
 
+
+
     if (ImGui::Button("SAVE"))
     {
         // 파일 스트림을 엽니다.
@@ -287,6 +250,92 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
         m_bIsOpend = false;
 
     ImGui::End();
+}
+
+void CMapToolGui::Load_MapLevel()
+{
+
+    string strFilePath = "../../Dat/MapLevel.dat";
+
+    ifstream fin(strFilePath);
+
+    string strGetLine = "";
+    //코드를 한 줄 읽어온다. (스테이지에 대한 정보는 한줄로 저장하게 만들어뒀기 때문에 가능)
+
+    while (getline(fin, strGetLine))
+    {
+        vector<string> vecStr;
+        int iIndex = 0;
+
+        while (true) {
+            // , 위치 찾기
+            int pos = strGetLine.find_first_of(',', iIndex);
+
+            // ,를 찾지 못하면 종료
+            if (pos == string::npos) {
+                break;
+            }
+
+            // 분리된 문자열 출력
+            vecStr.push_back(strGetLine.substr(iIndex, pos - iIndex));
+            iIndex = pos + 1;
+            vecStr.push_back(strGetLine.substr(iIndex));
+        }
+
+        m_mapStage.emplace(pair<int, string>(stoi(vecStr[0]), vecStr[1]));
+
+        vecStr.clear();
+    }
+
+    fin.close();
+}
+
+void CMapToolGui::Load_Room_Theme()
+{
+    //.dat 파일을 불려올 경로를 설정해준다.
+    string strFilePath = "../../Dat/Room_Theme.txt";
+
+    ifstream fin(strFilePath);
+
+    string strGetLine = "";
+    //코드를 한 줄씩 읽어온다.
+    while (getline(fin, strGetLine))
+    {
+        int iIndex = 0;
+
+        while (true) {
+            // , 위치 찾기
+            int pos = strGetLine.find_first_of(',', iIndex);
+
+            // ,를 찾지 못하면 종료
+            if (pos == string::npos) 
+                break;
+
+            // 분리된 문자열 출력
+            m_vecRoomTheme.push_back(strGetLine.substr(iIndex, pos - iIndex));
+            iIndex = pos + 1;
+        }
+    }
+
+    fin.close();
+}
+
+void CMapToolGui::Save_Stage_List()
+{
+    string strFilePath = "../../Dat/MapLevel.dat";
+
+    // 파일 스트림을 엽니다.
+    ofstream fout(strFilePath.c_str(), ios::binary);
+
+    // 파일에 데이터를 씁니다. Key, Name
+    for_each(m_mapStage.begin(), m_mapStage.end(),
+        [strFilePath, &fout](auto& iter) {
+            fout << iter.first << ",";
+            fout << iter.second << endl;
+        });
+
+    // 파일 스트림을 닫습니다.
+    fout.close();
 }
 
 void CMapToolGui::Free()
