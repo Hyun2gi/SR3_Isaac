@@ -21,6 +21,7 @@ public:
 private:
 	virtual HRESULT		Add_Component()						override;
 	virtual void		Motion_Change()						override;
+	virtual void		Face_Camera()						override;
 
 	void				Change_Dir(const _float& fTimeDelta);
 	void				Move(const _float& fTimeDelta);

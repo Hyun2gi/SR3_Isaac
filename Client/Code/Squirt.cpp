@@ -42,6 +42,8 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
+	Face_Camera();
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (Check_Time(fTimeDelta) && !m_bSliding)
@@ -143,6 +145,15 @@ void CSquirt::Motion_Change()
 	}
 }
 
+void CSquirt::Face_Camera()
+{
+	CTransform* PlayerTransform =
+		dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3 vAngle = m_pCalculCom->Compute_Vill_Angle(m_pTransformCom, PlayerTransform);
+	m_pTransformCom->m_vAngle.y = vAngle.y;
+}
+
 void CSquirt::Sliding(const _float& fTimeDelta)
 {
 	D3DXVec3Normalize(&m_vDir, &m_vDir);
@@ -159,7 +170,7 @@ void CSquirt::Sliding(const _float& fTimeDelta)
 
 void CSquirt::Check_TargetPos()
 {
-	m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"));
+	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
 

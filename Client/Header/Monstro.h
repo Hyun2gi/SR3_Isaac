@@ -21,6 +21,7 @@ public:
 private:
 	virtual HRESULT	Add_Component()							override;
 	virtual void	Motion_Change()							override;
+	virtual void	Face_Camera()						override;
 
 	void			MoveTo_Player(const _float& fTimeDelta);
 	void			JumpTo_Player(const _float& fTimeDelta);
