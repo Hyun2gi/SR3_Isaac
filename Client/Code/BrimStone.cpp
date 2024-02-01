@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "BrimStone.h"
 #include "Export_Utility.h"
+#include "Player.h"
 
 CBrimStone::CBrimStone(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CItem(pGraphicDev)
@@ -94,6 +95,7 @@ void CBrimStone::Motion_Change()
 
 void CBrimStone::Run_Item_Effect()
 {
+	CPlayer::GetInstance()->Set_BulletType(2);
 	m_bDead = true;
 }
 
