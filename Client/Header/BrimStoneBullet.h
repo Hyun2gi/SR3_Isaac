@@ -28,7 +28,7 @@ public:
 	virtual void Render_GameObject()						 override;
 
 public:
-	static CBrimStoneBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag);
+	static CBrimStoneBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag, int bulletIndex);
 
 public:
 	HRESULT					Set_HeadTexture(bool _head, int _index);
@@ -45,6 +45,7 @@ public:
 			break;
 		}
 	}
+	void				Set_BulletIndex(int index) { m_iBulletIndex = index; }
 
 private:
 	virtual HRESULT			Add_Component();
