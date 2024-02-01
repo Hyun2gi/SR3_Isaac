@@ -25,6 +25,7 @@ HRESULT CMapToolGui::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
 {
     m_bIsOpend = false;
     m_iSelectedStageIndex = 0;
+    m_iSelectedRoomThemeIndex = 0;
 
     m_pGraphicDev = pGraphicDev;
 
@@ -76,21 +77,6 @@ void CMapToolGui::Update_ImGuiTools()
     ImGui::SameLine();
     ImGui::SetNextItemWidth(100.f);
     ImGui::InputText("##Key", szStageKey, MAX_PATH);
-
-    vector<const char*> vecRoomText;
-
-    if (0 < m_vecRoomTheme.size())
-    {
-        for (const string& str : m_vecRoomTheme)
-            vecRoomText.push_back(str.c_str());
-    }
-
-    ImGui::Text("Room Theme: ");
-    ImGui::SameLine();
-
-    ImGui::SetNextItemWidth(100.f);
-    ImGui::Combo("##", &m_iSelectedRommThemeIndex, vecRoomText.data(), m_vecRoomTheme.size());
-
 
     //스테이지 리스트를 보여주는 map에 방금 작성한 스테이지를 Add한다.
     // Key값이 중복되지 않을 경우에만 emplace가 실행되게 예외처리 적용
@@ -184,6 +170,40 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
 
     ImGui::Text("Selected Stage Name: %s", items);
 
+
+    vector<string> vecStr;
+    int pos = strKeys.find_last_of(",") + 1;
+
+    m_strCurTheme = strKeys.substr(pos);
+
+    m_iSelectedRoomThemeIndex = 0;
+
+    for (int i = 0; i < m_vecRoomTheme.size(); ++i)
+    {
+        if (m_vecRoomTheme[i] == m_strCurTheme)
+        {
+            m_iSelectedRoomThemeIndex = i;
+            break;
+        }
+
+    }
+
+    //테마 목록을 보여주는 드롭다운박스
+    vector<const char*> vecRoomText;
+
+    if (0 < m_vecRoomTheme.size())
+    {
+        for (const string& str : m_vecRoomTheme)
+            vecRoomText.push_back(str.c_str());
+    }
+
+    ImGui::Text("Room Theme: ");
+    ImGui::SameLine();
+
+    ImGui::SetNextItemWidth(100.f);
+    ImGui::Combo("##", &m_iSelectedRoomThemeIndex, vecRoomText.data(), m_vecRoomTheme.size());
+
+
     ImGui::NewLine();
 
     ImGui::Text("Please enter a key value.");
@@ -240,7 +260,8 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
         fout << szSKeyLeftRoom << ",";
         fout << szSKeyRightRoom << ",";
         fout << szSKeyTopRoom << ",";
-        fout << szSKeyBottomRoom << endl;
+        fout << szSKeyBottomRoom << ",";
+        fout << vecRoomText[m_iSelectedRoomThemeIndex];
 
         // 파일 스트림을 닫습니다.
         fout.close();
