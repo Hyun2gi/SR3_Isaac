@@ -61,9 +61,6 @@ private:
 	virtual void Free() override;
 
 private:
-	map<int, string> m_mapLevel;
-	map<int, LoadObj> m_mapLoadObj;
-
 	CLoading* m_pLoading;
 
 	//바닥과 벽면을 가지고있게 한다.
@@ -77,7 +74,16 @@ private:
 
 	bool m_bIsCreated;
 
+	// 레벨 전체의 연결관계를 저장하는 맵
+	map<int, string> m_mapLevel;
+
+	//맵에 설치될 몬스터, 오브젝트를 저장하는 맵
+	map<int, LoadObj> m_mapLoadObj;
+
+	// 맵에 배치한 몬스터의 개수를 카운트해주는 벡터
 	vector<int> m_vecMonsterCount;
+
+	// 현재 스테이지의 연결관계를 Load해 저장하는 벡터
 	vector<int> m_vecConnectRoom;
 };
 
