@@ -2,6 +2,7 @@
 #include "BrimStoneBullet.h"
 
 #include "Export_Utility.h"
+#include "Player.h"
 
 CBrimStoneBullet::CBrimStoneBullet(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
@@ -26,14 +27,74 @@ HRESULT CBrimStoneBullet::Ready_GameObject()
 
     // 지속시간
 	m_fCallLimit = 2;
+    m_bRotate = false;
+
+    m_pTransformCom->m_vScale = { 0.8f,0.8f,0.8f };
 
 	return S_OK;
 }
 
 _int CBrimStoneBullet::Update_GameObject(const _float& fTimeDelta)
-{
+{   
     CGameObject::Update_GameObject(fTimeDelta);
+    m_pCalculatorCom->Compute_Vill_Matrix(m_pTransformCom);
 
+    //플레이어 첫 시작 위치 받아와서 거기서부터 시작
+    _vec3   playerPos;
+    _vec3   playerDir;
+    _vec3   bulletPos;
+    //dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"))->Get_Info(INFO_POS, &playerPos);
+    //dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"))->Get_Info(INFO_LOOK, &m_vBulletDir);
+
+    dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_POS, &playerPos);
+    dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_LOOK, &playerDir);
+
+    m_vBulletDir = _vec3(playerDir.x, 0, playerDir.z);
+    D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);
+
+    bulletPos = playerPos + ((m_iBulletIndex+1) * m_pTransformCom->m_vScale.x) * m_vBulletDir;
+    m_pTransformCom->Set_Pos(bulletPos);
+    m_pTransformCom->Rotation(ROT_X, 90);
+    m_bRotate = true;
+    
+
+
+    
+    /*if (m_bRotate == false)
+    {
+        _vec3 tempaxis;
+        _vec3 tempup = _vec3(0, 1, 0);
+
+        D3DXVec3Cross(&m_vPicDir, &tempup, &m_vBulletDir);
+        m_bRotate = true;
+    }*/
+
+    /*_vec3 tempaxis;
+    _vec3 tempup = _vec3(0, 1, 0);
+
+    D3DXVec3Cross(&m_vPicDir, &tempup, &m_vBulletDir);
+    m_bRotate = true;
+
+    m_pTransformCom->Rotate_Set_Axis(&m_vPicDir, 90);*/
+
+    /*_vec3 tempdir = _vec3(m_pTransformCom->m_vInfo[INFO_RIGHT].x, 0, m_pTransformCom->m_vInfo[INFO_RIGHT].z);
+    m_pTransformCom->Rotate_Set_Axis(&m_pTransformCom->m_vInfo[INFO_RIGHT], 90);
+    
+    _matrix matWorld, matView, matBill;
+    m_pTransformCom->Get_WorldMatrix(&matWorld);
+    m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+    D3DXMatrixIdentity(&matBill);
+
+    matBill._11 = matView._11;
+    matBill._13 = matView._13;
+    matBill._31 = matView._31;
+    matBill._33 = matView._33;
+
+    D3DXMatrixInverse(&matBill, NULL, &matBill);
+
+    m_pTransformCom->Set_WorldMatrix(&(matBill * matWorld));*/
+
+    
     if (Check_Time(fTimeDelta))
     {
         // 시간 다 되면 삭제
@@ -45,7 +106,7 @@ _int CBrimStoneBullet::Update_GameObject(const _float& fTimeDelta)
         return 1;
     }
 
-    Engine::Add_RenderGroup(RENDER_ALPHA, this);
+    Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
 
     return 0;
@@ -70,8 +131,9 @@ void CBrimStoneBullet::Render_GameObject()
 
     m_pBufferCom->Render_Buffer();
 
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+    /*m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);*/
+    
 }
 
 CBrimStoneBullet* CBrimStoneBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag)
@@ -89,6 +151,26 @@ CBrimStoneBullet* CBrimStoneBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const 
     return pInstance;
 }
 
+HRESULT CBrimStoneBullet::Set_HeadTexture(bool _head, int _index)
+{
+    m_bhead = _head;
+    m_iBulletIndex = _index;
+
+    CComponent* pComponent = nullptr;
+    if (m_bhead)
+    {
+        pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BulletTexture_BrimHead"));
+        NULL_CHECK_RETURN(pComponent, E_FAIL);
+        m_mapComponent[ID_STATIC].insert({ L"Proto_BulletTexture_BrimHead", pComponent });
+    }
+    else
+    {
+        pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BulletTexture_BrimCenter"));
+        NULL_CHECK_RETURN(pComponent, E_FAIL);
+        m_mapComponent[ID_STATIC].insert({ L"Proto_BulletTexture_BrimCenter", pComponent });
+    }
+}
+
 HRESULT CBrimStoneBullet::Add_Component()
 {
     CComponent* pComponent = nullptr;
@@ -97,20 +179,36 @@ HRESULT CBrimStoneBullet::Add_Component()
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-    pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BulletTexture_BrimHead"));
+    /*pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BulletTexture_BrimHead"));
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_STATIC].insert({ L"Proto_BulletTexture_BrimHead", pComponent });
 
     pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BulletTexture_BrimCenter"));
     NULL_CHECK_RETURN(pComponent, E_FAIL);
-    m_mapComponent[ID_STATIC].insert({ L"Proto_BulletTexture_BrimCenter", pComponent });
+    m_mapComponent[ID_STATIC].insert({ L"Proto_BulletTexture_BrimCenter", pComponent });*/
 
     pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
+    //플레이어 첫 시작 위치 받아와서 거기서부터 시작
+    _vec3   playerPos, playerDir;
 
+
+
+    dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_POS, &playerPos);
+    dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_LOOK, &playerDir);
+
+    _vec3 tempup = _vec3(0, 1, 0);
+
+    D3DXVec3Cross(&m_vPicDir, &tempup, &playerDir);
+
+    m_pTransformCom->Rotate_Set_Axis(&m_vPicDir, 90);
+
+    
+    NULL_CHECK_RETURN(pComponent, E_FAIL);
+    m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
     return S_OK;
 }
