@@ -269,8 +269,8 @@ bool CPlayer::Get_Camera_WallBlock()
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 	vScale = m_pTransformCom->m_vScale;
 
-	if (vPos.x < VTXCNTX - 5 && vPos.z < VTXCNTX - 5
-		&& vPos.x > 5 && vPos.z > 5)
+	if (vPos.x < VTXCNTX - 2.7 && vPos.z < VTXCNTX - 2.7
+		&& vPos.x > 2.7 && vPos.z > 2.7)
 	{
 		return false;
 	}
