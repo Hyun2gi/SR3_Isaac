@@ -103,19 +103,19 @@ HRESULT CDoor::Add_Component()
 #pragma region Texture
 
 	// STAGE _ OPEN
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BaseDoorOpenTexture"));
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_NormalDoorOpenTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_BaseDoorOpenTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_NormalDoorOpenTexture", pComponent });
 
 	// STAGE _ CLOSE
-	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BaseDoorCloseTexture"));
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_NormalDoorCloseTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_BaseDoorCloseTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_NormalDoorCloseTexture", pComponent });
 
 	// STAGE _ OPENING
-	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BaseDoorOpneingTexture"));
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_NormalDoorOpneingTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_BaseDoorOpneingTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_NormalDoorOpneingTexture", pComponent });
 
 	// BOSS _ OPEN
 	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BossDoorOpenTexture"));

@@ -32,6 +32,7 @@
 #include "SadOnion.h"
 #include "WhipWorm.h"
 #include "Epic.h"
+#include "Door.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
@@ -52,6 +53,7 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	
 	FAILED_CHECK_RETURN(Load_Level_Data(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_Stage_Data(), E_FAIL);
+	FAILED_CHECK_RETURN(Load_Connected_Stage_Theme(), E_FAIL);
 	FAILED_CHECK_RETURN(Load_Stage_Design_Data(), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
@@ -75,6 +77,8 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	{
 		m_bIsCreated = true;
 		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"GameObject"), E_FAIL);
+		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
+
 	}
 
 	if (Engine::Key_Down(DIK_1))
@@ -146,9 +150,8 @@ HRESULT CLoadStage::Load_Level_Data()
 			int pos = strGetLine.find_first_of(',', iIndex);
 
 			// ,를 찾지 못하면 종료
-			if (pos == string::npos) {
+			if (pos == string::npos) 
 				break;
-			}
 
 			// 분리된 문자열 출력
 			vecStr.push_back(strGetLine.substr(iIndex, pos - iIndex));
@@ -246,6 +249,37 @@ HRESULT CLoadStage::Load_Stage_Design_Data()
 
 	return S_OK;
 
+}
+
+HRESULT CLoadStage::Load_Connected_Stage_Theme()
+{
+	int iIndex = 0;
+
+	for (auto& iter : m_vecConnectRoom)
+	{
+		if (iter != 0)
+		{
+			string strFilePath = "../../Dat/Stage_" +
+				to_string(iter) + ".dat";
+
+			ifstream fin(strFilePath);
+
+			string strLine = "";
+			getline(fin, strLine);
+			fin.close();
+
+			//m_mapDoorTheme.emplace({})
+			int pos = strLine.find_last_of(",") + 1;
+
+			string strStageTheme = strLine.substr(pos);
+
+			m_mapDoorTheme.insert({ iIndex, strStageTheme });
+		}
+
+		++iIndex;
+	}
+
+	return S_OK;
 }
 
 HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
@@ -498,6 +532,98 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 	}
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
+}
+
+HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
+{
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	Engine::CGameObject* pGameObject = nullptr;
+
+	_vec3 vTempPos;
+
+	for (auto& iter : m_mapDoorTheme)
+	{
+		pGameObject = CDoor::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		pGameObject->Set_MyLayer(pLayerTag);
+
+		//string으로 key를 넘겨줄지 보민이랑 상의 후 string을 넘겨주기로 할 경우
+		// 불필요한 부분이라 임시로 테스트를 위해 하드코딩해둠
+		int iTempTag = 99;
+
+		if (iter.second == "Normal")
+		{
+			iTempTag = 0;
+		}
+		else if (iter.second == "Boss")
+		{
+			iTempTag = 1;
+		}
+		else if (iter.second == "Arcade")
+		{
+			iTempTag = 2;
+		}
+		else if (iter.second == "Treasure")
+		{
+			iTempTag = 3;
+		}
+		else if (iter.second == "Devil")
+		{
+			iTempTag = 4;
+		}
+		else if (iter.second == "Challenge")
+		{
+			iTempTag = 2;
+		}
+
+
+		switch (iter.first)
+		{
+		case WALL_LEFT:
+			
+			dynamic_cast<CDoor*>(pGameObject)->Set_Thema(iTempTag);
+
+			vTempPos = m_pLeftWall->Get_Transform()->m_vInfo[INFO_POS];
+
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + 0.6f, 2.f, vTempPos.z);
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pLeftWall->Get_Transform()->m_vAngle;
+			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
+			break;
+		case WALL_RIGHT:
+			dynamic_cast<CDoor*>(pGameObject)->Set_Thema(iTempTag);
+
+			vTempPos = m_pRightWall->Get_Transform()->m_vInfo[INFO_POS];
+
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + 0.6f, 2.f, vTempPos.z);
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pRightWall->Get_Transform()->m_vAngle;
+			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
+			break;
+		case WALL_TOP:
+			dynamic_cast<CDoor*>(pGameObject)->Set_Thema(iTempTag);
+
+			vTempPos = m_pTopWall->Get_Transform()->m_vInfo[INFO_POS];
+
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + 0.6f, 2.f, vTempPos.z);
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pTopWall->Get_Transform()->m_vAngle;
+			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
+			break;
+		case WALL_BOTTOM:
+			dynamic_cast<CDoor*>(pGameObject)->Set_Thema(iTempTag);
+
+			vTempPos = m_pBottomWall->Get_Transform()->m_vInfo[INFO_POS];
+
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + 0.6f, 2.f, vTempPos.z);
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pBottomWall->Get_Transform()->m_vAngle;
+			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
+			break;
+		}
+	}
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
+
+	return S_OK;
 }
 
 HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
