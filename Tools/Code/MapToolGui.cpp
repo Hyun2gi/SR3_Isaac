@@ -242,7 +242,7 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     ImGui::SameLine();
     if (strKeys != "")
     {
-        ImGui::Text("%c", strKeys[1]);
+        ImGui::Text("%c", strKeys[2]);
         ImGui::SameLine();
     }
     ImGui::SetNextItemWidth(30.f);
@@ -252,7 +252,7 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     ImGui::SameLine();
     if (strKeys != "")
     {
-        ImGui::Text("%c", strKeys[2]);
+        ImGui::Text("%c", strKeys[4]);
         ImGui::SameLine();
     }
     ImGui::SetNextItemWidth(30.f);
@@ -262,7 +262,7 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     ImGui::SameLine();
     if (strKeys != "")
     {
-        ImGui::Text("%c", strKeys[3]);
+        ImGui::Text("%c", strKeys[6]);
         ImGui::SameLine();
     }
     ImGui::SetNextItemWidth(30.f);
@@ -274,10 +274,10 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
         ofstream fout(strFilePath.c_str(), ios::binary);
 
         // 파일에 데이터를 씁니다.
-        fout << szSKeyLeftRoom;
-        fout << szSKeyRightRoom;
-        fout << szSKeyTopRoom;
-        fout << szSKeyBottomRoom;
+        fout << szSKeyLeftRoom << ",";
+        fout << szSKeyRightRoom << ",";
+        fout << szSKeyTopRoom << ",";
+        fout << szSKeyBottomRoom << endl;
 
         // 파일 스트림을 닫습니다.
         fout.close();
