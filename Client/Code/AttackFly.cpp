@@ -151,14 +151,5 @@ void CAttackFly::Free()
 	Safe_Release<CCenterFly*>(m_CenterFly);
 	m_CenterFly = nullptr;
 
-	if (!m_NormalFlyList.empty())
-	{
-		for (auto& iter = m_NormalFlyList.begin();
-			iter != m_NormalFlyList.end();)
-		{
-			Safe_Release<CNormalFly*>(*iter);
-			iter = m_NormalFlyList.erase(iter);
-		}
-	}
-	
+	for_each(m_NormalFlyList.begin(), m_NormalFlyList.end(), CDeleteObj());
 }

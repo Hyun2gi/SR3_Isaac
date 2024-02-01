@@ -196,5 +196,7 @@ void CSlotMC::Free()
 	Safe_Release<CMachine*>(m_pMachine);
 	m_pMachine = nullptr;
 
+	for_each(m_pCardList.begin(), m_pCardList.end(), CDeleteObj());
+
 	__super::Free();
 }
