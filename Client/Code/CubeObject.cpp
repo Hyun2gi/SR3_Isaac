@@ -22,6 +22,7 @@ HRESULT CCubeObject::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_fS = 1.f;
+	m_pTransformCom->m_vScale = { 0.5f, 0.5f, 0.5f };
 
 	return S_OK;
 }

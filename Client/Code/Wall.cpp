@@ -90,20 +90,22 @@ HRESULT CWall::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag, int iAxis)
 			pCube->Set_Cute_Texture(pCubeTextureTag);
 			CTransform* pTemp = dynamic_cast<CTransform*>(pCube->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
 
+			_vec3 vScale(pTemp->m_vScale.x * 2, pTemp->m_vScale.y * 2, pTemp->m_vScale.z * 2);
+
 			//어디 세울 벽인지에 따른 큐브의 목적지 포지션 세팅
 			switch (iAxis)
 			{
 			case WALL_LEFT:
-				pCube->Set_Dst_Pos({ 0, pTemp->m_vScale.y * i * 2 + pTemp->m_vScale.y, (_float)(j * pTemp->m_vScale.z + (pTemp->m_vScale.z * 0.5)) });
+				pCube->Set_Dst_Pos({ 0, vScale .y * i, (_float)(j * vScale.z) });
 				break;
 			case WALL_RIGHT:
-				pCube->Set_Dst_Pos({ pTemp->m_vScale.x * VTXCNTX, pTemp->m_vScale.y * i * 2 + pTemp->m_vScale.y, (_float)(j * pTemp->m_vScale.z + (pTemp->m_vScale.z * 0.5)) });
+				pCube->Set_Dst_Pos({ vScale.x * VTXCNTX, vScale.y * i, (_float)(j * vScale.z) });
 				break;
 			case WALL_TOP:
-				pCube->Set_Dst_Pos({ (_float)(j * pTemp->m_vScale.x + (pTemp->m_vScale.x * 0.5)), pTemp->m_vScale.y * i * 2 + pTemp->m_vScale.y, pTemp->m_vScale.z * VTXCNTX });
+				pCube->Set_Dst_Pos({ (_float)(j * vScale.x) , vScale.y * i, vScale.z * VTXCNTX });
 				break;
 			case WALL_BOTTOM:
-				pCube->Set_Dst_Pos({ (_float)(j * pTemp->m_vScale.x + (pTemp->m_vScale.x * 0.5)), pTemp->m_vScale.y * i * 2 + pTemp->m_vScale.y, 0 });
+				pCube->Set_Dst_Pos({ (_float)(j * vScale.x), vScale.y * i, 0 });
 				break;
 			}
 				

@@ -59,7 +59,7 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 	
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
-	//FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
+	//	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
 	return S_OK;
 }
