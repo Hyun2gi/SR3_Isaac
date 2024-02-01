@@ -168,21 +168,12 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
 	//}
 
-	// Attack Fly
-	/*pGameObject = CAttackFly::Create(m_pGraphicDev, 0);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	dynamic_cast<CAttackFly*>(pGameObject)->Set_CenterObj();
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CenterFly", pGameObject), E_FAIL);
-
-	for (int i = 1; i < 13; ++i)
-	{
-		pGameObject = CAttackFly::Create(m_pGraphicDev, i);
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		pGameObject->Set_MyLayer(pLayerTag);
-		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
-	}*/
-
+	//// Attack Fly
+	//pGameObject = CAttackFly::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
+	
 	//// Dip
 	//for (int i = 0; i < 5; ++i)
 	//{
@@ -307,11 +298,11 @@ HRESULT CStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
-	//// Coin
-	//pGameObject = CCoin::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Coin", pGameObject), E_FAIL);
+	// Coin
+	pGameObject = CCoin::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Coin", pGameObject), E_FAIL);
 
 	// Heart
 	pGameObject = CHeart::Create(m_pGraphicDev);
