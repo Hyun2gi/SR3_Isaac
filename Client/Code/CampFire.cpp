@@ -49,7 +49,8 @@ _int CCampFire::Update_GameObject(const _float& fTimeDelta)
 	if (m_pFire != nullptr)
 		m_pFire->Update_GameObject(fTimeDelta);
 
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+	if (Engine::Get_DIKeyState(DIK_Z) & 0x80)//Engine::Key_Down(DIK_X))
+		m_pFire->Set_Hit();
 
 	return 0;
 }
@@ -135,5 +136,11 @@ CCampFire* CCampFire::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CCampFire::Free()
 {
+	Safe_Release<CWood*>(m_pWood);
+	m_pWood = nullptr;
+
+	Safe_Release<CFire*>(m_pFire);
+	m_pFire = nullptr;
+
 	__super::Free();
 }

@@ -22,6 +22,11 @@
 #include "Poop.h"
 #include "CampFire.h"
 #include "Spike.h"
+#include "SlotMC.h"
+#include "ShopNpc.h"
+
+#include "Door.h"
+#include "PlayerBullet.h"
 
 #include "BackGround.h"
 #include "Terrain.h"
@@ -51,7 +56,9 @@ HRESULT CStage::Ready_Scene()
 {
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Monster(L"GameMst"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
@@ -74,6 +81,10 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 
 	// 충돌처리 함수
 	Run_Collision_Func();
+	Door_Collision();
+
+	// 아이템 드랍
+	Drop_ITem();
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
 	return __super::Update_Scene(fTimeDelta);
@@ -88,6 +99,25 @@ void CStage::LateUpdate_Scene()
 void CStage::Render_Scene()
 {
 	// DEBUG
+}
+
+void CStage::Drop_ITem()
+{
+	// 똥 / 모닥불 -> 같은 자리에 점프하며 생성
+	// 슬롯머신 -> 점프하며 대각선으로 뱉어냄
+	// 야바위 -> 점프하며 대각선으로 뱉어냄
+	// CGameObject* pObj = m_mapLayer.at(L"GameItem")->Collision_GameObject(CPlayer::GetInstance());
+	//Get_GameObject
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
+	if (dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_Dead())
+	{
+		Engine::CGameObject* pGameObject = nullptr;
+
+		pGameObject = CCoin::Create(m_pGraphicDev);
+		pGameObject->Set_MyLayer(L"GameItem");
+		//pGameObject->Get_Component()
+		m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);
+	}
 }
 
 HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
@@ -133,7 +163,61 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 	pGameObject->Set_MyLayer(pLayerTag);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
 
-#pragma region Monster
+#pragma region Object
+
+	// Poop
+	pGameObject = CPoop::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
+
+	// CampFire
+	pGameObject = CCampFire::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
+
+	// Spike
+	pGameObject = CSpike::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
+
+	// SlotMC
+	pGameObject = CSlotMC::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
+
+	// ShopNpc
+	pGameObject = CShopNpc::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShopNpc", pGameObject), E_FAIL);
+
+#pragma endregion Object
+
+
+
+	/*for (_int i = 0; i < 50; ++i)
+	{
+		pGameObject = CEffect::Create(m_pGraphicDev);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Effect", pGameObject), E_FAIL);
+	}*/
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
+
+
+	return S_OK;
+}
+
+HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
+{
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	Engine::CGameObject* pGameObject = nullptr;
 
 	//// Fly
 	//for (int i = 0; i < 10; ++i)
@@ -144,20 +228,11 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
 	//}
 
-	// Attack Fly
-	/*pGameObject = CAttackFly::Create(m_pGraphicDev, 0);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	dynamic_cast<CAttackFly*>(pGameObject)->Set_CenterObj();
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CenterFly", pGameObject), E_FAIL);
-
-	for (int i = 1; i < 13; ++i)
-	{
-		pGameObject = CAttackFly::Create(m_pGraphicDev, i);
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		pGameObject->Set_MyLayer(pLayerTag);
-		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
-	}*/
+	//// Attack Fly
+	//pGameObject = CAttackFly::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
 
 	//// Dip
 	//for (int i = 0; i < 5; ++i)
@@ -168,7 +243,7 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dip", pGameObject), E_FAIL);
 	//}
 
-	//// Pacer
+	// Pacer
 	//for (int i = 0; i < 6; ++i)
 	//{
 	//	pGameObject = CPacer::Create(m_pGraphicDev, i);
@@ -215,51 +290,10 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 	//	pGameObject->Set_MyLayer(pLayerTag);
 	//	dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
-
 	//}
-
-#pragma endregion Monster
-
-#pragma region Object
-
-	// Poop
-	pGameObject = CPoop::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
-
-	// CampFire
-	pGameObject = CCampFire::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
-
-	// Spike
-	pGameObject = CSpike::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
-
-
-#pragma endregion Object
-
-
-
-	/*for (_int i = 0; i < 50; ++i)
-	{
-		pGameObject = CEffect::Create(m_pGraphicDev);
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Effect", pGameObject), E_FAIL);
-	}*/
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
-
-	return S_OK;
-}
-
-HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
-{
 	return S_OK;
 }
 
@@ -272,57 +306,76 @@ HRESULT CStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
-	// Coin
-	pGameObject = CCoin::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Coin", pGameObject), E_FAIL);
+	//// Coin
+	//pGameObject = CCoin::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Coin", pGameObject), E_FAIL);
 
-	// Heart
-	pGameObject = CHeart::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Heart", pGameObject), E_FAIL);
+	//// Heart
+	//pGameObject = CHeart::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Heart", pGameObject), E_FAIL);
 
-	// HeartHalf
-	pGameObject = CHeartHalf::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"HeartHalf", pGameObject), E_FAIL);
+	//// HeartHalf
+	//pGameObject = CHeartHalf::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"HeartHalf", pGameObject), E_FAIL);
 
 
-	// Pill
-	pGameObject = CPill::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pill", pGameObject), E_FAIL);
+	//// Pill
+	//pGameObject = CPill::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pill", pGameObject), E_FAIL);
 
-	// BrimStone
-	pGameObject = CBrimStone::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BrimStone", pGameObject), E_FAIL);
+	//// BrimStone
+	//pGameObject = CBrimStone::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BrimStone", pGameObject), E_FAIL);
 
-	// Onion
-	pGameObject = CSadOnion::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SadOnion", pGameObject), E_FAIL);
+	//// Onion
+	//pGameObject = CSadOnion::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SadOnion", pGameObject), E_FAIL);
 
-	// WhipWorm
-	pGameObject = CWhipWorm::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"WhipWorm", pGameObject), E_FAIL);
+	//// WhipWorm
+	//pGameObject = CWhipWorm::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"WhipWorm", pGameObject), E_FAIL);
 
-	// Epic
-	pGameObject = CEpic::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Epic", pGameObject), E_FAIL);
+	//// Epic
+	//pGameObject = CEpic::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Epic", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
+
+	return S_OK;
+}
+
+HRESULT CStage::Ready_Layer_Door(const _tchar* pLayerTag)
+{
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	Engine::CGameObject* pGameObject = nullptr;
+
+	// Door
+	pGameObject = CDoor::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	dynamic_cast<CDoor*>(pGameObject)->Set_Thema(1);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
 }
@@ -369,6 +422,34 @@ void CStage::Run_Collision_Func()
 		//충돌됨
 		dynamic_cast<CItem*>(pObj)->Run_Item_Effect();
 	}
+}
+
+void CStage::Door_Collision()
+{
+	if (dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")) != nullptr)
+	{
+		if (dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor"))->Get_Open()) // 문이 열렸을 경우에만
+		{
+			CGameObject* pObj = m_mapLayer.at(L"GameDoor")->Collision_GameObject(CPlayer::GetInstance());
+
+			if (pObj) // 충돌된 문 존재
+			{
+				// 스테이지 변경
+			}
+		}
+	}
+}
+
+void CStage::Moster_Collision()
+{
+	// 몬스터 충돌 관련 처리 함수
+
+	// 몬스터 <- 총알
+	/*if (dynamic_cast<CMonster*>(m_mapLayer.at(L"GameMst")) != nullptr)
+	{
+		CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject()
+	}*/
+
 }
 
 CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)

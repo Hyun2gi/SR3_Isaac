@@ -97,6 +97,31 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	// Spike
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SpikeTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Spike/Spike.png")), E_FAIL);
 
+	// SlotMC
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SlotMCTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/SlotMC/SlotMC_%d.png", 3)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BrokenSlotMCTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/SlotMC/BrokenSlotMC.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SlotCardTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/SlotMC/SlotCard_%d.png", 7)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SlotCardRandTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/SlotMC/SlotRandom_%d.png", 6)), E_FAIL);
+
+	// Shop
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ShopNpcTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Shop/ShopNpc_%d.png", 2)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ShopNpcThumbsTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Shop/ShopNpc_ThumbsUp_%d.png", 2)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ShopNpcDeadTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Shop/ShopNpcDead_%d.png", 2)), E_FAIL);
+
+	// Door (Basement)
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BaseDoorCloseTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/BasementDoorClose.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BaseDoorOpenTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/BasementDoorOpen.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BaseDoorOpneingTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/BasementDoorOpeneing_%d.png", 4)), E_FAIL);
+
+	// Door (Boss)
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BossDoorCloseTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/BossDoor/BossDoorClose.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BossDoorOpenTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/BossDoor/BossDoorOpen.png")), E_FAIL);
+
+	// Door (Arcade)
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ArcadeDoorCloseTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/ArcadeDoor/ArcadeDoorClose.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ArcadeDoorOpenTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/ArcadeDoor/ArcadeDoorOpen.png")), E_FAIL);
+
+
 #pragma endregion MapObject
 
 

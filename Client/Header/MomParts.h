@@ -27,7 +27,7 @@ private:
 	void				Set_RandNum();
 	void				Change_State();
 
-	void				Hit();
+	virtual void		Hit();
 
 private:
 	// º¯¼ö

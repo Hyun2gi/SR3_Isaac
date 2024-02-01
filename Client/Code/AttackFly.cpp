@@ -31,6 +31,8 @@ HRESULT CAttackFly::Ready_GameObject()
 
 _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 {
+	CGameObject::Update_GameObject(fTimeDelta);
+
 	if (!m_bCreate)
 	{
 		Create_AttackFly();
@@ -47,10 +49,6 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 			iter->Update_GameObject(fTimeDelta);
 		}
 	}
-
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
-
-	CGameObject::Update_GameObject(fTimeDelta);
 
 	return 0;
 }
@@ -151,14 +149,5 @@ void CAttackFly::Free()
 	Safe_Release<CCenterFly*>(m_CenterFly);
 	m_CenterFly = nullptr;
 
-	if (!m_NormalFlyList.empty())
-	{
-		for (auto& iter = m_NormalFlyList.begin();
-			iter != m_NormalFlyList.end();)
-		{
-			Safe_Release<CNormalFly*>(*iter);
-			iter = m_NormalFlyList.erase(iter);
-		}
-	}
-	
+	for_each(m_NormalFlyList.begin(), m_NormalFlyList.end(), CDeleteObj());
 }

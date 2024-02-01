@@ -19,11 +19,15 @@ private:
 	HRESULT			Ready_Layer_GameLogic(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_Monster(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_GameItem(const _tchar* pLayerTag);
+	HRESULT			Ready_Layer_Door(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT			Ready_LightInfo();
 
 private:
 	void			Run_Collision_Func();
+	void			Door_Collision();
+	void			Moster_Collision();
+	void			Drop_ITem();
 
 public:
 	static CStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

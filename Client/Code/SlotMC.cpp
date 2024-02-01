@@ -1,15 +1,18 @@
 #include "stdafx.h"
 #include "SlotMC.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CSlotMC::CSlotMC(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CMapObj(pGraphicDev)
+	: CMapObj(pGraphicDev),
+	m_pMachine(nullptr)
 {
 }
 
 CSlotMC::CSlotMC(const CSlotMC& rhs)
-	: CMapObj(rhs)
+	: CMapObj(rhs),
+	m_pMachine(rhs.m_pMachine)
 {
 }
 
@@ -20,7 +23,7 @@ CSlotMC::~CSlotMC()
 HRESULT CSlotMC::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(5.f, 1.f, 10.f);
+	m_pTransformCom->Set_Pos(3.f, 2.f, 5.f);
 
 	m_iLimitHit = 4;
 
@@ -40,9 +43,26 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 		m_bCreate = true;
 	}
 
+	if (m_pMachine != nullptr)
+		m_pMachine->Update_GameObject(fTimeDelta);
 
+	if (!m_pCardList.empty())
+	{
+		for (auto& iter : m_pCardList)
+		{
+			iter->Update_GameObject(fTimeDelta);
+		}
+	}
 
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+	if (Engine::Get_DIKeyState(DIK_G) & 0x80)//Engine::Key_Down(DIK_G))
+	{
+		m_pMachine->Set_Game();
+		
+		for (auto& iter : m_pCardList)
+		{
+			iter->Set_Random();
+		}
+	}
 
 	return 0;
 }
@@ -51,11 +71,30 @@ void CSlotMC::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 
+	if (m_pMachine != nullptr)
+		m_pMachine->LateUpdate_GameObject();
 
+	if (!m_pCardList.empty())
+	{
+		for (auto& iter : m_pCardList)
+		{
+			iter->LateUpdate_GameObject();
+		}
+	}
 }
 
 void CSlotMC::Render_GameObject()
 {
+	if (m_pMachine != nullptr)
+		m_pMachine->Render_GameObject();
+
+	if (!m_pCardList.empty())
+	{
+		for (auto& iter : m_pCardList)
+		{
+			iter->Render_GameObject();
+		}
+	}
 }
 
 HRESULT CSlotMC::Add_Component()
@@ -65,6 +104,34 @@ HRESULT CSlotMC::Add_Component()
 	pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(Engine::Clone_Proto(L"Proto_RcTex"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
+
+#pragma region SlotMC Texture
+
+	// IDLE
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_SlotMCTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_SlotMCTexture", pComponent });
+
+	// BROKEN
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BrokenSlotMCTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_BrokenSlotMCTexture", pComponent });
+
+#pragma endregion SlotMC Texture
+
+#pragma region Card Texture
+
+	// Card
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_SlotCardTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_SlotCardTexture", pComponent });
+
+	// Random Card
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_SlotCardRandTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_SlotCardRandTexture", pComponent });
+
+#pragma endregion Card Texture
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -79,10 +146,33 @@ HRESULT CSlotMC::Add_Component()
 
 void CSlotMC::Create_Machine()
 {
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	m_pMachine = CMachine::Create(m_pGraphicDev);
+	m_pMachine->Set_MyLayer(m_vecMyLayer[0]);
+	m_pMachine->Get_TransformCom()->Set_Pos(vPos);
+
+	if (m_pMachine == nullptr)
+		return;
 }
 
 void CSlotMC::Create_Card()
 {
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	float fScalar = SCALAR_X;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		CSlotCard* pCard = CSlotCard::Create(m_pGraphicDev);
+		pCard->Set_MyLayer(m_vecMyLayer[0]);
+		pCard->Get_TransformCom()->Set_Pos(vPos.x + fScalar, vPos.y - SCALAR_Y, vPos.z);
+		pCard->Set_Index(i);
+		m_pCardList.push_back(pCard);
+		fScalar += 0.73f;
+	}
 }
 
 CSlotMC* CSlotMC::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -101,5 +191,10 @@ CSlotMC* CSlotMC::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CSlotMC::Free()
 {
+	Safe_Release<CMachine*>(m_pMachine);
+	m_pMachine = nullptr;
+
+	for_each(m_pCardList.begin(), m_pCardList.end(), CDeleteObj());
+
 	__super::Free();
 }
