@@ -6,7 +6,7 @@
 CMapObj::CMapObj(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev),
 	m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTargetTransCom(nullptr), m_pTextureCom(nullptr), m_pCalculator(nullptr),
-	m_iHitCount(0), m_iLimitHit(0), m_iPicNum(1), m_fFrameSpeed(0.f)
+	m_iHitCount(0), m_iLimitHit(0), m_iPicNum(1), m_fFrameSpeed(0.f), m_fCallLimit(0.f), m_fAccTimeDelta(0.f)
 {
 }
 
@@ -14,7 +14,8 @@ CMapObj::CMapObj(const CMapObj& rhs)
 	: Engine::CGameObject(rhs),
 	m_pBufferCom(rhs.m_pBufferCom), m_pTransformCom(rhs.m_pTransformCom), m_pTargetTransCom(rhs.m_pTargetTransCom),
 	m_pTextureCom(rhs.m_pTextureCom), m_pCalculator(rhs.m_pCalculator),
-	m_iHitCount(rhs.m_iHitCount), m_iLimitHit(rhs.m_iLimitHit), m_iPicNum(rhs.m_iPicNum), m_fFrameSpeed(rhs.m_fFrameSpeed)
+	m_iHitCount(rhs.m_iHitCount), m_iLimitHit(rhs.m_iLimitHit), m_iPicNum(rhs.m_iPicNum), m_fFrameSpeed(rhs.m_fFrameSpeed),
+	m_fCallLimit(rhs.m_fCallLimit), m_fAccTimeDelta(rhs.m_fAccTimeDelta)
 {
 }
 
@@ -46,6 +47,19 @@ void CMapObj::Render_GameObject()
 HRESULT CMapObj::Add_Component()
 {
 	return S_OK;
+}
+
+bool CMapObj::Check_Time(const _float& fTimeDelta)
+{
+	m_fAccTimeDelta += fTimeDelta;
+
+	if (m_fAccTimeDelta >= m_fCallLimit)
+	{
+		m_fAccTimeDelta = 0.f;
+		return true;
+	}
+
+	return false;
 }
 
 CMapObj* CMapObj::Create(LPDIRECT3DDEVICE9 pGraphicDev)

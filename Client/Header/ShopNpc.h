@@ -3,15 +3,14 @@
 #include "MapObj.h"
 #include "GameObject.h"
 
-class CFire : public CMapObj
+class CShopNpc : public CMapObj
 {
 private:
-	explicit CFire(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CFire(const CFire& rhs);
-	virtual ~CFire();
+	explicit CShopNpc(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CShopNpc(const CShopNpc& rhs);
+	virtual ~CShopNpc();
 
-public:
-	void			Set_Hit() { m_bHit = true; }
+	enum NPCSTATE { NPC_IDLE, NPC_GOOD, NPC_DEAD, NPC_END };
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -19,19 +18,20 @@ public:
 	virtual void	LateUpdate_GameObject()					 override;
 	virtual void	Render_GameObject()						 override;
 
-	void			Change_Scale();
-
 private:
 	virtual HRESULT		Add_Component()						override;
+	virtual	void		Motion_Change()						override;
 	virtual void		Hit()								override;
 
 private:
-	_bool				m_bHit;
+	NPCSTATE			m_ePreState;
+	NPCSTATE			m_eCurState;
 
 public:
-	static CFire*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CShopNpc*	Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
 	virtual void		Free()								override;
+
 };
 

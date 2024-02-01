@@ -33,6 +33,8 @@ protected:
 	virtual void			Motion_Change() {};
 	virtual void			Hit() {};
 
+	bool					Check_Time(const _float& fTimeDelta);
+
 protected:
 	Engine::CRcTex*			m_pBufferCom;
 	Engine::CTransform*		m_pTransformCom;
@@ -42,6 +44,9 @@ protected:
 	
 	_int					m_iHitCount;
 	_int					m_iLimitHit;
+
+	_float					m_fCallLimit;
+	_float					m_fAccTimeDelta;
 
 	_int					m_iPicNum;
 	_float					m_fFrame = 0.f;
