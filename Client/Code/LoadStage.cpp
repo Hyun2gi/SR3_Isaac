@@ -548,28 +548,32 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	Engine::CGameObject* pGameObject = nullptr;
 
 	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev);
-	dynamic_cast<CFloor*>(pGameObject)->Set_Cube_Texture_Tag(L"Proto_BossFloorCubeTexture");
+	dynamic_cast<CFloor*>(pGameObject)->Set_Cube_Texture_Tag(L"Proto_StageFloorCubeTexture");
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Floor", pGameObject), E_FAIL);
 
 
 	pGameObject = m_pLeftWall = CWall::Create(m_pGraphicDev);
-	dynamic_cast<CWall*>(pGameObject)->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_LEFT);
+	m_pLeftWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_LEFT);
+	m_pLeftWall->Set_Texture_Tag(L"Proto_StageWall", WALL_LEFT);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
 	pGameObject = m_pRightWall = CWall::Create(m_pGraphicDev);
-	dynamic_cast<CWall*>(pGameObject)->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_RIGHT);
+	m_pRightWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_RIGHT);
+	m_pRightWall->Set_Texture_Tag(L"Proto_StageWall", WALL_RIGHT);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
 	pGameObject = m_pTopWall = CWall::Create(m_pGraphicDev);
-	dynamic_cast<CWall*>(pGameObject)->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_TOP);
+	m_pTopWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_TOP);
+	m_pTopWall->Set_Texture_Tag(L"Proto_StageWall", WALL_TOP);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
 	pGameObject = m_pBottomWall = CWall::Create(m_pGraphicDev);
-	dynamic_cast<CWall*>(pGameObject)->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_BOTTOM);
+	m_pBottomWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_BOTTOM);
+	m_pBottomWall->Set_Texture_Tag(L"Proto_StageWall", WALL_BOTTOM);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
@@ -613,7 +617,8 @@ HRESULT CLoadStage::Ready_LightInfo()
 bool CLoadStage::Check_Cube_Arrived()
 {
 	return m_pLeftWall->Get_Arrived() && m_pRightWall->Get_Arrived()
-		&& m_pTopWall->Get_Arrived() && m_pBottomWall->Get_Arrived();
+		&& m_pTopWall->Get_Arrived() && m_pBottomWall->Get_Arrived()
+		&& m_pFloor->Get_Arrived();
 	
 }
 
@@ -628,6 +633,8 @@ CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType)
 		MSG_BOX("Stage Create Failed");
 		return nullptr;
 	}
+
+	CPlayer::GetInstance()->Set_Bool_StartScene(true);
 	
 	return pInstance;
 }
