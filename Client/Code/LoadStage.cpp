@@ -184,8 +184,9 @@ HRESULT CLoadStage::Load_Stage_Data()
 			int pos = strGetLine.find_first_of(',', iIndex);
 
 			// ,를 찾지 못하면 종료
-			if (pos == string::npos) {
-				m_vecConnectRoom.push_back(stoi(strGetLine.substr(iIndex)));
+			if (pos == string::npos)
+			{
+				m_strCurStageTheme = strGetLine.substr(iIndex);
 				break;
 			}
 

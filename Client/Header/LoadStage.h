@@ -71,6 +71,7 @@ private:
 	CWall* m_pBottomWall;
 
 	int m_iCurStageKey;
+	string m_strCurStageTheme;
 
 	bool m_bIsCreated;
 
@@ -84,8 +85,6 @@ private:
 	vector<int> m_vecMonsterCount;
 
 	// 현재 스테이지의 연결관계를 Load해 저장하는 벡터
-
-	
 	vector<int> m_vecConnectRoom;
 };
 
