@@ -25,6 +25,8 @@
 #include "SlotMC.h"
 #include "ShopNpc.h"
 
+#include "Door.h"
+
 #include "BackGround.h"
 #include "Terrain.h"
 #include "DynamicCamera.h"
@@ -54,6 +56,7 @@ HRESULT CStage::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
@@ -76,6 +79,7 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 
 	// 충돌처리 함수
 	Run_Collision_Func();
+	Door_Collision();
 
 	// 아이템 드랍
 	Drop_ITem();
@@ -353,6 +357,23 @@ HRESULT CStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 	return S_OK;
 }
 
+HRESULT CStage::Ready_Layer_Door(const _tchar* pLayerTag)
+{
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	Engine::CGameObject* pGameObject = nullptr;
+
+	// Door
+	pGameObject = CDoor::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	dynamic_cast<CDoor*>(pGameObject)->Set_Thema(1);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
+
+	return S_OK;
+}
+
 HRESULT CStage::Ready_Layer_UI(const _tchar* pLayerTag)
 {
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
@@ -394,6 +415,19 @@ void CStage::Run_Collision_Func()
 	{
 		//충돌됨
 		dynamic_cast<CItem*>(pObj)->Run_Item_Effect();
+	}
+}
+
+void CStage::Door_Collision()
+{
+	if (dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor"))->Get_Open()) // 문이 열렸을 경우에만
+	{
+		CGameObject* pObj = m_mapLayer.at(L"GameDoor")->Collision_GameObject(CPlayer::GetInstance());
+
+		if (pObj) // 충돌된 문 존재
+		{
+			// 스테이지 변경
+		}
 	}
 }
 
