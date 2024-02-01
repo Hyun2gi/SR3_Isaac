@@ -10,6 +10,9 @@ class CWall;
 class CLoadStage : public Engine::CScene
 {
 private:
+	const float DOOR_X_INTERVAL = 1.f;
+	const float DOOR_Y_INTERVAL = 2.f;
+
 	struct LoadObj
 	{
 		int iType, iIndex;
@@ -47,7 +50,6 @@ private:
 	// 연결된 문들의 테마를 Load하는 함수
 	HRESULT Load_Connected_Stage_Theme();
 
-
 private:
 	HRESULT			Ready_Layer_Environment(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_GameLogic(const _tchar* pLayerTag);
@@ -57,7 +59,9 @@ private:
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT			Ready_LightInfo();
 
-	bool Check_Cube_Arrived();
+	HRESULT			Door_Collision();
+
+	bool			Check_Cube_Arrived();
 
 public:
 	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType);

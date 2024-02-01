@@ -47,7 +47,7 @@ HRESULT CDoor::Ready_GameObject()
 	m_pTransformCom->Set_Pos(10.f, 2.f, 5.f); // 
 	m_pTransformCom->m_vScale = { 3.f, 3.f, 3.f };
 
-	m_bOpen = false;
+	m_bOpen = true;
 	m_bCollision = false;
 
 	m_ePreState = DOOR_END;

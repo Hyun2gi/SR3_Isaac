@@ -78,8 +78,15 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		m_bIsCreated = true;
 		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"GameObject"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
-
 	}
+
+	//bool bIsIntersect = dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Get_Collision();
+
+	//if (bIsIntersect)
+	//{
+	//	int i = 0;
+	//	//pGameObject
+	//}
 
 	if (Engine::Key_Down(DIK_1))
 	{
@@ -124,6 +131,9 @@ void CLoadStage::LateUpdate_Scene()
 {
 	__super::LateUpdate_Scene();
 	CPlayer::GetInstance()->LateUpdate_GameObject();
+
+	if (m_bIsCreated)
+		Door_Collision();
 }
 
 void CLoadStage::Render_Scene()
@@ -553,31 +563,12 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 		// 불필요한 부분이라 임시로 테스트를 위해 하드코딩해둠
 		int iTempTag = 99;
 
-		if (iter.second == "Normal")
-		{
-			iTempTag = 0;
-		}
-		else if (iter.second == "Boss")
-		{
-			iTempTag = 1;
-		}
-		else if (iter.second == "Arcade")
-		{
-			iTempTag = 2;
-		}
-		else if (iter.second == "Treasure")
-		{
-			iTempTag = 3;
-		}
-		else if (iter.second == "Devil")
-		{
-			iTempTag = 4;
-		}
-		else if (iter.second == "Challenge")
-		{
-			iTempTag = 2;
-		}
-
+		if (iter.second == "Normal") iTempTag = 0;
+		else if (iter.second == "Boss") iTempTag = 1;
+		else if (iter.second == "Arcade") iTempTag = 2;
+		else if (iter.second == "Treasure") iTempTag = 3;
+		else if (iter.second == "Devil") iTempTag = 4;
+		else if (iter.second == "Challenge") iTempTag = 2;
 
 		switch (iter.first)
 		{
@@ -587,7 +578,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 
 			vTempPos = m_pLeftWall->Get_Transform()->m_vInfo[INFO_POS];
 
-			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + 0.6f, 2.f, vTempPos.z);
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pLeftWall->Get_Transform()->m_vAngle;
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
@@ -596,7 +587,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 
 			vTempPos = m_pRightWall->Get_Transform()->m_vInfo[INFO_POS];
 
-			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + 0.6f, 2.f, vTempPos.z);
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pRightWall->Get_Transform()->m_vAngle;
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
@@ -605,7 +596,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 
 			vTempPos = m_pTopWall->Get_Transform()->m_vInfo[INFO_POS];
 
-			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + 0.6f, 2.f, vTempPos.z);
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pTopWall->Get_Transform()->m_vAngle;
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
@@ -614,7 +605,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 
 			vTempPos = m_pBottomWall->Get_Transform()->m_vInfo[INFO_POS];
 
-			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + 0.6f, 2.f, vTempPos.z);
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pBottomWall->Get_Transform()->m_vAngle;
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
@@ -649,7 +640,6 @@ HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	pGameObject->Set_MyLayer(pLayerTag);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
 
-
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
@@ -666,9 +656,7 @@ HRESULT CLoadStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
 	
-
 	m_mapLayer.insert({ pLayerTag, pLayer });
-
 
 	return S_OK;
 }
@@ -777,6 +765,29 @@ bool CLoadStage::Check_Cube_Arrived()
 		&& m_pTopWall->Get_Arrived() && m_pBottomWall->Get_Arrived()
 		&& m_pFloor->Get_Arrived();
 	
+}
+
+HRESULT CLoadStage::Door_Collision()
+{
+	if (m_mapLayer.at(L"GameDoor"))
+	{
+		if (dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Get_Open()) // 문이 열렸을 경우에만
+		{
+			CGameObject* pObj = m_mapLayer.at(L"GameDoor")->Collision_GameObject(CPlayer::GetInstance());
+
+			if (pObj) // 충돌된 문 존재
+			{
+				// 스테이지 변경
+				Engine::CScene* pScene = nullptr;
+
+				pScene = CLoadStage::Create(m_pGraphicDev, 3);
+				NULL_CHECK_RETURN(pScene, -1);
+
+				FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			}
+		}
+	}
 }
 
 CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType)
