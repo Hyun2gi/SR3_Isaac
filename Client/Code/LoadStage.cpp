@@ -11,6 +11,7 @@
 #include "DynamicCamera.h"
 #include "Floor.h"
 #include "Wall.h"
+#include "SkyBox.h"
 
 //몬스터
 #include "Fly.h"
@@ -58,7 +59,7 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 	
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
-	//FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
+	//	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
 	return S_OK;
 }
@@ -174,7 +175,6 @@ HRESULT CLoadStage::Load_Stage_Data()
 	ifstream fin(strFilePath);
 
 	string strGetLine = "";
-	//코드를 한 줄 읽어온다. (스테이지에 대한 정보는 한줄로 저장하게 만들어뒀기 때문에 가능)
 
 	while (getline(fin, strGetLine))
 	{
@@ -185,8 +185,9 @@ HRESULT CLoadStage::Load_Stage_Data()
 			int pos = strGetLine.find_first_of(',', iIndex);
 
 			// ,를 찾지 못하면 종료
-			if (pos == string::npos) {
-				m_vecConnectRoom.push_back(stoi(strGetLine.substr(iIndex)));
+			if (pos == string::npos)
+			{
+				m_strCurStageTheme = strGetLine.substr(iIndex);
 				break;
 			}
 
@@ -517,6 +518,12 @@ HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"DynamicCamera", pGameObject), E_FAIL);
 		
+	pGameObject = CSkyBox::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
+
+
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
@@ -547,33 +554,56 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
+	wstring wstrProto = L"Proto_";
+	wstring wstrTag, wstrTheme;
+
+	wstrTheme.assign(m_strCurStageTheme.begin(), m_strCurStageTheme.end());
+
+	//바닥 추가
+	wstrTag = wstrProto + wstrTheme + L"FloorCubeTexture";
 	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev);
-	dynamic_cast<CFloor*>(pGameObject)->Set_Cube_Texture_Tag(L"Proto_StageFloorCubeTexture");
+	m_pFloor->Set_Cube_Texture_Tag(wstrTag.c_str());
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Floor", pGameObject), E_FAIL);
 
 
+	//벽 추가
+	// 여기는 벽의 큐브 텍스처의 태그를 만들어서 넘겨주는 부분
+	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
 	pGameObject = m_pLeftWall = CWall::Create(m_pGraphicDev);
-	m_pLeftWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_LEFT);
-	m_pLeftWall->Set_Texture_Tag(L"Proto_StageWall", WALL_LEFT);
+	m_pLeftWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_LEFT);
+
+	// 여기는 벽면 텍스처의 태그를 만들어서 넘겨주는 부분
+	wstrTag = wstrProto + wstrTheme + L"Wall";
+	m_pLeftWall->Set_Texture_Tag(wstrTag.c_str(), WALL_LEFT);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
+	//반복
+	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
 	pGameObject = m_pRightWall = CWall::Create(m_pGraphicDev);
-	m_pRightWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_RIGHT);
-	m_pRightWall->Set_Texture_Tag(L"Proto_StageWall", WALL_RIGHT);
+	m_pRightWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_RIGHT);
+
+	wstrTag = wstrProto + wstrTheme + L"Wall";
+	m_pRightWall->Set_Texture_Tag(wstrTag.c_str(), WALL_RIGHT);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
+	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
 	pGameObject = m_pTopWall = CWall::Create(m_pGraphicDev);
-	m_pTopWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_TOP);
-	m_pTopWall->Set_Texture_Tag(L"Proto_StageWall", WALL_TOP);
+	m_pTopWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_TOP);
+
+	wstrTag = wstrProto + wstrTheme + L"Wall";
+	m_pTopWall->Set_Texture_Tag(wstrTag.c_str(), WALL_TOP);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
+	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
 	pGameObject = m_pBottomWall = CWall::Create(m_pGraphicDev);
-	m_pBottomWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_BOTTOM);
-	m_pBottomWall->Set_Texture_Tag(L"Proto_StageWall", WALL_BOTTOM);
+	m_pBottomWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_BOTTOM);
+
+	wstrTag = wstrProto + wstrTheme + L"Wall";
+	m_pBottomWall->Set_Texture_Tag(wstrTag.c_str(), WALL_BOTTOM);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
@@ -601,13 +631,14 @@ HRESULT CLoadStage::Ready_LightInfo()
 	D3DLIGHT9			tLightInfo;
 	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
 
-	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
+	tLightInfo.Type = D3DLIGHT_POINT;
 
 	tLightInfo.Diffuse   = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Specular  = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Ambient	 = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 
 	tLightInfo.Direction = _vec3(1.f, -1.f, 1.f);
+	tLightInfo.Range = 2.f;
 
 	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
 
