@@ -5,6 +5,7 @@
 #include "Export_Utility.h"
 
 #include "PlayerBullet.h"
+#include "BrimStoneBullet.h"
 
 IMPLEMENT_SINGLETON(CPlayer)
 
@@ -23,7 +24,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pGraphicDev = pGraphicDev;
 
-	m_eCurBulletState = P_BULLET_IDLE;
+	m_eCurBulletState = P_BULLET_BRIMSTONE;
 	m_ePreState = P_END;
 
 	// 딜레이 시간 초기화
@@ -44,15 +45,30 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 
 	// 총알 장전 시간
 	m_fAttackSpeed = 20; 
+	m_bStartScene = true;
 
 	//m_pTransformCom->m_vScale = { 2.f, 1.f, 1.f };
 	m_bMouseYRotataion = true;
+	m_pTransformCom->Set_Pos(VTXCNTX / 2, 0, VTXCNTZ / 2);
 
 	return S_OK;
 }
 
 Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bStartScene)
+	{
+		Engine::CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
+		NULL_CHECK(pTerrainBufferCom);
+
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		_float	fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
+
+		m_pTransformCom->Set_Pos(VTXCNTX / 2, fHeight + 1, VTXCNTZ / 2);
+		m_bStartScene = false;
+	}
+
 	m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
 
 	// P_THUMBS_UP 일때는 처음 스프라이트로 돌아가면 안됨
@@ -92,8 +108,15 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		for (auto& iter = m_PlayerBulletList.begin();
 			iter != m_PlayerBulletList.end(); )
 		{
-			iResult = dynamic_cast<CPlayerBullet*>(*iter)->Update_GameObject(fTimeDelta);
-
+			if (m_eCurBulletState == P_BULLET_IDLE)
+			{
+				iResult = dynamic_cast<CPlayerBullet*>(*iter)->Update_GameObject(fTimeDelta);
+			}
+			else if (m_eCurBulletState == P_BULLET_BRIMSTONE)
+			{
+				iResult = dynamic_cast<CBrimStoneBullet*>(*iter)->Update_GameObject(fTimeDelta);
+			}
+			
 			if (1 == iResult)
 			{
 				//Safe_Delete<CGameObject*>(*iter);
@@ -125,7 +148,14 @@ void CPlayer::LateUpdate_GameObject()
 	{
 		for (auto& iter : m_PlayerBulletList)
 		{
-			dynamic_cast<CPlayerBullet*>(iter)->LateUpdate_GameObject();
+			if (m_eCurBulletState == P_BULLET_IDLE)
+			{
+				dynamic_cast<CPlayerBullet*>(iter)->LateUpdate_GameObject();
+			}
+			else if (m_eCurBulletState == P_BULLET_BRIMSTONE)
+			{
+				dynamic_cast<CBrimStoneBullet*>(iter)->LateUpdate_GameObject();
+			}
 		}
 	}
 
@@ -211,23 +241,64 @@ HRESULT CPlayer::Add_Component()
 //	return pInstance;
 //}
 
+void CPlayer::Set_Player_Pos(_vec3 pos)
+{
+	m_pTransformCom->Set_Pos(pos); 
+}
+
+void CPlayer::Bullet_Change_To_Brim()
+{
+	if (!m_PlayerBulletList.empty())
+	{
+		for (auto& iter = m_PlayerBulletList.begin();
+			iter != m_PlayerBulletList.end(); )
+		{
+			Safe_Release<CGameObject*>(*iter);
+			iter = m_PlayerBulletList.erase(iter);
+		}
+	}
+
+	m_eCurBulletState = P_BULLET_BRIMSTONE;
+}
+
 void CPlayer::Key_Input(const _float& fTimeDelta)
 {
 	// W,A,S,D 움직임
 	_vec3		vDir;
 	m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
 
+	_vec3		vPos;
+	_vec3		vScale;
+
+	vScale = m_pTransformCom->m_vScale;
+
 	if (Engine::Get_DIKeyState(DIK_W) & 0x80)
 	{
 		m_eCurState = P_BACKWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
-		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+		
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		vPos += vDir * (m_fMoveSpeed) * fTimeDelta;
+
+		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+			&& vPos.x > vScale.x && vPos.z > vScale.z)
+		{
+			m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+		}
 	}
 	else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
 	{
 		m_eCurState = P_IDLEWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
-		m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
+
+		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+			&& vPos.x > vScale.x && vPos.z > vScale.z)
+		{
+			m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+		}
 	}
 	else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
 	{
@@ -235,7 +306,16 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		m_eCurState = P_LEFTWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
-		m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
+
+		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+			&& vPos.x > vScale.x && vPos.z > vScale.z)
+		{
+			m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+		}
+		
 	}
 	else if (Engine::Get_DIKeyState(DIK_D) & 0x80)
 	{
@@ -243,12 +323,20 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 		m_eCurState = P_RIGHTWALK;
 		D3DXVec3Normalize(&vDir, &vDir);
-		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		vPos += vDir * (m_fMoveSpeed) * fTimeDelta;
+
+		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+			&& vPos.x > vScale.x && vPos.z > vScale.z)
+		{
+			m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+		}
+		
 	}
 	else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
 	{
 		m_eCurState = P_THUMBS_UP;
-	
 	}
 	else
 	{
@@ -274,12 +362,22 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		if (m_fShootDelayTime == 0)
 		{
 			m_eCurState = P_SHOOTWALK;
-			m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev, m_pLayerTag));
+
+			if (m_eCurBulletState == P_BULLET_IDLE)
+			{
+				m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev, m_pLayerTag));
+			}
+			else if (m_eCurBulletState == P_BULLET_BRIMSTONE)
+			{
+				m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag));
+				dynamic_cast<CBrimStoneBullet*>(m_PlayerBulletList.back())->Set_HeadTexture(true,0);
+				
+				m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag));
+				dynamic_cast<CBrimStoneBullet*>(m_PlayerBulletList.back())->Set_HeadTexture(false, 1);
+			}
 			m_fShootDelayTime++;
 		}
 	}
-
-	
 
 	//마우스 회전으로 플레이어 각도 바꾸기
 	_long	dwMouseMove(0);
@@ -289,7 +387,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(dwMouseMove / 10.f));
 	}
 
-
 	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_Y))
 	{
 		if (m_bMouseYRotataion)
@@ -297,8 +394,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_pTransformCom->Rotation(ROT_X, D3DXToRadian(dwMouseMove / 20.f));
 		}
 	}
-
-	
 }
 
 void CPlayer::Height_OnTerrain()

@@ -633,6 +633,8 @@ CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType)
 		MSG_BOX("Stage Create Failed");
 		return nullptr;
 	}
+
+	CPlayer::GetInstance()->Set_Bool_StartScene(true);
 	
 	return pInstance;
 }

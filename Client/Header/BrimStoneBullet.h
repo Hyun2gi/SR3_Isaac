@@ -31,6 +31,8 @@ public:
 	static CBrimStoneBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag);
 
 public:
+	HRESULT					Set_HeadTexture(bool _head, int _index);
+
 	void					Set_Bullet(int _num)
 	{
 		switch (_num)
@@ -63,6 +65,11 @@ protected:
 	_float					m_fCallLimit;
 	_float					m_fAccTimeDelta;
 
+	_int					m_iBulletIndex;
+
+	_vec3					m_vPicDir;
+	bool					m_bhead; //head 부분인지 아닌지
+	bool					m_bRotate;
 
 private:
 	_vec3		m_vBulletDir;

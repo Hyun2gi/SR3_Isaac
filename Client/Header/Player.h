@@ -70,9 +70,10 @@ public:
 	void		Set_Coin(int _coin) { m_iCoin += _coin; }
 	void		Set_LayerTag(_tchar* pLayerTag) { m_pLayerTag = pLayerTag; }
 	void		Set_Bool_MouseYRotation(bool checkY) { m_bMouseYRotataion = checkY; }
-
+	void		Set_Player_Pos(_vec3 pos);
 
 	float		Get_BulletSpeed() { return m_fBulletSpeed; }
+	void		Set_Bool_StartScene(bool _start) { m_bStartScene = _start; }
 
 public:
 	void		Bullet_Change_To_Brim();
@@ -85,6 +86,9 @@ private:
 	bool			Check_Time(const _float& fTimeDelta);
 
 private:
+	// 씬이 시작할때 한가운데에 스폰하기 위해서 bool 값으로 씬이 시작하는지 확인
+	bool				m_bStartScene;
+
 	//bullet을 위한 layer 저장해놓는 변수
 	_tchar*				m_pLayerTag;
 	Engine::CRcTex*			m_pBufferCom;

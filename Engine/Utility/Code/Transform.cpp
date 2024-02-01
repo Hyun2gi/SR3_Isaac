@@ -117,6 +117,22 @@ const _matrix* Engine::CTransform::Compute_LookAtTarget(const _vec3* pTargetPos)
 						 D3DXVec3Normalize(&vUp, &m_vInfo[INFO_UP]))));
 }
 
+void CTransform::Rotate_Set_Axis(_vec3* axis, const _float angle)
+{
+	_matrix		matScale, matRot, matTrans;
+
+	D3DXMatrixScaling(&matScale, m_vScale.x, m_vScale.y, m_vScale.z);
+	D3DXMatrixTranslation(&matTrans, m_vInfo[INFO_POS].x, m_vInfo[INFO_POS].y, m_vInfo[INFO_POS].z);
+	
+	D3DXQUATERNION qRot;
+
+	D3DXQuaternionRotationMatrix(&qRot, &matRot);
+	D3DXQuaternionRotationAxis(&qRot, axis, angle);
+	D3DXMatrixRotationQuaternion(&matRot, &qRot);
+
+	m_matWorld = matScale * matRot * matTrans;
+}
+
 CTransform * CTransform::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	CTransform *	pInstance = new CTransform(pGraphicDev);
