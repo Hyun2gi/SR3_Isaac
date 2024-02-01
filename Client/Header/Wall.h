@@ -41,6 +41,8 @@ public:
 	HRESULT			Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag, int iAxis);
 	HRESULT			Set_Texture_Tag(const _tchar* pTextureTag, int iAxis);
 
+	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
+
 	bool Get_Arrived();
 
 private:
