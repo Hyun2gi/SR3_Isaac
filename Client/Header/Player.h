@@ -60,6 +60,8 @@ public:
 		return iter->second;
 	}
 
+	bool		Get_Camera_WallBlock_Sub();
+
 	// keyblock이 true면 key 움직임 막힘
 	void		Set_KeyBlock(_bool keyblock) { m_bKeyBlock = keyblock;}
 	void		Set_MoveSpeed(float _movespeed){ m_fMoveSpeed += _movespeed; }
@@ -74,6 +76,11 @@ public:
 
 	float		Get_BulletSpeed() { return m_fBulletSpeed; }
 	void		Set_Bool_StartScene(bool _start) { m_bStartScene = _start; }
+
+	void		Set_MouseRotation(float xRad, float yRad);
+
+	bool		Get_Camera_WallBlock();
+	
 
 public:
 	void		Bullet_Change_To_Brim();
