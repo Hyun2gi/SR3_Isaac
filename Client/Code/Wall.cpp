@@ -31,11 +31,11 @@ HRESULT CWall::Ready_GameObject()
 
 Engine::_int CWall::Update_GameObject(const _float& fTimeDelta)
 {
-	if (!m_bIsDeleted && Get_Arrived())
-	{
-		m_bIsDeleted = true;
-		Free_Cubes();
-	}
+	//if (!m_bIsDeleted && Get_Arrived())
+	//{
+	//	m_bIsDeleted = true;
+	//	Free_Cubes();
+	//}
 
 
 	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
@@ -59,6 +59,8 @@ void CWall::LateUpdate_GameObject()
 
 void CWall::Render_GameObject()
 {	
+	if (!m_bIsDeleted) return;
+
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 	m_pTextureCom->Set_Texture(0);

@@ -11,6 +11,7 @@
 #include "DynamicCamera.h"
 #include "Floor.h"
 #include "Wall.h"
+#include "SkyBox.h"
 
 //¸ó½ºÅÍ
 #include "Fly.h"
@@ -517,6 +518,12 @@ HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"DynamicCamera", pGameObject), E_FAIL);
 		
+	pGameObject = CSkyBox::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
+
+
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
@@ -624,13 +631,14 @@ HRESULT CLoadStage::Ready_LightInfo()
 	D3DLIGHT9			tLightInfo;
 	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
 
-	tLightInfo.Type = D3DLIGHT_DIRECTIONAL;
+	tLightInfo.Type = D3DLIGHT_POINT;
 
 	tLightInfo.Diffuse   = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Specular  = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 	tLightInfo.Ambient	 = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
 
 	tLightInfo.Direction = _vec3(1.f, -1.f, 1.f);
+	tLightInfo.Range = 2.f;
 
 	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
 
