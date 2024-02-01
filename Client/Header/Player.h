@@ -80,7 +80,7 @@ public:
 	void		Set_MouseRotation(float xRad, float yRad);
 
 	bool		Get_Camera_WallBlock();
-	
+	list<CGameObject*>* Get_Player_BullletList() { return &m_PlayerBulletList; }
 
 public:
 	void		Bullet_Change_To_Brim();
