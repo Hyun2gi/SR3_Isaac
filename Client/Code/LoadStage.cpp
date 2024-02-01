@@ -547,33 +547,56 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
+	wstring wstrProto = L"Proto_";
+	wstring wstrTag, wstrTheme;
+
+	wstrTheme.assign(m_strCurStageTheme.begin(), m_strCurStageTheme.end());
+
+	//바닥 추가
+	wstrTag = wstrProto + wstrTheme + L"FloorCubeTexture";
 	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev);
-	dynamic_cast<CFloor*>(pGameObject)->Set_Cube_Texture_Tag(L"Proto_StageFloorCubeTexture");
+	m_pFloor->Set_Cube_Texture_Tag(wstrTag.c_str());
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Floor", pGameObject), E_FAIL);
 
 
+	//벽 추가
+	// 여기는 벽의 큐브 텍스처의 태그를 만들어서 넘겨주는 부분
+	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
 	pGameObject = m_pLeftWall = CWall::Create(m_pGraphicDev);
-	m_pLeftWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_LEFT);
-	m_pLeftWall->Set_Texture_Tag(L"Proto_StageWall", WALL_LEFT);
+	m_pLeftWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_LEFT);
+
+	// 여기는 벽면 텍스처의 태그를 만들어서 넘겨주는 부분
+	wstrTag = wstrProto + wstrTheme + L"Wall";
+	m_pLeftWall->Set_Texture_Tag(wstrTag.c_str(), WALL_LEFT);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
+	//반복
+	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
 	pGameObject = m_pRightWall = CWall::Create(m_pGraphicDev);
-	m_pRightWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_RIGHT);
-	m_pRightWall->Set_Texture_Tag(L"Proto_StageWall", WALL_RIGHT);
+	m_pRightWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_RIGHT);
+
+	wstrTag = wstrProto + wstrTheme + L"Wall";
+	m_pRightWall->Set_Texture_Tag(wstrTag.c_str(), WALL_RIGHT);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
+	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
 	pGameObject = m_pTopWall = CWall::Create(m_pGraphicDev);
-	m_pTopWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_TOP);
-	m_pTopWall->Set_Texture_Tag(L"Proto_StageWall", WALL_TOP);
+	m_pTopWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_TOP);
+
+	wstrTag = wstrProto + wstrTheme + L"Wall";
+	m_pTopWall->Set_Texture_Tag(wstrTag.c_str(), WALL_TOP);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
+	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
 	pGameObject = m_pBottomWall = CWall::Create(m_pGraphicDev);
-	m_pBottomWall->Set_Cube_Texture_Tag(L"Proto_StageWallCubeTexture", WALL_BOTTOM);
-	m_pBottomWall->Set_Texture_Tag(L"Proto_StageWall", WALL_BOTTOM);
+	m_pBottomWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_BOTTOM);
+
+	wstrTag = wstrProto + wstrTheme + L"Wall";
+	m_pBottomWall->Set_Texture_Tag(wstrTag.c_str(), WALL_BOTTOM);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
