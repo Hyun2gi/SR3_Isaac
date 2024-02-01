@@ -188,6 +188,10 @@ void CMomParts::Change_State()
 		m_eCurState = MOM_DOOR;
 }
 
+void CMomParts::Hit()
+{
+}
+
 void CMomParts::Setting_Value()
 {
 	switch (m_iIndex)

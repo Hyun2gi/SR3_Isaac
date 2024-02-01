@@ -31,6 +31,8 @@ HRESULT CAttackFly::Ready_GameObject()
 
 _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 {
+	CGameObject::Update_GameObject(fTimeDelta);
+
 	if (!m_bCreate)
 	{
 		Create_AttackFly();
@@ -49,8 +51,6 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
-
-	CGameObject::Update_GameObject(fTimeDelta);
 
 	return 0;
 }
