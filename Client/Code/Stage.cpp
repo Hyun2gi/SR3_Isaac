@@ -77,6 +77,9 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 	// 충돌처리 함수
 	Run_Collision_Func();
 
+	// 아이템 드랍
+	Drop_ITem();
+
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
 	return __super::Update_Scene(fTimeDelta);
 }
@@ -90,6 +93,25 @@ void CStage::LateUpdate_Scene()
 void CStage::Render_Scene()
 {
 	// DEBUG
+}
+
+void CStage::Drop_ITem()
+{
+	// 똥 / 모닥불 -> 같은 자리에 점프하며 생성
+	// 슬롯머신 -> 점프하며 대각선으로 뱉어냄
+	// 야바위 -> 점프하며 대각선으로 뱉어냄
+	// CGameObject* pObj = m_mapLayer.at(L"GameItem")->Collision_GameObject(CPlayer::GetInstance());
+	//Get_GameObject
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
+	if (dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_Dead())
+	{
+		Engine::CGameObject* pGameObject = nullptr;
+
+		pGameObject = CCoin::Create(m_pGraphicDev);
+		pGameObject->Set_MyLayer(L"GameItem");
+		//pGameObject->Get_Component()
+		m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);
+	}
 }
 
 HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
@@ -285,11 +307,11 @@ HRESULT CStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
-	// Coin
-	pGameObject = CCoin::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Coin", pGameObject), E_FAIL);
+	//// Coin
+	//pGameObject = CCoin::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Coin", pGameObject), E_FAIL);
 
 	// Heart
 	pGameObject = CHeart::Create(m_pGraphicDev);

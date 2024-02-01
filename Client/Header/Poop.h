@@ -11,6 +11,9 @@ private:
 	virtual ~CPoop();
 
 public:
+	_bool			Get_Dead() { return m_bDead; }
+
+public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
 	virtual void	LateUpdate_GameObject()					 override;
@@ -26,6 +29,7 @@ private:
 private:
 	_bool				m_bAni;
 	_bool				m_bReduce;
+	_bool				m_bDead;
 
 public:
 	static CPoop*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

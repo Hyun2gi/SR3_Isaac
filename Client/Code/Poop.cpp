@@ -27,6 +27,7 @@ HRESULT CPoop::Ready_GameObject()
 
 	m_bAni = false;
 	m_bReduce = true;
+	m_bDead = false;
 
 	return S_OK;
 }
@@ -132,6 +133,7 @@ void CPoop::Hit()
 	}
 	else
 	{
+		m_bDead = true;
 	}
 }
 

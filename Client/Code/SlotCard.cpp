@@ -167,17 +167,24 @@ void CSlotCard::Setting_FirstCard()
 
 void CSlotCard::Check_Result()
 {
-	int iResult = rand() % 3;
+	int iResult = rand() % 10;
 
 	switch (iResult)
 	{
 	case 0: // 꽝
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+	case 5:
 		m_fFrame = rand() % 5 + m_iIndex;
 		break;
-	case 1: // 코인
+	case 6: // 코인
+	case 7:
 		m_fFrame = 3.f;
 		break;
-	case 2: // 하트
+	case 8: // 하트
+	case 9:
 		m_fFrame = 6.f;
 		break;
 	default:
