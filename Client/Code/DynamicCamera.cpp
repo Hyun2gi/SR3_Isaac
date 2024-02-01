@@ -31,13 +31,17 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 
 	m_fCameraHeight = 5.f;
 	m_fCameraDistance = 8.f;
+
+	m_fCameraShortHeight = 3.f;
+	m_fCameraShortDistance = 4.f;
+
 	m_pTarget = nullptr;
 	m_ePreState = C_END;
 	m_eCurState = C_PLAYERCHASE;
 
 	m_bShake = false;
 	m_bMove = false;
-
+	m_bCollisionWall = false;
 
 	m_fAngleY = 0;
 
@@ -178,13 +182,57 @@ void CDynamicCamera::Chase_Character()
 			// 카메라 처음 초기화
 			// 플레이어 뒤로 위치하게끔 하고 높이 조절
 			m_vCameraPosDir = -(playerDir);
-			m_vEye = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
+
+			if (m_bCollisionWall)
+			{
+				m_vEye = m_vAt + m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
+			}
+			else
+			{
+				m_vEye = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
+			}
 		}
 		else
 		{
 			// 회전한만큼 길이와 방향이 벡터에 저장되어 있어서
 			// 플레이어에서 해당방향만큼 계산
-			m_vEye = m_vAt + m_vCameraPosDir;
+			_vec3 vPos = m_vAt + m_vCameraPosDir;
+
+			if (m_bCollisionWall == true && !CPlayer::GetInstance()->Get_Camera_WallBlock())
+			{
+				// 카메라가 안정권에 들어오면 다시 멀어지기
+				m_vCameraPosDir = -(playerDir);
+				_vec3	moveCamPos = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
+				// void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
+				OnMoveTargetCamera(0.3f, 10.f, moveCamPos, false);
+				m_bCollisionWall = false;
+				m_bChaseInit = true;
+
+				return;
+			}
+
+
+			if ((m_bCollisionWall == false && CPlayer::GetInstance()->Get_Camera_WallBlock()) &&
+				(vPos.x > VTXCNTX || vPos.z > VTXCNTX|| vPos.x < 0 || vPos.z < 0))
+			{
+				// 처음 벽에 닿았을때 가까이 가도록
+				// 현재 벽에 닿은 상태가 아니고 플레이어가 끝에 닿을때
+				// 또는 카메라가 랜드 밖에 벗어났을때
+				m_vCameraPosDir = -(playerDir);
+				_vec3	moveCamPos = m_vAt + m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
+				// void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
+				OnMoveTargetCamera(0.8f, 8.f, moveCamPos, false);
+
+
+				m_bChaseInit = true;
+				m_bCollisionWall = true;
+
+			}
+			else
+			{
+				m_vEye = m_vAt + m_vCameraPosDir;
+			}
+			
 		}
 	}
 	
@@ -252,7 +300,7 @@ void CDynamicCamera::Mouse_Move()
 		D3DXQuaternionRotationMatrix(&qRot, &matRotY);
 		D3DXVec3Cross(&vCross, &m_vUp, &vLook);
 		
-		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f)  < 50)
+		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f)  < 30)
 		{
 			m_fAngleY -= (dwMouseMoveY / 10.f);
 			D3DXQuaternionRotationAxis(&qRot, &vCross, -D3DXToRadian(dwMouseMoveY / 10.f));
@@ -261,11 +309,13 @@ void CDynamicCamera::Mouse_Move()
 			matTotalRot = matRotX * matRotY;
 
 			CPlayer::GetInstance()->Set_Bool_MouseYRotation(true);
+			CPlayer::GetInstance()->Set_MouseRotation(D3DXToRadian(dwMouseMoveX / 10.f), -D3DXToRadian(dwMouseMoveY / 10.f));
 		}
 		else
 		{
 			CPlayer::GetInstance()->Set_Bool_MouseYRotation(false);
 			matTotalRot = matRotX;
+			CPlayer::GetInstance()->Set_MouseRotation(D3DXToRadian(dwMouseMoveX / 10.f), 0);
 		}
 		
 		D3DXVec3TransformCoord(&vLook, &vLook, &matTotalRot);
@@ -443,10 +493,11 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 			m_eCurState = C_PLAYERCHASE;
 
 			// goalposition에 고정안하고 원래 position으로 돌아가는 경우
-			if (m_bFixedPos == false)
+			if (m_bFixedPos == true)
 			{
 				m_vEye = m_vStartEyePosition;
 			}
+			CPlayer::GetInstance()->Set_KeyBlock(false);
 		}
 
 		m_fMoveTime -= fTimeDelta;
@@ -495,6 +546,8 @@ void CDynamicCamera::OnShakeCameraRot(float shakeTime, float shakeIntensity)
 
 void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
 {
+	CPlayer::GetInstance()->Set_KeyBlock(true);
+
 	m_eCurState = C_MOVE_TO_TARGET;
 
 	m_bFix = true; // 사용자 카메라 움직임 잠금 
@@ -514,6 +567,8 @@ void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 t
 
 void CDynamicCamera::OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
 {
+	CPlayer::GetInstance()->Set_KeyBlock(true);
+
 	m_vAt = atPos;
 
 	m_eCurState = C_MOVE_TO_TARGET;
