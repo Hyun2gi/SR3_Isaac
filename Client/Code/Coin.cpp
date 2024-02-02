@@ -166,7 +166,7 @@ void CCoin::Motion_Change()
 	}
 }
 
-CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot)
 {
 	CCoin* pInstance = new CCoin(pGraphicDev);
 
@@ -176,6 +176,7 @@ CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 		MSG_BOX("COIN Create Failed");
 		return nullptr;
 	}
+	pInstance->Set_Item_SpawnSpot(spawnspot);
 
 	return pInstance;
 }

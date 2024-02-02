@@ -28,7 +28,7 @@ private:
 	_float					m_fPicNum;
 
 public:
-	static CEpic* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CEpic* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot);
 
 private:
 	virtual void		Free()									override;

@@ -102,15 +102,18 @@ void CPill::Run_Item_Effect()
 	case 0:
 		// 최대피
 		CPlayer::GetInstance()->Set_To_MaxHp();
+		CPlayer::GetInstance()->Set_Item_Get_Anim();
 		break;
 	case 1:
 		CPlayer::GetInstance()->Set_Hp(-1);
 		break;
 	case 2:
 		// 무적 상태
+		CPlayer::GetInstance()->Set_Item_Get_Anim();
 		break;
 	case 3:
 		CPlayer::GetInstance()->Set_MoveSpeed(4);
+		CPlayer::GetInstance()->Set_Item_Get_Anim();
 		break;
 	case 4:
 		CPlayer::GetInstance()->Set_MoveSpeed(-2);
@@ -145,7 +148,7 @@ void CPill::Motion_Change()
 {
 }
 
-CPill* CPill::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CPill* CPill::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot)
 {
 	CPill* pInstance = new CPill(pGraphicDev);
 
@@ -155,6 +158,7 @@ CPill* CPill::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 		MSG_BOX("Pill Create Failed");
 		return nullptr;
 	}
+	pInstance->Set_Item_SpawnSpot(spawnspot);
 
 	return pInstance;
 }

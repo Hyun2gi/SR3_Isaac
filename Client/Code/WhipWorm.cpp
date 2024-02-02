@@ -24,6 +24,7 @@ HRESULT CWhipWorm::Ready_GameObject()
 
     m_bDead = false;
     m_fFrame = 0;
+    m_iCoin = 3;
 
     return S_OK;
 }
@@ -72,6 +73,7 @@ void CWhipWorm::Run_Item_Effect()
 {
     m_bDead = true;
     CPlayer::GetInstance()->Set_BulletSpeed(50);
+    CPlayer::GetInstance()->Set_Item_Get_Anim();
 }
 
 HRESULT CWhipWorm::Add_Component()
@@ -100,7 +102,7 @@ void CWhipWorm::Motion_Change()
    
 }
 
-CWhipWorm* CWhipWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CWhipWorm* CWhipWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot)
 {
     CWhipWorm* pInstance = new CWhipWorm(pGraphicDev);
 
@@ -110,6 +112,7 @@ CWhipWorm* CWhipWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev)
         MSG_BOX("WhipWorm Create Failed");
         return nullptr;
     }
+    pInstance->Set_Item_SpawnSpot(spawnspot);
 
     return pInstance;
 }

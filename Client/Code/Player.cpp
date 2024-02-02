@@ -91,7 +91,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		}
 
 		// 2초 동안 따봉
-		if (m_fDelayTime > 3)
+		if (m_fDelayTime > 2)
 		{
 			m_eCurState = P_IDLE;
 			m_fDelayTime = 0; // 딜레이 시간 초기화
@@ -436,9 +436,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			{
 				for (int i = 0; i < 50; i++)
 				{
-					m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag,i));
+					m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag,i, false));
+					m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag, i, true));
 				}
-				
 			}
 			m_fShootDelayTime++;
 		}

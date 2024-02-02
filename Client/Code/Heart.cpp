@@ -24,6 +24,7 @@ HRESULT CHeart::Ready_GameObject()
 
     m_bDead = false;
     m_fFrame = 0;
+    m_iCoin = 3;
 
     return S_OK;
 }
@@ -31,8 +32,44 @@ HRESULT CHeart::Ready_GameObject()
 _int CHeart::Update_GameObject(const _float& fTimeDelta)
 {
     CGameObject::Update_GameObject(fTimeDelta);
-
     m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+
+    Engine::CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
+    NULL_CHECK(pTerrainBufferCom);
+
+    _vec3 vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _float	fHeight = m_pCalculCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
+
+
+    m_pTransformCom->Set_Pos(VTXCNTX / 2, fHeight + 1, VTXCNTZ / 2);
+
+    if (m_eCurItemPlace == SP_SLOT)
+    {
+        // 크게 튀어나옴
+        if (m_iTimer < 40)
+        {
+
+        }
+        else if(m_iTimer == 40)
+        {
+
+        }
+    }
+    else if (m_eCurItemPlace == SP_OBJECT)
+    {
+        // 조금 튀어오름
+        if (m_iTimer < 40)
+        {
+
+        }
+        else if(m_iTimer == 40)
+        {
+
+        }
+    }
+    
 
     if (m_bDead == true)
     {
@@ -70,8 +107,22 @@ void CHeart::Render_GameObject()
 
 void CHeart::Run_Item_Effect()
 {
-    m_bDead = true;
-    CPlayer::GetInstance()->Set_Hp(1);
+    if (m_eCurItemPlace == SP_SHOP)
+    {
+        // 구매해야할 경우
+        if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
+        {
+            CPlayer::GetInstance()->Set_Coin(-m_iCoin);
+            m_bDead = true;
+            CPlayer::GetInstance()->Set_Hp(1);
+        }
+    }
+    else
+    {
+        // 그냥 바로 적용
+        m_bDead = true;
+        CPlayer::GetInstance()->Set_Hp(1);
+    }
 }
 
 HRESULT CHeart::Add_Component()
@@ -99,7 +150,7 @@ void CHeart::Motion_Change()
 {
 }
 
-CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot)
 {
     CHeart* pInstance = new CHeart(pGraphicDev);
 
@@ -109,6 +160,7 @@ CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev)
         MSG_BOX("WhipWorm Create Failed");
         return nullptr;
     }
+    pInstance->Set_Item_SpawnSpot(spawnspot);
 
     return pInstance;
 }

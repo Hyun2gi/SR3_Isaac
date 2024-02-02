@@ -28,7 +28,7 @@ public:
 	virtual void Render_GameObject()						 override;
 
 public:
-	static CBrimStoneBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag, int bulletIndex);
+	static CBrimStoneBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag, int bulletIndex, bool lie);
 
 public:
 	HRESULT					Set_HeadTexture(bool _head, int _index);
@@ -46,6 +46,7 @@ public:
 		}
 	}
 	void				Set_BulletIndex(int index) { m_iBulletIndex = index; }
+	void				Set_BulletLie(bool _lie) { m_bLie = _lie; }
 
 private:
 	virtual HRESULT			Add_Component();
@@ -71,6 +72,7 @@ protected:
 	_vec3					m_vPicDir;
 	bool					m_bhead; //head 부분인지 아닌지
 	bool					m_bRotate;
+	bool					m_bLie;
 
 private:
 	_vec3		m_vBulletDir;

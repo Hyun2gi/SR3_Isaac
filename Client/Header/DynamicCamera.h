@@ -54,7 +54,7 @@ public:
 	void	OnShakeCameraRot(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
 
 	void	OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition, int afterstate);
-	void	OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveSpeed, _vec3 target, bool fixedPosition);
+	void	OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveSpeed, _vec3 target, bool fixedPosition, int afterstate);
 
 	// 따봉할때
 	void	OnMoveToPlayerFront();
@@ -85,9 +85,9 @@ private:
 	// 필요없을 경우 삭제하기
 	// 카메라 흔들림 주기 전에 position
 	_vec3		m_vStartEyePosition;
+	_vec3		m_vOriginAtPosition;
 	_vec3		m_vStartAtPosition;
 	_vec3		m_vGoalPosition;
-	_vec3		m_vOriginAtPosition;
 
 
 	// X,Y,Z 회전각

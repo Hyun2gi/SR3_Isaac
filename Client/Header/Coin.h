@@ -40,7 +40,7 @@ private:
 	_int					m_iDelay;
 
 public:
-	static CCoin* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CCoin* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot);
 
 private:
 	virtual void		Free()									override;

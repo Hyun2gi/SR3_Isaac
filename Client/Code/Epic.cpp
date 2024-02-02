@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Epic.h"
 #include "Export_Utility.h"
+#include "Player.h"
 
 CEpic::CEpic(LPDIRECT3DDEVICE9 pGraphicDev)
     : CItem(pGraphicDev)
@@ -23,6 +24,7 @@ HRESULT CEpic::Ready_GameObject()
 
     m_bDead = false;
     m_fFrame = 0;
+    m_iCoin = 5;
 
     return S_OK;
 }
@@ -70,6 +72,7 @@ void CEpic::Render_GameObject()
 void CEpic::Run_Item_Effect()
 {
     m_bDead = true;
+    CPlayer::GetInstance()->Set_Item_Get_Anim();
 }
 
 HRESULT CEpic::Add_Component()
@@ -97,7 +100,7 @@ void CEpic::Motion_Change()
 {
 }
 
-CEpic* CEpic::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CEpic* CEpic::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot)
 {
     CEpic* pInstance = new CEpic(pGraphicDev);
 
@@ -107,6 +110,7 @@ CEpic* CEpic::Create(LPDIRECT3DDEVICE9 pGraphicDev)
         MSG_BOX("Epic Create Failed");
         return nullptr;
     }
+    pInstance->Set_Item_SpawnSpot(spawnspot);
 
     return pInstance;
 }

@@ -24,6 +24,7 @@ HRESULT CHeartHalf::Ready_GameObject()
 
     m_bDead = false;
     m_fFrame = 0;
+    m_iCoin = 2;
 
     return S_OK;
 }
@@ -70,8 +71,22 @@ void CHeartHalf::Render_GameObject()
 
 void CHeartHalf::Run_Item_Effect()
 {
-    m_bDead = true;
-    CPlayer::GetInstance()->Set_Hp(0.5);
+    if (m_eCurItemPlace == SP_SHOP)
+    {
+        // 구매해야할 경우
+        if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
+        {
+            CPlayer::GetInstance()->Set_Coin(-m_iCoin);
+            m_bDead = true;
+            CPlayer::GetInstance()->Set_Hp(0.5);
+        }
+    }
+    else 
+    {
+        // 그냥 바로 적용
+        m_bDead = true;
+        CPlayer::GetInstance()->Set_Hp(0.5);
+    }
 }
 
 HRESULT CHeartHalf::Add_Component()
@@ -99,7 +114,7 @@ void CHeartHalf::Motion_Change()
 {
 }
 
-CHeartHalf* CHeartHalf::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CHeartHalf* CHeartHalf::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot)
 {
     CHeartHalf* pInstance = new CHeartHalf(pGraphicDev);
 
@@ -109,6 +124,7 @@ CHeartHalf* CHeartHalf::Create(LPDIRECT3DDEVICE9 pGraphicDev)
         MSG_BOX("WhipWorm Create Failed");
         return nullptr;
     }
+    pInstance->Set_Item_SpawnSpot(spawnspot);
 
     return pInstance;
 }
