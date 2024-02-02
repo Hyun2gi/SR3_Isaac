@@ -1,6 +1,6 @@
 #include "..\..\Header\Timer.h"
 
-CTimer::CTimer() : m_fTimeDelta(0.f)
+CTimer::CTimer() : m_fTimeDelta(0.f), m_fDeltaScale(1.f)
 {
 }
 
@@ -29,6 +29,8 @@ void CTimer::Update_TimeDelta(void)
 	}
 
 	m_fTimeDelta = float(m_FrameTime.QuadPart - m_LastTime.QuadPart) / m_CpuTick.QuadPart;
+
+	m_fTimeDelta *= m_fDeltaScale;
 
 	m_LastTime = m_FrameTime;
 

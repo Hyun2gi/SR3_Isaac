@@ -14,6 +14,8 @@ private:
 
 public:
 	_float		Get_TimeDelta(const _tchar* pTimerTag);
+	bool		Set_TimeDeltaScale(const _tchar* pTimerTag, _float fDeltaScale);
+
 	void		Update_TimeDelta(const _tchar* pTimerTag);
 
 public:

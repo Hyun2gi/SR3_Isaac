@@ -124,6 +124,16 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		return 0;
 	}
 
+	//타임 델타 스케일 조절 예시 _ 사용
+	if (Engine::Key_Down(DIK_P))
+	{
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f);
+	}
+	if (Engine::Key_Down(DIK_O))
+	{
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+	}
+
 	return iExit;
 }
 
