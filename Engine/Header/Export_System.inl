@@ -121,6 +121,36 @@ inline void Render_ImGuiMgr()
 	CImGuiMgr::GetInstance()->Render_ImGuiMgr();
 }
 
+inline void PlaySound(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
+{
+	CSoundMgr::GetInstance()->PlaySound(pSoundKey, eID, fVolume);
+}
+
+inline void Ready_Sound()
+{
+	CSoundMgr::GetInstance()->Ready_Sound();
+}
+
+inline void PlayBGM(TCHAR* pSoundKey, _float fVolume)
+{
+	CSoundMgr::GetInstance()->PlayBGM(pSoundKey, fVolume);
+}
+
+inline void StopSound(CHANNEL_ID eID)
+{
+	CSoundMgr::GetInstance()->StopSound(eID);
+}
+
+inline void StopAll()
+{
+	CSoundMgr::GetInstance()->StopAll();
+}
+
+inline void SetChannelVolume(CHANNEL_ID eID, _float fVolume)
+{
+	CSoundMgr::GetInstance()->SetChannelVolume(eID, fVolume);
+}
+
 // Destroy
 void			Release_System()
 {
@@ -129,4 +159,5 @@ void			Release_System()
 	CFrameMgr::GetInstance()->DestroyInstance();
 	CTimerMgr::GetInstance()->DestroyInstance();
 	CGraphicDev::GetInstance()->DestroyInstance();
+	CSoundMgr::GetInstance()->DestroyInstance();
 }
