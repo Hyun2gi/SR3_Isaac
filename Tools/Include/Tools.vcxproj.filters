@@ -73,6 +73,18 @@
     <Filter Include="02. GameObject\08. PlacementObject">
       <UniqueIdentifier>{8c42e1b7-5e41-4456-bd86-3c902f7dfffd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. UI">
+      <UniqueIdentifier>{b0c6127f-f829-4de3-857f-aa908a11d561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. UI\LogoBack">
+      <UniqueIdentifier>{1b724024-0d54-4b64-bc28-489dec45e32f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. UI\MapToolFly">
+      <UniqueIdentifier>{19f6201c-7db5-476e-8a22-a42daceb378c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. UI\StageToolFly">
+      <UniqueIdentifier>{b59197ba-e8ca-41a3-a56f-575d522bb485}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -162,6 +174,15 @@
     <ClInclude Include="..\Header\PlacementObject.h">
       <Filter>02. GameObject\08. PlacementObject</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\LogoBack.h">
+      <Filter>02. GameObject\09. UI\LogoBack</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\MapToolFly.h">
+      <Filter>02. GameObject\09. UI\MapToolFly</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\StageToolFly.h">
+      <Filter>02. GameObject\09. UI\StageToolFly</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -241,6 +262,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\PlacementObject.cpp">
       <Filter>02. GameObject\08. PlacementObject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\LogoBack.cpp">
+      <Filter>02. GameObject\09. UI\LogoBack</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MapToolFly.cpp">
+      <Filter>02. GameObject\09. UI\MapToolFly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StageToolFly.cpp">
+      <Filter>02. GameObject\09. UI\StageToolFly</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

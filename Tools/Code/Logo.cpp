@@ -6,6 +6,9 @@
 
 
 #include "BackGround.h"
+#include "MapToolFly.h"
+#include "StageToolFly.h"
+#include "LogoBack.h"
 #include "StageTool.h"
 #include "MapTool.h"
 
@@ -20,6 +23,8 @@ CLogo::~CLogo()
 
 HRESULT CLogo::Ready_Scene()
 {
+	m_bIsMaptool = true;
+
 	FAILED_CHECK_RETURN(Ready_Prototype(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	
@@ -33,30 +38,36 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 {
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
+	m_pMapToolFly->Set_Selected(m_bIsMaptool);
+	m_pStageToolFly->Set_Selected(!m_bIsMaptool);
+
 	if (true == m_pLoading->Get_Finish())
 	{
 		if (GetAsyncKeyState('1'))
 		{
-			Engine::CScene* pScene = nullptr;
+			m_bIsMaptool = true;
+	
+			//Engine::CScene* pScene = nullptr;
 
-			pScene = CMapTool::Create(m_pGraphicDev);
-			NULL_CHECK_RETURN(pScene, -1);
+			//pScene = CMapTool::Create(m_pGraphicDev);
+			//NULL_CHECK_RETURN(pScene, -1);
 
-			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+			//FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
 
-			return 0;
+			//return 0;
 		}
 
 		if (GetAsyncKeyState('2'))
 		{
-			Engine::CScene*		pScene = nullptr;
+			m_bIsMaptool = false;
+			//Engine::CScene*		pScene = nullptr;
 
-			pScene = CStageTool::Create(m_pGraphicDev);
-			NULL_CHECK_RETURN(pScene, -1);
+			//pScene = CStageTool::Create(m_pGraphicDev);
+			//NULL_CHECK_RETURN(pScene, -1);
 
-			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+			//FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
 
-			return 0;
+			//return 0;
 		}		
 
 	}
@@ -76,9 +87,15 @@ void CLogo::Render_Scene()
 
 HRESULT CLogo::Ready_Prototype()
 {
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Transform", CTransform::Create(m_pGraphicDev)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_RcTex", CRcTex::Create(m_pGraphicDev)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_LogoTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/MapTool/Logo/ToolLogo.png")), E_FAIL);
+
+	//맵 툴 선택하는 파리
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MapToolFly", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/MapTool/MapToolFly/MapToolFly_%d.png", 4)), E_FAIL);
 	
+	//스테이지 툴 선택하는 파리
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_StageToolFly", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/MapTool/StageToolFly/StageToolFly_%d.png", 4)), E_FAIL);
 	
 	return S_OK;
 }
@@ -90,10 +107,21 @@ HRESULT CLogo::Ready_Layer_Environment(const _tchar * pLayerTag)
 
 	Engine::CGameObject*		pGameObject = nullptr;
 
-	pGameObject = CBackGround::Create(m_pGraphicDev);
+	//TODO: 백그라운드 출력 시 플라이들 가려지는 문제 해결해야함, 출력순서를 지정해주는 로직을 작성해야함.
+	 
+	//디바이스, x크기, y크기, x좌표, y좌표, x전체 크기, y전체 크기 (전체크기는 default 잡혀있음)
+	//pGameObject = m_pLogoBack = CLogoBack::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BackGround", pGameObject), E_FAIL);
+
+	pGameObject = m_pMapToolFly = CMapToolFly::Create(m_pGraphicDev, 100.f, 100.f, -120.f, -100.f, 2, 4);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BackGround", pGameObject), E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Proto_MapToolFly", pGameObject), E_FAIL);
 	
+	pGameObject = m_pStageToolFly = CStageToolFly::Create(m_pGraphicDev, 100.f, 100.f, 120.f, -100.f, 2, 4);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Proto_MapToolFly", pGameObject), E_FAIL);
+
 	
 	m_mapLayer.insert({ pLayerTag, pLayer });
 

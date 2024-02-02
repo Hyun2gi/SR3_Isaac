@@ -4,6 +4,10 @@
 
 #include "Loading.h"
 
+class CLogoBack;
+class CMapToolFly;
+class CStageToolFly;
+
 class CLogo : public Engine::CScene
 {
 private:
@@ -25,6 +29,11 @@ private:
 
 private:
 	CLoading*		m_pLoading;
+	CLogoBack*		m_pLogoBack;
+	CMapToolFly*	m_pMapToolFly;
+	CStageToolFly*	m_pStageToolFly;
+
+	bool	m_bIsMaptool;
 
 public:
 	static CLogo*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

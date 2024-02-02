@@ -584,7 +584,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 		{
 		case WALL_LEFT:
 			
-			dynamic_cast<CDoor*>(pGameObject)->Set_Thema(iTempTag);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iTempTag);
 
 			vTempPos = m_pLeftWall->Get_Transform()->m_vInfo[INFO_POS];
 
@@ -593,7 +593,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_RIGHT:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Thema(iTempTag);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iTempTag);
 
 			vTempPos = m_pRightWall->Get_Transform()->m_vInfo[INFO_POS];
 
@@ -602,7 +602,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_TOP:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Thema(iTempTag);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iTempTag);
 
 			vTempPos = m_pTopWall->Get_Transform()->m_vInfo[INFO_POS];
 
@@ -611,7 +611,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_BOTTOM:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Thema(iTempTag);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iTempTag);
 
 			vTempPos = m_pBottomWall->Get_Transform()->m_vInfo[INFO_POS];
 

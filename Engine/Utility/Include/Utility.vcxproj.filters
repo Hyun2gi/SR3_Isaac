@@ -64,6 +64,9 @@
     <Filter Include="08. Light\Manager">
       <UniqueIdentifier>{86841570-8811-4fb3-a973-8bfd6a867dd6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. GameObject\UI">
+      <UniqueIdentifier>{8061918a-84c3-48f7-8453-49bcd0056c7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Header\Management.h">
@@ -129,6 +132,9 @@
     <ClInclude Include="..\..\Header\LightMgr.h">
       <Filter>08. Light\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Header\UI.h">
+      <Filter>03. GameObject\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\Management.cpp">
@@ -190,6 +196,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\LightMgr.cpp">
       <Filter>08. Light\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\UI.cpp">
+      <Filter>03. GameObject\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
