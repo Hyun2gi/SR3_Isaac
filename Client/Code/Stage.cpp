@@ -373,7 +373,7 @@ HRESULT CStage::Ready_Layer_Door(const _tchar* pLayerTag)
 	pGameObject = CDoor::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pGameObject->Set_MyLayer(pLayerTag);
-	dynamic_cast<CDoor*>(pGameObject)->Set_Thema(1);
+	dynamic_cast<CDoor*>(pGameObject)->Set_Theme("Normal");
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
@@ -427,15 +427,16 @@ void CStage::Run_Collision_Func()
 
 void CStage::Door_Collision()
 {
-	if (dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")) != nullptr)
+	if (m_mapLayer.at(L"GameDoor") != nullptr)
 	{
-		if (dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor"))->Get_Open()) // 문이 열렸을 경우에만
+		if (dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Get_Open()) // 문이 열렸을 경우에만
 		{
 			CGameObject* pObj = m_mapLayer.at(L"GameDoor")->Collision_GameObject(CPlayer::GetInstance());
 
 			if (pObj) // 충돌된 문 존재
 			{
 				// 스테이지 변경
+				
 			}
 		}
 	}

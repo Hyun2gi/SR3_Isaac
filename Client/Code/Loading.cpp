@@ -108,7 +108,7 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ShopNpcThumbsTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Shop/ShopNpc_ThumbsUp_%d.png", 2)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ShopNpcDeadTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Shop/ShopNpcDead_%d.png", 2)), E_FAIL);
 
-	// Door (Basement)
+	// Door (Normal)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_NormalDoorCloseTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/BasementDoorClose.png")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_NormalDoorOpenTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/BasementDoorOpen.png")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_NormalDoorOpneingTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/BasementDoorOpeneing_%d.png", 4)), E_FAIL);
@@ -120,18 +120,6 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	// Door (Arcade)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ArcadeDoorCloseTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/ArcadeDoor/ArcadeDoorClose.png")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ArcadeDoorOpenTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/ArcadeDoor/ArcadeDoorOpen.png")), E_FAIL);
-
-	// Door (Challenge)
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ChallengeDoorCloseTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/ChallengeDoor/ChallengeDoorClose.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ChallengeDoorOpenTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/ChallengeDoor/ChallengeDoorOpen.png")), E_FAIL);
-
-	// Door (Devil)
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_DevilDoorCloseTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/DevilDoor/DevilDoorClose.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_DevilDoorOpenTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/DevilDoor/DevilDoorOpen.png")), E_FAIL);
-
-	// Door (Tresure)
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_TreasureDoorCloseTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/TreasureDoor/TreasureDoorClose.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_TreasureDoorOpenTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Door/TreasureDoor/TreasureDoorOpen.png")), E_FAIL);
 
 
 #pragma endregion MapObject
