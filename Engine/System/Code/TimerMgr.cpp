@@ -19,6 +19,14 @@ _float CTimerMgr::Get_TimeDelta(const _tchar * pTimerTag)
 	return pTimer->Get_TimeDelta();
 }
 
+bool CTimerMgr::Set_TimeDeltaScale(const _tchar* pTimerTag, _float fDeltaScale)
+{
+	CTimer* pTimer = Find_Timer(pTimerTag);
+	NULL_CHECK_RETURN(pTimer, 0.f);
+
+	pTimer->Set_TimeDeltaScale(fDeltaScale);
+}
+
 void CTimerMgr::Update_TimeDelta(const _tchar * pTimerTag)
 {
 	CTimer* pTimer = Find_Timer(pTimerTag);

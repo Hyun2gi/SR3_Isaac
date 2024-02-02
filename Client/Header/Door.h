@@ -10,13 +10,14 @@ private:
 	explicit CDoor(const CDoor& rhs);
 	virtual ~CDoor();
 
-	enum DOORTHEMA { THEMA_STAGE, THEMA_BOSS, THEMA_ARCADE, THEMA_GOLD, THEMA_DEVIL, THEMA_END };
+	enum DOORTHEME { THEME_NORMAL, THEME_BOSS, THEME_ARCADE, THEME_GOLD, THEME_DEVIL, THEME_END };
 	enum DOORSTATE { DOOR_OPEN, DOOR_CLOSE, DOOR_OPENING, DOOR_END };
 
 public:
-	void			Set_Thema(int iID);
+	void			Set_Theme(int iID);
+	void			Set_Theme(string strStageKey) { m_strStageKey = strStageKey; }
 	void			Set_Open() { m_bOpen = true; }
-	_bool			Get_Open() { return m_bOpen; } // 필요 없을 수도
+	_bool			Get_Open() { return m_bOpen; } 
 	void			Set_Collision() { m_bCollision = true; }
 	_bool			Get_Collision() { return m_bCollision; }
 
@@ -33,8 +34,9 @@ private:
 private:
 	_bool				m_bOpen;
 	_bool				m_bCollision;
+	string				m_strStageKey;
 
-	DOORTHEMA			m_eThema;
+	DOORTHEME			m_eTheme;
 	
 	DOORSTATE			m_ePreState;
 	DOORSTATE			m_eCurState;

@@ -124,6 +124,16 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		return 0;
 	}
 
+	//타임 델타 스케일 조절 예시 _ 사용
+	if (Engine::Key_Down(DIK_P))
+	{
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f);
+	}
+	if (Engine::Key_Down(DIK_O))
+	{
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+	}
+
 	return iExit;
 }
 
@@ -574,7 +584,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 		{
 		case WALL_LEFT:
 			
-			dynamic_cast<CDoor*>(pGameObject)->Set_Thema(iTempTag);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iTempTag);
 
 			vTempPos = m_pLeftWall->Get_Transform()->m_vInfo[INFO_POS];
 
@@ -583,7 +593,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_RIGHT:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Thema(iTempTag);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iTempTag);
 
 			vTempPos = m_pRightWall->Get_Transform()->m_vInfo[INFO_POS];
 
@@ -592,7 +602,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_TOP:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Thema(iTempTag);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iTempTag);
 
 			vTempPos = m_pTopWall->Get_Transform()->m_vInfo[INFO_POS];
 
@@ -601,7 +611,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_BOTTOM:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Thema(iTempTag);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iTempTag);
 
 			vTempPos = m_pBottomWall->Get_Transform()->m_vInfo[INFO_POS];
 

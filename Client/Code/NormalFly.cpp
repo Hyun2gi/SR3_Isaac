@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "NormalFly.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CNormalFly::CNormalFly(LPDIRECT3DDEVICE9 pGraphicDev, _int iIndex)
@@ -41,12 +42,29 @@ HRESULT CNormalFly::Ready_GameObject()
 
 _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
+	_float fSecondDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	m_fFrame += m_iPicNum * fSecondDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
-	CGameObject::Update_GameObject(fTimeDelta);
+	if (m_bHit)
+	{
+		m_iHp -= 1;
+
+		Hit_PushBack(fSecondDelta);
+
+		m_bHit = false;
+
+		if (0 >= m_iHp)
+		{
+			m_eCurState = FLY_DEAD;
+			//m_bDead = true;
+		}
+	}
+
+	CGameObject::Update_GameObject(fSecondDelta);
 
 	Revolve_Center();
 
@@ -82,6 +100,9 @@ void CNormalFly::Revolve_Center()
 {
 	//m_pTargetTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"CenterFly", L"Proto_Transform"));
 
+	//타임 델타 스케일 조절 예시 _ 적용, TimeDelta 대신 새로 생성한 Timer_Second 값을 사용하면 됨
+	_float fSecondDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
 	_vec3 vPos;
 	m_pTargetTransCom->Get_Info(INFO_POS, &vPos);
 
@@ -89,7 +110,7 @@ void CNormalFly::Revolve_Center()
 		vPos.y,
 		vPos.z - m_fDistance * sin(m_fAngle * (3.14 / 180.f)));
 
-	m_fAngle += 1.f;
+	m_fAngle += 60.f * fSecondDelta;
 
 	m_eCurState = FLY_IDLE;
 }
@@ -144,7 +165,7 @@ void CNormalFly::Motion_Change()
 
 		case CNormalFly::FLY_DEAD:
 			m_iPicNum = 11;
-			m_fFrameSpeed = 1.f;
+			m_fFrameSpeed = 3.f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"AttackFly", L"Proto_FlyDeadTexture"));
 			break;
 		}

@@ -47,6 +47,21 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 
 	Face_Camera();
 
+	if (m_bHit)
+	{
+		m_iHp -= 1;
+
+		Hit_PushBack(fTimeDelta);
+
+		m_bHit = false;
+
+		if (0 >= m_iHp)
+		{
+			m_eCurState = FLY_DEAD;
+			//m_bDead = true;
+		}
+	}
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (Check_Time(fTimeDelta))
@@ -131,7 +146,7 @@ void CFly::Motion_Change()
 
 		case CFly::FLY_DEAD:
 			m_iPicNum = 11;
-			m_fFrameSpeed = 1.f;
+			m_fFrameSpeed = 2.f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Fly", L"Proto_FlyDeadTexture"));
 			break;
 		}

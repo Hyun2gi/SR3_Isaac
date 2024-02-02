@@ -18,6 +18,8 @@
 #include "Pipeline.h"
 #include "Calculator.h"
 
+#include "UI.h"
+
 BEGIN(Engine)
 
 // Management
