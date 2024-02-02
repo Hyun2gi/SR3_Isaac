@@ -13,7 +13,7 @@ private:
 
 public:
 	_float			Get_TimeDelta() { return m_fTimeDelta; }
-	void			Set_DeltaScale(_float fDeltaScale) { m_fDeltaScale = fDeltaScale; }
+	void			Set_TimeDeltaScale(_float fDeltaScale) { m_fDeltaScale = fDeltaScale; }
 
 
 public:

@@ -24,7 +24,7 @@ bool CTimerMgr::Set_TimeDeltaScale(const _tchar* pTimerTag, _float fDeltaScale)
 	CTimer* pTimer = Find_Timer(pTimerTag);
 	NULL_CHECK_RETURN(pTimer, 0.f);
 
-	pTimer->Set_DeltaScale(fDeltaScale);
+	pTimer->Set_TimeDeltaScale(fDeltaScale);
 }
 
 void CTimerMgr::Update_TimeDelta(const _tchar * pTimerTag)
