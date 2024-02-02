@@ -373,7 +373,7 @@ HRESULT CStage::Ready_Layer_Door(const _tchar* pLayerTag)
 	pGameObject = CDoor::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pGameObject->Set_MyLayer(pLayerTag);
-	dynamic_cast<CDoor*>(pGameObject)->Set_Thema(1);
+	dynamic_cast<CDoor*>(pGameObject)->Set_Theme("Normal");
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });

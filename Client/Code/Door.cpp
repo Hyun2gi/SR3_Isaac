@@ -103,19 +103,19 @@ HRESULT CDoor::Add_Component()
 #pragma region Texture
 
 	// STAGE _ OPEN
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BaseDoorOpenTexture"));
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_NormalDoorOpenTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_BaseDoorOpenTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_NormalDoorOpenTexture", pComponent });
 
 	// STAGE _ CLOSE
-	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BaseDoorCloseTexture"));
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_NormalDoorCloseTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_BaseDoorCloseTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_NormalDoorCloseTexture", pComponent });
 
 	// STAGE _ OPENING
-	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BaseDoorOpneingTexture"));
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_NormalDoorOpneingTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_BaseDoorOpneingTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_NormalDoorOpneingTexture", pComponent });
 
 	// BOSS _ OPEN
 	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BossDoorOpenTexture"));
@@ -161,47 +161,21 @@ void CDoor::Motion_Change()
 
 		wstrTheme.assign(m_strStageKey.begin(), m_strStageKey.end());
 		//Proto_BaseDoorOpenTexture
-		wstrTexture = wstrProto + wstrTheme + L"DoorOpenTexture";
 
 		switch (m_eCurState)
 		{
 		case CDoor::DOOR_OPEN:
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.f;
-			
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0],
-				L"Door", ))
-
-			if (THEME_NORMAL == m_eTheme)
-			{
-				m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", L"Proto_BaseDoorOpenTexture"));
-			}
-			else if (THEME_BOSS == m_eTheme)
-			{
-				m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", L"Proto_BossDoorOpenTexture"));
-			}
-			else if (THEME_ARCADE == m_eTheme)
-			{
-				m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", L"Proto_ArcadeDoorOpenTexture"));
-			}
+			wstrTexture = wstrProto + wstrTheme + L"DoorOpenTexture";
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", wstrTexture.c_str()));
 			break;
 
 		case CDoor::DOOR_CLOSE:
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.f;
-
-			if (THEME_NORMAL == m_eTheme)
-			{
-				m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", L"Proto_BaseDoorCloseTexture"));
-			}
-			else if (THEME_BOSS == m_eTheme)
-			{
-				m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", L"Proto_BossDoorCloseTexture"));
-			}
-			else if (THEME_ARCADE == m_eTheme)
-			{
-				m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", L"Proto_ArcadeDoorCloseTexture"));
-			}
+			wstrTexture = wstrProto + wstrTheme + L"DoorCloseTexture";
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", wstrTexture.c_str()));
 			break;
 
 		case CDoor::DOOR_OPENING: // 리소스 작업할 시간이 남는다면 구현
