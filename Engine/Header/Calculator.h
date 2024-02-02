@@ -26,6 +26,7 @@ public:
 	_vec3		Get_Picking_Dir(HWND hWnd, CTransform* pTransform);
 
 	_vec3		Compute_Vill_Angle(CTransform* pSrcTrans, CTransform* pDstTrans);
+	bool		Compute_Vill_Matrix_X(CTransform* pTransformCom);
 	bool		Compute_Vill_Matrix(CTransform* pTransformCom);
 
 public:

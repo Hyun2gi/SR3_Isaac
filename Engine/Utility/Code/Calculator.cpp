@@ -230,6 +230,28 @@ _vec3 CCalculator::Compute_Vill_Angle(CTransform* pSrcTrans, CTransform* pDstTra
 	return vVlaue;
 }
 
+bool CCalculator::Compute_Vill_Matrix_X(CTransform* _pTransformCom)
+{
+	if (!_pTransformCom) return false;
+
+	_matrix	matWorld, matView, matBill;
+
+	_pTransformCom->Get_WorldMatrix(&matWorld);
+	m_pGraphicDev->GetTransform(D3DTS_VIEW, &matView);
+	D3DXMatrixIdentity(&matBill);
+
+	matBill._22 = matView._22;
+	matBill._23 = matView._23;
+	matBill._32 = matView._32;
+	matBill._33 = matView._33;
+
+	D3DXMatrixInverse(&matBill, NULL, &matBill);
+
+	_pTransformCom->Set_WorldMatrix(&(matBill * matWorld));
+
+	return true;
+}
+
 //넘겨준 트랜스폼 객체의 월드행렬을 빌보드형식으로 바꿔준다.
 bool CCalculator::Compute_Vill_Matrix(CTransform* _pTransformCom)
 {
