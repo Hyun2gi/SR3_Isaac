@@ -28,7 +28,7 @@ public:
 	virtual void Render_GameObject()						 override;
 
 public:
-	static CEpicBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag, float xPos, float zPos);
+	static CEpicBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag);
 
 public:
 	HRESULT					Set_HeadTexture(bool _head, int _index);

@@ -103,7 +103,7 @@ void CEpicBullet::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);*/
 }
 
-CEpicBullet* CEpicBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag, float xPos, float zPos)
+CEpicBullet* CEpicBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag)
 {
     CEpicBullet* pInstance = new CEpicBullet(pGraphicDev);
     pInstance->Set_MyLayer(pLayerTag);
@@ -116,7 +116,7 @@ CEpicBullet* CEpicBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pL
     }
 
     // 시작 위치설정
-    pInstance->m_pTransformCom->Set_Pos(_vec3(xPos,11, zPos));
+    //pInstance->m_pTransformCom->Set_Pos(_vec3(xPos,11, zPos));
 
     return pInstance;
 }
