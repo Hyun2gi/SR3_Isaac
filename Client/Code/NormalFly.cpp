@@ -173,9 +173,10 @@ void CNormalFly::Motion_Change()
 	}
 }
 
-CNormalFly* CNormalFly::Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iIndex)
+CNormalFly* CNormalFly::Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iIndex, const _tchar* pLayerTag)
 {
 	CNormalFly* pInstance = new CNormalFly(pGraphicDev, iIndex);
+	pInstance->Set_MyLayer(pLayerTag);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{

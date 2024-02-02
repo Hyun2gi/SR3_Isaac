@@ -24,6 +24,9 @@ private:
 	virtual void		Hit()								override;
 
 private:
+	_bool				m_bGood;
+	_bool				m_bFrameFix;
+
 	NPCSTATE			m_ePreState;
 	NPCSTATE			m_eCurState;
 

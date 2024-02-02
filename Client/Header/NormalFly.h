@@ -47,7 +47,7 @@ private:
 	FLYSTATE			m_eCurState;
 
 public:
-	static CNormalFly* Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iIndex);
+	static CNormalFly* Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iIndex, const _tchar* pLayerTag);
 
 private:
 	virtual void		Free()								override;

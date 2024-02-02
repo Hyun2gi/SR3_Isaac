@@ -6,12 +6,18 @@
 #include "CenterFly.h"
 #include "NormalFly.h"
 
+#include "Layer.h"
+
 class CAttackFly : public CMonster
 {
 private:
 	explicit CAttackFly(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CAttackFly(const CAttackFly& rhs);
 	virtual ~CAttackFly();
+
+public:
+	vector<CNormalFly*>	Get_NormalFlyVec() { return m_NormalFlyList; }
+	void				Set_NormalFly_ToStage(CLayer* pLayer);
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;

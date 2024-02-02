@@ -254,14 +254,16 @@ void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 		}
 		else
 		{
-			vPos.y += 1.f;
+			//vPos.y += 1.f;
+			vPos.y += m_fSpeed * fTimeDelta;
 		}
 	}
 	else if (LEAPER_DOWN == m_eCurState)
 	{
 		if (vPos.y > 1.f)
 		{
-			vPos.y -= 1.f;
+			//vPos.y -= 1.f;
+			vPos.y -= m_fSpeed * fTimeDelta;
 		}
 		else
 		{

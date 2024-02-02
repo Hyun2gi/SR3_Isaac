@@ -354,6 +354,9 @@
     <ClInclude Include="..\Header\Door.h">
       <Filter>02. GameObject\09. MapObject\06. Door</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Shop.h">
+      <Filter>02. GameObject\09. MapObject\04. Shop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -511,6 +514,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Door.cpp">
       <Filter>02. GameObject\09. MapObject\06. Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Shop.cpp">
+      <Filter>02. GameObject\09. MapObject\04. Shop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -172,6 +172,7 @@
     <ClInclude Include="..\Header\Effect.h" />
     <ClInclude Include="..\Header\Epic.h" />
     <ClInclude Include="..\Header\Fire.h" />
+    <ClInclude Include="..\Header\Shop.h" />
     <ClInclude Include="..\Header\ShopNpc.h" />
     <ClInclude Include="..\Header\SlotCard.h" />
     <ClInclude Include="..\Header\Floor.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="..\Code\Effect.cpp" />
     <ClCompile Include="..\Code\Epic.cpp" />
     <ClCompile Include="..\Code\Fire.cpp" />
+    <ClCompile Include="..\Code\Shop.cpp" />
     <ClCompile Include="..\Code\ShopNpc.cpp" />
     <ClCompile Include="..\Code\SlotCard.cpp" />
     <ClCompile Include="..\Code\Floor.cpp" />
