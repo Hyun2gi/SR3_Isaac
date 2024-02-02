@@ -568,17 +568,6 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
 		pGameObject->Set_MyLayer(pLayerTag);
 
-		//string으로 key를 넘겨줄지 보민이랑 상의 후 string을 넘겨주기로 할 경우
-		// 불필요한 부분이라 임시로 테스트를 위해 하드코딩해둠
-		int iTempTag = 99;
-
-		if (iter.second == "Normal") iTempTag = 0;
-		else if (iter.second == "Boss") iTempTag = 1;
-		else if (iter.second == "Arcade") iTempTag = 2;
-		else if (iter.second == "Treasure") iTempTag = 3;
-		else if (iter.second == "Devil") iTempTag = 4;
-		else if (iter.second == "Challenge") iTempTag = 2;
-
 		switch (iter.first)
 		{
 		case WALL_LEFT:
