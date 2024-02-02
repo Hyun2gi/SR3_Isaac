@@ -4,6 +4,11 @@
 #include "GameObject.h"
 
 #include "ShopNpc.h"
+#include "Pill.h"
+#include "Epic.h"
+#include "Heart.h"
+
+#include "Item.h"
 
 class CShop : public CMapObj
 {
@@ -26,6 +31,7 @@ private:
 
 private:
 	CShopNpc*			m_pShopNpc;
+	vector<CItem*>		m_ItemVec;
 
 public:
 	static CShop* Create(LPDIRECT3DDEVICE9 pGraphicDev);

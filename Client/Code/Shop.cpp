@@ -62,7 +62,7 @@ HRESULT CShop::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-#pragma region Texture
+#pragma region NPC Texture
 
 	// IDLE
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ShopNpcTexture"));
@@ -79,7 +79,22 @@ HRESULT CShop::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_ShopNpcDeadTexture", pComponent });
 
-#pragma endregion Texture
+#pragma endregion NPC Texture
+
+	// 필요 없는 거 아닌강
+#pragma region Item Texture
+
+	// Pill
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ItemTexture_Pill"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_ItemTexture_Pill", pComponent });
+
+	// Epic
+
+	// Heart
+
+#pragma endregion Item Texture
+
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -105,9 +120,17 @@ void CShop::Create_NPC()
 		return;
 }
 
-void CShop::Create_Item()
+void CShop::Create_Item() // Item 클래스의 Get_Transform 등등 필요함
 {
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
+	/*for (int i = 0; i < 3; ++i)
+	{
+		CPill* pPill = CPill::Create(m_pGraphicDev);
+		pPill->Set_MyLayer(m_vecMyLayer[0]);
+		pPill->Get_Trans
+	}*/
 }
 
 CShop* CShop::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -128,6 +151,8 @@ void CShop::Free()
 {
 	Safe_Release<CShopNpc*>(m_pShopNpc);
 	m_pShopNpc = nullptr;
+
+	for_each(m_ItemVec.begin(), m_ItemVec.end(), CDeleteObj());
 
 	__super::Free();
 }
