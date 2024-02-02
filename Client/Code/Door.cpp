@@ -17,24 +17,24 @@ CDoor::~CDoor()
 {
 }
 
-void CDoor::Set_Thema(int iID)
+void CDoor::Set_Theme(int iID)
 {
 	switch (iID)
 	{
 	case 0:
-		m_eThema = THEMA_STAGE;
+		m_eTheme = THEME_NORMAL;
 		break;
 	case 1:
-		m_eThema = THEMA_BOSS;
+		m_eTheme = THEME_BOSS;
 		break;
 	case 2:
-		m_eThema = THEMA_ARCADE;
+		m_eTheme = THEME_ARCADE;
 		break;
 	case 3:
-		m_eThema = THEMA_GOLD;
+		m_eTheme = THEME_GOLD;
 		break;
 	case 4:
-		m_eThema = THEMA_DEVIL;
+		m_eTheme = THEME_DEVIL;
 		break;
 	default:
 		break;
@@ -156,21 +156,31 @@ void CDoor::Motion_Change()
 	{
 		m_fFrame = 0.f;
 
+		wstring wstrProto = L"Proto_";
+		wstring wstrTexture, wstrTheme;
+
+		wstrTheme.assign(m_strStageKey.begin(), m_strStageKey.end());
+		//Proto_BaseDoorOpenTexture
+		wstrTexture = wstrProto + wstrTheme + L"DoorOpenTexture";
+
 		switch (m_eCurState)
 		{
 		case CDoor::DOOR_OPEN:
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.f;
+			
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0],
+				L"Door", ))
 
-			if (THEMA_STAGE == m_eThema)
+			if (THEME_NORMAL == m_eTheme)
 			{
 				m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", L"Proto_BaseDoorOpenTexture"));
 			}
-			else if (THEMA_BOSS == m_eThema)
+			else if (THEME_BOSS == m_eTheme)
 			{
 				m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", L"Proto_BossDoorOpenTexture"));
 			}
-			else if (THEMA_ARCADE == m_eThema)
+			else if (THEME_ARCADE == m_eTheme)
 			{
 				m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", L"Proto_ArcadeDoorOpenTexture"));
 			}
@@ -180,15 +190,15 @@ void CDoor::Motion_Change()
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.f;
 
-			if (THEMA_STAGE == m_eThema)
+			if (THEME_NORMAL == m_eTheme)
 			{
 				m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", L"Proto_BaseDoorCloseTexture"));
 			}
-			else if (THEMA_BOSS == m_eThema)
+			else if (THEME_BOSS == m_eTheme)
 			{
 				m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", L"Proto_BossDoorCloseTexture"));
 			}
-			else if (THEMA_ARCADE == m_eThema)
+			else if (THEME_ARCADE == m_eTheme)
 			{
 				m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", L"Proto_ArcadeDoorCloseTexture"));
 			}
