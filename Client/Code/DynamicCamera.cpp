@@ -204,7 +204,7 @@ void CDynamicCamera::Chase_Character()
 				m_vCameraPosDir = -(playerDir);
 				_vec3	moveCamPos = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
 				// void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
-				OnMoveTargetCamera(0.3f, 10.f, moveCamPos, false);
+				OnMoveTargetCamera(0.2f, 10.f, moveCamPos, false);
 				m_bCollisionWall = false;
 				m_bChaseInit = true;
 
@@ -213,7 +213,7 @@ void CDynamicCamera::Chase_Character()
 
 
 			if ((m_bCollisionWall == false && CPlayer::GetInstance()->Get_Camera_WallBlock()) &&
-				(vPos.x > VTXCNTX || vPos.z > VTXCNTX|| vPos.x < 0 || vPos.z < 0))
+				(vPos.x > VTXCNTX+2 || vPos.z > VTXCNTX+2|| vPos.x < -2 || vPos.z < -2))
 			{
 				// 처음 벽에 닿았을때 가까이 가도록
 				// 현재 벽에 닿은 상태가 아니고 플레이어가 끝에 닿을때
@@ -221,7 +221,7 @@ void CDynamicCamera::Chase_Character()
 				m_vCameraPosDir = -(playerDir);
 				_vec3	moveCamPos = m_vAt + m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
 				// void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
-				OnMoveTargetCamera(0.8f, 8.f, moveCamPos, false);
+				OnMoveTargetCamera(0.6f, 8.f, moveCamPos, false);
 
 
 				m_bChaseInit = true;
@@ -300,7 +300,7 @@ void CDynamicCamera::Mouse_Move()
 		D3DXQuaternionRotationMatrix(&qRot, &matRotY);
 		D3DXVec3Cross(&vCross, &m_vUp, &vLook);
 		
-		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f)  < 30)
+		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f)  < 35)
 		{
 			m_fAngleY -= (dwMouseMoveY / 10.f);
 			D3DXQuaternionRotationAxis(&qRot, &vCross, -D3DXToRadian(dwMouseMoveY / 10.f));

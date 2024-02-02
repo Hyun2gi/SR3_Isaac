@@ -263,14 +263,29 @@ void CPlayer::Set_MouseRotation(float xRad, float yRad)
 	m_pTransformCom->Rotation(ROT_Y, xRad);
 }
 
+void CPlayer::Set_BulletType(int _bullet)
+{
+	switch (_bullet)
+	{
+	case 1:
+		m_eCurBulletState = P_BULLET_IDLE;
+		m_fShootDelayTime = 20;
+		break;
+	case 2:
+		m_eCurBulletState = P_BULLET_BRIMSTONE;
+		m_fShootDelayTime = 90;
+		break;
+	}
+}
+
 bool CPlayer::Get_Camera_WallBlock()
 {
 	_vec3	vPos, vScale;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 	vScale = m_pTransformCom->m_vScale;
 
-	if (vPos.x < VTXCNTX - 5 && vPos.z < VTXCNTX - 5
-		&& vPos.x > 5 && vPos.z > 5)
+	if (vPos.x < VTXCNTX - 2.7 && vPos.z < VTXCNTX - 2.7
+		&& vPos.x > 2.7 && vPos.z > 2.7)
 	{
 		return false;
 	}
@@ -403,13 +418,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			}
 			else if (m_eCurBulletState == P_BULLET_BRIMSTONE)
 			{
-				m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag));
-				dynamic_cast<CBrimStoneBullet*>(m_PlayerBulletList.back())->Set_HeadTexture(true,0);
-				
-				for (int i = 1; i < 50; i++)
+				for (int i = 0; i < 50; i++)
 				{
-					m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag));
-					dynamic_cast<CBrimStoneBullet*>(m_PlayerBulletList.back())->Set_HeadTexture(false, i);
+					m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag,i));
 				}
 				
 			}

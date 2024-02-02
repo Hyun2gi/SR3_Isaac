@@ -10,6 +10,9 @@ class CWall;
 class CLoadStage : public Engine::CScene
 {
 private:
+	const float DOOR_X_INTERVAL = 1.f;
+	const float DOOR_Y_INTERVAL = 2.f;
+
 	struct LoadObj
 	{
 		int iType, iIndex;
@@ -44,15 +47,21 @@ private:
 	// 현재 스테이지의 디자인을 불러오는 함수
 	HRESULT Load_Stage_Design_Data();
 
+	// 연결된 문들의 테마를 Load하는 함수
+	HRESULT Load_Connected_Stage_Theme();
+
 private:
 	HRESULT			Ready_Layer_Environment(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_GameLogic(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_RoomObject(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_GameObject(const _tchar* pLayerTag);
+	HRESULT			Ready_Layer_Door(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
 	HRESULT			Ready_LightInfo();
 
-	bool Check_Cube_Arrived();
+	HRESULT			Door_Collision();
+
+	bool			Check_Cube_Arrived();
 
 public:
 	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType);
@@ -86,5 +95,8 @@ private:
 
 	// 현재 스테이지의 연결관계를 Load해 저장하는 벡터
 	vector<int> m_vecConnectRoom;
+
+	// 각 방향에 맞는 문의 테마를 저장하는 맵
+	map<int, string> m_mapDoorTheme;
 };
 

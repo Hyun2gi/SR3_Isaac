@@ -74,8 +74,8 @@ public:
 
 	float		Get_BulletSpeed() { return m_fBulletSpeed; }
 	void		Set_Bool_StartScene(bool _start) { m_bStartScene = _start; }
-
 	void		Set_MouseRotation(float xRad, float yRad);
+	void		Set_BulletType(int _bullet);
 
 	bool		Get_Camera_WallBlock();
 	list<CGameObject*>* Get_Player_BullletList() { return &m_PlayerBulletList; }
