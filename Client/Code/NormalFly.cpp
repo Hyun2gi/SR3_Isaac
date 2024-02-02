@@ -42,9 +42,9 @@ HRESULT CNormalFly::Ready_GameObject()
 
 _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 {
-	_float fSecondDelta = Engine::Get_TimeDelta(L"Timer_Second");
+	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
-	m_fFrame += m_iPicNum * fSecondDelta * m_fFrameSpeed;
+	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
@@ -53,7 +53,7 @@ _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_iHp -= 1;
 
-		Hit_PushBack(fSecondDelta);
+		Hit_PushBack(m_fSlowDelta);
 
 		m_bHit = false;
 
@@ -64,7 +64,7 @@ _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	CGameObject::Update_GameObject(fSecondDelta);
+	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	Revolve_Center();
 

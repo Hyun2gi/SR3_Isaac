@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Squirt.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CSquirt::CSquirt(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -37,7 +38,9 @@ HRESULT CSquirt::Ready_GameObject()
 
 _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
+	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
@@ -48,7 +51,7 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_iHp -= 1;
 
-		Hit_PushBack(fTimeDelta);
+		Hit_PushBack(m_fSlowDelta);
 
 		m_bHit = false;
 
@@ -58,9 +61,9 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	CGameObject::Update_GameObject(fTimeDelta);
+	CGameObject::Update_GameObject(m_fSlowDelta);
 
-	if (Check_Time(fTimeDelta) && !m_bSliding)
+	if (Check_Time(m_fSlowDelta) && !m_bSliding)
 	{
 		Check_TargetPos();
 		m_bSliding = true;
@@ -68,7 +71,7 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bSliding)
 	{
-		Sliding(fTimeDelta);
+		Sliding(m_fSlowDelta);
 		m_eCurState = SQU_SLIDE;
 	}
 	else

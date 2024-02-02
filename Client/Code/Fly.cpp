@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Fly.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CFly::CFly(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
@@ -37,7 +38,9 @@ HRESULT CFly::Ready_GameObject()
 
 _int CFly::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
+	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
@@ -45,13 +48,11 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 	// 추후 사망 처리 추가
 	// m_eState = FLY_DEAD;
 
-	Face_Camera();
-
 	if (m_bHit)
 	{
 		m_iHp -= 1;
 
-		Hit_PushBack(fTimeDelta);
+		Hit_PushBack(m_fSlowDelta);
 
 		m_bHit = false;
 
@@ -62,12 +63,14 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	CGameObject::Update_GameObject(fTimeDelta);
+	Face_Camera();
 
-	if (Check_Time(fTimeDelta))
-		Change_Dir(fTimeDelta);
+	if (Check_Time(m_fSlowDelta))
+		Change_Dir(m_fSlowDelta);
 
-	Move(fTimeDelta);
+	Move(m_fSlowDelta);
+
+	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
