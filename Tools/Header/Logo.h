@@ -11,7 +11,7 @@ class CStageToolFly;
 class CLogo : public Engine::CScene
 {
 private:
-	explicit CLogo(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CLogo(LPDIRECT3DDEVICE9 pGraphicDev, bool isBack);
 	virtual ~CLogo();
 
 public:
@@ -34,9 +34,10 @@ private:
 	CStageToolFly*	m_pStageToolFly;
 
 	bool	m_bIsMaptool;
+	bool	m_bIsBack;
 
 public:
-	static CLogo*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CLogo*		Create(LPDIRECT3DDEVICE9 pGraphicDev, bool isBack = false);
 
 private:
 	virtual void Free() override;
