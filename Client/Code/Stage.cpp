@@ -325,11 +325,11 @@ HRESULT CStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"HeartHalf", pGameObject), E_FAIL);
 
 
-	//// Pill
-	//pGameObject = CPill::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pill", pGameObject), E_FAIL);
+	// Pill
+	pGameObject = CPill::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pill", pGameObject), E_FAIL);
 
 	//// BrimStone
 	//pGameObject = CBrimStone::Create(m_pGraphicDev);
@@ -421,6 +421,7 @@ void CStage::Run_Collision_Func()
 	{
 		//Ãæµ¹µÊ
 		dynamic_cast<CItem*>(pObj)->Run_Item_Effect();
+		CPlayer::GetInstance()->Set_Item_Get_Anim();
 	}
 }
 

@@ -57,6 +57,7 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 	{
 		//m_pTarget = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
 		m_pTarget = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+		CPlayer::GetInstance()->Set_Camera(this);
 	}
 
 	ShakeByPosition(fTimeDelta);
@@ -133,7 +134,7 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 			playerDir *= -3;
 			// 바라보는 대상은 플레이어
 			targetpos = playerPos + playerDir;
-			OnMoveTargetCamera(3,7, targetpos, false);
+			//OnMoveTargetCamera(3,7, targetpos, false);
 		}
 	}
 
@@ -204,7 +205,7 @@ void CDynamicCamera::Chase_Character()
 				m_vCameraPosDir = -(playerDir);
 				_vec3	moveCamPos = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
 				// void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
-				OnMoveTargetCamera(0.2f, 10.f, moveCamPos, false);
+				OnMoveTargetCamera(0.2f, 10.f, moveCamPos, false, 0);
 				m_bCollisionWall = false;
 				m_bChaseInit = true;
 
@@ -221,7 +222,7 @@ void CDynamicCamera::Chase_Character()
 				m_vCameraPosDir = -(playerDir);
 				_vec3	moveCamPos = m_vAt + m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
 				// void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
-				OnMoveTargetCamera(0.6f, 8.f, moveCamPos, false);
+				OnMoveTargetCamera(0.6f, 8.f, moveCamPos, false,0);
 
 
 				m_bChaseInit = true;
@@ -490,7 +491,16 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 		{
 			m_bMove = false;
 			m_bFix = false; //잠금 풀어주기
-			m_eCurState = C_PLAYERCHASE;
+
+			if (m_eAfterState == C_PLAYERCHASE)
+			{
+				m_eCurState = C_PLAYERCHASE;
+			}
+			else if (m_eAfterState == C_MOVE_TO_TARGET)
+			{
+				m_eCurState = C_MOVE_TO_TARGET;
+			}
+			
 
 			// goalposition에 고정안하고 원래 position으로 돌아가는 경우
 			if (m_bFixedPos == true)
@@ -544,7 +554,7 @@ void CDynamicCamera::OnShakeCameraRot(float shakeTime, float shakeIntensity)
 	m_bFix = true; // 사용자 움직임 잠금 
 }
 
-void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
+void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition, int afterstate)
 {
 	CPlayer::GetInstance()->Set_KeyBlock(true);
 
@@ -562,6 +572,25 @@ void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 t
 	{
 		// 다시 돌아가야할 경우 첫 시작점 저장
 		m_vStartEyePosition = m_vEye;
+	}
+
+	switch (afterstate)
+	{
+	case 0 :
+		m_eAfterState = C_PLAYERCHASE;
+		break;
+	case 1:
+		m_eAfterState = C_WHOLELAND;
+		break;
+	case 2:
+		m_eAfterState = C_SHAKING_POS;
+		break;
+	case 3:
+		m_eAfterState = C_SHAKING_ROT;
+		break;
+	case 4:
+		m_eAfterState = C_MOVE_TO_TARGET;
+		break;
 	}
 }
 
@@ -586,6 +615,56 @@ void CDynamicCamera::OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveS
 		// 다시 돌아가야할 경우 첫 시작점 저장
 		m_vStartEyePosition = m_vEye;
 	}
+}
+
+void CDynamicCamera::OnMoveToPlayerFront()
+{
+	CPlayer::GetInstance()->Set_KeyBlock(true);
+	m_bMove = true;
+	m_eCurState = C_MOVE_TO_TARGET;
+	CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3		playerPos;
+	_vec3		playerDir;
+	_vec3		targetpos;
+
+	playerInfo->Get_Info(INFO_POS, &playerPos);
+	playerInfo->Get_Info(INFO_LOOK, &playerDir);
+
+	
+
+	D3DXVec3Normalize(&playerDir, &playerDir);
+	playerDir *= -3;
+	// 바라보는 대상은 플레이어
+	targetpos = playerPos + playerDir;
+	OnMoveTargetCamera(3, 5, targetpos, false, 4);
+}
+
+void CDynamicCamera::OnMoveToOriginPos()
+{
+	CPlayer::GetInstance()->Set_KeyBlock(true);
+	_vec3		playerPos;
+	_vec3		playerDir;
+	_vec3		targetpos;
+
+	m_pTarget->Get_Info(INFO_POS, &playerPos);
+	m_pTarget->Get_Info(INFO_LOOK, &playerDir);
+
+	m_vCameraPosDir = -(playerDir);
+
+	_vec3	moveCamPos;
+
+	if (m_bCollisionWall == false)
+	{
+		moveCamPos = playerPos + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
+	}
+	else
+	{
+		moveCamPos = playerPos + m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
+	}
+	
+	m_bChaseInit = true;
+	OnMoveTargetCamera(2.f, 5.f, moveCamPos, false, 0);
 }
 
 

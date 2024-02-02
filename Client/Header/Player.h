@@ -74,8 +74,12 @@ public:
 
 	float		Get_BulletSpeed() { return m_fBulletSpeed; }
 	void		Set_Bool_StartScene(bool _start) { m_bStartScene = _start; }
+	void		Set_StartPosition(_vec3 _position);
 	void		Set_MouseRotation(float xRad, float yRad);
 	void		Set_BulletType(int _bullet);
+
+	void		Set_Item_Get_Anim();
+	void		Set_Camera(CGameObject* _cam) { m_pCamera = _cam; }
 
 	bool		Get_Camera_WallBlock();
 	list<CGameObject*>* Get_Player_BullletList() { return &m_PlayerBulletList; }
@@ -141,6 +145,7 @@ private:
 
 	bool				m_bMouseYRotataion;
 
+	CGameObject*		m_pCamera;
 public:
 	/*static CPlayer*		Create(LPDIRECT3DDEVICE9	pGraphicDev);*/
 

@@ -53,8 +53,13 @@ public:
 	void	OnShakeCameraPos(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
 	void	OnShakeCameraRot(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
 
-	void	OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition);
+	void	OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition, int afterstate);
 	void	OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveSpeed, _vec3 target, bool fixedPosition);
+
+	// 따봉할때
+	void	OnMoveToPlayerFront();
+	// 따봉 후
+	void	OnMoveToOriginPos();
 
 private:
 	virtual void Free();
@@ -132,6 +137,7 @@ private:
 
 	//필요없을시 삭제
 	DYNAMICCAMERAID		m_ePreState;
+	DYNAMICCAMERAID		m_eAfterState;
 
 };
 

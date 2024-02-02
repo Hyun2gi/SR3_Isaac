@@ -6,6 +6,7 @@
 
 #include "PlayerBullet.h"
 #include "BrimStoneBullet.h"
+#include "DynamicCamera.h"
 
 IMPLEMENT_SINGLETON(CPlayer)
 
@@ -90,12 +91,13 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		}
 
 		// 2초 동안 따봉
-		if (m_fDelayTime > 2)
+		if (m_fDelayTime > 3)
 		{
 			m_eCurState = P_IDLE;
 			m_fDelayTime = 0; // 딜레이 시간 초기화
 			m_fFrame = 0.f;
 			m_bKeyBlock = false; // key 입력 활성화
+			dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToOriginPos();
 		}
 	}
 		
@@ -258,6 +260,12 @@ void CPlayer::Set_Player_Pos(_vec3 pos)
 	m_pTransformCom->Set_Pos(pos); 
 }
 
+void CPlayer::Set_StartPosition(_vec3 _position)
+{
+	m_bStartScene = true;
+	m_pTransformCom->Set_Pos(_position);
+}
+
 void CPlayer::Set_MouseRotation(float xRad, float yRad)
 {
 	m_pTransformCom->Rotation(ROT_Y, xRad);
@@ -276,6 +284,14 @@ void CPlayer::Set_BulletType(int _bullet)
 		m_fShootDelayTime = 90;
 		break;
 	}
+}
+
+void CPlayer::Set_Item_Get_Anim()
+{
+	m_bKeyBlock = true;
+	m_eCurState = P_THUMBS_UP;
+
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToPlayerFront();
 }
 
 bool CPlayer::Get_Camera_WallBlock()
