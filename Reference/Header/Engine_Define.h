@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include <ctime>
 
+#include <io.h>
 #include <iostream>
 #include <fstream>
 
