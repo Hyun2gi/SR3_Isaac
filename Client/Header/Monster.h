@@ -22,6 +22,9 @@ protected:
 	virtual ~CMonster();
 
 public:
+	void		Hit() { m_bHit = true; }
+
+public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
 	virtual void LateUpdate_GameObject()					 override;
@@ -30,12 +33,12 @@ public:
 protected:
 	virtual HRESULT			Add_Component();
 	virtual void			Motion_Change() {};
-	virtual void			Hit() { m_iHp -= 1; }
 	virtual void			Face_Camera() {};
 
 	bool			Check_Time(const _float& fTimeDelta);
 	bool			Check_Time(const _float& fTimeDelta, float fLimit);
 	void			Check_Map_Range();
+	void			Hit_PushBack(const _float& fTimeDelta);
 
 protected:
 	Engine::CRcTex* m_pBufferCom;
@@ -44,6 +47,7 @@ protected:
 	Engine::CTexture* m_pTextureCom;
 	Engine::CCalculator* m_pCalculCom;
 
+	_bool					m_bHit;
 	_bool					m_bDead;
 	_int					m_iHp;
 
@@ -53,6 +57,8 @@ protected:
 	_float					m_fCallLimit;
 	_float					m_fAccTimeDelta;
 	_float					m_fSecAccTimeDelta;
+
+	_vec3					m_vOriginScale;
 
 public:
 	static CMonster*		Create(LPDIRECT3DDEVICE9	pGraphicDev);

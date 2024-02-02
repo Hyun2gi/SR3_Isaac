@@ -82,9 +82,11 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 	// 충돌처리 함수
 	Run_Collision_Func();
 	Door_Collision();
+	Moster_Collision();
 
 	// 아이템 드랍
 	Drop_ITem();
+
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
 	return __super::Update_Scene(fTimeDelta);
@@ -115,7 +117,6 @@ void CStage::Drop_ITem()
 
 		pGameObject = CCoin::Create(m_pGraphicDev);
 		pGameObject->Set_MyLayer(L"GameItem");
-		//pGameObject->Get_Component()
 		m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);
 	}
 }
@@ -219,7 +220,7 @@ HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
-	//// Fly
+ 	//// Fly
 	//for (int i = 0; i < 10; ++i)
 	//{
 	//	pGameObject = CFly::Create(m_pGraphicDev, i * 2);
@@ -243,7 +244,7 @@ HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dip", pGameObject), E_FAIL);
 	//}
 
-	// Pacer
+	//// Pacer
 	//for (int i = 0; i < 6; ++i)
 	//{
 	//	pGameObject = CPacer::Create(m_pGraphicDev, i);
@@ -445,11 +446,24 @@ void CStage::Moster_Collision()
 	// 몬스터 충돌 관련 처리 함수
 
 	// 몬스터 <- 총알
-	/*if (dynamic_cast<CMonster*>(m_mapLayer.at(L"GameMst")) != nullptr)
+	if (m_mapLayer.at(L"GameMst") != nullptr)
 	{
-		CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject()
-	}*/
+		list<CGameObject*>* pBulletList = CPlayer::GetInstance()->Get_Player_BullletList();
 
+		for (list<CGameObject*>::iterator iter = pBulletList->begin();
+			iter != pBulletList->end();)
+		{
+			CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(*iter);
+			// AttackFly 는 고민해볼 것
+			if (pMonster)
+			{
+				dynamic_cast<CMonster*>(pMonster)->Hit();
+				break;
+			}
+			else
+				++iter;
+		}
+	}
 }
 
 CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)

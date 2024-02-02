@@ -52,6 +52,20 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 
 	Face_Camera();
 
+	if (m_bHit)
+	{
+		m_iHp -= 1;
+
+		Hit_PushBack(fTimeDelta);
+
+		m_bHit = false;
+
+		if (0 >= m_iHp)
+		{
+			m_bDead = true;
+		}
+	}
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (Check_Time(fTimeDelta, 5.f))
