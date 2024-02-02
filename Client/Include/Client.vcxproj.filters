@@ -187,6 +187,9 @@
     <Filter Include="02. GameObject\09. MapObject\06. Door">
       <UniqueIdentifier>{b9251cda-bcbe-4b54-a10f-3e91f1a23382}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Bullet\03. EpicBullet">
+      <UniqueIdentifier>{3ff29e70-f5e3-48e7-8d7d-3714f71882b6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -354,6 +357,9 @@
     <ClInclude Include="..\Header\Door.h">
       <Filter>02. GameObject\09. MapObject\06. Door</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\EpicBullet.h">
+      <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -511,6 +517,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Door.cpp">
       <Filter>02. GameObject\09. MapObject\06. Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EpicBullet.cpp">
+      <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

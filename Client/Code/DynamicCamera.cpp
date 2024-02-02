@@ -45,6 +45,8 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 
 	m_fAngleY = 0;
 
+	m_bEpic = false;
+
 	FAILED_CHECK_RETURN(CCamera::Ready_GameObject(), E_FAIL);
 
 	return S_OK;
@@ -70,13 +72,33 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 
 	Key_Input(fTimeDelta);
 
+	if (m_eCurState == C_EPIC)
+	{
+		m_vEye = _vec3(VTXCNTX / 2, 20, VTXCNTZ / 2);
+		CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+		_vec3		playerPos;
+
+		playerInfo->Get_Info(INFO_POS, &playerPos);
+
+		//m_vAt = playerPos;
+	}
+	
+	
 	if (false == m_bFix)
 	{
 		Mouse_Move();
-		Chase_Character();
+		Chase_Character(fTimeDelta);
 		Whole_Land_Show();
 		//마우스 움직임
-		Mouse_Fix();
+
+		if (m_eCurState != C_EPIC)
+		{
+			// EPIC 일때는 마우스 움직일 수 있게하기
+			// EPIC 아닐때는 마우스 움직임 중간으로
+			Mouse_Fix();
+		}
+		
 	}
 
 	return iExit;
@@ -158,7 +180,7 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		return;
 }
 
-void CDynamicCamera::Chase_Character()
+void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 {
 	if (m_eCurState == C_PLAYERCHASE)
 	{
@@ -214,7 +236,7 @@ void CDynamicCamera::Chase_Character()
 
 
 			if ((m_bCollisionWall == false && CPlayer::GetInstance()->Get_Camera_WallBlock()) &&
-				(vPos.x > VTXCNTX+2 || vPos.z > VTXCNTX+2|| vPos.x < -2 || vPos.z < -2))
+				(vPos.x > VTXCNTX + 2 || vPos.z > VTXCNTX + 2 || vPos.x < -2 || vPos.z < -2))
 			{
 				// 처음 벽에 닿았을때 가까이 가도록
 				// 현재 벽에 닿은 상태가 아니고 플레이어가 끝에 닿을때
@@ -222,7 +244,7 @@ void CDynamicCamera::Chase_Character()
 				m_vCameraPosDir = -(playerDir);
 				_vec3	moveCamPos = m_vAt + m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
 				// void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
-				OnMoveTargetCamera(0.6f, 8.f, moveCamPos, false,0);
+				OnMoveTargetCamera(0.6f, 8.f, moveCamPos, false, 0);
 
 
 				m_bChaseInit = true;
@@ -233,10 +255,10 @@ void CDynamicCamera::Chase_Character()
 			{
 				m_vEye = m_vAt + m_vCameraPosDir;
 			}
-			
+
 		}
 	}
-	
+
 
 }
 
@@ -244,7 +266,7 @@ void CDynamicCamera::Whole_Land_Show()
 {
 	if (m_eCurState == C_WHOLELAND)
 	{
-		m_vEye = _vec3(0,50.f,0);
+		m_vEye = _vec3(0, 50.f, 0);
 	}
 }
 
@@ -300,8 +322,8 @@ void CDynamicCamera::Mouse_Move()
 
 		D3DXQuaternionRotationMatrix(&qRot, &matRotY);
 		D3DXVec3Cross(&vCross, &m_vUp, &vLook);
-		
-		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f)  < 35)
+
+		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f) < 35)
 		{
 			m_fAngleY -= (dwMouseMoveY / 10.f);
 			D3DXQuaternionRotationAxis(&qRot, &vCross, -D3DXToRadian(dwMouseMoveY / 10.f));
@@ -318,7 +340,7 @@ void CDynamicCamera::Mouse_Move()
 			matTotalRot = matRotX;
 			CPlayer::GetInstance()->Set_MouseRotation(D3DXToRadian(dwMouseMoveX / 10.f), 0);
 		}
-		
+
 		D3DXVec3TransformCoord(&vLook, &vLook, &matTotalRot);
 		m_vCameraPosDir = vLook;
 	}
@@ -331,10 +353,10 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 	if (m_eCurState == C_SHAKING_POS)
 	{
 		//잠깐 맞았을때 살짝 흔들리는거
-		
+
 		if (m_fShakeTime > 0.0f)
 		{
-			
+
 			if (m_vGoalPosition == m_vEye)
 			{
 				float FLOAT_MAX = 1;
@@ -364,7 +386,7 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 
 				_vec3 moveDir;
 				D3DXVec3Cross(&moveDir, &(_vec3(0, 1, 0)), &templook);
-				
+
 				//테스트추가
 				//moveDir = _vec3(moveDir.x, 0, moveDir.z);
 				// x축으로 직선일때는 양옆으로
@@ -373,14 +395,14 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 
 				D3DXVec3Normalize(&moveDir, &moveDir);
 
-				
+
 
 				if (m_iShakeNum % 2 == 0)
 				{
 					moveDir *= -1;
 				}
 				m_iShakeNum++;
-				
+
 				// 목표위치
 				// moveDir과 곱해주는 값은 작아야함!!
 				//m_vGoalPosition = m_vStartEyePosition + moveDir*0.2;
@@ -390,11 +412,11 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 			{
 				D3DXVECTOR3 _movevec;
 				// fTimeDelta에 50 곱하면 느림..
-				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta*60);
+				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 60);
 
 				m_vEye = _movevec;
 			}
-			
+
 			m_fShakeTime -= fTimeDelta;
 		}
 		else
@@ -425,20 +447,20 @@ void CDynamicCamera::ShakeByRotation(const _float& fTimeDelta)
 			srand((unsigned)time(NULL));
 
 			//랜덤각도 움직이고 싶을때
-	
+
 			float randx = (float)(rand() % 30);
 			//float randy = (float)(rand() % 30);
 			float randz = (float)(rand() % 30);
 
 			// 같은 회전으로 움직일때 사용
 			float randy = 5;
-			
+
 			if (m_iShakeNum % 2 == 1)
 			{
 
 				randy *= -1;
 
-			}			
+			}
 			D3DXQUATERNION qRot;
 
 			_matrix		matRotX, matRotY, matRotZ, matTotalRot;
@@ -505,6 +527,17 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 			m_bMove = false;
 			m_bFix = false; //잠금 풀어주기
 
+
+			// 에픽에투스일때 위로 고정
+			if (m_bEpic == true)
+			{
+				m_eCurState = C_EPIC;
+				m_vEye = _vec3(VTXCNTX / 2, 50, VTXCNTZ / 2);
+				m_vAt = playerPos + playerDir * 2;
+				CPlayer::GetInstance()->Set_KeyBlock(false);
+				return;
+			}
+
 			if (m_eAfterState == C_PLAYERCHASE)
 			{
 				m_eCurState = C_PLAYERCHASE;
@@ -516,7 +549,7 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 				m_eCurState = C_MOVE_TO_TARGET;
 				m_bFix = true;
 			}
-			
+
 
 			// goalposition에 고정안하고 원래 position으로 돌아가는 경우
 			if (m_bFixedPos == true)
@@ -592,7 +625,7 @@ void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 t
 
 	switch (afterstate)
 	{
-	case 0 :
+	case 0:
 		m_eAfterState = C_PLAYERCHASE;
 		break;
 	case 1:
@@ -669,7 +702,7 @@ void CDynamicCamera::OnMoveToPlayerFront()
 	playerInfo->Get_Info(INFO_LOOK, &playerDir);
 
 	m_vOriginAtPosition = m_vAt;
-	
+
 	m_bFix = true;
 	D3DXVec3Normalize(&playerDir, &playerDir);
 	playerDir *= -3;
@@ -715,6 +748,57 @@ void CDynamicCamera::OnMoveToOriginPos()
 
 	m_eCurState = C_MOVE_TO_TARGET;
 	m_vCameraPosDir = m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
+
+	OnMoveTargetCamera(1.f, 7.f, moveCamPos, false, 0);
+}
+
+void CDynamicCamera::Set_EpicBullet()
+{
+	m_bEpic = true;
+	_vec3 target = _vec3(VTXCNTX / 2, 20, VTXCNTZ / 2);
+	OnMoveTargetCamera(1.f, 7.f, target, false, 0);
+}
+
+void CDynamicCamera::Set_Shoot_End_Epic()
+{
+	// 에픽에투스 완료
+	m_bEpic = false;
+	m_eAfterState = C_PLAYERCHASE;
+	m_bChaseInit = true;
+	m_eCurState = C_MOVE_TO_TARGET;
+
+	CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3		playerPos;
+	_vec3		playerDir;
+	_vec3		cameraDir;
+	_vec3		cameraPos;
+
+
+	playerInfo->Get_Info(INFO_POS, &playerPos);
+	playerInfo->Get_Info(INFO_LOOK, &playerDir);
+
+	D3DXVec3Normalize(&playerDir, &playerDir);
+
+	// 바라보는 대상은 플레이어
+	m_vAt = playerPos + playerDir * 2;
+
+	m_bFix = true;
+
+	CPlayer::GetInstance()->Set_KeyBlock(true);
+
+	m_vCameraPosDir = -(playerDir);
+
+	_vec3	moveCamPos;
+
+	if (m_bCollisionWall == false)
+	{
+		moveCamPos = playerPos + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
+	}
+	else
+	{
+		moveCamPos = playerPos + m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
+	}
 
 	OnMoveTargetCamera(1.f, 7.f, moveCamPos, false, 0);
 }

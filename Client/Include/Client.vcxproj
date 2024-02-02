@@ -171,6 +171,7 @@
     <ClInclude Include="..\Header\DynamicCamera.h" />
     <ClInclude Include="..\Header\Effect.h" />
     <ClInclude Include="..\Header\Epic.h" />
+    <ClInclude Include="..\Header\EpicBullet.h" />
     <ClInclude Include="..\Header\Fire.h" />
     <ClInclude Include="..\Header\ShopNpc.h" />
     <ClInclude Include="..\Header\SlotCard.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="..\Code\DynamicCamera.cpp" />
     <ClCompile Include="..\Code\Effect.cpp" />
     <ClCompile Include="..\Code\Epic.cpp" />
+    <ClCompile Include="..\Code\EpicBullet.cpp" />
     <ClCompile Include="..\Code\Fire.cpp" />
     <ClCompile Include="..\Code\ShopNpc.cpp" />
     <ClCompile Include="..\Code\SlotCard.cpp" />

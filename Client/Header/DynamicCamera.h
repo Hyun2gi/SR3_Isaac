@@ -19,6 +19,7 @@ private:
 		C_SHAKING_POS, // Position 변화로 흔들림
 		C_SHAKING_ROT, // Rotatation 변화로 흔들림
 		C_MOVE_TO_TARGET,
+		C_EPIC,
 		C_END
 	};
 
@@ -61,10 +62,14 @@ public:
 	// 따봉 후
 	void	OnMoveToOriginPos();
 
+	// 에픽에투스 설정
+	void				Set_EpicBullet();
+	void				Set_Shoot_End_Epic(); 
+
 private:
 	virtual void Free();
 	void		Key_Input(const _float& fTimeDelta);
-	void		Chase_Character();
+	void		Chase_Character(const _float& fTimeDelta);
 	void		Whole_Land_Show();
 	void		Mouse_Fix();
 	void		Mouse_Move();
@@ -108,6 +113,7 @@ private:
 
 	_bool		m_bShake;
 	_bool		m_bMove;
+	_bool		m_bFirstPerson;
 
 
 	// 이동 후에 goalposition에서 fixed 할건지 아니면 시작 position으로 갈건지
@@ -118,7 +124,7 @@ private:
 	//플레이어에서 해당방향 더해주기
 	_vec3		m_vCameraPosDir;
 
-
+	_bool		m_bEpic;
 
 	// 눈과 바로보는 지점의 거리
 	// 바로보는 지점으로부터 눈까지 가는 방향벡터

@@ -7,6 +7,7 @@
 #include "PlayerBullet.h"
 #include "BrimStoneBullet.h"
 #include "DynamicCamera.h"
+#include "EpicBullet.h"
 
 IMPLEMENT_SINGLETON(CPlayer)
 
@@ -25,7 +26,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pGraphicDev = pGraphicDev;
 
-	m_eCurBulletState = P_BULLET_IDLE; // P_BULLET_BRIMSTONE
+	m_eCurBulletState = P_BULLET_EPIC; // P_BULLET_BRIMSTONE
 	m_ePreState = P_END;
 
 	// 딜레이 시간 초기화
@@ -80,6 +81,9 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_fFrame = 0.f;	
 	}
+
+	
+
 
 	if (m_eCurState == P_THUMBS_UP)
 	{
@@ -311,6 +315,23 @@ bool CPlayer::Get_Camera_WallBlock()
 	}
 }
 
+bool CPlayer::Get_SafeCamer_Area()
+{
+	_vec3	vPos, vScale;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	vScale = m_pTransformCom->m_vScale;
+
+	if (vPos.x < VTXCNTX - 4 && vPos.z < VTXCNTX - 4
+		&& vPos.x > 4 && vPos.z > 4)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void CPlayer::Bullet_Change_To_Brim()
 {
 	if (!m_PlayerBulletList.empty())
@@ -422,27 +443,46 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	// 총알 발사
 	if (Engine::Get_DIMouseState(DIM_LB) & 0x80)
 	{
-		m_eCurState = P_SHOOTWALK;
-		// m_fShootDelay가 0일때만 쏠 수 있음
-		if (m_fShootDelayTime == 0)
+		if (m_eCurBulletState == P_BULLET_IDLE || m_eCurBulletState == P_BULLET_BRIMSTONE)
 		{
 			m_eCurState = P_SHOOTWALK;
+			// m_fShootDelay가 0일때만 쏠 수 있음
+			if (m_fShootDelayTime == 0)
+			{
+				m_eCurState = P_SHOOTWALK;
 
-			if (m_eCurBulletState == P_BULLET_IDLE)
-			{
-				m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev, m_pLayerTag));
-			}
-			else if (m_eCurBulletState == P_BULLET_BRIMSTONE)
-			{
-				for (int i = 0; i < 50; i++)
+				if (m_eCurBulletState == P_BULLET_IDLE)
 				{
-					m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag,i, false));
-					m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag, i, true));
+					m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev, m_pLayerTag));
 				}
+				else if (m_eCurBulletState == P_BULLET_BRIMSTONE)
+				{
+					for (int i = 0; i < 50; i++)
+					{
+						m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag, i, false));
+						m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag, i, true));
+					}
+				}
+				m_fShootDelayTime++;
 			}
-			m_fShootDelayTime++;
 		}
+		else if (m_eCurBulletState == P_BULLET_EPIC)
+		{
+			// 다시 플레이어 추적으로 변경
+			// 해당 위치로 이동하기
+			m_PlayerBulletList.push_back(CEpicBullet::Create(m_pGraphicDev, m_pLayerTag));
+			dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_Shoot_End_Epic();
+		}
+		
 	}
+
+	if ((Engine::Get_DIMouseState(DIM_RB) & 0x80) && m_eCurBulletState == P_BULLET_EPIC && m_eCurState!= P_SHOOTWALK)
+	{
+		// 카메라를 위로 이동 
+		m_eCurState = P_SHOOTWALK;
+		dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_EpicBullet();
+	}
+
 
 	if (m_eCurBulletState == P_BULLET_BRIMSTONE && !m_PlayerBulletList.empty())
 	{

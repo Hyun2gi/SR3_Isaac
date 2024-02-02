@@ -200,6 +200,12 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	//pickup_heart_half
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_HeartHalf", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/pickup_heart_half.png", 1)), E_FAIL);
 
+	// EPIC ÃÑ¾Ë
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_EpicBullet", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/EpicBullet.png", 1)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_EpicEff", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/EpicEff_%d.png", 11)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_EpicSpace", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/EpicSpace_%d.png", 8)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_EpicTarget", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/EpicTarget.png", 1)), E_FAIL);
+
 	m_bFinish = true;
 
 	lstrcpy(m_szLoading, L"Loading Complete");
