@@ -1,5 +1,7 @@
 #include "..\..\Header\Renderer.h"
 
+#include "Export_Utility.h"
+
 IMPLEMENT_SINGLETON(CRenderer)
 
 CRenderer::CRenderer()
@@ -106,10 +108,19 @@ void CRenderer::Render_Alpha_Sorting(LPDIRECT3DDEVICE9& pGraphicDev)
 	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 
-void CRenderer::Render_UI(LPDIRECT3DDEVICE9 & pGraphicDev)
+void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 {
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+
+	m_RenderGroup[RENDER_UI].sort([](auto& iter, auto& iter2)
+		{ 
+			return dynamic_cast<CUI*>(iter)->Get_RenderIndex() > dynamic_cast<CUI*>(iter2)->Get_RenderIndex();
+		});
+
 	for (auto& iter : m_RenderGroup[RENDER_UI])
 		iter->Render_GameObject();
+
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 
 void CRenderer::Free()
