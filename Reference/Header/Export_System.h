@@ -20,6 +20,7 @@ inline void			Render_End(void);
 // TimerMgr
 
 inline _float		Get_TimeDelta(const _tchar* pTimerTag);
+inline bool			Set_TimeDeltaScale(const _tchar* pTimerTag, _float fDeltaScale);
 inline void		Update_TimeDelta(const _tchar* pTimerTag);
 inline HRESULT		Ready_Timer(const _tchar* pTimerTag);
 

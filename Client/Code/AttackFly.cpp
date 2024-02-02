@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AttackFly.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CAttackFly::CAttackFly(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -31,7 +32,9 @@ HRESULT CAttackFly::Ready_GameObject()
 
 _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 {
-	CGameObject::Update_GameObject(fTimeDelta);
+	_float fSecondDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	CGameObject::Update_GameObject(fSecondDelta);
 
 	if (!m_bCreate)
 	{
@@ -40,13 +43,13 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	if (m_CenterFly != nullptr)
-		m_CenterFly->Update_GameObject(fTimeDelta);
+		m_CenterFly->Update_GameObject(fSecondDelta);
 
 	if (!m_NormalFlyList.empty())
 	{
 		for (auto& iter : m_NormalFlyList)
 		{
-			iter->Update_GameObject(fTimeDelta);
+			iter->Update_GameObject(fSecondDelta);
 		}
 	}
 

@@ -50,6 +50,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
 	FAILED_CHECK_RETURN(Engine::Ready_Timer(L"Timer_Immediate"), FALSE);
 	FAILED_CHECK_RETURN(Engine::Ready_Timer(L"Timer_FPS60"), FALSE);
+	FAILED_CHECK_RETURN(Engine::Ready_Timer(L"Timer_Second"), FALSE);
 
 	FAILED_CHECK_RETURN(Engine::Ready_Frame(L"Frame60", 60.f), FALSE);
 
@@ -82,6 +83,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 			if (Engine::IsPermit_Call(L"Frame60", fTimer_Immediate))
 			{
 				Engine::Update_TimeDelta(L"Timer_FPS60");
+				Engine::Update_TimeDelta(L"Timer_Second");
 				float fTimer_FPS60 = Engine::Get_TimeDelta(L"Timer_FPS60");
 
 				pMainApp->Update_MainApp(fTimer_FPS60);

@@ -18,6 +18,10 @@ _float		Get_TimeDelta(const _tchar* pTimerTag)
 {
 	return CTimerMgr::GetInstance()->Get_TimeDelta(pTimerTag);
 }
+bool		Set_TimeDeltaScale(const _tchar* pTimerTag, _float fDeltaScale)
+{
+	return CTimerMgr::GetInstance()->Set_TimeDeltaScale(pTimerTag, fDeltaScale);
+}
 void		Update_TimeDelta(const _tchar* pTimerTag)
 {
 	CTimerMgr::GetInstance()->Update_TimeDelta(pTimerTag);
