@@ -55,9 +55,7 @@ Engine::_int CMapToolFly::Update_GameObject(const _float& fTimeDelta)
 	}
 	
 
-	Engine::Add_RenderGroup(RENDER_PRIORITY, this);
-
-	CGameObject::Update_GameObject(fTimeDelta);
+	CUI::Update_GameObject(fTimeDelta);
 
 	return 0;
 }

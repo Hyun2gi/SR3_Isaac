@@ -16,6 +16,9 @@ public:
 
 	void	Compute_ProjectionMatrix();
 
+	_int	Get_RenderIndex() { return m_iRenderIndex; }
+	void	Set_RenderIndex(_int iRenderIndex) { m_iRenderIndex = iRenderIndex; }
+
 	void	Set_Size(_float x, _float y) 
 	{
 		m_fSizeX = x * 0.5f;
@@ -42,6 +45,9 @@ protected:
 	_float			m_fSizeX, m_fSizeY;
 	_float			m_fPosX, m_fPosY;
 	_matrix			m_matView, m_matProj;
+
+	//임의의 큰 값
+	_int m_iRenderIndex = 99;
 
 protected:
 	virtual void	Free();

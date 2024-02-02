@@ -53,11 +53,8 @@ Engine::_int CStageToolFly::Update_GameObject(const _float& fTimeDelta)
 		m_iStartFrame = 0;
 		m_iEndFrame = m_iAnimFrameCount;
 	}
-	
 
-	Engine::Add_RenderGroup(RENDER_PRIORITY, this);
-
-	CGameObject::Update_GameObject(fTimeDelta);
+	CUI::Update_GameObject(fTimeDelta);
 
 	return 0;
 }

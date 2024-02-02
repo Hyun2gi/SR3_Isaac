@@ -44,31 +44,36 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 	if (true == m_pLoading->Get_Finish())
 	{
 		if (GetAsyncKeyState('1'))
-		{
 			m_bIsMaptool = true;
-	
-			//Engine::CScene* pScene = nullptr;
-
-			//pScene = CMapTool::Create(m_pGraphicDev);
-			//NULL_CHECK_RETURN(pScene, -1);
-
-			//FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
-
-			//return 0;
-		}
 
 		if (GetAsyncKeyState('2'))
-		{
 			m_bIsMaptool = false;
-			//Engine::CScene*		pScene = nullptr;
 
-			//pScene = CStageTool::Create(m_pGraphicDev);
-			//NULL_CHECK_RETURN(pScene, -1);
+		if (GetAsyncKeyState(VK_RETURN))
+		{
+			if (m_bIsMaptool)
+			{
+				Engine::CScene* pScene = nullptr;
 
-			//FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+				pScene = CMapTool::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pScene, -1);
 
-			//return 0;
-		}		
+				FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+				return 0;
+			}
+			else
+			{
+				Engine::CScene*		pScene = nullptr;
+
+				pScene = CStageTool::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pScene, -1);
+
+				FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+				return 0;
+			}
+		}
 
 	}
 
@@ -110,17 +115,19 @@ HRESULT CLogo::Ready_Layer_Environment(const _tchar * pLayerTag)
 	//TODO: 백그라운드 출력 시 플라이들 가려지는 문제 해결해야함, 출력순서를 지정해주는 로직을 작성해야함.
 	 
 	//디바이스, x크기, y크기, x좌표, y좌표, x전체 크기, y전체 크기 (전체크기는 default 잡혀있음)
-	//pGameObject = m_pLogoBack = CLogoBack::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BackGround", pGameObject), E_FAIL);
+	pGameObject = m_pLogoBack = CLogoBack::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BackGround", pGameObject), E_FAIL);
 
 	pGameObject = m_pMapToolFly = CMapToolFly::Create(m_pGraphicDev, 100.f, 100.f, -120.f, -100.f, 2, 4);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	m_pMapToolFly->Set_RenderIndex(1);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Proto_MapToolFly", pGameObject), E_FAIL);
 	
 	pGameObject = m_pStageToolFly = CStageToolFly::Create(m_pGraphicDev, 100.f, 100.f, 120.f, -100.f, 2, 4);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Proto_MapToolFly", pGameObject), E_FAIL);
+	m_pStageToolFly->Set_RenderIndex(2);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Proto_StageToolFly", pGameObject), E_FAIL);
 
 	
 	m_mapLayer.insert({ pLayerTag, pLayer });

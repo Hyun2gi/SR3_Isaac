@@ -1,5 +1,7 @@
 #include "UI.h"
 
+#include "Export_Utility.h"
+
 CUI::CUI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 {
@@ -25,6 +27,8 @@ HRESULT Engine::CUI::Ready_GameObject()
 
 Engine::_int Engine::CUI::Update_GameObject(const _float& fTimeDelta)
 {
+	Engine::Add_RenderGroup(RENDER_UI, this);
+
 	return CGameObject::Update_GameObject(fTimeDelta);
 }
 
