@@ -28,7 +28,7 @@ private:
 	_float					m_fPicNum;
 
 public:
-	static CHeart* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot);
+	static CHeart* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos);
 
 private:
 	virtual void		Free()									override;

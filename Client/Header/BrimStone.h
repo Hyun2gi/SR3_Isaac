@@ -27,7 +27,7 @@ private:
 	_float					m_fPicNum;
 
 public:
-	static CBrimStone* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot);
+	static CBrimStone* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos);
 
 private:
 	virtual void		Free()									override;

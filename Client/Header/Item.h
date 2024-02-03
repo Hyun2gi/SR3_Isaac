@@ -38,6 +38,7 @@ public:
 	virtual void	Run_Item_Effect();
 	void			Set_Item_SpawnSpot(int _spawnspot);
 	virtual void	Item_Spawn_Action();
+	void			Set_SpawnPos(_vec3 pos) { m_vSpawnPos = pos; }
 
 protected:
 	virtual HRESULT			Add_Component();
@@ -64,6 +65,7 @@ protected:
 	bool					m_bDead;
 
 	ITEMSPAWN				m_eCurItemPlace;
+	_vec3					m_vSpawnPos;
 
 public:
 	static CItem* Create(LPDIRECT3DDEVICE9	pGraphicDev);
