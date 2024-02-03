@@ -114,11 +114,12 @@ void CEpic::Motion_Change()
 {
 }
 
-CEpic* CEpic::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos)
+CEpic* CEpic::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
 {
     CEpic* pInstance = new CEpic(pGraphicDev);
     //정확한 위치 설정
     pInstance->Set_SpawnPos(pos);
+    pInstance->Set_LookDir(look);
 
     if (FAILED(pInstance->Ready_GameObject()))
     {

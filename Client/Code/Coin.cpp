@@ -134,7 +134,7 @@ void CCoin::Item_Spawn_Action()
 	{
 		if (m_iTimer < 40)
 		{
-			m_pTransformCom->Set_Pos(itemPos.x+1, itemPos.y + 3, itemPos.z+1);
+			m_pTransformCom->Set_Pos(itemPos.x+1, itemPos.y + 2, itemPos.z+1);
 		}
 		else
 		{
@@ -227,11 +227,12 @@ void CCoin::Motion_Change()
 	}
 }
 
-CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos)
+CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
 {
 	CCoin* pInstance = new CCoin(pGraphicDev);
 	//정확한 위치 설정
 	pInstance->Set_SpawnPos(pos);
+	pInstance->Set_LookDir(look);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
