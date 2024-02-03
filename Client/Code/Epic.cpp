@@ -41,7 +41,7 @@ _int CEpic::Update_GameObject(const _float& fTimeDelta)
         return 1;
     }
 
-    Engine::Add_RenderGroup(RENDER_ALPHA, this);
+    Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
     return 0;
 }
@@ -59,14 +59,12 @@ void CEpic::Render_GameObject()
 {
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
     m_pTextureCom->Set_Texture((_uint)0);
 
     m_pBufferCom->Render_Buffer();
 
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+ 
 }
 
 void CEpic::Run_Item_Effect()
@@ -101,6 +99,8 @@ HRESULT CEpic::Add_Component()
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
+    m_pTransformCom->Set_Pos(m_vSpawnPos);
+
     pComponent = m_pCalculCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
@@ -110,9 +110,11 @@ void CEpic::Motion_Change()
 {
 }
 
-CEpic* CEpic::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot)
+CEpic* CEpic::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos)
 {
     CEpic* pInstance = new CEpic(pGraphicDev);
+    //정확한 위치 설정
+    pInstance->Set_SpawnPos(pos);
 
     if (FAILED(pInstance->Ready_GameObject()))
     {
