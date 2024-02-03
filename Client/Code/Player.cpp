@@ -40,7 +40,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 
 	m_fMaxHp = 3;
 	m_fHp = 3;
-	m_iCoin = 0;
+	m_iCoin = 100;
 
 	m_fMoveSpeed = 10;
 	m_fBulletSpeed = 60;
@@ -293,6 +293,10 @@ void CPlayer::Set_BulletType(int _bullet)
 		break;
 	case 2:
 		m_eCurBulletState = P_BULLET_BRIMSTONE;
+		m_fShootDelayTime = 90;
+		break;
+	case 3:
+		m_eCurBulletState = P_BULLET_EPIC;
 		m_fShootDelayTime = 90;
 		break;
 	}

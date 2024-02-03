@@ -24,7 +24,7 @@ HRESULT CEpic::Ready_GameObject()
 
     m_bDead = false;
     m_fFrame = 0;
-    m_iCoin = 5;
+    m_iCoin = 15;
 
     return S_OK;
 }
@@ -71,8 +71,18 @@ void CEpic::Render_GameObject()
 
 void CEpic::Run_Item_Effect()
 {
-    m_bDead = true;
-    CPlayer::GetInstance()->Set_Item_Get_Anim();
+    if (m_eCurItemPlace == SP_SHOP)
+    {
+        // 구매해야할 경우
+        if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
+        {
+            CPlayer::GetInstance()->Set_BulletType(3);
+            CPlayer::GetInstance()->Set_Coin(-m_iCoin);
+            m_bDead = true;
+            CPlayer::GetInstance()->Set_Item_Get_Anim();
+        }
+    }
+    
 }
 
 HRESULT CEpic::Add_Component()

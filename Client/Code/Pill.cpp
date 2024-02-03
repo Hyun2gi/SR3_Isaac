@@ -28,6 +28,7 @@ HRESULT CPill::Ready_GameObject()
 	srand((unsigned)time(NULL));
 	m_iPicNum = rand() % 5;
 
+	m_iCoin = 5;
 	// 약 효과
 	switch (m_iPicNum)
 	{
@@ -93,34 +94,74 @@ void CPill::Render_GameObject()
 
 void CPill::Run_Item_Effect()
 {
-	srand((unsigned)time(NULL));
-	int iEffectNum = rand() % 5;
-
-	// 약 효과
-	switch (iEffectNum)
+	if (m_eCurItemPlace == SP_SHOP)
 	{
-	case 0:
-		// 최대피
-		CPlayer::GetInstance()->Set_To_MaxHp();
-		CPlayer::GetInstance()->Set_Item_Get_Anim();
-		break;
-	case 1:
-		CPlayer::GetInstance()->Set_Hp(-1);
-		break;
-	case 2:
-		// 무적 상태
-		CPlayer::GetInstance()->Set_Item_Get_Anim();
-		break;
-	case 3:
-		CPlayer::GetInstance()->Set_MoveSpeed(4);
-		CPlayer::GetInstance()->Set_Item_Get_Anim();
-		break;
-	case 4:
-		CPlayer::GetInstance()->Set_MoveSpeed(-2);
-		break;
-	}
+		// 구매해야할 경우
+		if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
+		{
+			CPlayer::GetInstance()->Set_Coin(-m_iCoin);
+			srand((unsigned)time(NULL));
+			int iEffectNum = rand() % 5;
 
-	m_bDead = true;
+			// 약 효과
+			switch (iEffectNum)
+			{
+			case 0:
+				// 최대피
+				CPlayer::GetInstance()->Set_To_MaxHp();
+				CPlayer::GetInstance()->Set_Item_Get_Anim();
+				break;
+			case 1:
+				CPlayer::GetInstance()->Set_Hp(-1);
+				break;
+			case 2:
+				// 무적 상태
+				CPlayer::GetInstance()->Set_Item_Get_Anim();
+				break;
+			case 3:
+				CPlayer::GetInstance()->Set_MoveSpeed(4);
+				CPlayer::GetInstance()->Set_Item_Get_Anim();
+				break;
+			case 4:
+				CPlayer::GetInstance()->Set_MoveSpeed(-2);
+				break;
+			}
+
+			m_bDead = true;
+			
+		}
+	}
+	else
+	{
+		srand((unsigned)time(NULL));
+		int iEffectNum = rand() % 5;
+
+		// 약 효과
+		switch (iEffectNum)
+		{
+		case 0:
+			// 최대피
+			CPlayer::GetInstance()->Set_To_MaxHp();
+			CPlayer::GetInstance()->Set_Item_Get_Anim();
+			break;
+		case 1:
+			CPlayer::GetInstance()->Set_Hp(-1);
+			break;
+		case 2:
+			// 무적 상태
+			CPlayer::GetInstance()->Set_Item_Get_Anim();
+			break;
+		case 3:
+			CPlayer::GetInstance()->Set_MoveSpeed(4);
+			CPlayer::GetInstance()->Set_Item_Get_Anim();
+			break;
+		case 4:
+			CPlayer::GetInstance()->Set_MoveSpeed(-2);
+			break;
+		}
+
+		m_bDead = true;
+	}
 }
 
 HRESULT CPill::Add_Component()
