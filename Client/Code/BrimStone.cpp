@@ -24,6 +24,7 @@ HRESULT CBrimStone::Ready_GameObject()
 
 	m_bDead = false;
 	m_fFrame = 0;
+	m_iCoin = 4;
 
 	return S_OK;
 }
@@ -96,10 +97,11 @@ void CBrimStone::Motion_Change()
 void CBrimStone::Run_Item_Effect()
 {
 	CPlayer::GetInstance()->Set_BulletType(2);
+	CPlayer::GetInstance()->Set_Item_Get_Anim();
 	m_bDead = true;
 }
 
-CBrimStone* CBrimStone::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CBrimStone* CBrimStone::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot)
 {
 	CBrimStone* pInstance = new CBrimStone(pGraphicDev);
 
@@ -109,6 +111,7 @@ CBrimStone* CBrimStone::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 		MSG_BOX("BrimStone Create Failed");
 		return nullptr;
 	}
+	pInstance->Set_Item_SpawnSpot(spawnspot);
 
 	return pInstance;
 }

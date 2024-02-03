@@ -69,6 +69,7 @@ _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 	Revolve_Center();
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+	//m_pCalculCom->Compute_Vill_Matrix_X(m_pTransformCom);
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 

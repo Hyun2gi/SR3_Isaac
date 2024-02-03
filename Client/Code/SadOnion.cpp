@@ -24,6 +24,7 @@ HRESULT CSadOnion::Ready_GameObject()
 
 	m_bDead = false;
 	m_fFrame = 0;
+	m_iCoin = 2;
 
 	return S_OK;
 }
@@ -72,6 +73,7 @@ void CSadOnion::Render_GameObject()
 void CSadOnion::Run_Item_Effect()
 {
 	CPlayer::GetInstance()->Set_AttackSpeed(-6);
+	CPlayer::GetInstance()->Set_Item_Get_Anim();
 	m_bDead = true;
 }
 
@@ -100,7 +102,7 @@ void CSadOnion::Motion_Change()
 {
 }
 
-CSadOnion* CSadOnion::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CSadOnion* CSadOnion::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot)
 {
 	CSadOnion* pInstance = new CSadOnion(pGraphicDev);
 
@@ -110,6 +112,7 @@ CSadOnion* CSadOnion::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 		MSG_BOX("SadOnion Create Failed");
 		return nullptr;
 	}
+	pInstance->Set_Item_SpawnSpot(spawnspot);
 
 	return pInstance;
 }

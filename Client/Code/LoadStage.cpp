@@ -68,7 +68,6 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 
 Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 {	
-	
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
@@ -569,22 +568,11 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
 		pGameObject->Set_MyLayer(pLayerTag);
 
-		//string으로 key를 넘겨줄지 보민이랑 상의 후 string을 넘겨주기로 할 경우
-		// 불필요한 부분이라 임시로 테스트를 위해 하드코딩해둠
-		int iTempTag = 99;
-
-		if (iter.second == "Normal") iTempTag = 0;
-		else if (iter.second == "Boss") iTempTag = 1;
-		else if (iter.second == "Arcade") iTempTag = 2;
-		else if (iter.second == "Treasure") iTempTag = 3;
-		else if (iter.second == "Devil") iTempTag = 4;
-		else if (iter.second == "Challenge") iTempTag = 2;
-
 		switch (iter.first)
 		{
 		case WALL_LEFT:
 			
-			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iTempTag);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iter.second);
 
 			vTempPos = m_pLeftWall->Get_Transform()->m_vInfo[INFO_POS];
 
@@ -593,7 +581,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_RIGHT:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iTempTag);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iter.second);
 
 			vTempPos = m_pRightWall->Get_Transform()->m_vInfo[INFO_POS];
 
@@ -602,7 +590,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_TOP:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iTempTag);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iter.second);
 
 			vTempPos = m_pTopWall->Get_Transform()->m_vInfo[INFO_POS];
 
@@ -611,7 +599,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_BOTTOM:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iTempTag);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iter.second);
 
 			vTempPos = m_pBottomWall->Get_Transform()->m_vInfo[INFO_POS];
 
@@ -787,6 +775,10 @@ HRESULT CLoadStage::Door_Collision()
 
 			if (pObj) // 충돌된 문 존재
 			{
+				_vec3 playerpos;
+				dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &playerpos);
+				CPlayer::GetInstance()->Set_StartPosition(playerpos);
+
 				// 스테이지 변경
 				Engine::CScene* pScene = nullptr;
 
@@ -811,8 +803,6 @@ CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType)
 		MSG_BOX("Stage Create Failed");
 		return nullptr;
 	}
-
-	CPlayer::GetInstance()->Set_Bool_StartScene(true);
 	
 	return pInstance;
 }

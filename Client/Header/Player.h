@@ -29,7 +29,7 @@ private:
 	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_THUMBS_UP, P_END  };
 	
 	enum BULLETID
-	{	P_BULLET_IDLE, P_BULLET_BRIMSTONE,P_BULLET_END};
+	{	P_BULLET_IDLE, P_BULLET_BRIMSTONE, P_BULLET_EPIC, P_BULLET_END};
 
 public:
 	virtual HRESULT Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -73,11 +73,19 @@ public:
 	void		Set_Player_Pos(_vec3 pos);
 
 	float		Get_BulletSpeed() { return m_fBulletSpeed; }
+	int			Get_Coin() { return m_iCoin; }
 	void		Set_Bool_StartScene(bool _start) { m_bStartScene = _start; }
+	void		Set_StartPosition(_vec3 _position);
 	void		Set_MouseRotation(float xRad, float yRad);
 	void		Set_BulletType(int _bullet);
+	void		Set_EpicFall();
+
+
+	void		Set_Item_Get_Anim();
+	void		Set_Camera(CGameObject* _cam) { m_pCamera = _cam; }
 
 	bool		Get_Camera_WallBlock();
+	bool		Get_SafeCamer_Area(); // 카메라 벗어나지 않는 안전지대인지
 	list<CGameObject*>* Get_Player_BullletList() { return &m_PlayerBulletList; }
 
 public:
@@ -141,6 +149,7 @@ private:
 
 	bool				m_bMouseYRotataion;
 
+	CGameObject*		m_pCamera;
 public:
 	/*static CPlayer*		Create(LPDIRECT3DDEVICE9	pGraphicDev);*/
 

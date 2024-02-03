@@ -6,13 +6,13 @@
 
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev)
 	:Engine::CGameObject(pGraphicDev), 
-	m_pCalculCom(nullptr),m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_bDead(false)
+	m_pCalculCom(nullptr),m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_bDead(false), m_iTimer(0)
 {
 }
 
 CItem::CItem(const CItem& rhs)
 	: Engine::CGameObject(rhs),
-	m_pCalculCom(nullptr), m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_bDead(false)
+	m_pCalculCom(nullptr), m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_bDead(false), m_iTimer(0)
 {
 }
 
@@ -42,6 +42,29 @@ void CItem::Render_GameObject()
 }
 
 void CItem::Run_Item_Effect()
+{
+}
+
+void CItem::Set_Item_SpawnSpot(int _spawnspot)
+{
+	switch (_spawnspot)
+	{
+	case 0:
+		m_eCurItemPlace = SP_IDLE;
+		break;
+	case 1:
+		m_eCurItemPlace = SP_SLOT;
+		break;
+	case 2 :
+		m_eCurItemPlace = SP_OBJECT;
+		break;
+	case 3:
+		m_eCurItemPlace = SP_SHOP;
+		break;
+	}
+}
+
+void CItem::Item_Spawn_Action()
 {
 }
 
