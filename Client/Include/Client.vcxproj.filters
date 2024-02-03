@@ -187,6 +187,15 @@
     <Filter Include="02. GameObject\09. MapObject\06. Door">
       <UniqueIdentifier>{b9251cda-bcbe-4b54-a10f-3e91f1a23382}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\07. Bullet\03. EpicBullet">
+      <UniqueIdentifier>{3acf777d-5a06-44b5-941d-4698dba9806a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\05. Shell Game\00. Shell">
+      <UniqueIdentifier>{59820322-d400-47c1-b726-392f7a452976}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\05. Shell Game\01. ShellNpc">
+      <UniqueIdentifier>{af33f3d5-80c0-442d-9b1d-9bee1a32d282}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -354,6 +363,21 @@
     <ClInclude Include="..\Header\Door.h">
       <Filter>02. GameObject\09. MapObject\06. Door</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\EpicBullet.h">
+      <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\ShellGame.h">
+      <Filter>02. GameObject\09. MapObject\05. Shell Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Shell.h">
+      <Filter>02. GameObject\09. MapObject\05. Shell Game\00. Shell</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\ShellNpc.h">
+      <Filter>02. GameObject\09. MapObject\05. Shell Game\01. ShellNpc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Shop.h">
+      <Filter>02. GameObject\09. MapObject\04. Shop</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -511,6 +535,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\Door.cpp">
       <Filter>02. GameObject\09. MapObject\06. Door</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EpicBullet.cpp">
+      <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ShellGame.cpp">
+      <Filter>02. GameObject\09. MapObject\05. Shell Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Shell.cpp">
+      <Filter>02. GameObject\09. MapObject\05. Shell Game\00. Shell</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ShellNpc.cpp">
+      <Filter>02. GameObject\09. MapObject\05. Shell Game\01. ShellNpc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Shop.cpp">
+      <Filter>02. GameObject\09. MapObject\04. Shop</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

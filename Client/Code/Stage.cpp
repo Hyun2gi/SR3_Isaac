@@ -89,11 +89,11 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 	Drop_ITem();
 
 	// Normal Fly 추가
-	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"NormalFly") == nullptr)
-	{
-		dynamic_cast<CAttackFly*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"AttackFly"))
-			->Set_NormalFly_ToStage(m_mapLayer.at(L"GameMst"));
-	}
+	//if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"NormalFly") == nullptr)
+	//{
+	//	dynamic_cast<CAttackFly*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"AttackFly"))
+	//		->Set_NormalFly_ToStage(m_mapLayer.at(L"GameMst"));
+	//}
 
 	//Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f); // Second Timer 테스트용 코드
 
@@ -128,7 +128,7 @@ void CStage::Drop_ITem()
 		{
 			Engine::CGameObject* pGameObject = nullptr;
 
-		pGameObject = CCoin::Create(m_pGraphicDev);
+		pGameObject = CCoin::Create(m_pGraphicDev, 2);
 		pGameObject->Set_MyLayer(L"GameItem");
 		m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);
 	}
@@ -141,7 +141,7 @@ void CStage::Drop_ITem()
 		{
 			Engine::CGameObject* pGameObject = nullptr;
 
-			pGameObject = CHeart::Create(m_pGraphicDev);
+			pGameObject = CHeart::Create(m_pGraphicDev, 2);
 			pGameObject->Set_MyLayer(L"GameItem");
 			FAILED_CHECK_RETURN(m_mapLayer.at(L"GameItem")->Add_GameObject(L"Heart", pGameObject));
 		}
@@ -197,17 +197,17 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 
 #pragma region Object
 
-	//// Poop
-	//pGameObject = CPoop::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
+	// Poop
+	pGameObject = CPoop::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
 
-	//// CampFire
-	//pGameObject = CCampFire::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
+	// CampFire
+	pGameObject = CCampFire::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
 
 	//// Spike
 	//pGameObject = CSpike::Create(m_pGraphicDev);
