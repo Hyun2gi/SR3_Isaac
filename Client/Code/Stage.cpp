@@ -124,28 +124,33 @@ void CStage::Drop_ITem()
 	// ¶Ë
 	if (Get_GameObject(L"GameLogic", L"Poop") != nullptr)
 	{
-		if (dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_Dead())
+		if (dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_Dead() &&
+			!dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_Drop())
 		{
-			Engine::CGameObject* pGameObject = nullptr;
+			/*Engine::CGameObject* pGameObject = nullptr;
 
-		pGameObject = CCoin::Create(m_pGraphicDev, 2);
-		pGameObject->Set_MyLayer(L"GameItem");
-		m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);
-	}
+			pGameObject = CCoin::Create(m_pGraphicDev, 2);
+			pGameObject->Set_MyLayer(L"GameItem");
+			m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);*/
+			Engine::CGameObject* pGameObject = nullptr;
+			pGameObject = dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Create_Item(COIN, 2, m_mapLayer.at(L"GameItem"));
+			m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);
+			dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Set_Drop();
+		}
 }
 
-	if (Get_GameObject(L"GameLogic", L"Campfire") != nullptr)
-	{
-		// ¸ð´ÚºÒ
-		if (dynamic_cast<CCampFire*>(Get_GameObject(L"GameLogic", L"Campfire"))->Get_Dead())
-		{
-			Engine::CGameObject* pGameObject = nullptr;
+	//if (Get_GameObject(L"GameLogic", L"Campfire") != nullptr)
+	//{
+	//	// ¸ð´ÚºÒ
+	//	if (dynamic_cast<CCampFire*>(Get_GameObject(L"GameLogic", L"Campfire"))->Get_Dead())
+	//	{
+	//		Engine::CGameObject* pGameObject = nullptr;
 
-			pGameObject = CHeart::Create(m_pGraphicDev, 2);
-			pGameObject->Set_MyLayer(L"GameItem");
-			FAILED_CHECK_RETURN(m_mapLayer.at(L"GameItem")->Add_GameObject(L"Heart", pGameObject));
-		}
-	}
+	//		pGameObject = CHeart::Create(m_pGraphicDev, 2);
+	//		pGameObject->Set_MyLayer(L"GameItem");
+	//		FAILED_CHECK_RETURN(m_mapLayer.at(L"GameItem")->Add_GameObject(L"Heart", pGameObject));
+	//	}
+	//}
 
 	// ½½·Ô¸Ó½Å
 
@@ -363,17 +368,17 @@ HRESULT CStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"HeartHalf", pGameObject), E_FAIL);
 
 
-	// Pill
-	pGameObject = CPill::Create(m_pGraphicDev,0);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pill", pGameObject), E_FAIL);
+	//// Pill
+	//pGameObject = CPill::Create(m_pGraphicDev, 0, );
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pill", pGameObject), E_FAIL);
 
-	// BrimStone
-	pGameObject = CBrimStone::Create(m_pGraphicDev,0);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BrimStone", pGameObject), E_FAIL);
+	//// BrimStone
+	//pGameObject = CBrimStone::Create(m_pGraphicDev,0);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BrimStone", pGameObject), E_FAIL);
 
 	//// Onion
 	//pGameObject = CSadOnion::Create(m_pGraphicDev);

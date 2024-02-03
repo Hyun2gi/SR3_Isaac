@@ -33,6 +33,7 @@ HRESULT CPoop::Ready_GameObject()
 
 _int CPoop::Update_GameObject(const _float& fTimeDelta)
 {
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	/*if (Engine::Key_Down(DIK_Z))
