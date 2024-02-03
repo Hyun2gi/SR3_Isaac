@@ -95,12 +95,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;SYSTEM_EXPORTS;%(PreprocessorDefinitions);ENGINE_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../../imgui/backend;../../../imgui/imgui;../../Header;../../../Base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../../fmod;../../../imgui/backend;../../../imgui/imgui;../../Header;../../../Base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d9.lib;d3dx9.lib;dxguid.lib;dinput8.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d9.lib;d3dx9.lib;dxguid.lib;dinput8.lib;fmodex_vc.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>../../../Reference/Library</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -181,10 +181,18 @@ call CopySystem.bat</Command>
     <ClCompile Include="..\Code\ImGuiMgr.cpp" />
     <ClCompile Include="..\Code\InputDev.cpp" />
     <ClCompile Include="..\Code\MyFont.cpp" />
+    <ClCompile Include="..\Code\SoundMgr.cpp" />
     <ClCompile Include="..\Code\Timer.cpp" />
     <ClCompile Include="..\Code\TimerMgr.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\fmod\fmod.h" />
+    <ClInclude Include="..\..\..\fmod\fmod.hpp" />
+    <ClInclude Include="..\..\..\fmod\fmod_codec.h" />
+    <ClInclude Include="..\..\..\fmod\fmod_dsp.h" />
+    <ClInclude Include="..\..\..\fmod\fmod_errors.h" />
+    <ClInclude Include="..\..\..\fmod\fmod_memoryinfo.h" />
+    <ClInclude Include="..\..\..\fmod\fmod_output.h" />
     <ClInclude Include="..\..\..\imgui\backend\imgui_impl_dx9.h" />
     <ClInclude Include="..\..\..\imgui\backend\imgui_impl_win32.h" />
     <ClInclude Include="..\..\..\imgui\imgui\imconfig.h" />
@@ -202,14 +210,20 @@ call CopySystem.bat</Command>
     <ClInclude Include="..\..\Header\ImGuiMgr.h" />
     <ClInclude Include="..\..\Header\InputDev.h" />
     <ClInclude Include="..\..\Header\MyFont.h" />
+    <ClInclude Include="..\..\Header\SoundMgr.h" />
     <ClInclude Include="..\..\Header\Timer.h" />
     <ClInclude Include="..\..\Header\TimerMgr.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\fmod\fmodex.dll" />
+    <None Include="..\..\..\fmod\fmodexL.dll" />
     <None Include="..\..\..\imgui\imgui\.editorconfig" />
     <None Include="..\..\..\imgui\imgui\.gitattributes" />
     <None Include="..\..\..\imgui\imgui\.gitignore" />
     <None Include="..\..\Header\Export_System.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\..\fmod\fmodex_vc.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
