@@ -84,6 +84,7 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 	Run_Collision_Func();
 	Door_Collision();
 	Moster_Collision();
+	MapObj_Collision();
 
 	// 아이템 드랍
 	Drop_ITem();
@@ -127,12 +128,8 @@ void CStage::Drop_ITem()
 		if (dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_Dead() &&
 			!dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_Drop())
 		{
-			/*Engine::CGameObject* pGameObject = nullptr;
-
-			pGameObject = CCoin::Create(m_pGraphicDev, 2);
-			pGameObject->Set_MyLayer(L"GameItem");
-			m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);*/
 			Engine::CGameObject* pGameObject = nullptr;
+			// Create_Item( ) : 2인자 : spawn Pos 정수 넣어주면 됨
 			pGameObject = dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Create_Item(COIN, 2, m_mapLayer.at(L"GameItem"));
 			m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);
 			dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Set_Drop();
@@ -507,6 +504,11 @@ void CStage::Moster_Collision()
 				++iter;
 		}
 	}
+}
+
+void CStage::MapObj_Collision()
+{
+	//if(m_mapLayer.at(L"GameLogic"))
 }
 
 CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)

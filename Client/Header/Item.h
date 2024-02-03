@@ -59,7 +59,8 @@ protected:
 	_float					m_fSpeed;
 	_float					m_fFrame = 0.f;
 	_int					m_iTimer;
-
+	
+	_float					m_fMoveSpeed;
 	_float					m_fCallLimit;
 	_float					m_fAccTimeDelta;
 	_float					m_fSpriteSpeed;
