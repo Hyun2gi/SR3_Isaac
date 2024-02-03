@@ -17,6 +17,7 @@ public:
 
 public:
 	void			Run_Item_Effect()						override;
+	void			Item_Spawn_Action()						override;
 
 private:
 	virtual HRESULT		Add_Component()						override;

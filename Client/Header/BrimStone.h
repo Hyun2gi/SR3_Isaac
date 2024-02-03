@@ -21,6 +21,7 @@ private:
 
 public:
 	void			Run_Item_Effect()						override;
+	void			Item_Spawn_Action()						override;
 
 private:
 	// 랜덤값으로 한 이미지 지정하면 계속 유지

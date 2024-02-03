@@ -67,12 +67,11 @@ _int CCoin::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	Item_Spawn_Action();
-
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
+	Item_Spawn_Action();
 	
 	if (m_bDead == true)
 	{
@@ -140,7 +139,7 @@ void CCoin::Item_Spawn_Action()
 		else
 		{
 			_vec3 temp = itemPos - _vec3(0, 1, 0);
-			if (itemPos.y <= fHeight + 1)
+			if (temp.y <= fHeight + 1)
 			{
 				m_eCurItemPlace = SP_END;
 				m_pTransformCom->Set_Pos(itemPos.x, fHeight + 1, itemPos.z);
@@ -155,12 +154,13 @@ void CCoin::Item_Spawn_Action()
 	{
 		if (m_iTimer < 40)
 		{
-			m_pTransformCom->Set_Pos(itemPos.x, itemPos.y + 2, itemPos.z);
+			m_pTransformCom->Set_Pos(itemPos.x, itemPos.y + 1, itemPos.z);
 		}
 		else 
 		{
 			_vec3 temp = itemPos - _vec3(0, 1, 0);
-			if (itemPos.y <= fHeight + 1)
+
+			if (temp.y <= fHeight + 1)
 			{
 				m_eCurItemPlace = SP_END;
 				m_pTransformCom->Set_Pos(itemPos.x, fHeight + 1, itemPos.z);
@@ -171,6 +171,8 @@ void CCoin::Item_Spawn_Action()
 			}
 		}
 	}
+
+	m_iTimer++;
 }
 
 HRESULT CCoin::Add_Component()

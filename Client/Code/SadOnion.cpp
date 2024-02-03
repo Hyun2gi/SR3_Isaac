@@ -74,6 +74,10 @@ void CSadOnion::Run_Item_Effect()
 	m_bDead = true;
 }
 
+void CSadOnion::Item_Spawn_Action()
+{
+}
+
 HRESULT CSadOnion::Add_Component()
 {
 	CComponent* pComponent = nullptr;

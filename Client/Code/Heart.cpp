@@ -34,6 +34,7 @@ _int CHeart::Update_GameObject(const _float& fTimeDelta)
     CGameObject::Update_GameObject(fTimeDelta);
     m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
+    Item_Spawn_Action();
 
     Engine::CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
     NULL_CHECK(pTerrainBufferCom);
@@ -41,7 +42,6 @@ _int CHeart::Update_GameObject(const _float& fTimeDelta)
     _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     _float	fHeight = m_pCalculCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
-
 
     m_pTransformCom->Set_Pos(VTXCNTX / 2, fHeight + 1, VTXCNTZ / 2);
 
@@ -120,6 +120,10 @@ void CHeart::Run_Item_Effect()
         m_bDead = true;
         CPlayer::GetInstance()->Set_Hp(1);
     }
+}
+
+void CHeart::Item_Spawn_Action()
+{
 }
 
 HRESULT CHeart::Add_Component()

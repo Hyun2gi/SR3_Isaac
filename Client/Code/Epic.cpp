@@ -83,6 +83,10 @@ void CEpic::Run_Item_Effect()
     
 }
 
+void CEpic::Item_Spawn_Action()
+{
+}
+
 HRESULT CEpic::Add_Component()
 {
     CComponent* pComponent = nullptr;

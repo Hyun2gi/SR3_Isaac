@@ -160,6 +160,10 @@ void CPill::Run_Item_Effect()
 	}
 }
 
+void CPill::Item_Spawn_Action()
+{
+}
+
 HRESULT CPill::Add_Component()
 {
 	CComponent * pComponent = nullptr;

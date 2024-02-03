@@ -73,6 +73,10 @@ void CWhipWorm::Run_Item_Effect()
     CPlayer::GetInstance()->Set_Item_Get_Anim();
 }
 
+void CWhipWorm::Item_Spawn_Action()
+{
+}
+
 HRESULT CWhipWorm::Add_Component()
 {
     CComponent* pComponent = nullptr;

@@ -84,6 +84,10 @@ void CHeartHalf::Run_Item_Effect()
     }
 }
 
+void CHeartHalf::Item_Spawn_Action()
+{
+}
+
 HRESULT CHeartHalf::Add_Component()
 {
     CComponent* pComponent = nullptr;

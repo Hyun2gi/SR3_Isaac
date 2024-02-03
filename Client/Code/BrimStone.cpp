@@ -99,6 +99,10 @@ void CBrimStone::Run_Item_Effect()
 	m_bDead = true;
 }
 
+void CBrimStone::Item_Spawn_Action()
+{
+}
+
 CBrimStone* CBrimStone::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos)
 {
 	CBrimStone* pInstance = new CBrimStone(pGraphicDev);
