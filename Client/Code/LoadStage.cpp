@@ -202,20 +202,31 @@ HRESULT CLoadStage::Load_Stage_Data()
 	{
 		int iIndex = 0;
 
+		int iCount = 0;
+
 		while (true) {
 			// , 위치 찾기
 			int pos = strGetLine.find_first_of(',', iIndex);
 
-			// ,를 찾지 못하면 종료
-			if (pos == string::npos)
+			if (3 < iCount)
 			{
-				m_strCurStageTheme = strGetLine.substr(iIndex);
-				break;
-			}
+				m_vecStageInfo.push_back(strGetLine.substr(iIndex, pos - iIndex));
 
-			// 분리된 문자열 출력
-			m_vecConnectRoom.push_back(stoi(strGetLine.substr(iIndex, pos - iIndex)));
+				// ,를 찾지 못하면 종료
+				if (pos == string::npos)
+				{
+					break;
+				}
+			}
+			else
+			{
+				// 분리된 문자열 출력
+				m_vecConnectRoom.push_back(stoi(strGetLine.substr(iIndex, pos - iIndex)));
+			}
+			
 			iIndex = pos + 1;
+
+			iCount++;
 		}
 	}
 
@@ -669,7 +680,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	wstring wstrProto = L"Proto_";
 	wstring wstrTag, wstrTheme;
 
-	wstrTheme.assign(m_strCurStageTheme.begin(), m_strCurStageTheme.end());
+	wstrTheme.assign(m_vecStageInfo[0].begin(), m_vecStageInfo[0].end());
 
 	//바닥 추가
 	wstrTag = wstrProto + wstrTheme + L"FloorCubeTexture";

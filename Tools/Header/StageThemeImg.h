@@ -24,6 +24,8 @@ public:
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
+	void	Set_Theme_Texture(const _tchar* pTextureTag);
+
 private:
 	HRESULT			Add_Component();
 

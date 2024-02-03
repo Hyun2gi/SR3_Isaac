@@ -10,6 +10,7 @@
 #include "DynamicCamera.h"
 
 #include "MapToolGui.h"
+#include "StageThemeImg.h"
 
 CMapTool::CMapTool(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
@@ -22,7 +23,10 @@ CMapTool::~CMapTool()
 
 HRESULT CMapTool::Ready_Scene()
 {
+	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
+
 	m_pImGuiTools = new CMapToolGui(g_hWnd, m_pGraphicDev);
+	m_pImGuiTools->Set_Target_Scene(this);
 
 	return S_OK;
 }
@@ -57,6 +61,11 @@ void CMapTool::Render_Scene()
 	m_pImGuiTools->Render_ImGuiTools();
 }
 
+void CMapTool::Set_Theme_Texture(const _tchar* pTextureTag)
+{
+	m_pThemeImg->Set_Theme_Texture(pTextureTag);
+}
+
 HRESULT CMapTool::Ready_Layer_Environment(const _tchar * pLayerTag)
 {
 
@@ -71,6 +80,16 @@ HRESULT CMapTool::Ready_Layer_GameLogic(const _tchar * pLayerTag)
 
 HRESULT CMapTool::Ready_Layer_UI(const _tchar * pLayerTag)
 {
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	Engine::CGameObject* pGameObject = nullptr;
+
+	pGameObject = m_pThemeImg = CStageThemeImg::Create(m_pGraphicDev, THEME_SIZE_X, THEME_SIZE_Y, 0.f, 0.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ThemeImg", pGameObject), E_FAIL);
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
 }

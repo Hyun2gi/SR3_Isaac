@@ -6,6 +6,7 @@
 
 #include "Export_System.h"
 
+#include "MapTool.h"
 
 CMapToolGui::CMapToolGui()
 {
@@ -218,7 +219,10 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     ImGui::SetNextItemWidth(120.f);
     if (ImGui::Combo("##0", &m_iSelectedRoomThemeIndex, vecRoomThemeText.data(), m_vecRoomTheme.size()))
     {
+        wstring wstrTexture;
 
+        wstrTexture.assign(m_vecRoomTheme[m_iSelectedRoomThemeIndex].begin(), m_vecRoomTheme[m_iSelectedRoomThemeIndex].end());
+        m_pTargetScene->Set_Theme_Texture(wstrTexture.c_str());
     }
 
     // 스테이지 타입 목록을 보여주는 드롭다운박스
@@ -234,11 +238,7 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     ImGui::SameLine();
 
     ImGui::SetNextItemWidth(120.f);
-    if (ImGui::Combo("##1", &m_iSelectedRoomTypeIndex, vecRoomTypeText.data(), m_vecRoomType.size()))
-    {
-
-    }
-
+    ImGui::Combo("##1", &m_iSelectedRoomTypeIndex, vecRoomTypeText.data(), m_vecRoomType.size());
 
     ImGui::NewLine();
 
@@ -296,7 +296,7 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
         fout << szSKeyTopRoom << ",";
         fout << szSKeyBottomRoom << ",";
         fout << vecRoomThemeText[m_iSelectedRoomThemeIndex] << ",";
-        fout << m_vecRoomType[m_iSelectedRoomTypeIndex];
+        fout << vecRoomTypeText[m_iSelectedRoomTypeIndex];
 
         // 파일 스트림을 닫습니다.
         fout.close();

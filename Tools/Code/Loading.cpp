@@ -92,11 +92,8 @@ _uint CLoading::Loading_ForStage()
 
 	// 방 테마
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Normal", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Normal.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Arcade", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Normal.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Challenge", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Normal.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Devil", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Normal.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Treasure", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Normal.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Boss", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Normal.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Arcade", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Arcade.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Sheol", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Sheol.png")), E_FAIL);
 
 
 	//텍스처 프로토 추가

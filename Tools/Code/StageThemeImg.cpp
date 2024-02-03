@@ -59,6 +59,11 @@ void CStageThemeImg::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
+void CStageThemeImg::Set_Theme_Texture(const _tchar* pTextureTag)
+{
+	m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(pTextureTag));
+}
+
 HRESULT CStageThemeImg::Add_Component()
 {
 	CComponent*		pComponent = nullptr;
@@ -67,9 +72,17 @@ HRESULT CStageThemeImg::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_LogoTexture"));
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_Theme_Arcade"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_LogoTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_Theme_Arcade", pComponent });
+
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_Theme_Sheol"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_Theme_Sheol", pComponent });
+
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_Theme_Normal"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_Theme_Normal", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -89,7 +102,7 @@ CStageThemeImg * CStageThemeImg::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fS
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("BackGround Create Failed");
+		MSG_BOX("StageThemeImg Create Failed");
 		return nullptr;
 	}
 

@@ -2,6 +2,8 @@
 #include "Base.h"
 #include "Engine_Define.h"
 
+class CMapTool;
+
 class CMapToolGui : public CBase
 {
     struct StageStruct
@@ -20,6 +22,8 @@ public:
     void Update_ImGuiTools();
     void Render_ImGuiTools();
 
+    void    Set_Target_Scene(CMapTool* pScene) { m_pTargetScene = pScene; }
+
 private:
     void Popup_Stage_Connection(const char* items);
 
@@ -31,6 +35,8 @@ private:
 
 private:
     LPDIRECT3DDEVICE9 m_pGraphicDev;
+
+    CMapTool* m_pTargetScene;
 
     bool m_bIsOpend;
     int m_iSelectedStageIndex;
