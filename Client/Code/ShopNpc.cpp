@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "ShopNpc.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CShopNpc::CShopNpc(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -20,13 +21,15 @@ CShopNpc::~CShopNpc()
 HRESULT CShopNpc::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(10.f, 1.f, 5.f);
 	m_pTransformCom->m_vScale = { 1.5f, 1.5f, 1.5f };
 
 	m_iPicNum = 2;
 	m_fFrameSpeed = 1.f;
 
-	m_fCallLimit = 1.f;
+	m_fCallLimit = 3.f;
+
+	m_bGood = false;
+	m_bFrameFix = false;
 
 	m_ePreState = NPC_END;
 
@@ -35,17 +38,34 @@ HRESULT CShopNpc::Ready_GameObject()
 
 _int CShopNpc::Update_GameObject(const _float& fTimeDelta)
 {
-	if (NPC_IDLE == m_eCurState)
+	if (!m_bFrameFix)
 	{
 		m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
 
 		if (m_iPicNum < m_fFrame)
-			m_fFrame = 0.f;
+		{
+			if(NPC_IDLE == m_eCurState)
+				m_fFrame = 0.f;
+			else if(NPC_GOOD == m_eCurState || NPC_DEAD == m_eCurState)
+			{
+				m_fFrame = 2.f;
+				m_bFrameFix = true;
+			}
+		}
 	}
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	m_eCurState = NPC_IDLE;
+	if (m_bGood)
+	{
+		m_eCurState = NPC_GOOD;
+
+		if (Check_Time(fTimeDelta))
+		{
+			m_bGood = false;
+		}
+	}else
+		m_eCurState = NPC_IDLE;
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -83,25 +103,6 @@ HRESULT CShopNpc::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-#pragma region Texture
-	
-		// IDLE
-		pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ShopNpcTexture"));
-		NULL_CHECK_RETURN(pComponent, E_FAIL);
-		m_mapComponent[ID_STATIC].insert({ L"Proto_ShopNpcTexture", pComponent });
-	
-		// GOOD
-		pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ShopNpcThumbsTexture"));
-		NULL_CHECK_RETURN(pComponent, E_FAIL);
-		m_mapComponent[ID_STATIC].insert({ L"Proto_ShopNpcThumbsTexture", pComponent });
-
-		// DEAD
-		pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ShopNpcDeadTexture"));
-		NULL_CHECK_RETURN(pComponent, E_FAIL);
-		m_mapComponent[ID_STATIC].insert({ L"Proto_ShopNpcDeadTexture", pComponent });
-	
-#pragma endregion Texture
-
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
@@ -122,15 +123,15 @@ void CShopNpc::Motion_Change()
 		switch (m_eCurState)
 		{
 		case CShopNpc::NPC_IDLE:
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShopNpc", L"Proto_ShopNpcTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Shop", L"Proto_ShopNpcTexture"));
 			break;
 
 		case CShopNpc::NPC_GOOD:
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShopNpc", L"Proto_ShopNpcThumbsTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Shop", L"Proto_ShopNpcThumbsTexture"));
 			break;
 
 		case CShopNpc::NPC_DEAD:
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShopNpc", L"Proto_ShopNpcDeadTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Shop", L"Proto_ShopNpcDeadTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;
@@ -140,6 +141,7 @@ void CShopNpc::Motion_Change()
 void CShopNpc::Hit()
 {
 	// 폭탄에 맞았을 때만 충돌 처리 되도록
+	m_eCurState = NPC_DEAD;
 }
 
 CShopNpc* CShopNpc::Create(LPDIRECT3DDEVICE9 pGraphicDev)

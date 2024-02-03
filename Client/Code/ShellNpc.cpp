@@ -1,49 +1,48 @@
 #include "stdafx.h"
-#include "Poop.h"
+#include "ShellNpc.h"
 
-#include "Export_System.h"
 #include "Export_Utility.h"
 
-CPoop::CPoop(LPDIRECT3DDEVICE9 pGraphicDev)
+CShellNpc::CShellNpc(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMapObj(pGraphicDev)
 {
 }
 
-CPoop::CPoop(const CPoop& rhs)
+CShellNpc::CShellNpc(const CShellNpc& rhs)
 	: CMapObj(rhs)
 {
 }
 
-CPoop::~CPoop()
+CShellNpc::~CShellNpc()
 {
 }
 
-HRESULT CPoop::Ready_GameObject()
+HRESULT CShellNpc::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(10.f, 1.f, 10.f);
+	m_pTransformCom->m_vScale = { 1.5f, 1.5f, 1.5f };
 
-	m_iLimitHit = 4;
+	m_iPicNum = 1;
+	m_fFrameSpeed = 1.f;
 
-	m_bAni = false;
-	m_bReduce = true;
+	m_ePreState = NPC_END;
 
 	return S_OK;
 }
 
-_int CPoop::Update_GameObject(const _float& fTimeDelta)
+_int CShellNpc::Update_GameObject(const _float& fTimeDelta)
 {
-
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	/*if (Engine::Key_Down(DIK_Z))
-		Hit();*/
+	if (NPC_IDLE == m_eCurState)
+	{
+		
+	}
+	else if (NPC_GAMING == m_eCurState)
+	{
 
-	if (Engine::Get_DIKeyState(DIK_Z) & 0x80)
-		Hit();
+	}
 
-	if (m_bAni)
-		Change_Scale();
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -52,8 +51,10 @@ _int CPoop::Update_GameObject(const _float& fTimeDelta)
 	return 0;
 }
 
-void CPoop::LateUpdate_GameObject()
+void CShellNpc::LateUpdate_GameObject()
 {
+	Motion_Change();
+
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
@@ -61,7 +62,7 @@ void CPoop::LateUpdate_GameObject()
 	__super::Compute_ViewZ(&vPos);
 }
 
-void CPoop::Render_GameObject()
+void CShellNpc::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -71,42 +72,13 @@ void CPoop::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-void CPoop::Change_Scale()
-{
-	float fScaleY = m_pTransformCom->m_vScale.y;
-
-	if (m_bReduce)
-	{
-		if (0.9f >= fScaleY)
-			m_bReduce = false;
-
-		fScaleY -= 0.1f;
-	}
-	else
-	{
-		if (1.f <= fScaleY)
-		{
-			m_bReduce = true;
-			m_bAni = false;
-		}
-
-		fScaleY += 0.1f;
-	}
-	m_pTransformCom->m_vScale = { m_pTransformCom->m_vScale.x,
-	fScaleY, m_pTransformCom->m_vScale.z };
-}
-
-HRESULT CPoop::Add_Component()
+HRESULT CShellNpc::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
 	pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(Engine::Clone_Proto(L"Proto_RcTex"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
-
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PoopTexture"));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_PoopTexture", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -117,41 +89,47 @@ HRESULT CPoop::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
 	return S_OK;
+
 }
 
-void CPoop::Motion_Change()
+void CShellNpc::Motion_Change()
 {
-}
-
-void CPoop::Hit()
-{
-	if (m_iHitCount < m_iLimitHit)
+	if (m_ePreState != m_eCurState)
 	{
-		m_iHitCount += 1;
-		m_fFrame += 1.f;
-		m_bAni = true;
-	}
-	else
-	{
-		m_bDead = true;
+		m_fFrame = 0.f;
+
+		switch (m_eCurState)
+		{
+		case CShellNpc::NPC_IDLE:
+			m_iPicNum = 1;
+			m_fFrameSpeed = 1.f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShellGame", L"Proto_ShellNpcTexture"));
+			break;
+
+		case CShellNpc::NPC_GAMING:
+			m_iPicNum = 6;
+			m_fFrameSpeed = 1.f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShellGame", L"Proto_ShellNpcGameTexture"));
+			break;
+		}
 	}
 }
 
-CPoop* CPoop::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CShellNpc* CShellNpc::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CPoop* pInstance = new CPoop(pGraphicDev);
+	CShellNpc* pInstance = new CShellNpc(pGraphicDev);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("Poop Create Failed");
+		MSG_BOX("ShellNpc Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
 }
 
-void CPoop::Free()
+void CShellNpc::Free()
 {
 	__super::Free();
 }

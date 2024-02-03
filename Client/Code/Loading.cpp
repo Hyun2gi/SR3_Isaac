@@ -20,12 +20,12 @@ HRESULT CLoading::Ready_Loading(LOADINGID eID)
 {
 	InitializeCriticalSection(&m_Crt);
 	
-	m_hThread = (HANDLE)_beginthreadex(NULL,	// µğÆúÆ® º¸¾È ¼Ó¼º
-										0,		// µğÆúÆ® ½ºÅÃ »çÀÌÁî(1¹ÙÀÌÆ®)
-										Thread_Main, // µ¿ÀÛ ½ÃÅ³ ¾²·¹µå ÇÔ¼ö ÀÌ¸§(__stdcall ±Ô¾à)
-										this,		// ¾²·¹µå ÇÔ¼öÀÇ ¸Å°³ º¯¼ö·Î Àü´ŞÇÒ °ª
-										0,			// ¾²·¹µå »ı¼º ¹× ½ÇÇàÀ» Á¶ÀıÇÏ±â À§ÇÑ FLAG
-										NULL);		// ¾²·¹µå ID ¹İÈ¯
+	m_hThread = (HANDLE)_beginthreadex(NULL,	// ë””í´íŠ¸ ë³´ì•ˆ ì†ì„±
+										0,		// ë””í´íŠ¸ ìŠ¤íƒ ì‚¬ì´ì¦ˆ(1ë°”ì´íŠ¸)
+										Thread_Main, // ë™ì‘ ì‹œí‚¬ ì“°ë ˆë“œ í•¨ìˆ˜ ì´ë¦„(__stdcall ê·œì•½)
+										this,		// ì“°ë ˆë“œ í•¨ìˆ˜ì˜ ë§¤ê°œ ë³€ìˆ˜ë¡œ ì „ë‹¬í•  ê°’
+										0,			// ì“°ë ˆë“œ ìƒì„± ë° ì‹¤í–‰ì„ ì¡°ì ˆí•˜ê¸° ìœ„í•œ FLAG
+										NULL);		// ì“°ë ˆë“œ ID ë°˜í™˜
 
 	m_eID = eID;
 
@@ -130,13 +130,14 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ShellNpcGameTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/ShellGame/ShellGaming_%d.png", 6)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ShellTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/ShellGame/ShellGame.png")), E_FAIL);
 
+
 #pragma endregion MapObject
 
 
-	//¹æ ¹è°æ °ü·Ã ÅØ½ºÃÄµé
+	//ë°© ë°°ê²½ ê´€ë ¨ í…ìŠ¤ì³ë“¤
 	//FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_EffectTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Explosion/Explosion%d.png", 90)), E_FAIL);
 
-	//±âº» ÅØ½ºÃ³, Å¥ºê·Î ¹Ù²Ù±â·ÎÇÏ°í »ç¿ëÇÏÁö¾ÊÀ½
+	//ê¸°ë³¸ í…ìŠ¤ì²˜, íë¸Œë¡œ ë°”ê¾¸ê¸°ë¡œí•˜ê³  ì‚¬ìš©í•˜ì§€ì•ŠìŒ
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BasementWall", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Wall/StageWall_Long.png")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BossWall", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Wall/BossWall.png")), E_FAIL);
 
@@ -149,7 +150,7 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BossWallCubeTexture", CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/Wall/BossWallCube.dds")), E_FAIL);
 
 
-	//TODO: ÅØ½ºÃÄ °æ·Î ¼öÁ¤ ÇÊ¿äÇÏ´Ù!
+	//TODO: í…ìŠ¤ì³ ê²½ë¡œ ìˆ˜ì • í•„ìš”í•˜ë‹¤!
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SheolFloorCubeTexture", CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/Terrain/BossCube.dds")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SheolWallCubeTexture", CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/Wall/BossWallCube.dds")), E_FAIL);
 
@@ -159,8 +160,8 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 
 
 
-	//ÇöÁ¤LoadingÃß°¡
-	//ISAAC ÀÌ¹ÌÁö
+	//í˜„ì •Loadingì¶”ê°€
+	//ISAAC ì´ë¯¸ì§€
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_IDLE", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_idle_%d.png", 11)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_BACK", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_back_%d.png", 11)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_BACK_SMALL", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_back_small_%d.png", 11)), E_FAIL);
@@ -168,7 +169,7 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_LEFT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_left_%d.png", 8)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_THUMBS_UP", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_thumbs_up_%d.png", 2)), E_FAIL);
 
-	//´«¹°Ãß°¡
+	//ëˆˆë¬¼ì¶”ê°€
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/Tear_%d.png", 13)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MstTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Monstertear/tear_%d.png", 13)), E_FAIL);
 
@@ -178,14 +179,14 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_BrimHead", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/BrimHead.png", 1)), E_FAIL);
 
 
-	//Coin ÀÌ¹ÌÁö
+	//Coin ì´ë¯¸ì§€
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinTexture_IDLE", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/coin_%d.png", 6)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinTexture_EFFECT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/coin_effect_%d.png", 5)), E_FAIL);
 
-	//Pill ÀÌ¹ÌÁö
+	//Pill ì´ë¯¸ì§€
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_Pill", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/pill_%d.png", 5)), E_FAIL);
 
-	//¿ì´Â¾çÆÄ ÀÌ¹ÌÁö
+	//ìš°ëŠ”ì–‘íŒŒ ì´ë¯¸ì§€
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_SadOnion", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/collectibles_001_thesadonion.png", 1)), E_FAIL);
 
 	//BrimStone
@@ -202,6 +203,12 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 
 	//pickup_heart_half
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_HeartHalf", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/pickup_heart_half.png", 1)), E_FAIL);
+
+	// EPIC ì´ì•Œ
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_EpicBullet", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/EpicBullet.png", 1)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_EpicEff", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/EpicEff_%d.png", 11)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_EpicSpace", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/EpicSpace_%d.png", 8)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_EpicTarget", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/EpicTarget.png", 1)), E_FAIL);
 
 	m_bFinish = true;
 
@@ -275,16 +282,17 @@ _uint CLoading::Loading_ForStage()
 
 
 
-	//ÇöÁ¤LoadingÃß°¡
-	//ISAAC ÀÌ¹ÌÁö
+	//í˜„ì •Loadingì¶”ê°€
+	//ISAAC ì´ë¯¸ì§€
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_IDLE", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_idle_%d.png",11)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_BACK", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_back_%d.png", 11)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_BACK_SMALL", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_back_small_%d.png", 11)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_RIGHT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_right_%d.png", 8)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_LEFT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_left_%d.png", 8)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_THUMBS_UP", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_thumbs_up_%d.png", 2)), E_FAIL);
+	//FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_THUMBS_UP", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_thumbs_up_%d.png", 2)), E_FAIL);
 
-	//´«¹°Ãß°¡
+	//ëˆˆë¬¼ì¶”ê°€
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/Tear_%d.png", 13)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MstTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Monstertear/tear_%d.png", 13)), E_FAIL);
 
@@ -293,14 +301,14 @@ _uint CLoading::Loading_ForStage()
 	//BrimHead
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_BrimHead", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/BrimHead.png", 1)), E_FAIL);
 
-	//Coin ÀÌ¹ÌÁö
+	//Coin ì´ë¯¸ì§€
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinTexture_IDLE", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/coin_%d.png", 6)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinTexture_EFFECT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/coin_effect_%d.png", 5)), E_FAIL);
 
-	//Pill ÀÌ¹ÌÁö
+	//Pill ì´ë¯¸ì§€
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_Pill", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/pill_%d.png", 5)), E_FAIL);
 
-	//¿ì´Â¾çÆÄ ÀÌ¹ÌÁö
+	//ìš°ëŠ”ì–‘íŒŒ ì´ë¯¸ì§€
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ItemTexture_SadOnion", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Item/collectibles_001_thesadonion.png", 1)), E_FAIL);
 
 	//BrimStone

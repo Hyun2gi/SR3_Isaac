@@ -17,6 +17,7 @@ public:
 
 public:
 	void			Run_Item_Effect()						override;
+	void			Item_Spawn_Action()						override;
 
 private:
 	virtual HRESULT		Add_Component()						override;
@@ -28,7 +29,7 @@ private:
 	_float					m_fPicNum;
 
 public:
-	static CSadOnion* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CSadOnion* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look);
 
 private:
 	virtual void		Free()									override;

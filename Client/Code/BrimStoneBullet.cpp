@@ -29,7 +29,7 @@ HRESULT CBrimStoneBullet::Ready_GameObject()
     m_fCallLimit = 1;
     m_bRotate = false;
 
-    m_pTransformCom->m_vScale = { 0.8f,0.8f,0.8f };
+    m_pTransformCom->m_vScale = { 0.6f,0.6f,0.6f };
 
     return S_OK;
 }
@@ -54,8 +54,13 @@ _int CBrimStoneBullet::Update_GameObject(const _float& fTimeDelta)
 
     bulletPos = playerPos + ((m_iBulletIndex + 1) * m_pTransformCom->m_vScale.x) * m_vBulletDir;
     m_pTransformCom->Set_Pos(bulletPos);
-    m_pTransformCom->Rotation(ROT_X, 95);
-    m_pTransformCom->Rotation(ROT_Z, 95);
+
+    if (m_bLie == false)
+    {
+        m_pTransformCom->Rotation(ROT_X, 100);
+        m_pTransformCom->Rotation(ROT_Z, 100);
+    }
+   
     m_bRotate = true;
 
 
@@ -100,11 +105,12 @@ void CBrimStoneBullet::Render_GameObject()
 
 }
 
-CBrimStoneBullet* CBrimStoneBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag, int bulletIndex)
+CBrimStoneBullet* CBrimStoneBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag, int bulletIndex, bool lie)
 {
     CBrimStoneBullet* pInstance = new CBrimStoneBullet(pGraphicDev);
     pInstance->Set_MyLayer(pLayerTag);
     pInstance->Set_BulletIndex(bulletIndex);
+    pInstance->Set_BulletLie(lie);
     if (FAILED(pInstance->Ready_GameObject()))
     {
         Safe_Release(pInstance);
@@ -175,6 +181,16 @@ HRESULT CBrimStoneBullet::Add_Component()
 
     bulletPos = playerPos + ((m_iBulletIndex + 1) * m_pTransformCom->m_vScale.x*0.5) * m_vBulletDir;
     m_pTransformCom->Set_Pos(bulletPos);
+
+    if (m_bLie == true)
+    {
+        m_pTransformCom->Rotation(ROT_X, 90);
+    }
+
+    if (m_bLie == false)
+    {
+        m_pTransformCom->m_vScale = { 1.f,1.f,1.f };
+    }
 
     m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 

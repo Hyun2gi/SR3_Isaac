@@ -22,13 +22,15 @@ CCoin::~CCoin()
 HRESULT CCoin::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(6.f, 1.f, 10.f);
-
+	
+	m_pTransformCom->m_vScale = { 0.5,0.5,0.5 };
 	m_ePreState = COIN_END;
 	m_eCurState = COIN_IDLE;
 	m_fFrame = 0;
 	m_fSpriteSpeed = 2;
 	m_iDelay = 0;
+	m_iTimer = 0;
+	m_fMoveSpeed = 0.9;
 
 	m_bDead = false;
 
@@ -65,12 +67,12 @@ _int CCoin::Update_GameObject(const _float& fTimeDelta)
 			m_bDead = true;
 		}
 	}
-	
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
+	Item_Spawn_Action();
 	
 	if (m_bDead == true)
 	{
@@ -78,7 +80,7 @@ _int CCoin::Update_GameObject(const _float& fTimeDelta)
 		return 1;
 	}
 
-	Engine::Add_RenderGroup(RENDER_ALPHA, this);
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 	return 0;
 }
 
@@ -97,14 +99,10 @@ void CCoin::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	m_pTextureCom->Set_Texture((_uint)m_fFrame);
 
 	m_pBufferCom->Render_Buffer();
-
-	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 void CCoin::Run_Item_Effect()
@@ -114,6 +112,69 @@ void CCoin::Run_Item_Effect()
 	m_fFrame = 0;
 
 	CPlayer::GetInstance()->Set_Coin(1);
+}
+
+void CCoin::Item_Spawn_Action()
+{
+	// SP_IDLE, // ±×³É ÀÖÀ½
+	//	SP_SLOT, // ½½·Ô ¸Ó½Å¿¡¼­ ³ª¿È (¸¹ÀÌ Æ¢¾î³ª¿È)
+	//	SP_OBJECT, // OBJECT¿¡¼­ ³ª¿È (Á¶±Ý Æ¢¾î³ª¿È)
+	//	SP_SHOP, // ¼¥¿¡¼­ ±¸¸Å
+
+	Engine::CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
+	NULL_CHECK(pTerrainBufferCom);
+
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	_float	fHeight = m_pCalculCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
+
+	_vec3 itemPos;
+	m_pTransformCom->Get_Info(INFO_POS, &itemPos);
+
+	if (m_eCurItemPlace == SP_SLOT)
+	{
+		if (m_iTimer < 40)
+		{
+			m_pTransformCom->Set_Pos(itemPos.x+1, itemPos.y + 2, itemPos.z+1);
+		}
+		else
+		{
+			_vec3 temp = itemPos - _vec3(0, 1, 0);
+			if (temp.y <= fHeight + 1)
+			{
+				m_eCurItemPlace = SP_END;
+				m_pTransformCom->Set_Pos(itemPos.x, fHeight + 1, itemPos.z);
+			}
+			else
+			{
+				m_pTransformCom->Set_Pos(itemPos.x+1, itemPos.y - 1, itemPos.z+1);
+			}
+		}
+	}
+	else if(m_eCurItemPlace == SP_OBJECT)
+	{
+		if (m_iTimer < 1)
+		{
+			//m_fMoveSpeed += 0.01;
+			m_pTransformCom->Set_Pos(itemPos.x, itemPos.y + m_fMoveSpeed, itemPos.z);
+		}
+		else 
+		{
+			_vec3 temp = itemPos - _vec3(0, 0.1, 0);
+
+			if (temp.y <= fHeight + 1)
+			{
+				m_eCurItemPlace = SP_END;
+				m_pTransformCom->Set_Pos(itemPos.x, fHeight + 1, itemPos.z);
+			}
+			else
+			{
+				m_pTransformCom->Set_Pos(itemPos.x, itemPos.y - 0.1, itemPos.z);
+			}
+		}
+	}
+
+	m_iTimer++;
 }
 
 HRESULT CCoin::Add_Component()
@@ -137,6 +198,8 @@ HRESULT CCoin::Add_Component()
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
+
+	m_pTransformCom->Set_Pos(m_vSpawnPos);
 
 	pComponent = m_pCalculCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -166,9 +229,12 @@ void CCoin::Motion_Change()
 	}
 }
 
-CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
 {
 	CCoin* pInstance = new CCoin(pGraphicDev);
+	//Á¤È®ÇÑ À§Ä¡ ¼³Á¤
+	pInstance->Set_SpawnPos(pos);
+	pInstance->Set_LookDir(look);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
@@ -176,6 +242,7 @@ CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 		MSG_BOX("COIN Create Failed");
 		return nullptr;
 	}
+	pInstance->Set_Item_SpawnSpot(spawnspot);
 
 	return pInstance;
 }

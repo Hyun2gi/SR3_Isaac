@@ -1,49 +1,39 @@
 #include "stdafx.h"
-#include "Poop.h"
+#include "Shell.h"
 
 #include "Export_System.h"
 #include "Export_Utility.h"
 
-CPoop::CPoop(LPDIRECT3DDEVICE9 pGraphicDev)
+CShell::CShell(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMapObj(pGraphicDev)
 {
 }
 
-CPoop::CPoop(const CPoop& rhs)
+CShell::CShell(const CShell& rhs)
 	: CMapObj(rhs)
 {
 }
 
-CPoop::~CPoop()
+CShell::~CShell()
 {
 }
 
-HRESULT CPoop::Ready_GameObject()
+HRESULT CShell::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(10.f, 1.f, 10.f);
+	m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
 
-	m_iLimitHit = 4;
-
-	m_bAni = false;
-	m_bReduce = true;
+	m_iPicNum = 1;
+	m_fFrameSpeed = 1.f;
 
 	return S_OK;
 }
 
-_int CPoop::Update_GameObject(const _float& fTimeDelta)
+_int CShell::Update_GameObject(const _float& fTimeDelta)
 {
-
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	/*if (Engine::Key_Down(DIK_Z))
-		Hit();*/
 
-	if (Engine::Get_DIKeyState(DIK_Z) & 0x80)
-		Hit();
-
-	if (m_bAni)
-		Change_Scale();
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -52,7 +42,7 @@ _int CPoop::Update_GameObject(const _float& fTimeDelta)
 	return 0;
 }
 
-void CPoop::LateUpdate_GameObject()
+void CShell::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 
@@ -61,7 +51,7 @@ void CPoop::LateUpdate_GameObject()
 	__super::Compute_ViewZ(&vPos);
 }
 
-void CPoop::Render_GameObject()
+void CShell::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -71,32 +61,7 @@ void CPoop::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-void CPoop::Change_Scale()
-{
-	float fScaleY = m_pTransformCom->m_vScale.y;
-
-	if (m_bReduce)
-	{
-		if (0.9f >= fScaleY)
-			m_bReduce = false;
-
-		fScaleY -= 0.1f;
-	}
-	else
-	{
-		if (1.f <= fScaleY)
-		{
-			m_bReduce = true;
-			m_bAni = false;
-		}
-
-		fScaleY += 0.1f;
-	}
-	m_pTransformCom->m_vScale = { m_pTransformCom->m_vScale.x,
-	fScaleY, m_pTransformCom->m_vScale.z };
-}
-
-HRESULT CPoop::Add_Component()
+HRESULT CShell::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
@@ -104,9 +69,9 @@ HRESULT CPoop::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PoopTexture"));
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ShellTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_PoopTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_ShellTexture", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -119,39 +84,25 @@ HRESULT CPoop::Add_Component()
 	return S_OK;
 }
 
-void CPoop::Motion_Change()
+void CShell::Hit()
 {
 }
 
-void CPoop::Hit()
+CShell* CShell::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	if (m_iHitCount < m_iLimitHit)
-	{
-		m_iHitCount += 1;
-		m_fFrame += 1.f;
-		m_bAni = true;
-	}
-	else
-	{
-		m_bDead = true;
-	}
-}
-
-CPoop* CPoop::Create(LPDIRECT3DDEVICE9 pGraphicDev)
-{
-	CPoop* pInstance = new CPoop(pGraphicDev);
+	CShell* pInstance = new CShell(pGraphicDev);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("Poop Create Failed");
+		MSG_BOX("Shell Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
 }
 
-void CPoop::Free()
+void CShell::Free()
 {
 	__super::Free();
 }

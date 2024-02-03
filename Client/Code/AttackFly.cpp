@@ -4,11 +4,13 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
+#include "Scene.h"
+#include "Stage.h"
+
 CAttackFly::CAttackFly(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
 	m_CenterFly(nullptr)
 {
-	//ZeroMemory(&m_NormalFlyList, sizeof(m_NormalFlyList));
 }
 
 CAttackFly::CAttackFly(const CAttackFly& rhs)
@@ -19,6 +21,16 @@ CAttackFly::CAttackFly(const CAttackFly& rhs)
 
 CAttackFly::~CAttackFly()
 {
+}
+
+void CAttackFly::Set_NormalFly_ToStage(CLayer* pLayer)
+{
+	for (vector<CNormalFly*>::iterator iter = m_NormalFlyList.begin();
+		iter != m_NormalFlyList.end();)
+	{
+		pLayer->Add_GameObject(L"NormalFly", *iter);
+		++iter;
+	}
 }
 
 HRESULT CAttackFly::Ready_GameObject()
@@ -124,8 +136,8 @@ void CAttackFly::Create_AttackFly()
 
 	for (int i = 1; i < 13; ++i)
 	{
-		CNormalFly* pNormalFly = CNormalFly::Create(m_pGraphicDev, i);
-		pNormalFly->Set_MyLayer(m_vecMyLayer[0]);
+		CNormalFly* pNormalFly = CNormalFly::Create(m_pGraphicDev, i, m_vecMyLayer[0]);
+		//pNormalFly->Set_MyLayer(m_vecMyLayer[0]); // Create 바꿀 필요 없을 듯함
 		pNormalFly->Set_TargetTransform(m_CenterFly->Get_Transform());
 		m_NormalFlyList.push_back(pNormalFly);
 	}

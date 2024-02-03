@@ -24,6 +24,7 @@ HRESULT CWhipWorm::Ready_GameObject()
 
     m_bDead = false;
     m_fFrame = 0;
+    m_iCoin = 3;
 
     return S_OK;
 }
@@ -40,7 +41,7 @@ _int CWhipWorm::Update_GameObject(const _float& fTimeDelta)
         return 1;
     }
 
-    Engine::Add_RenderGroup(RENDER_ALPHA, this);
+    Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
     return 0;
 }
@@ -58,20 +59,22 @@ void CWhipWorm::Render_GameObject()
 {
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
     m_pTextureCom->Set_Texture((_uint)0);
 
     m_pBufferCom->Render_Buffer();
 
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 void CWhipWorm::Run_Item_Effect()
 {
     m_bDead = true;
     CPlayer::GetInstance()->Set_BulletSpeed(50);
+    CPlayer::GetInstance()->Set_Item_Get_Anim();
+}
+
+void CWhipWorm::Item_Spawn_Action()
+{
 }
 
 HRESULT CWhipWorm::Add_Component()
@@ -90,6 +93,8 @@ HRESULT CWhipWorm::Add_Component()
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
+    m_pTransformCom->Set_Pos(m_vSpawnPos);
+
     pComponent = m_pCalculCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
@@ -100,9 +105,12 @@ void CWhipWorm::Motion_Change()
    
 }
 
-CWhipWorm* CWhipWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CWhipWorm* CWhipWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
 {
     CWhipWorm* pInstance = new CWhipWorm(pGraphicDev);
+    //정확한 위치 설정
+    pInstance->Set_SpawnPos(pos);
+    pInstance->Set_LookDir(look);
 
     if (FAILED(pInstance->Ready_GameObject()))
     {
@@ -110,6 +118,7 @@ CWhipWorm* CWhipWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev)
         MSG_BOX("WhipWorm Create Failed");
         return nullptr;
     }
+    pInstance->Set_Item_SpawnSpot(spawnspot);
 
     return pInstance;
 }

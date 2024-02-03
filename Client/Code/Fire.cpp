@@ -122,6 +122,7 @@ void CFire::Hit()
 	else
 	{
 		// 아이템 드랍
+		m_bDead = true;
 	}
 }
 

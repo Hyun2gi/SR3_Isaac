@@ -21,13 +21,14 @@ private:
 
 public:
 	void			Run_Item_Effect()						override;
+	void			Item_Spawn_Action()						override;
 
 private:
 	// 랜덤값으로 한 이미지 지정하면 계속 유지
 	_float					m_fPicNum;
 
 public:
-	static CBrimStone* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CBrimStone* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look);
 
 private:
 	virtual void		Free()									override;

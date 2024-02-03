@@ -24,6 +24,7 @@ HRESULT CHeartHalf::Ready_GameObject()
 
     m_bDead = false;
     m_fFrame = 0;
+    m_iCoin = 2;
 
     return S_OK;
 }
@@ -31,7 +32,6 @@ HRESULT CHeartHalf::Ready_GameObject()
 _int CHeartHalf::Update_GameObject(const _float& fTimeDelta)
 {
     CGameObject::Update_GameObject(fTimeDelta);
-
     m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
     if (m_bDead == true)
@@ -40,7 +40,7 @@ _int CHeartHalf::Update_GameObject(const _float& fTimeDelta)
         return 1;
     }
 
-    Engine::Add_RenderGroup(RENDER_ALPHA, this);
+    Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
     return 0;
 }
@@ -58,20 +58,34 @@ void CHeartHalf::Render_GameObject()
 {
     m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
     m_pTextureCom->Set_Texture((_uint)0);
 
     m_pBufferCom->Render_Buffer();
-
-    m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-    m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 void CHeartHalf::Run_Item_Effect()
 {
-    m_bDead = true;
-    CPlayer::GetInstance()->Set_Hp(0.5);
+    if (m_eCurItemPlace == SP_SHOP)
+    {
+        // 구매해야할 경우
+        if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
+        {
+            CPlayer::GetInstance()->Set_Coin(-m_iCoin);
+            m_bDead = true;
+            CPlayer::GetInstance()->Set_Hp(0.5);
+        }
+    }
+    else 
+    {
+        // 그냥 바로 적용
+        m_bDead = true;
+        CPlayer::GetInstance()->Set_Hp(0.5);
+    }
+}
+
+void CHeartHalf::Item_Spawn_Action()
+{
 }
 
 HRESULT CHeartHalf::Add_Component()
@@ -90,6 +104,8 @@ HRESULT CHeartHalf::Add_Component()
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
+    m_pTransformCom->Set_Pos(m_vSpawnPos);
+
     pComponent = m_pCalculCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
@@ -99,16 +115,20 @@ void CHeartHalf::Motion_Change()
 {
 }
 
-CHeartHalf* CHeartHalf::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CHeartHalf* CHeartHalf::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
 {
     CHeartHalf* pInstance = new CHeartHalf(pGraphicDev);
+    //정확한 위치 설정
+    pInstance->Set_SpawnPos(pos);
+    pInstance->Set_LookDir(look);
 
     if (FAILED(pInstance->Ready_GameObject()))
     {
         Safe_Release(pInstance);
-        MSG_BOX("WhipWorm Create Failed");
+        MSG_BOX("HeartHalf Create Failed");
         return nullptr;
     }
+    pInstance->Set_Item_SpawnSpot(spawnspot);
 
     return pInstance;
 }

@@ -19,6 +19,7 @@ private:
 		C_SHAKING_POS, // Position 변화로 흔들림
 		C_SHAKING_ROT, // Rotatation 변화로 흔들림
 		C_MOVE_TO_TARGET,
+		C_EPIC,
 		C_END
 	};
 
@@ -53,13 +54,22 @@ public:
 	void	OnShakeCameraPos(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
 	void	OnShakeCameraRot(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
 
-	void	OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition);
-	void	OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveSpeed, _vec3 target, bool fixedPosition);
+	void	OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition, int afterstate);
+	void	OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveSpeed, _vec3 target, bool fixedPosition, int afterstate);
+
+	// 따봉할때
+	void	OnMoveToPlayerFront();
+	// 따봉 후
+	void	OnMoveToOriginPos();
+
+	// 에픽에투스 설정
+	void				Set_EpicBullet();
+	void				Set_Shoot_End_Epic(); 
 
 private:
 	virtual void Free();
 	void		Key_Input(const _float& fTimeDelta);
-	void		Chase_Character();
+	void		Chase_Character(const _float& fTimeDelta);
 	void		Whole_Land_Show();
 	void		Mouse_Fix();
 	void		Mouse_Move();
@@ -80,9 +90,9 @@ private:
 	// 필요없을 경우 삭제하기
 	// 카메라 흔들림 주기 전에 position
 	_vec3		m_vStartEyePosition;
+	_vec3		m_vOriginAtPosition;
 	_vec3		m_vStartAtPosition;
 	_vec3		m_vGoalPosition;
-	_vec3		m_vOriginAtPosition;
 
 
 	// X,Y,Z 회전각
@@ -103,6 +113,7 @@ private:
 
 	_bool		m_bShake;
 	_bool		m_bMove;
+	_bool		m_bFirstPerson;
 
 
 	// 이동 후에 goalposition에서 fixed 할건지 아니면 시작 position으로 갈건지
@@ -113,6 +124,10 @@ private:
 	//플레이어에서 해당방향 더해주기
 	_vec3		m_vCameraPosDir;
 
+	//현재 Epic 상태인지 아닌지 판별
+	_bool		m_bEpic;
+	//에픽에투스 누르고 플레이어로 돌아온 후에 떨어져야해서 판별
+	_bool		m_bEpicCall;
 
 
 	// 눈과 바로보는 지점의 거리
@@ -132,6 +147,7 @@ private:
 
 	//필요없을시 삭제
 	DYNAMICCAMERAID		m_ePreState;
+	DYNAMICCAMERAID		m_eAfterState;
 
 };
 

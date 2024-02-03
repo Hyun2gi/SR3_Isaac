@@ -3,6 +3,9 @@
 #include "Base.h"
 #include "GameObject.h"
 
+#include "Item.h"
+#include "Layer.h"
+
 BEGIN(Engine)
 
 class CRcTex;
@@ -20,6 +23,10 @@ protected:
 	virtual ~CMapObj();
 
 public:
+	_bool			Get_Dead() { return m_bDead; }
+	_bool			Get_Drop() { return m_bItemDrop; }
+	void			Set_Drop() { m_bItemDrop = true; }
+
 	Engine::CTransform* Get_TransformCom() { return m_pTransformCom; }
 
 public:
@@ -27,6 +34,8 @@ public:
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
 	virtual void	LateUpdate_GameObject()					 override;
 	virtual void	Render_GameObject()						 override;
+
+	CItem*			Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer);
 
 protected:
 	virtual HRESULT			Add_Component();
@@ -41,6 +50,9 @@ protected:
 	Engine::CTransform*		m_pTargetTransCom;
 	Engine::CTexture*		m_pTextureCom;
 	Engine::CCalculator*	m_pCalculator;
+
+	_bool					m_bDead;
+	_bool					m_bItemDrop;
 	
 	_int					m_iHitCount;
 	_int					m_iLimitHit;

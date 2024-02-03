@@ -28,6 +28,7 @@ HRESULT CPill::Ready_GameObject()
 	srand((unsigned)time(NULL));
 	m_iPicNum = rand() % 5;
 
+	m_iCoin = 5;
 	// 약 효과
 	switch (m_iPicNum)
 	{
@@ -81,43 +82,86 @@ void CPill::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
-	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
 	m_pTextureCom->Set_Texture((_uint)m_iPicNum);
 
 	m_pBufferCom->Render_Buffer();
-
-	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 }
 
 void CPill::Run_Item_Effect()
 {
-	srand((unsigned)time(NULL));
-	int iEffectNum = rand() % 5;
-
-	// 약 효과
-	switch (iEffectNum)
+	if (m_eCurItemPlace == SP_SHOP)
 	{
-	case 0:
-		// 최대피
-		CPlayer::GetInstance()->Set_To_MaxHp();
-		break;
-	case 1:
-		CPlayer::GetInstance()->Set_Hp(-1);
-		break;
-	case 2:
-		// 무적 상태
-		break;
-	case 3:
-		CPlayer::GetInstance()->Set_MoveSpeed(4);
-		break;
-	case 4:
-		CPlayer::GetInstance()->Set_MoveSpeed(-2);
-		break;
-	}
+		// 구매해야할 경우
+		if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
+		{
+			CPlayer::GetInstance()->Set_Coin(-m_iCoin);
+			srand((unsigned)time(NULL));
+			int iEffectNum = rand() % 5;
 
-	m_bDead = true;
+			// 약 효과
+			switch (iEffectNum)
+			{
+			case 0:
+				// 최대피
+				CPlayer::GetInstance()->Set_To_MaxHp();
+				CPlayer::GetInstance()->Set_Item_Get_Anim();
+				break;
+			case 1:
+				CPlayer::GetInstance()->Set_Hp(-1);
+				break;
+			case 2:
+				// 무적 상태
+				CPlayer::GetInstance()->Set_Item_Get_Anim();
+				break;
+			case 3:
+				CPlayer::GetInstance()->Set_MoveSpeed(4);
+				CPlayer::GetInstance()->Set_Item_Get_Anim();
+				break;
+			case 4:
+				CPlayer::GetInstance()->Set_MoveSpeed(-2);
+				break;
+			}
+
+			m_bDead = true;
+			
+		}
+	}
+	else
+	{
+		srand((unsigned)time(NULL));
+		int iEffectNum = rand() % 5;
+
+		// 약 효과
+		switch (iEffectNum)
+		{
+		case 0:
+			// 최대피
+			CPlayer::GetInstance()->Set_To_MaxHp();
+			CPlayer::GetInstance()->Set_Item_Get_Anim();
+			break;
+		case 1:
+			CPlayer::GetInstance()->Set_Hp(-1);
+			break;
+		case 2:
+			// 무적 상태
+			CPlayer::GetInstance()->Set_Item_Get_Anim();
+			break;
+		case 3:
+			CPlayer::GetInstance()->Set_MoveSpeed(4);
+			CPlayer::GetInstance()->Set_Item_Get_Anim();
+			break;
+		case 4:
+			CPlayer::GetInstance()->Set_MoveSpeed(-2);
+			break;
+		}
+
+		m_bDead = true;
+	}
+}
+
+void CPill::Item_Spawn_Action()
+{
 }
 
 HRESULT CPill::Add_Component()
@@ -136,6 +180,8 @@ HRESULT CPill::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
+	m_pTransformCom->Set_Pos(m_vSpawnPos);
+
 	pComponent = m_pCalculCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
@@ -145,9 +191,12 @@ void CPill::Motion_Change()
 {
 }
 
-CPill* CPill::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CPill* CPill::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
 {
 	CPill* pInstance = new CPill(pGraphicDev);
+	//정확한 위치 설정
+	pInstance->Set_SpawnPos(pos);
+	pInstance->Set_LookDir(look);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
@@ -155,6 +204,7 @@ CPill* CPill::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 		MSG_BOX("Pill Create Failed");
 		return nullptr;
 	}
+	pInstance->Set_Item_SpawnSpot(spawnspot);
 
 	return pInstance;
 }

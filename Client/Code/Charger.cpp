@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Charger.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CCharger::CCharger(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -34,7 +35,9 @@ HRESULT CCharger::Ready_GameObject()
 
 _int CCharger::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed; // 1.5
+	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed; // 1.5
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
@@ -45,7 +48,7 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_iHp -= 1;
 
-		Hit_PushBack(fTimeDelta);
+		Hit_PushBack(m_fSlowDelta);
 
 		m_bHit = false;
 
@@ -55,14 +58,14 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	CGameObject::Update_GameObject(fTimeDelta);
+	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	Check_Range();
 
 	_vec3 vTargetPos;
 	m_pTargetTransCom->Get_Info(INFO_POS, &vTargetPos);
 
-	m_pTransformCom->Chase_Target(&vTargetPos, m_fSpeed, fTimeDelta);
+	m_pTransformCom->Chase_Target(&vTargetPos, m_fSpeed, m_fSlowDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
