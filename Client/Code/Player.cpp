@@ -134,6 +134,10 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 			{
 				iResult = dynamic_cast<CBrimStoneBullet*>(*iter)->Update_GameObject(fTimeDelta);
 			}
+			else if (m_eCurBulletState == P_BULLET_EPIC)
+			{
+				iResult = dynamic_cast<CEpicBullet*>(*iter)->Update_GameObject(fTimeDelta);
+			}
 			
 			if (1 == iResult)
 			{
@@ -173,6 +177,10 @@ void CPlayer::LateUpdate_GameObject()
 			else if (m_eCurBulletState == P_BULLET_BRIMSTONE)
 			{
 				dynamic_cast<CBrimStoneBullet*>(iter)->LateUpdate_GameObject();
+			}
+			else if (m_eCurBulletState == P_BULLET_EPIC)
+			{
+				dynamic_cast<CEpicBullet*>(iter)->LateUpdate_GameObject();
 			}
 		}
 	}
@@ -287,6 +295,17 @@ void CPlayer::Set_BulletType(int _bullet)
 		m_eCurBulletState = P_BULLET_BRIMSTONE;
 		m_fShootDelayTime = 90;
 		break;
+	}
+}
+
+void CPlayer::Set_EpicFall()
+{
+	if (m_eCurBulletState == P_BULLET_EPIC)
+	{
+		if (!m_PlayerBulletList.empty())
+		{
+			dynamic_cast<CEpicBullet*>(m_PlayerBulletList.back())->Set_StartFall(true);
+		}
 	}
 }
 
@@ -468,19 +487,38 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 		else if (m_eCurBulletState == P_BULLET_EPIC)
 		{
-			// 다시 플레이어 추적으로 변경
-			// 해당 위치로 이동하기
-			m_PlayerBulletList.push_back(CEpicBullet::Create(m_pGraphicDev, m_pLayerTag));
-			dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_Shoot_End_Epic();
+			if (!m_PlayerBulletList.empty())
+			{
+				// 다시 플레이어 추적으로 변경
+				// 해당 위치로 이동하기
+				//m_PlayerBulletList.push_back(CEpicBullet::Create(m_pGraphicDev, m_pLayerTag));
+
+				CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
+				//NULL_CHECK_RETURN(pTerrainBufferCom, _vec3());
+
+				CTransform* pTerrainTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Terrain", L"Proto_Transform"));
+				//NULL_CHECK_RETURN(pTerrainTransCom, _vec3());
+
+				_vec3 targetpos = m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);
+				dynamic_cast<CEpicBullet*>(m_PlayerBulletList.back())->Set_Shoot(_vec3(targetpos.x, 0, targetpos.z));
+				dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_Shoot_End_Epic();
+			}
+			
 		}
 		
 	}
 
 	if ((Engine::Get_DIMouseState(DIM_RB) & 0x80) && m_eCurBulletState == P_BULLET_EPIC && m_eCurState!= P_SHOOTWALK)
 	{
-		// 카메라를 위로 이동 
-		m_eCurState = P_SHOOTWALK;
-		dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_EpicBullet();
+		//비었을때만
+		if (m_PlayerBulletList.empty())
+		{
+			// 카메라를 위로 이동 
+			m_eCurState = P_SHOOTWALK;
+			m_PlayerBulletList.push_back(CEpicBullet::Create(m_pGraphicDev, m_pLayerTag));
+			dynamic_cast<CEpicBullet*>(m_PlayerBulletList.back())->Set_Bullet(1);
+			dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_EpicBullet();
+		}
 	}
 
 

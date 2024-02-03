@@ -19,7 +19,7 @@ private:
 	explicit CEpicBullet(const CEpicBullet& rhs);
 	virtual ~CEpicBullet();
 
-	enum EPICSTATE{ BRIM_HEAD, BRIM_CENTER, BRIM_END };
+	enum EPICSTATE{ EPIC_TARGET, EPIC_BULLET, EPIC_EFFECT, EPIC_END };
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -27,26 +27,27 @@ public:
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
+	void		Motion_Change();
+
 public:
 	static CEpicBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag);
 
 public:
-	HRESULT					Set_HeadTexture(bool _head, int _index);
-
 	void					Set_Bullet(int _num)
 	{
 		switch (_num)
 		{
 		case 1:
-			m_eCurState = BRIM_HEAD;
+			m_eCurState = EPIC_TARGET;
 			break;
 		case 2:
-			m_eCurState = BRIM_CENTER;
+			m_eCurState = EPIC_BULLET;
 			break;
 		}
 	}
-	void				Set_BulletIndex(int index) { m_iBulletIndex = index; }
-	void				Set_BulletLie(bool _lie) { m_bLie = _lie; }
+
+	void					Set_Shoot(_vec3 shootpos);
+	void					Set_StartFall(bool start) { m_bStartFall = start; }
 
 private:
 	virtual HRESULT			Add_Component();
@@ -67,17 +68,18 @@ protected:
 	_float					m_fCallLimit;
 	_float					m_fAccTimeDelta;
 
-	_int					m_iBulletIndex;
+	int						m_iPicNum;
+	_float					m_fSpriteSpeed;
+	_vec3					m_vShootPos;
+	_vec3					m_vTargetPos;
+	_vec3					m_vBulletSpeed;
 
-	_vec3					m_vPicDir;
-	bool					m_bhead; //head 부분인지 아닌지
-	bool					m_bRotate;
-	bool					m_bLie;
-
+	bool					m_bStartFall;
 
 private:
 	_vec3		m_vBulletDir;
 	bool		m_bDead = false;
 	EPICSTATE	m_eCurState;
+	EPICSTATE	m_ePreState;
 };
 

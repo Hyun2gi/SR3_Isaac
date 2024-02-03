@@ -21,14 +21,14 @@ HRESULT CEpicBullet::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
-	m_eCurState = BRIM_CENTER;
 	m_fAccTimeDelta = 0;
+    m_ePreState = EPIC_END;
 
 	// 지속시간
 	m_fCallLimit = 1;
-	m_bRotate = false;
-
-	m_pTransformCom->m_vScale = { 0.6f,0.6f,0.6f };
+    m_fSpriteSpeed = 2;
+    m_vBulletSpeed = _vec3(0, 5, 0);
+    m_bStartFall = false;
 
 	return S_OK;
 }
@@ -37,36 +37,43 @@ _int CEpicBullet::Update_GameObject(const _float& fTimeDelta)
 {
     CGameObject::Update_GameObject(fTimeDelta);
     m_pCalculatorCom->Compute_Vill_Matrix(m_pTransformCom);
+    
+    Motion_Change();
 
-    //플레이어 첫 시작 위치 받아와서 거기서부터 시작
-    _vec3   playerPos;
-    _vec3   playerDir;
-    _vec3   bulletPos;
-    //dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"))->Get_Info(INFO_POS, &playerPos);
-    //dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"))->Get_Info(INFO_LOOK, &m_vBulletDir);
-
-    dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_POS, &playerPos);
-    dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_LOOK, &playerDir);
-
-    m_vBulletDir = _vec3(playerDir.x, 0, playerDir.z);
-    D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);
-
-    bulletPos = playerPos + ((m_iBulletIndex + 1) * m_pTransformCom->m_vScale.x) * m_vBulletDir;
-    m_pTransformCom->Set_Pos(bulletPos);
-
-    if (m_bLie == false)
+    if (m_eCurState == EPIC_TARGET)
     {
-        m_pTransformCom->Rotation(ROT_X, 100);
-        m_pTransformCom->Rotation(ROT_Z, 100);
+        POINT		ptMouse{};
+        GetCursorPos(&ptMouse);
+        ScreenToClient(g_hWnd, &ptMouse);
+        // SetCursorPos(pt.x, pt.y);
+        m_pTransformCom->Set_Pos(_vec3(ptMouse.x, 10, ptMouse.y));
+        //m_pTransformCom->Rotation(ROT_X, 90);
     }
-
-    m_bRotate = true;
-
-
-    if (Check_Time(fTimeDelta))
+   
+    if (m_eCurState == EPIC_BULLET && m_bStartFall)
     {
-        // 시간 다 되면 삭제
-        m_bDead = true;
+        m_vBulletSpeed += _vec3(0, 2, 0);
+        m_vShootPos -= m_vBulletSpeed*fTimeDelta;
+        m_pTransformCom->Set_Pos(m_vShootPos);
+
+        // 땅에 닿으면
+        if (m_vShootPos.y-(m_pTransformCom->m_vScale.y*0.5) <= 2)
+        {
+            m_eCurState = EPIC_EFFECT;
+            m_pTransformCom->m_vScale = { 1.2f, 1.2f, 1.2f };
+            m_fFrame = 0;
+        }
+    } 
+
+    if (m_eCurState == EPIC_EFFECT)
+    {
+        m_fFrame += m_iPicNum * fTimeDelta * m_fSpriteSpeed;
+
+        if (m_iPicNum < m_fFrame)
+        {
+            // 없애기
+            m_bDead = true;
+        }
     }
 
     if (m_bDead == true)
@@ -97,10 +104,49 @@ void CEpicBullet::Render_GameObject()
 
     m_pTextureCom->Set_Texture((_uint)0);
 
-    m_pBufferCom->Render_Buffer();
+    if (m_eCurState == EPIC_BULLET && m_bStartFall)
+    {
+        // BULLET 상태에서는
+        // 떨어질때만 보이게
+        m_pBufferCom->Render_Buffer();
+    }
+    else if(m_eCurState != EPIC_BULLET)
+    {
+        // BULLET 아니면 그냥 계속 RENDER
+        m_pBufferCom->Render_Buffer();
+    }
+    
 
     /*m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);*/
+}
+
+void CEpicBullet::Motion_Change()
+{
+    if (m_ePreState != m_eCurState)
+    {
+        m_fFrame = 0.f;
+        switch (m_eCurState)
+        {
+        case EPIC_TARGET:
+            m_iPicNum = 1;
+            m_fSpriteSpeed = 1.5f;
+            m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicTarget"));
+            break;
+        case EPIC_BULLET:
+            m_iPicNum = 1;
+            m_fSpriteSpeed = 1.5f;
+            m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicBullet"));
+            break;
+        case EPIC_EFFECT:
+            m_iPicNum = 11;
+            m_fSpriteSpeed = 1.5f;
+            m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicEff"));
+            break;
+        }
+
+        m_ePreState = m_eCurState;
+    }
 }
 
 CEpicBullet* CEpicBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag)
@@ -121,6 +167,24 @@ CEpicBullet* CEpicBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pL
     return pInstance;
 }
 
+
+void CEpicBullet::Set_Shoot(_vec3 shootpos)
+{
+    m_eCurState = EPIC_BULLET;
+    m_vShootPos = shootpos + _vec3(0, 11, 0);
+    m_pTransformCom->Set_Pos(m_vShootPos);
+
+    // 타겟 높이 고려해서 위치 지정
+    Engine::CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
+    NULL_CHECK(pTerrainBufferCom);
+
+    _vec3 vPos;
+    m_pTransformCom->Get_Info(INFO_POS, &vPos);
+    _float	fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
+
+    m_vTargetPos = _vec3(m_vShootPos.x, fHeight, m_vShootPos.z);
+
+}
 
 HRESULT CEpicBullet::Add_Component()
 {

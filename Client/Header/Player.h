@@ -78,6 +78,8 @@ public:
 	void		Set_StartPosition(_vec3 _position);
 	void		Set_MouseRotation(float xRad, float yRad);
 	void		Set_BulletType(int _bullet);
+	void		Set_EpicFall();
+
 
 	void		Set_Item_Get_Anim();
 	void		Set_Camera(CGameObject* _cam) { m_pCamera = _cam; }

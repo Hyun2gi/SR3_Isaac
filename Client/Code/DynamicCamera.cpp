@@ -46,6 +46,7 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_fAngleY = 0;
 
 	m_bEpic = false;
+	m_bEpicCall = false;
 
 	FAILED_CHECK_RETURN(CCamera::Ready_GameObject(), E_FAIL);
 
@@ -258,8 +259,6 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 
 		}
 	}
-
-
 }
 
 void CDynamicCamera::Whole_Land_Show()
@@ -538,6 +537,20 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 				return;
 			}
 
+			if (m_bEpicCall == true)
+			{
+				// 다시 제자리로 돌아간 후 떨어지기 시작
+				CPlayer::GetInstance()->Set_EpicFall();
+				m_bEpicCall = false;
+				m_eCurState = C_PLAYERCHASE;
+				m_bChaseInit = false;
+				m_bFix = false;
+				m_vEye = m_vGoalPosition;
+				m_vCameraPosDir = m_vEye - m_vAt;
+				CPlayer::GetInstance()->Set_KeyBlock(false);
+				return;
+			}
+
 			if (m_eAfterState == C_PLAYERCHASE)
 			{
 				m_eCurState = C_PLAYERCHASE;
@@ -711,6 +724,7 @@ void CDynamicCamera::OnMoveToPlayerFront()
 	OnMoveTargetCamera(3, 5, targetpos, false, 4);
 }
 
+
 void CDynamicCamera::OnMoveToOriginPos()
 {
 	CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
@@ -755,6 +769,7 @@ void CDynamicCamera::OnMoveToOriginPos()
 void CDynamicCamera::Set_EpicBullet()
 {
 	m_bEpic = true;
+	m_vStartEyePosition = m_vEye;
 	_vec3 target = _vec3(VTXCNTX / 2, 20, VTXCNTZ / 2);
 	OnMoveTargetCamera(1.f, 7.f, target, false, 0);
 }
@@ -763,6 +778,8 @@ void CDynamicCamera::Set_Shoot_End_Epic()
 {
 	// 에픽에투스 완료
 	m_bEpic = false;
+	// 에픽에투스 떨어지는거 부르기
+	m_bEpicCall = true;
 	m_eAfterState = C_PLAYERCHASE;
 	m_bChaseInit = true;
 	m_eCurState = C_MOVE_TO_TARGET;
