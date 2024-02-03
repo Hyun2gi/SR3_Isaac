@@ -34,6 +34,8 @@ _int CShop::Update_GameObject(const _float& fTimeDelta)
 	if (m_pShopNpc == nullptr)
 		Create_NPC();
 
+
+
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->Update_GameObject(fTimeDelta);
 

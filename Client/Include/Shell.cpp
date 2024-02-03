@@ -1,23 +1,26 @@
 #include "stdafx.h"
-#include "ShellNpc.h"
+#include "Shell.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
-CShellNpc::CShellNpc(LPDIRECT3DDEVICE9 pGraphicDev)
+CShell::CShell(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMapObj(pGraphicDev)
 {
 }
 
-CShellNpc::CShellNpc(const CShellNpc& rhs)
+
+CShell::CShell(const CShell& rhs)
 	: CMapObj(rhs)
 {
 }
 
-CShellNpc::~CShellNpc()
+
+CShell::~CShell()
 {
 }
 
-HRESULT CShellNpc::Ready_GameObject()
+HRESULT CShell::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->m_vScale = { 1.5f, 1.5f, 1.5f };
@@ -25,23 +28,15 @@ HRESULT CShellNpc::Ready_GameObject()
 	m_iPicNum = 1;
 	m_fFrameSpeed = 1.f;
 
-	m_ePreState = NPC_END;
+	//m_fCallLimit = 3.f;
 
 	return S_OK;
 }
 
-_int CShellNpc::Update_GameObject(const _float& fTimeDelta)
+_int CShell::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (NPC_IDLE == m_eCurState)
-	{
-		
-	}
-	else if (NPC_GAMING == m_eCurState)
-	{
-
-	}
 
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
@@ -51,10 +46,8 @@ _int CShellNpc::Update_GameObject(const _float& fTimeDelta)
 	return 0;
 }
 
-void CShellNpc::LateUpdate_GameObject()
+void CShell::LateUpdate_GameObject()
 {
-	Motion_Change();
-
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
@@ -62,7 +55,7 @@ void CShellNpc::LateUpdate_GameObject()
 	__super::Compute_ViewZ(&vPos);
 }
 
-void CShellNpc::Render_GameObject()
+void CShell::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -72,13 +65,17 @@ void CShellNpc::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CShellNpc::Add_Component()
+HRESULT CShell::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
 	pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(Engine::Clone_Proto(L"Proto_RcTex"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
+
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ShellTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_ShellTexture", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -89,47 +86,27 @@ HRESULT CShellNpc::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
 	return S_OK;
-
 }
 
-void CShellNpc::Motion_Change()
+void CShell::Hit()
 {
-	if (m_ePreState != m_eCurState)
-	{
-		m_fFrame = 0.f;
-
-		switch (m_eCurState)
-		{
-		case CShellNpc::NPC_IDLE:
-			m_iPicNum = 1;
-			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShellGame", L"Proto_ShellNpcTexture"));
-			break;
-
-		case CShellNpc::NPC_GAMING:
-			m_iPicNum = 6;
-			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShellGame", L"Proto_ShellNpcGameTexture"));
-			break;
-		}
-	}
 }
 
-CShellNpc* CShellNpc::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CShell* CShell::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CShellNpc* pInstance = new CShellNpc(pGraphicDev);
+	CShell* pInstance = new CShell(pGraphicDev);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("ShellNpc Create Failed");
+		MSG_BOX("Shell Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
 }
 
-void CShellNpc::Free()
+void CShell::Free()
 {
 	__super::Free();
 }

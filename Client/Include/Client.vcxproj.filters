@@ -367,6 +367,9 @@
       <Filter>02. GameObject\09. MapObject\05. Shell Game\00. NPC</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\ShellGame.h">
+      <Filter>02. GameObject\09. MapObject\05. Shell Game</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Shell.h">
       <Filter>02. GameObject\09. MapObject\05. Shell Game\01. Shell</Filter>
     </ClInclude>
   </ItemGroup>
@@ -534,6 +537,9 @@
       <Filter>02. GameObject\09. MapObject\05. Shell Game\00. NPC</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\ShellGame.cpp">
+      <Filter>02. GameObject\09. MapObject\05. Shell Game</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Shell.cpp">
       <Filter>02. GameObject\09. MapObject\05. Shell Game\01. Shell</Filter>
     </ClCompile>
   </ItemGroup>

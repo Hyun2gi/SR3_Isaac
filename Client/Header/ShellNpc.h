@@ -13,6 +13,10 @@ private:
 	enum NPCSTATE { NPC_IDLE, NPC_GAMING, NPC_END };
 
 public:
+	void			Set_Game_True() { m_eCurState = NPC_GAMING; }
+	void			Set_Game_False() { m_eCurState = NPC_IDLE; }
+
+public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
 	virtual void	LateUpdate_GameObject()					 override;

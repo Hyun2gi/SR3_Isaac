@@ -5,12 +5,14 @@
 #include "Export_Utility.h"
 
 CShellGame::CShellGame(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CMapObj(pGraphicDev)
+	: CMapObj(pGraphicDev),
+	m_pShellNpc(nullptr)
 {
 }
 
 CShellGame::CShellGame(const CShellGame& rhs)
-	: CMapObj(rhs)
+	: CMapObj(rhs),
+	m_pShellNpc(rhs.m_pShellNpc)
 {
 }
 
@@ -21,7 +23,7 @@ CShellGame::~CShellGame()
 HRESULT CShellGame::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(5.f, 2.f, 0.f);
+	m_pTransformCom->Set_Pos(0.f, 3.f, 0.f);
 
 	m_bGame = false;
 
@@ -30,8 +32,25 @@ HRESULT CShellGame::Ready_GameObject()
 
 _int CShellGame::Update_GameObject(const _float& fTimeDelta)
 {
-	CGameObject::Update_GameObject(fTimeDelta);
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
+	if (m_pShellNpc == nullptr)
+		Create_NPC();
+	else
+		m_pShellNpc->Update_GameObject(fTimeDelta);
+
+	if (m_vecShell.empty())
+		Create_Shell();
+	else
+	{
+		for (auto& iter : m_vecShell)
+		{
+			iter->Update_GameObject(fTimeDelta);
+		}
+	}
+
+	CGameObject::Update_GameObject(fTimeDelta);
 
 	return 0;
 }
@@ -39,10 +58,31 @@ _int CShellGame::Update_GameObject(const _float& fTimeDelta)
 void CShellGame::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
+
+	if (m_pShellNpc != nullptr)
+		m_pShellNpc->LateUpdate_GameObject();
+
+	if (!m_vecShell.empty())
+	{
+		for (auto& iter : m_vecShell)
+		{
+			iter->LateUpdate_GameObject();
+		}
+	}
 }
 
 void CShellGame::Render_GameObject()
 {
+	if (m_pShellNpc != nullptr)
+		m_pShellNpc->Render_GameObject();
+
+	if (!m_vecShell.empty())
+	{
+		for (auto& iter : m_vecShell)
+		{
+			iter->Render_GameObject();
+		}
+	}
 }
 
 HRESULT CShellGame::Add_Component()
@@ -86,10 +126,34 @@ HRESULT CShellGame::Add_Component()
 
 void CShellGame::Create_NPC()
 {
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	m_pShellNpc = CShellNpc::Create(m_pGraphicDev);
+	m_pShellNpc->Set_MyLayer(m_vecMyLayer[0]);
+	m_pShellNpc->Get_TransformCom()->Set_Pos(vPos);
+	m_pShellNpc->Set_Game_False();
+
+	if (m_pShellNpc == nullptr)
+		return;
 }
 
 void CShellGame::Create_Shell()
 {
+	// Shell 세 개 생성
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	float fScalar = SCALAR_X;
+
+	for (int i = 0; i < 3; ++i)
+	{
+		CShell* pShell = CShell::Create(m_pGraphicDev);
+		pShell->Set_MyLayer(m_vecMyLayer[0]);
+		pShell->Get_TransformCom()->Set_Pos(vPos.x + fScalar, vPos.y, vPos.z);
+		m_vecShell.push_back(pShell);
+		fScalar += 1.f;
+	}
 }
 
 CShellGame* CShellGame::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -108,6 +172,8 @@ CShellGame* CShellGame::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CShellGame::Free()
 {
+	Safe_Release<CShellNpc*>(m_pShellNpc);
+	m_pShellNpc = nullptr;
 
 	__super::Free();
 }

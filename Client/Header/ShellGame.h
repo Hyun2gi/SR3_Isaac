@@ -4,9 +4,14 @@
 #include "GameObject.h"
 
 #include "ShellNpc.h"
+#include "Shell.h"
 
 class CShellGame : public CMapObj
 {
+private:
+	const float SCALAR_X = -0.9f;
+	const float SCALAR_Y = 0.1f;
+
 private:
 	explicit CShellGame(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CShellGame(const CShellGame& rhs);
@@ -26,7 +31,9 @@ private:
 
 private:
 	_bool				m_bGame;
-	//CShellNpc* m_pShellNpc;
+
+	CShellNpc*			m_pShellNpc;
+	vector<CShell*>		m_vecShell;
 
 public:
 	static CShellGame* Create(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -35,4 +42,3 @@ private:
 	virtual void		Free()								override;
 
 };
-
