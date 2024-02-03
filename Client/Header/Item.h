@@ -35,8 +35,9 @@ public:
 	virtual void Render_GameObject()						 override;
 
 public:
-	virtual void Run_Item_Effect();
-	void		Set_Item_SpawnSpot(int _spawnspot);
+	virtual void	Run_Item_Effect();
+	void			Set_Item_SpawnSpot(int _spawnspot);
+	virtual void	Item_Spawn_Action();
 
 protected:
 	virtual HRESULT			Add_Component();

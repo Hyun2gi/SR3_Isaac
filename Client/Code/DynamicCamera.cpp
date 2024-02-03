@@ -231,7 +231,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 				OnMoveTargetCamera(0.2f, 10.f, moveCamPos, false, 0);
 				m_bCollisionWall = false;
 				m_bChaseInit = true;
-
+				m_fAngleY = 0;
 				return;
 			}
 
@@ -247,7 +247,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 				// void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
 				OnMoveTargetCamera(0.6f, 8.f, moveCamPos, false, 0);
 
-
+				m_fAngleY = 0;
 				m_bChaseInit = true;
 				m_bCollisionWall = true;
 

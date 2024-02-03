@@ -64,6 +64,10 @@ void CItem::Set_Item_SpawnSpot(int _spawnspot)
 	}
 }
 
+void CItem::Item_Spawn_Action()
+{
+}
+
 HRESULT CItem::Add_Component()
 {
 	return S_OK;
