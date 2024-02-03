@@ -73,6 +73,10 @@ void CWhipWorm::Run_Item_Effect()
     CPlayer::GetInstance()->Set_Item_Get_Anim();
 }
 
+void CWhipWorm::Item_Spawn_Action()
+{
+}
+
 HRESULT CWhipWorm::Add_Component()
 {
     CComponent* pComponent = nullptr;
@@ -101,11 +105,12 @@ void CWhipWorm::Motion_Change()
    
 }
 
-CWhipWorm* CWhipWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos)
+CWhipWorm* CWhipWorm::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
 {
     CWhipWorm* pInstance = new CWhipWorm(pGraphicDev);
     //정확한 위치 설정
     pInstance->Set_SpawnPos(pos);
+    pInstance->Set_LookDir(look);
 
     if (FAILED(pInstance->Ready_GameObject()))
     {

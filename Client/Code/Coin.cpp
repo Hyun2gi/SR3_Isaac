@@ -67,12 +67,11 @@ _int CCoin::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	Item_Spawn_Action();
-
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
+	Item_Spawn_Action();
 	
 	if (m_bDead == true)
 	{
@@ -135,12 +134,12 @@ void CCoin::Item_Spawn_Action()
 	{
 		if (m_iTimer < 40)
 		{
-			m_pTransformCom->Set_Pos(itemPos.x+1, itemPos.y + 3, itemPos.z+1);
+			m_pTransformCom->Set_Pos(itemPos.x+1, itemPos.y + 2, itemPos.z+1);
 		}
 		else
 		{
 			_vec3 temp = itemPos - _vec3(0, 1, 0);
-			if (itemPos.y <= fHeight + 1)
+			if (temp.y <= fHeight + 1)
 			{
 				m_eCurItemPlace = SP_END;
 				m_pTransformCom->Set_Pos(itemPos.x, fHeight + 1, itemPos.z);
@@ -155,12 +154,13 @@ void CCoin::Item_Spawn_Action()
 	{
 		if (m_iTimer < 40)
 		{
-			m_pTransformCom->Set_Pos(itemPos.x, itemPos.y + 2, itemPos.z);
+			m_pTransformCom->Set_Pos(itemPos.x, itemPos.y + 1, itemPos.z);
 		}
 		else 
 		{
 			_vec3 temp = itemPos - _vec3(0, 1, 0);
-			if (itemPos.y <= fHeight + 1)
+
+			if (temp.y <= fHeight + 1)
 			{
 				m_eCurItemPlace = SP_END;
 				m_pTransformCom->Set_Pos(itemPos.x, fHeight + 1, itemPos.z);
@@ -171,6 +171,8 @@ void CCoin::Item_Spawn_Action()
 			}
 		}
 	}
+
+	m_iTimer++;
 }
 
 HRESULT CCoin::Add_Component()
@@ -225,11 +227,12 @@ void CCoin::Motion_Change()
 	}
 }
 
-CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos)
+CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
 {
 	CCoin* pInstance = new CCoin(pGraphicDev);
 	//정확한 위치 설정
 	pInstance->Set_SpawnPos(pos);
+	pInstance->Set_LookDir(look);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{

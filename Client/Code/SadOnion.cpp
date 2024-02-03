@@ -74,6 +74,10 @@ void CSadOnion::Run_Item_Effect()
 	m_bDead = true;
 }
 
+void CSadOnion::Item_Spawn_Action()
+{
+}
+
 HRESULT CSadOnion::Add_Component()
 {
 	CComponent* pComponent = nullptr;
@@ -101,11 +105,12 @@ void CSadOnion::Motion_Change()
 {
 }
 
-CSadOnion* CSadOnion::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos)
+CSadOnion* CSadOnion::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
 {
 	CSadOnion* pInstance = new CSadOnion(pGraphicDev);
 	//정확한 위치 설정
 	pInstance->Set_SpawnPos(pos);
+	pInstance->Set_LookDir(look);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
