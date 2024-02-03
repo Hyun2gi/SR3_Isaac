@@ -32,6 +32,9 @@ HRESULT CMachine::Ready_GameObject()
 
 _int CMachine::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bDead)
+		m_eCurState = MC_BROKEN;
+
 	// 충돌 했을 때 bool 값 true 만들면서 Motion Change() 호출
 	if (m_bGame)
 	{

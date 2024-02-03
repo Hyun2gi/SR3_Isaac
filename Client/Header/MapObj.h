@@ -20,6 +20,8 @@ protected:
 	virtual ~CMapObj();
 
 public:
+	_bool			Get_Dead() { return m_bDead; }
+
 	Engine::CTransform* Get_TransformCom() { return m_pTransformCom; }
 
 public:
@@ -41,6 +43,8 @@ protected:
 	Engine::CTransform*		m_pTargetTransCom;
 	Engine::CTexture*		m_pTextureCom;
 	Engine::CCalculator*	m_pCalculator;
+
+	_bool					m_bDead;
 	
 	_int					m_iHitCount;
 	_int					m_iLimitHit;

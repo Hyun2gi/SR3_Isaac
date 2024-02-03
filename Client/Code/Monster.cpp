@@ -1,12 +1,13 @@
 #include "stdafx.h"
 #include "..\Header\Monster.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev),
 	m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTargetTransCom(nullptr), m_pTextureCom(nullptr), m_pCalculCom(nullptr),
-	m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_fSecAccTimeDelta(0.f),
+	m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_fSecAccTimeDelta(0.f), m_fSlowDelta(0.f),
 	m_bDead(false), m_bHit(false)
 {
 	m_vOriginScale = { 1.f, 1.f, 1.f };
@@ -16,7 +17,7 @@ CMonster::CMonster(const CMonster& rhs)
 	: Engine::CGameObject(rhs),
 	m_pBufferCom(rhs.m_pBufferCom), m_pTransformCom(rhs.m_pTransformCom), m_pTargetTransCom(rhs.m_pTargetTransCom),
 	m_pTextureCom(rhs.m_pTextureCom), m_pCalculCom(rhs.m_pCalculCom),
-	m_fCallLimit(rhs.m_fCallLimit), m_fAccTimeDelta(rhs.m_fAccTimeDelta), m_fSpeed(rhs.m_fSpeed), m_fSecAccTimeDelta(rhs.m_fSecAccTimeDelta),
+	m_fCallLimit(rhs.m_fCallLimit), m_fAccTimeDelta(rhs.m_fAccTimeDelta), m_fSpeed(rhs.m_fSpeed), m_fSecAccTimeDelta(rhs.m_fSecAccTimeDelta), m_fSlowDelta(rhs.m_fSlowDelta),
 	m_bDead(rhs.m_bDead), m_bHit(rhs.m_bHit)
 {
 }

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Leaper.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CLeaper::CLeaper(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
@@ -45,7 +46,9 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 {
 	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
-	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
+	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
@@ -56,7 +59,7 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_iHp -= 1;
 
-		Hit_PushBack(fTimeDelta);
+		Hit_PushBack(m_fSlowDelta);
 
 		m_bHit = false;
 
@@ -66,9 +69,9 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	CGameObject::Update_GameObject(fTimeDelta);
+	CGameObject::Update_GameObject(m_fSlowDelta);
 
-	if (Check_Time(fTimeDelta, 5.f))
+	if (Check_Time(m_fSlowDelta, 5.f))
 	{
 		m_eCurState = LEAPER_UP;
 		m_bJump = true;
@@ -77,19 +80,19 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bJump)
 	{
-		JumpTo_Player(fTimeDelta);
+		JumpTo_Player(m_fSlowDelta);
 	}
 	else
 	{
-		if (Check_Time(fTimeDelta) && !m_bMove)
+		if (Check_Time(m_fSlowDelta) && !m_bMove)
 		{
-			Change_Dir(fTimeDelta);
+			Change_Dir(m_fSlowDelta);
 			m_bMove = true;
 		}
 
 		if (m_bMove)
 		{
-			MoveTo_Random(fTimeDelta);
+			MoveTo_Random(m_fSlowDelta);
 		}
 		m_eCurState = LEAPER_IDLE;
 	}
@@ -251,14 +254,16 @@ void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 		}
 		else
 		{
-			vPos.y += 1.f;
+			//vPos.y += 1.f;
+			vPos.y += m_fSpeed * fTimeDelta;
 		}
 	}
 	else if (LEAPER_DOWN == m_eCurState)
 	{
 		if (vPos.y > 1.f)
 		{
-			vPos.y -= 1.f;
+			//vPos.y -= 1.f;
+			vPos.y -= m_fSpeed * fTimeDelta;
 		}
 		else
 		{

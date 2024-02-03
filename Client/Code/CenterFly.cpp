@@ -33,15 +33,15 @@ HRESULT CCenterFly::Ready_GameObject()
 
 _int CCenterFly::Update_GameObject(const _float& fTimeDelta)
 {
-	_float fSecondDelta = Engine::Get_TimeDelta(L"Timer_Second");
+	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
-	CGameObject::Update_GameObject(fSecondDelta);
+	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 	
 	_vec3 vPlayerPos;
 	m_pTargetTransCom->Get_Info(INFO_POS, &vPlayerPos);
-	m_pTransformCom->Chase_Target(&vPlayerPos, 3.f, fSecondDelta);
+	m_pTransformCom->Chase_Target(&vPlayerPos, 3.f, m_fSlowDelta);
 
 	return 0;
 }

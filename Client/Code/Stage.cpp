@@ -23,7 +23,8 @@
 #include "CampFire.h"
 #include "Spike.h"
 #include "SlotMC.h"
-#include "ShopNpc.h"
+#include "Shop.h"
+#include "ShellGame.h"
 
 #include "Door.h"
 #include "PlayerBullet.h"
@@ -87,6 +88,14 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 	// 아이템 드랍
 	Drop_ITem();
 
+	// Normal Fly 추가
+	//if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"NormalFly") == nullptr)
+	//{
+	//	dynamic_cast<CAttackFly*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"AttackFly"))
+	//		->Set_NormalFly_ToStage(m_mapLayer.at(L"GameMst"));
+	//}
+
+	//Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f); // Second Timer 테스트용 코드
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
 	return __super::Update_Scene(fTimeDelta);
@@ -111,14 +120,36 @@ void CStage::Drop_ITem()
 	// CGameObject* pObj = m_mapLayer.at(L"GameItem")->Collision_GameObject(CPlayer::GetInstance());
 	//Get_GameObject
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
-	if (dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_Dead())
+	
+	// 똥
+	if (Get_GameObject(L"GameLogic", L"Poop") != nullptr)
 	{
-		Engine::CGameObject* pGameObject = nullptr;
+		if (dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_Dead())
+		{
+			Engine::CGameObject* pGameObject = nullptr;
 
-		pGameObject = CCoin::Create(m_pGraphicDev,2);
+		pGameObject = CCoin::Create(m_pGraphicDev, 2);
 		pGameObject->Set_MyLayer(L"GameItem");
 		m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);
 	}
+}
+
+	if (Get_GameObject(L"GameLogic", L"Campfire") != nullptr)
+	{
+		// 모닥불
+		if (dynamic_cast<CCampFire*>(Get_GameObject(L"GameLogic", L"Campfire"))->Get_Dead())
+		{
+			Engine::CGameObject* pGameObject = nullptr;
+
+			pGameObject = CHeart::Create(m_pGraphicDev, 2);
+			pGameObject->Set_MyLayer(L"GameItem");
+			FAILED_CHECK_RETURN(m_mapLayer.at(L"GameItem")->Add_GameObject(L"Heart", pGameObject));
+		}
+	}
+
+	// 슬롯머신
+
+	// 야바위
 }
 
 HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
@@ -178,23 +209,29 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 	pGameObject->Set_MyLayer(pLayerTag);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
 
-	// Spike
-	pGameObject = CSpike::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
+	//// Spike
+	//pGameObject = CSpike::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
 
-	// SlotMC
-	pGameObject = CSlotMC::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
+	//// SlotMC
+	//pGameObject = CSlotMC::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
 
-	// ShopNpc
-	pGameObject = CShopNpc::Create(m_pGraphicDev);
+	//// Shop
+	pGameObject = CShop::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShopNpc", pGameObject), E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Shop", pGameObject), E_FAIL);
+
+	//// Shell Game
+	//pGameObject = CShellGame::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
 
 #pragma endregion Object
 
@@ -220,7 +257,7 @@ HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
- 	//// Fly
+ //	// Fly
 	//for (int i = 0; i < 10; ++i)
 	//{
 	//	pGameObject = CFly::Create(m_pGraphicDev, i * 2);

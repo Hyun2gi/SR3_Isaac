@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "MomParts.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CMomParts::CMomParts(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex)
@@ -35,7 +36,9 @@ HRESULT CMomParts::Ready_GameObject()
 
 _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
+	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
 	{
@@ -46,19 +49,18 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 		}
 		else
 			m_fFrame = 0.f;
-
 	}
 
 	Set_RandNum();
 
-	if (Check_Time(fTimeDelta))
+	if (Check_Time(m_fSlowDelta))
 	{
 		m_fCallLimit = (_float)m_iRandNum;
 		// 랜덤하게 바꾸기
 		Change_State();
 	}
 
-	CGameObject::Update_GameObject(fTimeDelta);
+	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	// 각 방향 문마다 랜덤한 쿨타임으로 상태 변화 -> 매번 달라야함
 	// Look 벡터가 애초에 이상해서 밑 함수 활용 결과도 이상한가 싶은

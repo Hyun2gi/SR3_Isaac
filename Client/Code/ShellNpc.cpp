@@ -1,71 +1,48 @@
 #include "stdafx.h"
-#include "ShopNpc.h"
+#include "ShellNpc.h"
 
-#include "Export_System.h"
 #include "Export_Utility.h"
 
-CShopNpc::CShopNpc(LPDIRECT3DDEVICE9 pGraphicDev)
+CShellNpc::CShellNpc(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMapObj(pGraphicDev)
 {
 }
 
-CShopNpc::CShopNpc(const CShopNpc& rhs)
+CShellNpc::CShellNpc(const CShellNpc& rhs)
 	: CMapObj(rhs)
 {
 }
 
-CShopNpc::~CShopNpc()
+CShellNpc::~CShellNpc()
 {
 }
 
-HRESULT CShopNpc::Ready_GameObject()
+HRESULT CShellNpc::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->m_vScale = { 1.5f, 1.5f, 1.5f };
 
-	m_iPicNum = 2;
+	m_iPicNum = 1;
 	m_fFrameSpeed = 1.f;
-
-	m_fCallLimit = 3.f;
-
-	m_bGood = false;
-	m_bFrameFix = false;
 
 	m_ePreState = NPC_END;
 
 	return S_OK;
 }
 
-_int CShopNpc::Update_GameObject(const _float& fTimeDelta)
+_int CShellNpc::Update_GameObject(const _float& fTimeDelta)
 {
-	if (!m_bFrameFix)
-	{
-		m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
-
-		if (m_iPicNum < m_fFrame)
-		{
-			if(NPC_IDLE == m_eCurState)
-				m_fFrame = 0.f;
-			else if(NPC_GOOD == m_eCurState || NPC_DEAD == m_eCurState)
-			{
-				m_fFrame = 2.f;
-				m_bFrameFix = true;
-			}
-		}
-	}
-
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (m_bGood)
+	if (NPC_IDLE == m_eCurState)
 	{
-		m_eCurState = NPC_GOOD;
+		
+	}
+	else if (NPC_GAMING == m_eCurState)
+	{
 
-		if (Check_Time(fTimeDelta))
-		{
-			m_bGood = false;
-		}
-	}else
-		m_eCurState = NPC_IDLE;
+	}
+
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -74,7 +51,7 @@ _int CShopNpc::Update_GameObject(const _float& fTimeDelta)
 	return 0;
 }
 
-void CShopNpc::LateUpdate_GameObject()
+void CShellNpc::LateUpdate_GameObject()
 {
 	Motion_Change();
 
@@ -85,7 +62,7 @@ void CShopNpc::LateUpdate_GameObject()
 	__super::Compute_ViewZ(&vPos);
 }
 
-void CShopNpc::Render_GameObject()
+void CShellNpc::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -95,7 +72,7 @@ void CShopNpc::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CShopNpc::Add_Component()
+HRESULT CShellNpc::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
@@ -112,9 +89,10 @@ HRESULT CShopNpc::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
 	return S_OK;
+
 }
 
-void CShopNpc::Motion_Change()
+void CShellNpc::Motion_Change()
 {
 	if (m_ePreState != m_eCurState)
 	{
@@ -122,44 +100,36 @@ void CShopNpc::Motion_Change()
 
 		switch (m_eCurState)
 		{
-		case CShopNpc::NPC_IDLE:
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Shop", L"Proto_ShopNpcTexture"));
+		case CShellNpc::NPC_IDLE:
+			m_iPicNum = 1;
+			m_fFrameSpeed = 1.f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShellGame", L"Proto_ShellNpcTexture"));
 			break;
 
-		case CShopNpc::NPC_GOOD:
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Shop", L"Proto_ShopNpcThumbsTexture"));
-			break;
-
-		case CShopNpc::NPC_DEAD:
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Shop", L"Proto_ShopNpcDeadTexture"));
+		case CShellNpc::NPC_GAMING:
+			m_iPicNum = 6;
+			m_fFrameSpeed = 1.f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShellGame", L"Proto_ShellNpcGameTexture"));
 			break;
 		}
-		m_ePreState = m_eCurState;
 	}
 }
 
-void CShopNpc::Hit()
+CShellNpc* CShellNpc::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	// 폭탄에 맞았을 때만 충돌 처리 되도록
-	m_eCurState = NPC_DEAD;
-}
-
-CShopNpc* CShopNpc::Create(LPDIRECT3DDEVICE9 pGraphicDev)
-{
-	CShopNpc* pInstance = new CShopNpc(pGraphicDev);
+	CShellNpc* pInstance = new CShellNpc(pGraphicDev);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("ShopNpc Create Failed");
+		MSG_BOX("ShellNpc Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
 }
 
-void CShopNpc::Free()
+void CShellNpc::Free()
 {
 	__super::Free();
 }
-

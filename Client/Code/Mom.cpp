@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Mom.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CMom::CMom(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -43,14 +44,16 @@ HRESULT CMom::Ready_GameObject()
 
 _int CMom::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
+	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
 	Face_Camera();
 
-	CGameObject::Update_GameObject(fTimeDelta);
+	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	// 상태에 따라 callLimit을 바꾸는 것은?
 	switch (m_eState)
@@ -66,7 +69,7 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 
 	if (MOM_IDLE == m_eState)
 	{
-		if (Check_Time(fTimeDelta))
+		if (Check_Time(m_fSlowDelta))
 		{
 			int iX, iZ;
 			iX = rand() % 30;
@@ -79,13 +82,13 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 	}
 	else if (MOM_WAIT == m_eState)
 	{
-		if (Check_Time(fTimeDelta))
+		if (Check_Time(m_fSlowDelta))
 		{
 			m_eState = MOM_UP;
 		}
 	}
 	else if (MOM_ATTACK == m_eState || MOM_UP == m_eState) // 
-		Attack(fTimeDelta);
+		Attack(m_fSlowDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 

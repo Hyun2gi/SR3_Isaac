@@ -1,52 +1,39 @@
 #include "stdafx.h"
-#include "Fire.h"
+#include "Shell.h"
 
 #include "Export_System.h"
 #include "Export_Utility.h"
 
-CFire::CFire(LPDIRECT3DDEVICE9 pGraphicDev)
+CShell::CShell(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMapObj(pGraphicDev)
 {
 }
 
-CFire::CFire(const CFire& rhs)
+CShell::CShell(const CShell& rhs)
 	: CMapObj(rhs)
 {
 }
 
-CFire::~CFire()
+CShell::~CShell()
 {
 }
 
-HRESULT CFire::Ready_GameObject()
+HRESULT CShell::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	//m_pTransformCom->Set_Pos(10.f, 1.f, 10.f);
+	m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
 
-	m_iLimitHit = 4;
-
-	m_iPicNum = 6;
+	m_iPicNum = 1;
 	m_fFrameSpeed = 1.f;
-
-	m_bHit = false;
 
 	return S_OK;
 }
 
-_int CFire::Update_GameObject(const _float& fTimeDelta)
+_int CShell::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
-
-	if (m_iPicNum < m_fFrame)
-		m_fFrame = 0.f;
-
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (m_bHit)
-	{
-		Hit();
-		m_bHit = false;
-	}
+
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -55,7 +42,7 @@ _int CFire::Update_GameObject(const _float& fTimeDelta)
 	return 0;
 }
 
-void CFire::LateUpdate_GameObject()
+void CShell::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 
@@ -64,7 +51,7 @@ void CFire::LateUpdate_GameObject()
 	__super::Compute_ViewZ(&vPos);
 }
 
-void CFire::Render_GameObject()
+void CShell::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -74,22 +61,7 @@ void CFire::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-void CFire::Change_Scale()
-{
-	m_pTransformCom->m_vScale =
-	{
-		m_pTransformCom->m_vScale.x - 0.2f,
-		m_pTransformCom->m_vScale.y - 0.2f,
-		m_pTransformCom->m_vScale.z - 0.2f
-	};
-
-	_vec3 vPos;
-	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-	
-	m_pTransformCom->Set_Pos(vPos.x, vPos.y - 0.09f, vPos.z);
-}
-
-HRESULT CFire::Add_Component()
+HRESULT CShell::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
@@ -97,9 +69,9 @@ HRESULT CFire::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FireTexture"));
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ShellTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_FireTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_ShellTexture", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -112,35 +84,25 @@ HRESULT CFire::Add_Component()
 	return S_OK;
 }
 
-void CFire::Hit()
+void CShell::Hit()
 {
-	if (m_iHitCount < m_iLimitHit)
-	{
-		m_iHitCount += 1;
-		Change_Scale();
-	}
-	else
-	{
-		// 아이템 드랍
-		m_bDead = true;
-	}
 }
 
-CFire* CFire::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CShell* CShell::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	CFire* pInstance = new CFire(pGraphicDev);
+	CShell* pInstance = new CShell(pGraphicDev);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("Fire Create Failed");
+		MSG_BOX("Shell Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
 }
 
-void CFire::Free()
+void CShell::Free()
 {
 	__super::Free();
 }

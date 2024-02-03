@@ -34,6 +34,9 @@ HRESULT CCampFire::Ready_GameObject()
 
 _int CCampFire::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_pFire != nullptr && m_pFire->Get_Dead())
+		m_bDead = true;
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (!m_bCreate)

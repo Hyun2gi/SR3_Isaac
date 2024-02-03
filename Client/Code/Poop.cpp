@@ -27,7 +27,6 @@ HRESULT CPoop::Ready_GameObject()
 
 	m_bAni = false;
 	m_bReduce = true;
-	m_bDead = false;
 
 	return S_OK;
 }

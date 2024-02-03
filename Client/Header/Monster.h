@@ -57,6 +57,7 @@ protected:
 	_float					m_fCallLimit;
 	_float					m_fAccTimeDelta;
 	_float					m_fSecAccTimeDelta;
+	_float					m_fSlowDelta;
 
 	_vec3					m_vOriginScale;
 

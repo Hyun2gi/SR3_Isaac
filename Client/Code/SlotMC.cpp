@@ -54,13 +54,16 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	if (Engine::Get_DIKeyState(DIK_G) & 0x80)//Engine::Key_Down(DIK_G))
+	if (m_pMachine != nullptr && !(m_pMachine->Get_Dead()))
 	{
-		m_pMachine->Set_Game();
-		
-		for (auto& iter : m_pCardList)
+		if (Engine::Get_DIKeyState(DIK_G) & 0x80)// 이후 플레이어와의 충돌로 변경
 		{
-			iter->Set_Random();
+			m_pMachine->Set_Game();
+
+			for (auto& iter : m_pCardList)
+			{
+				iter->Set_Random();
+			}
 		}
 	}
 

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Monstro.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 #include "MstBullet.h"
@@ -43,7 +44,9 @@ HRESULT CMonstro::Ready_GameObject()
 
 _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
+	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
@@ -55,7 +58,7 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 		for (auto& iter = m_BulletList.begin();
 			iter != m_BulletList.end();)
 		{
-			iResult = dynamic_cast<CMstBullet*>(*iter)->Update_GameObject(fTimeDelta);
+			iResult = dynamic_cast<CMstBullet*>(*iter)->Update_GameObject(m_fSlowDelta);
 
 			if (1 == iResult)
 			{
@@ -71,11 +74,11 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 
 	//Face_Camera();
 
-	CGameObject::Update_GameObject(fTimeDelta);
+	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	if (MONSTRO_IDLE == m_eCurState || MONSTRO_END == m_eCurState) // 기본 상태일 때
 	{
-		if (Check_Time(fTimeDelta)) // 일정 시간마다 기믹3 - 큰 점프 발동
+		if (Check_Time(m_fSlowDelta)) // 일정 시간마다 기믹3 - 큰 점프 발동
 		{
 			int iRandBum;
 
@@ -97,7 +100,7 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 		}
 		else
 		{
-			if (Check_Time(fTimeDelta, 1.f)) // 일정 시간마다 기믹 1 - 작은 점프 발동
+			if (Check_Time(m_fSlowDelta, 1.f)) // 일정 시간마다 기믹 1 - 작은 점프 발동
 			{
 				m_eCurState = MONSTRO_MOVE;
 				Check_TargetPos();
@@ -106,7 +109,7 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 	}
 	else if (MONSTRO_MOVE == m_eCurState)
 	{
-		MoveTo_Player(fTimeDelta);
+		MoveTo_Player(m_fSlowDelta);
 	}
 	else if (MONSTRO_ATTACK == m_eCurState)
 	{
@@ -116,7 +119,7 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 			m_bBullet = false;
 		}
 
-		if (Check_Time(fTimeDelta, 2.5f))
+		if (Check_Time(m_fSlowDelta, 2.5f))
 		{
 			m_eCurState = MONSTRO_IDLE; // 이 부분 수정 필요할지도
 			m_bBullet = false;
@@ -124,7 +127,7 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	if(m_bJump)
-		JumpTo_Player(fTimeDelta);
+		JumpTo_Player(m_fSlowDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 

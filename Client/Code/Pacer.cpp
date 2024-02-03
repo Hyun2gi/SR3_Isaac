@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Pacer.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CPacer::CPacer(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
@@ -35,7 +36,9 @@ HRESULT CPacer::Ready_GameObject()
 
 _int CPacer::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fFrame += 10.f * fTimeDelta;
+	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	m_fFrame += 10.f * m_fSlowDelta;
 
 	if (10.f < m_fFrame)
 		m_fFrame = 0.f;
@@ -46,7 +49,7 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_iHp -= 1;
 
-		Hit_PushBack(fTimeDelta);
+		Hit_PushBack(m_fSlowDelta);
 
 		m_bHit = false;
 
@@ -56,12 +59,12 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	CGameObject::Update_GameObject(fTimeDelta);
+	CGameObject::Update_GameObject(m_fSlowDelta);
 
-	if (Check_Time(fTimeDelta))
-		Change_Dir(fTimeDelta);
+	if (Check_Time(m_fSlowDelta))
+		Change_Dir(m_fSlowDelta);
 
-	Move(fTimeDelta);
+	Move(m_fSlowDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
