@@ -175,5 +175,7 @@ void CShellGame::Free()
 	Safe_Release<CShellNpc*>(m_pShellNpc);
 	m_pShellNpc = nullptr;
 
+	for_each(m_vecShell.begin(), m_vecShell.end(), CDeleteObj());
+
 	__super::Free();
 }

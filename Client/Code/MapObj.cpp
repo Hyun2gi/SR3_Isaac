@@ -99,17 +99,19 @@ CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer)
 		break;
 
 	case Engine::COIN:
+	{
 		CItem* pItem = CCoin::Create(m_pGraphicDev, iSpawnPos, vPos);
 		pItem->Set_MyLayer(L"GameItem");
 		return pItem;
 		break;
+	}
 
-	//case Engine::HEART:
-	//	break;
-	//case Engine::HEART_HALF:
-	//	break;
-	//case Engine::PILL_0:
-	//	break;
+	case Engine::HEART:
+		break;
+	case Engine::HEART_HALF:
+		break;
+	case Engine::PILL_0:
+		break;
 	}
 }
 

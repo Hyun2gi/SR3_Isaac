@@ -27,6 +27,7 @@ private:
 	void			Run_Collision_Func();
 	void			Door_Collision();
 	void			Moster_Collision();
+	void			MapObj_Collision();
 	void			Drop_ITem();
 
 public:
