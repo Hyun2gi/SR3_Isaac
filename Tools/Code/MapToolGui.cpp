@@ -30,6 +30,7 @@ HRESULT CMapToolGui::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev)
     m_pGraphicDev = pGraphicDev;
 
     Load_MapLevel();
+    Load_Room_Type();
     Load_Room_Theme();
 
     IMGUI_CHECKVERSION();
@@ -160,48 +161,83 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     string strExtension = ".dat";
     strFilePath = strFilePath + items + strExtension;
 
-    ifstream fin(strFilePath);
-
-    string strKeys = "";
     //코드를 한 줄 읽어온다. (스테이지에 대한 정보는 한줄로 저장하게 만들어뒀기 때문에 가능)
+    ifstream fin(strFilePath);
+    string strKeys = "";
     getline(fin, strKeys);
-
     fin.close();
 
     ImGui::Text("Selected Stage Name: %s", items);
 
+    //left, right, top, bottom, theme, roomtype
+    int iTypePos = strKeys.find_last_of(",") + 1;
 
-    vector<string> vecStr;
-    int pos = strKeys.find_last_of(",") + 1;
+    string strTemp = strKeys.substr(0, iTypePos - 1);
+    int iThemePos = strTemp.find_last_of(",") + 1;
 
-    m_strCurTheme = strKeys.substr(pos);
+    m_strCurRoomType = strKeys.substr(iTypePos);
+    m_strCurRoomTheme = strTemp.substr(iThemePos);
 
-    m_iSelectedRoomThemeIndex = 0;
-
-    for (int i = 0; i < m_vecRoomTheme.size(); ++i)
+    if (strKeys != "")
     {
-        if (m_vecRoomTheme[i] == m_strCurTheme)
+        m_iSelectedRoomTypeIndex = 0;
+
+        for (int i = 0; i < m_vecRoomType.size(); ++i)
         {
-            m_iSelectedRoomThemeIndex = i;
-            break;
+            if (m_vecRoomType[i] == m_strCurRoomType)
+            {
+                m_iSelectedRoomTypeIndex = i;
+                break;
+            }
         }
 
+        m_iSelectedRoomThemeIndex = 0;
+
+        for (int i = 0; i < m_strCurRoomTheme.size(); ++i)
+        {
+            if (m_vecRoomTheme[i] == m_strCurRoomTheme)
+            {
+                m_iSelectedRoomThemeIndex = i;
+                break;
+            }
+        }
     }
 
     //테마 목록을 보여주는 드롭다운박스
-    vector<const char*> vecRoomText;
+    vector<const char*> vecRoomThemeText;
 
     if (0 < m_vecRoomTheme.size())
     {
         for (const string& str : m_vecRoomTheme)
-            vecRoomText.push_back(str.c_str());
+            vecRoomThemeText.push_back(str.c_str());
     }
 
     ImGui::Text("Room Theme: ");
     ImGui::SameLine();
 
-    ImGui::SetNextItemWidth(100.f);
-    ImGui::Combo("##", &m_iSelectedRoomThemeIndex, vecRoomText.data(), m_vecRoomTheme.size());
+    ImGui::SetNextItemWidth(120.f);
+    if (ImGui::Combo("##0", &m_iSelectedRoomThemeIndex, vecRoomThemeText.data(), m_vecRoomTheme.size()))
+    {
+
+    }
+
+    // 스테이지 타입 목록을 보여주는 드롭다운박스
+    vector<const char*> vecRoomTypeText;
+
+    if (0 < m_vecRoomType.size())
+    {
+        for (const string& str : m_vecRoomType)
+            vecRoomTypeText.push_back(str.c_str());
+    }
+
+    ImGui::Text("Room Type: ");
+    ImGui::SameLine();
+
+    ImGui::SetNextItemWidth(120.f);
+    if (ImGui::Combo("##1", &m_iSelectedRoomTypeIndex, vecRoomTypeText.data(), m_vecRoomType.size()))
+    {
+
+    }
 
 
     ImGui::NewLine();
@@ -249,8 +285,6 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     ImGui::SetNextItemWidth(30.f);
     ImGui::InputText("##Bottom", szSKeyBottomRoom, MAX_PATH);
 
-
-
     if (ImGui::Button("SAVE"))
     {
         // 파일 스트림을 엽니다.
@@ -261,7 +295,8 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
         fout << szSKeyRightRoom << ",";
         fout << szSKeyTopRoom << ",";
         fout << szSKeyBottomRoom << ",";
-        fout << vecRoomText[m_iSelectedRoomThemeIndex];
+        fout << vecRoomThemeText[m_iSelectedRoomThemeIndex] << ",";
+        fout << m_vecRoomType[m_iSelectedRoomTypeIndex];
 
         // 파일 스트림을 닫습니다.
         fout.close();
@@ -311,10 +346,9 @@ void CMapToolGui::Load_MapLevel()
     fin.close();
 }
 
-void CMapToolGui::Load_Room_Theme()
+void CMapToolGui::Load_Room_Type()
 {
-    //.dat 파일을 불려올 경로를 설정해준다.
-    string strFilePath = "../../Dat/Room_Theme.txt";
+    string strFilePath = "../../Dat/Room_Type.txt";
 
     ifstream fin(strFilePath);
 
@@ -330,6 +364,35 @@ void CMapToolGui::Load_Room_Theme()
 
             // ,를 찾지 못하면 종료
             if (pos == string::npos) 
+                break;
+
+            // 분리된 문자열 출력
+            m_vecRoomType.push_back(strGetLine.substr(iIndex, pos - iIndex));
+            iIndex = pos + 1;
+        }
+    }
+
+    fin.close();
+}
+
+void CMapToolGui::Load_Room_Theme()
+{
+    string strFilePath = "../../Dat/Room_Theme.txt";
+
+    ifstream fin(strFilePath);
+
+    string strGetLine = "";
+    //코드를 한 줄씩 읽어온다.
+    while (getline(fin, strGetLine))
+    {
+        int iIndex = 0;
+
+        while (true) {
+            // , 위치 찾기
+            int pos = strGetLine.find_first_of(',', iIndex);
+
+            // ,를 찾지 못하면 종료
+            if (pos == string::npos)
                 break;
 
             // 분리된 문자열 출력
