@@ -94,7 +94,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>../../imgui/backend;../../imgui/imgui;../Header;../../Base;../../Reference/Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../fmod;../../imgui/backend;../../imgui/imgui;../Header;../../Base;../../Reference/Header;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -167,6 +167,8 @@
     <ClInclude Include="..\Header\BackGround.h" />
     <ClInclude Include="..\Header\DynamicCamera.h" />
     <ClInclude Include="..\Header\Effect.h" />
+    <ClInclude Include="..\Header\LogoBack.h" />
+    <ClInclude Include="..\Header\MapToolFly.h" />
     <ClInclude Include="..\Header\MapToolGui.h" />
     <ClInclude Include="..\Header\Loading.h" />
     <ClInclude Include="..\Header\Logo.h" />
@@ -179,6 +181,7 @@
     <ClInclude Include="..\Header\Player.h" />
     <ClInclude Include="..\Header\SkyBox.h" />
     <ClInclude Include="..\Header\StageTool.h" />
+    <ClInclude Include="..\Header\StageToolFly.h" />
     <ClInclude Include="..\Header\StageToolGui.h" />
     <ClInclude Include="..\Header\Terrain.h" />
     <ClInclude Include="Tools.h" />
@@ -197,6 +200,8 @@
     <ClCompile Include="..\Code\BackGround.cpp" />
     <ClCompile Include="..\Code\DynamicCamera.cpp" />
     <ClCompile Include="..\Code\Effect.cpp" />
+    <ClCompile Include="..\Code\LogoBack.cpp" />
+    <ClCompile Include="..\Code\MapToolFly.cpp" />
     <ClCompile Include="..\Code\MapToolGui.cpp" />
     <ClCompile Include="..\Code\Loading.cpp" />
     <ClCompile Include="..\Code\Logo.cpp" />
@@ -209,6 +214,7 @@
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\SkyBox.cpp" />
     <ClCompile Include="..\Code\StageTool.cpp" />
+    <ClCompile Include="..\Code\StageToolFly.cpp" />
     <ClCompile Include="..\Code\StageToolGui.cpp" />
     <ClCompile Include="..\Code\Terrain.cpp" />
     <ClCompile Include="Tools.cpp" />

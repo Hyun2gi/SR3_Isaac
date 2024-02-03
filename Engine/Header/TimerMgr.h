@@ -6,7 +6,6 @@ BEGIN(Engine)
 
 class ENGINE_DLL CTimerMgr : public CBase
 {
-
 	DECLARE_SINGLETON(CTimerMgr)
 private:
 	explicit CTimerMgr();

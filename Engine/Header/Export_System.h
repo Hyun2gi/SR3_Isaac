@@ -8,6 +8,7 @@
 #include "FontMgr.h"
 #include "InputDev.h"
 #include "ImGuiMgr.h"
+#include "SoundMgr.h"
 
 BEGIN(Engine)
 
@@ -59,6 +60,13 @@ inline void		Update_InputDev(void);
 HRESULT Ready_ImGuiMgr(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev);
 void Update_ImGuiMgr();
 void Render_ImGuiMgr();
+
+inline void PlaySound(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume);
+inline void Ready_Sound();
+inline void PlayBGM(TCHAR* pSoundKey, _float fVolume);
+inline void StopSound(CHANNEL_ID eID);
+inline void StopAll();
+inline void SetChannelVolume(CHANNEL_ID eID, _float fVolume);
 
 // Destroy
 inline void			Release_System();

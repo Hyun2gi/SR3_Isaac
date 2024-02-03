@@ -43,6 +43,12 @@
     <Filter Include="06. CollisionMgr">
       <UniqueIdentifier>{4cb57df2-4f2c-4ed2-bd7d-1095ace6be13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="07. SoundMgr">
+      <UniqueIdentifier>{77f7fe92-15f2-4eb4-83e5-2a669a66d6ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07. SoundMgr\fmod">
+      <UniqueIdentifier>{2ca9b2aa-1074-4eda-99b6-809acb7a5f1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\GraphicDev.cpp">
@@ -95,6 +101,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\CollisionMgr.cpp">
       <Filter>06. CollisionMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\SoundMgr.cpp">
+      <Filter>07. SoundMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -155,6 +164,30 @@
     <ClInclude Include="..\..\Header\CollisionMgr.h">
       <Filter>06. CollisionMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Header\SoundMgr.h">
+      <Filter>07. SoundMgr</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\fmod\fmod.h">
+      <Filter>07. SoundMgr\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\fmod\fmod.hpp">
+      <Filter>07. SoundMgr\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\fmod\fmod_codec.h">
+      <Filter>07. SoundMgr\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\fmod\fmod_dsp.h">
+      <Filter>07. SoundMgr\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\fmod\fmod_errors.h">
+      <Filter>07. SoundMgr\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\fmod\fmod_memoryinfo.h">
+      <Filter>07. SoundMgr\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\fmod\fmod_output.h">
+      <Filter>07. SoundMgr\fmod</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Header\Export_System.inl">
@@ -169,5 +202,16 @@
     <None Include="..\..\..\imgui\imgui\.gitignore">
       <Filter>05. ImGui\lib\imgui</Filter>
     </None>
+    <None Include="..\..\..\fmod\fmodex.dll">
+      <Filter>07. SoundMgr\fmod</Filter>
+    </None>
+    <None Include="..\..\..\fmod\fmodexL.dll">
+      <Filter>07. SoundMgr\fmod</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\..\fmod\fmodex_vc.lib">
+      <Filter>07. SoundMgr\fmod</Filter>
+    </Library>
   </ItemGroup>
 </Project>

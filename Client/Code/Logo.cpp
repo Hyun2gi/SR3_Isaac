@@ -4,7 +4,6 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
-
 #include "BackGround.h"
 #include "Stage.h"
 #include "LoadStage.h"
@@ -21,6 +20,8 @@ CLogo::~CLogo()
 
 HRESULT CLogo::Ready_Scene()
 {
+	Engine::PlayBGM(L"Success.wav", 1.f);
+
 	FAILED_CHECK_RETURN(Ready_Prototype(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	

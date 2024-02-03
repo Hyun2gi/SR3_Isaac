@@ -4,13 +4,10 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
-#include "Player.h"
-#include "Monster.h"
-#include "BackGround.h"
+#include "Logo.h"
+
 #include "Terrain.h"
 #include "DynamicCamera.h"
-#include "SkyBox.h"
-#include "Effect.h"
 
 #include "MapToolGui.h"
 
@@ -33,6 +30,18 @@ HRESULT CMapTool::Ready_Scene()
 Engine::_int CMapTool::Update_Scene(const _float& fTimeDelta)
 {	
 	m_pImGuiTools->Update_ImGuiTools();
+
+	if (GetAsyncKeyState(VK_BACK))
+	{
+		Engine::CScene* pScene = nullptr;
+
+		pScene = CLogo::Create(m_pGraphicDev, true);
+		NULL_CHECK_RETURN(pScene, -1);
+
+		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+		return 0;
+	}
 
 	return __super::Update_Scene(fTimeDelta);
 }

@@ -4,7 +4,8 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
-#include "BackGround.h"
+#include "Logo.h"
+
 #include "Terrain.h"
 #include "DynamicCamera.h"
 
@@ -12,6 +13,7 @@
 #include "ObjectLoad.h"
 #include "MouseObjectImg.h"
 #include "PlacementObject.h"
+
 
 CStageTool::CStageTool(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
@@ -47,6 +49,17 @@ Engine::_int CStageTool::Update_Scene(const _float& fTimeDelta)
 
 	dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic", L"MouseObjectImg", L"Proto_Transform"))->Set_Pos(vecTemp);
 
+	if (GetAsyncKeyState(VK_BACK))
+	{
+		Engine::CScene* pScene = nullptr;
+
+		pScene = CLogo::Create(m_pGraphicDev, true);
+		NULL_CHECK_RETURN(pScene, -1);
+
+		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+		return 0;
+	}
 
 	return __super::Update_Scene(fTimeDelta);
 }
