@@ -25,7 +25,7 @@ CStageTool::~CStageTool()
 }
 
 HRESULT CStageTool::Ready_Scene()
-{
+{	m_vPickingPos = { 0, 0, 0 };
 	m_iCurObjType = m_iCurObjIndex = 0;
 	m_pStageTools = new CStageToolGui(g_hWnd, m_pGraphicDev);
 	m_pStageTools->Set_Target_Scene(this);
@@ -49,17 +49,17 @@ Engine::_int CStageTool::Update_Scene(const _float& fTimeDelta)
 
 	dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic", L"MouseObjectImg", L"Proto_Transform"))->Set_Pos(vecTemp);
 
-	//if (GetAsyncKeyState(VK_BACK))
-	//{
-	//	Engine::CScene* pScene = nullptr;
+	if (Engine::Key_Down(DIK_BACK))
+	{
+		Engine::CScene* pScene = nullptr;
 
-	//	pScene = CLogo::Create(m_pGraphicDev, true);
-	//	NULL_CHECK_RETURN(pScene, -1);
+		pScene = CLogo::Create(m_pGraphicDev, true);
+		NULL_CHECK_RETURN(pScene, -1);
 
-	//	FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
 
-	//	return 0;
-	//}
+		return;
+	}
 
 	return __super::Update_Scene(fTimeDelta);
 }
@@ -204,7 +204,7 @@ void CStageTool::Clear_Placement_Object()
 	Delete_Layer(L"GameObject");
 }
 
-HRESULT CStageTool::Key_Input(const _float& fTimeDelta)
+void CStageTool::Key_Input(const _float& fTimeDelta)
 {
 	if (Engine::Get_DIMouseMove(DIMS_X))
 		m_vPickingPos = Picking_OnTerrain();
@@ -215,19 +215,6 @@ HRESULT CStageTool::Key_Input(const _float& fTimeDelta)
 		Create_Placement_Object();
 		m_pStageTools->Push_Placement_Obj_List(m_iCurObjType, m_iCurObjIndex, m_vPickingPos.x, m_vPickingPos.y + SET_Y_POS, m_vPickingPos.z);
 	}
-
-	if(Engine::Key_Down(DIK_BACK))
-	{
-		Engine::CScene* pScene = nullptr;
-
-		pScene = CLogo::Create(m_pGraphicDev, true);
-		NULL_CHECK_RETURN(pScene, -1);
-
-		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
-
-		return;
-	}
-
 
 }
 

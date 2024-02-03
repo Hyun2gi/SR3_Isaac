@@ -43,7 +43,7 @@ private:
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
 
 private:
-	HRESULT		Key_Input(const _float& fTimeDelta);
+	void		Key_Input(const _float& fTimeDelta);
 
 	_vec3	Picking_OnTerrain();
 

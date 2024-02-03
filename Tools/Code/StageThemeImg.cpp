@@ -61,7 +61,12 @@ void CStageThemeImg::Render_GameObject()
 
 void CStageThemeImg::Set_Theme_Texture(const _tchar* pTextureTag)
 {
-	m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(pTextureTag));
+	wstring wstrProto = L"Proto_Theme_";
+	wstring wstrTag = pTextureTag;
+
+	wstrProto += pTextureTag;
+
+	m_pTextureCom = dynamic_cast<CTexture*>(Get_Component(ID_STATIC, wstrProto.c_str()));
 }
 
 HRESULT CStageThemeImg::Add_Component()
@@ -82,7 +87,7 @@ HRESULT CStageThemeImg::Add_Component()
 
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_Theme_Normal"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_Theme_Normal", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_Theme_Basement", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);

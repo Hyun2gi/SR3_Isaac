@@ -33,6 +33,9 @@ private:
 
     void    Save_Stage_List();
 
+    void    Change_Theme_Texture();
+    void    Set_Index_Val(const char* items);
+
 private:
     LPDIRECT3DDEVICE9 m_pGraphicDev;
 
@@ -54,6 +57,7 @@ private:
 
     string m_strCurRoomTheme;
     string m_strCurRoomType;
+    string m_strGetLine;
 
 private:
     virtual void Free();
