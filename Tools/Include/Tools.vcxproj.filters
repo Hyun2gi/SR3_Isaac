@@ -85,6 +85,9 @@
     <Filter Include="02. GameObject\09. UI\StageToolFly">
       <UniqueIdentifier>{b59197ba-e8ca-41a3-a56f-575d522bb485}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. UI\StageThemeImg">
+      <UniqueIdentifier>{b4aa4fab-1fdb-42ae-8dba-7333afa41bd5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -183,6 +186,9 @@
     <ClInclude Include="..\Header\StageToolFly.h">
       <Filter>02. GameObject\09. UI\StageToolFly</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\StageThemeImg.h">
+      <Filter>02. GameObject\09. UI\StageThemeImg</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -271,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\StageToolFly.cpp">
       <Filter>02. GameObject\09. UI\StageToolFly</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StageThemeImg.cpp">
+      <Filter>02. GameObject\09. UI\StageThemeImg</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

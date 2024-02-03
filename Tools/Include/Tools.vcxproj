@@ -180,6 +180,7 @@
     <ClInclude Include="..\Header\PlacementObject.h" />
     <ClInclude Include="..\Header\Player.h" />
     <ClInclude Include="..\Header\SkyBox.h" />
+    <ClInclude Include="..\Header\StageThemeImg.h" />
     <ClInclude Include="..\Header\StageTool.h" />
     <ClInclude Include="..\Header\StageToolFly.h" />
     <ClInclude Include="..\Header\StageToolGui.h" />
@@ -213,6 +214,7 @@
     <ClCompile Include="..\Code\PlacementObject.cpp" />
     <ClCompile Include="..\Code\Player.cpp" />
     <ClCompile Include="..\Code\SkyBox.cpp" />
+    <ClCompile Include="..\Code\StageThemeImg.cpp" />
     <ClCompile Include="..\Code\StageTool.cpp" />
     <ClCompile Include="..\Code\StageToolFly.cpp" />
     <ClCompile Include="..\Code\StageToolGui.cpp" />
