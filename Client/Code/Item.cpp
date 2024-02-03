@@ -57,6 +57,7 @@ void CItem::Set_Item_SpawnSpot(int _spawnspot)
 		break;
 	case 2 :
 		m_eCurItemPlace = SP_OBJECT;
+		m_fMoveSpeed = 0.9;
 		break;
 	case 3:
 		m_eCurItemPlace = SP_SHOP;
