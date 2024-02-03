@@ -24,7 +24,7 @@ HRESULT CShopNpc::Ready_GameObject()
 	m_pTransformCom->m_vScale = { 1.5f, 1.5f, 1.5f };
 
 	m_iPicNum = 2;
-	m_fFrameSpeed = 0.1f;
+	m_fFrameSpeed = 1.f;
 
 	m_fCallLimit = 3.f;
 

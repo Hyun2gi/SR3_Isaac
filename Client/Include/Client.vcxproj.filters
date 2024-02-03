@@ -187,6 +187,12 @@
     <Filter Include="02. GameObject\09. MapObject\06. Door">
       <UniqueIdentifier>{b9251cda-bcbe-4b54-a10f-3e91f1a23382}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. MapObject\05. Shell Game\00. NPC">
+      <UniqueIdentifier>{f0d62b8e-e251-4b65-9698-9c31ed4cf6a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\09. MapObject\05. Shell Game\01. Shell">
+      <UniqueIdentifier>{05239c4e-05a2-436f-a6ea-2efc018ccd43}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -357,6 +363,12 @@
     <ClInclude Include="..\Header\Shop.h">
       <Filter>02. GameObject\09. MapObject\04. Shop</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\ShellNpc.h">
+      <Filter>02. GameObject\09. MapObject\05. Shell Game\00. NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\ShellGame.h">
+      <Filter>02. GameObject\09. MapObject\05. Shell Game\01. Shell</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -517,6 +529,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\Shop.cpp">
       <Filter>02. GameObject\09. MapObject\04. Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ShellNpc.cpp">
+      <Filter>02. GameObject\09. MapObject\05. Shell Game\00. NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ShellGame.cpp">
+      <Filter>02. GameObject\09. MapObject\05. Shell Game\01. Shell</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
