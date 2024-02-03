@@ -775,6 +775,10 @@ HRESULT CLoadStage::Door_Collision()
 
 			if (pObj) // 충돌된 문 존재
 			{
+				_vec3 playerpos;
+				dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &playerpos);
+				CPlayer::GetInstance()->Set_StartPosition(playerpos);
+
 				// 스테이지 변경
 				Engine::CScene* pScene = nullptr;
 
@@ -799,8 +803,6 @@ CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType)
 		MSG_BOX("Stage Create Failed");
 		return nullptr;
 	}
-
-	CPlayer::GetInstance()->Set_Bool_StartScene(true);
 	
 	return pInstance;
 }

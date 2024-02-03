@@ -41,7 +41,7 @@ private:
 	PILLSTATE			m_eCurState;
 
 public:
-	static CPill* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CPill* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot);
 
 private:
 	virtual void		Free()									override;

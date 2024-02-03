@@ -28,7 +28,7 @@ private:
 	_float					m_fPicNum;
 
 public:
-	static CWhipWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CWhipWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot);
 
 private:
 	virtual void		Free()									override;

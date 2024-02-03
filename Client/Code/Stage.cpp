@@ -115,7 +115,7 @@ void CStage::Drop_ITem()
 	{
 		Engine::CGameObject* pGameObject = nullptr;
 
-		pGameObject = CCoin::Create(m_pGraphicDev);
+		pGameObject = CCoin::Create(m_pGraphicDev,2);
 		pGameObject->Set_MyLayer(L"GameItem");
 		m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);
 	}
@@ -326,17 +326,17 @@ HRESULT CStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"HeartHalf", pGameObject), E_FAIL);
 
 
-	//// Pill
-	//pGameObject = CPill::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pill", pGameObject), E_FAIL);
+	// Pill
+	pGameObject = CPill::Create(m_pGraphicDev,0);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pill", pGameObject), E_FAIL);
 
-	//// BrimStone
-	//pGameObject = CBrimStone::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BrimStone", pGameObject), E_FAIL);
+	// BrimStone
+	pGameObject = CBrimStone::Create(m_pGraphicDev,0);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BrimStone", pGameObject), E_FAIL);
 
 	//// Onion
 	//pGameObject = CSadOnion::Create(m_pGraphicDev);
