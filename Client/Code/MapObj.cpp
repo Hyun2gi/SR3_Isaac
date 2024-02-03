@@ -81,8 +81,9 @@ bool CMapObj::Check_Time(const _float& fTimeDelta)
 
 CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer)
 {
-	_vec3 vPos;
+	_vec3 vPos, vLook;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	m_pTransformCom->Get_Info(INFO_LOOK, &vLook);
 
 	switch (eItemType)
 	{
@@ -100,7 +101,7 @@ CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer)
 
 	case Engine::COIN:
 	{
-		CItem* pItem = CCoin::Create(m_pGraphicDev, iSpawnPos, vPos);
+		CItem* pItem = CCoin::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
 		pItem->Set_MyLayer(L"GameItem");
 		return pItem;
 		break;

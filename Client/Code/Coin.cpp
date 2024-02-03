@@ -22,14 +22,15 @@ CCoin::~CCoin()
 HRESULT CCoin::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(6.f, 1.f, 10.f);
-
+	
+	m_pTransformCom->m_vScale = { 0.5,0.5,0.5 };
 	m_ePreState = COIN_END;
 	m_eCurState = COIN_IDLE;
 	m_fFrame = 0;
 	m_fSpriteSpeed = 2;
 	m_iDelay = 0;
 	m_iTimer = 0;
+	m_fMoveSpeed = 0.9;
 
 	m_bDead = false;
 
@@ -152,13 +153,14 @@ void CCoin::Item_Spawn_Action()
 	}
 	else if(m_eCurItemPlace == SP_OBJECT)
 	{
-		if (m_iTimer < 40)
+		if (m_iTimer < 1)
 		{
-			m_pTransformCom->Set_Pos(itemPos.x, itemPos.y + 1, itemPos.z);
+			//m_fMoveSpeed += 0.01;
+			m_pTransformCom->Set_Pos(itemPos.x, itemPos.y + m_fMoveSpeed, itemPos.z);
 		}
 		else 
 		{
-			_vec3 temp = itemPos - _vec3(0, 1, 0);
+			_vec3 temp = itemPos - _vec3(0, 0.1, 0);
 
 			if (temp.y <= fHeight + 1)
 			{
@@ -167,7 +169,7 @@ void CCoin::Item_Spawn_Action()
 			}
 			else
 			{
-				m_pTransformCom->Set_Pos(itemPos.x, itemPos.y - 1, itemPos.z);
+				m_pTransformCom->Set_Pos(itemPos.x, itemPos.y - 0.1, itemPos.z);
 			}
 		}
 	}

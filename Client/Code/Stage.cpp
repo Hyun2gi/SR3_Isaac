@@ -129,6 +129,7 @@ void CStage::Drop_ITem()
 			!dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_Drop())
 		{
 			Engine::CGameObject* pGameObject = nullptr;
+			// Create_Item( ) : 2인자 : spawn Pos 정수 넣어주면 됨
 			pGameObject = dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Create_Item(COIN, 2, m_mapLayer.at(L"GameItem"));
 			m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);
 			dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Set_Drop();
