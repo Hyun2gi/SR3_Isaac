@@ -28,6 +28,7 @@ public:
 
 public:
 	void			Run_Item_Effect()						override;
+	void			Item_Spawn_Action()						override;
 
 private:
 	virtual HRESULT		Add_Component()						override;
@@ -41,7 +42,7 @@ private:
 	PILLSTATE			m_eCurState;
 
 public:
-	static CPill* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos);
+	static CPill* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look);
 
 private:
 	virtual void		Free()									override;
