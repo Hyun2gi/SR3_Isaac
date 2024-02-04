@@ -49,6 +49,12 @@
     <Filter Include="07. SoundMgr\fmod">
       <UniqueIdentifier>{2ca9b2aa-1074-4eda-99b6-809acb7a5f1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="08. Particle">
+      <UniqueIdentifier>{9d94868a-94fc-4c05-816b-7b4a8af87ab8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08. Particle\Manager">
+      <UniqueIdentifier>{7029f3e1-d4a0-46e4-ba15-ca1187eea490}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\GraphicDev.cpp">
@@ -104,6 +110,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\SoundMgr.cpp">
       <Filter>07. SoundMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ParticleMgr.cpp">
+      <Filter>08. Particle\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ParticleSystem.cpp">
+      <Filter>08. Particle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -187,6 +199,12 @@
     </ClInclude>
     <ClInclude Include="..\..\..\fmod\fmod_output.h">
       <Filter>07. SoundMgr\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\ParticleMgr.h">
+      <Filter>08. Particle\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\ParticleSystem.h">
+      <Filter>08. Particle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
