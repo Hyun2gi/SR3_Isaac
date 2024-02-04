@@ -6,16 +6,12 @@ BEGIN(Engine)
 class ENGINE_DLL CParticleScatter : public CParticleSystem
 {
 protected:
-	explicit CParticleScatter();
+	explicit CParticleScatter(BoundingBox* boundingBox, int numParticles);
 	virtual ~CParticleScatter();
 
 public:
 	virtual void Reset_Partice(Attribute* attribute) override;
 	virtual void Update_Particle(_float fTimeDelat) override;
-//public:
-//	Snow(BoundingBox* boundingBox, int numParticles);
-//	void resetParticle(Attribute* attribute);
-//	void update(float timeDelta);
 
 private:
 	virtual void	Free();
