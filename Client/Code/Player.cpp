@@ -8,6 +8,7 @@
 #include "BrimStoneBullet.h"
 #include "DynamicCamera.h"
 #include "EpicBullet.h"
+#include "EpicBulletMark.h"
 
 IMPLEMENT_SINGLETON(CPlayer)
 
@@ -155,6 +156,28 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
+	if (!m_EpicMarkList.empty())
+	{
+		int		iResult = 0;
+		for (auto& iter = m_EpicMarkList.begin();
+			iter != m_EpicMarkList.end(); )
+		{
+			iResult = dynamic_cast<CEpicBulletMark*>(*iter)->Update_GameObject(fTimeDelta);
+
+			if (1 == iResult)
+			{
+				//Safe_Delete<CGameObject*>(*iter);
+				Safe_Release<CGameObject*>(*iter);
+				iter = m_PlayerBulletList.erase(iter);
+			}
+			else
+			{
+				++iter;
+			}
+		}
+		
+	}
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 
@@ -184,6 +207,14 @@ void CPlayer::LateUpdate_GameObject()
 			{
 				dynamic_cast<CEpicBullet*>(iter)->LateUpdate_GameObject();
 			}
+		}
+	}
+
+	if (!m_EpicMarkList.empty())
+	{
+		for (auto& iter : m_EpicMarkList)
+		{
+			dynamic_cast<CEpicBulletMark*>(iter)->LateUpdate_GameObject();
 		}
 	}
 
@@ -361,6 +392,59 @@ bool CPlayer::Get_SafeCamer_Area()
 	}
 }
 
+void CPlayer::Plus_EpicBulletMark(_vec3 pos)
+{
+	// 바닥위에 나오도록
+	_vec3 tempPos = pos;
+	Engine::CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
+	NULL_CHECK(pTerrainBufferCom);
+	_float	fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&tempPos, pTerrainBufferCom->Get_VtxPos());
+	tempPos = _vec3(tempPos.x, fHeight + 0.2, tempPos.z);
+
+	m_EpicMarkList.push_back(CEpicBulletMark::Create(m_pGraphicDev, m_pLayerTag, tempPos));
+}
+
+
+// 씬 이동때마다 바닥에 있는 에픽 흔적 지우기
+void CPlayer::Clear_EpicBulletMark()
+{
+	if (!m_PlayerBulletList.empty())
+	{
+		for (auto& iter = m_PlayerBulletList.begin();
+			iter != m_PlayerBulletList.end(); )
+		{
+			Safe_Release<CGameObject*>(*iter);
+			iter = m_PlayerBulletList.erase(iter);
+		}
+	}
+}
+
+void CPlayer::Change_LastEpicMark_To_Trace()
+{
+	dynamic_cast<CEpicBulletMark*>(m_EpicMarkList.back())->Set_Bullet_Mark(2);
+}
+
+int CPlayer::Get_PlayerCurState()
+{
+	switch (m_eCurState)
+	{
+	case P_IDLE:
+		return 0;
+	case P_IDLEWALK:
+		return 1;
+	case P_BACKWALK:
+		return 2;
+	case P_LEFTWALK:
+		return 3;
+	case P_RIGHTWALK:
+		return 4;
+	case P_SHOOTWALK:
+		return 5;
+	case P_THUMBS_UP:
+		return 6;
+	}
+}
+
 void CPlayer::Bullet_Change_To_Brim()
 {
 	if (!m_PlayerBulletList.empty())
@@ -517,6 +601,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				_vec3 targetpos = m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);
 				dynamic_cast<CEpicBullet*>(m_PlayerBulletList.back())->Set_Shoot(_vec3(targetpos.x, 0, targetpos.z));
 				dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_Shoot_End_Epic();
+
+				//epicmark도 시작
+				Plus_EpicBulletMark(_vec3(targetpos.x, 0, targetpos.z));
 			}
 			
 		}
@@ -670,6 +757,16 @@ void CPlayer::Free()
 		{
 			Safe_Release<CGameObject*>(*iter);
 			iter = m_PlayerBulletList.erase(iter);
+		}
+	}
+
+	if (!m_EpicMarkList.empty())
+	{
+		for (auto& iter = m_EpicMarkList.begin();
+			iter != m_EpicMarkList.end(); )
+		{
+			Safe_Release<CGameObject*>(*iter);
+			iter = m_EpicMarkList.erase(iter);
 		}
 	}
 	

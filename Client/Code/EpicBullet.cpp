@@ -74,6 +74,8 @@ _int CEpicBullet::Update_GameObject(const _float& fTimeDelta)
         {
             m_eCurState = EPIC_EFFECT;
             m_fFrame = 0;
+            // 터지는 순간 흔적남는걸로 변경
+            CPlayer::GetInstance()->Change_LastEpicMark_To_Trace();
         }
     } 
 
@@ -184,9 +186,6 @@ CEpicBullet* CEpicBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pL
         return nullptr;
     }
 
-    // 시작 위치설정
-    pInstance->m_pTransformCom->Set_Pos(0,0,0);
-
     return pInstance;
 }
 
@@ -244,7 +243,6 @@ HRESULT CEpicBullet::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
-    m_pTransformCom->Set_Pos(0, 0, 0);
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 

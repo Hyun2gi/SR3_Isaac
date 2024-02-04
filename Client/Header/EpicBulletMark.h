@@ -30,7 +30,10 @@ public:
 	void		Motion_Change();
 
 public:
-	static CEpicBulletMark* Create(LPDIRECT3DDEVICE9	pGraphicDev);
+	void		Set_Pos(_vec3 pos) { m_pTransformCom->Set_Pos(pos); }
+
+public:
+	static CEpicBulletMark* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag, _vec3 pos);
 
 public:
 	void					Set_Bullet_Mark(int _num)
@@ -67,7 +70,7 @@ protected:
 
 	int						m_iPicNum;
 	_float					m_fSpriteSpeed;
-
+	bool					m_bPicStop;
 
 private:
 	_vec3		m_vBulletDir;

@@ -30,7 +30,7 @@ public:
 	void		Motion_Change();
 
 public:
-	static CEpicBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag);
+	static CEpicBullet* Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag);
 
 public:
 	void					Set_Bullet(int _num)
