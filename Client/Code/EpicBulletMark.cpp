@@ -22,11 +22,14 @@ HRESULT CEpicBulletMark::Ready_GameObject()
 
 	m_fAccTimeDelta = 0;
 	m_ePreState = EPIC_MARK_END;
+    m_eCurState = EPIC_MARK_TARGET;
 
 	// 지속시간
 	m_fCallLimit = 1;
 	m_fSpriteSpeed = 2;
-
+    m_iPicNum = 0;
+    m_fFrame = 0;
+    m_bPicStop = false;
 
 	return S_OK;
 }
@@ -35,9 +38,23 @@ _int CEpicBulletMark::Update_GameObject(const _float& fTimeDelta)
 {
     CGameObject::Update_GameObject(fTimeDelta);
 
+    if (m_eCurState == EPIC_MARK_TRACE && m_bPicStop == false)
+    {
+        m_fFrame += m_iPicNum * m_fSpriteSpeed;
+
+        // 한번 돌고 멈추기
+        if (m_iPicNum < m_fFrame)
+        {
+            m_fFrame = m_iPicNum-1;
+            m_bPicStop = true;
+        }   
+    }
+    else
+    {
+        m_fFrame = 0;
+    }
    
     Motion_Change();
-
 
     Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -60,7 +77,7 @@ void CEpicBulletMark::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 	m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
-	m_pTextureCom->Set_Texture((_uint)0);
+	m_pTextureCom->Set_Texture((_uint)m_fFrame);
 
 	m_pBufferCom->Render_Buffer();
 }
@@ -79,10 +96,10 @@ void CEpicBulletMark::Motion_Change()
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicTarget"));
             break;
         case EPIC_MARK_TRACE:
-            m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
-            m_iPicNum = 1;
+            m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
+            m_iPicNum = 8;
             m_fSpriteSpeed = 1.5f;
-            m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicBullet"));
+            m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicSpace"));
             break;
         }
 
@@ -90,9 +107,10 @@ void CEpicBulletMark::Motion_Change()
     }
 }
 
-CEpicBulletMark* CEpicBulletMark::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CEpicBulletMark* CEpicBulletMark::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag, _vec3 pos)
 {
     CEpicBulletMark* pInstance = new CEpicBulletMark(pGraphicDev);
+    pInstance->Set_MyLayer(pLayerTag);
 
     if (FAILED(pInstance->Ready_GameObject()))
     {
@@ -100,6 +118,8 @@ CEpicBulletMark* CEpicBulletMark::Create(LPDIRECT3DDEVICE9 pGraphicDev)
         MSG_BOX("CEpicBulletMark Create Failed");
         return nullptr;
     }
+
+    pInstance->Set_Pos(pos);
 
     return pInstance;
 }
@@ -126,9 +146,10 @@ HRESULT CEpicBulletMark::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
-    m_pTransformCom->Set_Pos(0, 0, 0);
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
+
+    m_pTransformCom->m_vAngle = _vec3(90, 0, 0);
 
     return S_OK;
 }

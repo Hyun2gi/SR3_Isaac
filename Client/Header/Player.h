@@ -72,11 +72,6 @@ public:
 	void		Set_Bool_MouseYRotation(bool checkY) { m_bMouseYRotataion = checkY; }
 	void		Set_Player_Pos(_vec3 pos);
 
-	// 에픽에투스 타겟상태가 진행되는지
-	// 타겟 상태일때 몬스터 느려짐 + 플레이어 이동 제어
-	void		Set_EpicTargetRun(bool _run) { m_bEpicTargetRun = _run; }
-	bool		Get_EpicTargetRun() { return m_bEpicTargetRun; }
-
 	float		Get_BulletSpeed() { return m_fBulletSpeed; }
 	int			Get_Coin() { return m_iCoin; }
 	void		Set_Bool_StartScene(bool _start) { m_bStartScene = _start; }
@@ -92,6 +87,16 @@ public:
 	bool		Get_Camera_WallBlock();
 	bool		Get_SafeCamer_Area(); // 카메라 벗어나지 않는 안전지대인지
 	list<CGameObject*>* Get_Player_BullletList() { return &m_PlayerBulletList; }
+	void		Plus_EpicBulletMark(_vec3 pos); 
+	void		Clear_EpicBulletMark(); // 씬 이동때마다 바닥에 있는 에픽 흔적 지우기
+	void		Change_LastEpicMark_To_Trace(); // 마지막 epic을 trace로 변경
+
+
+	// 에픽에투스 타겟상태가 진행되는지
+	// 타겟 상태일때(지형선택하고 떨어지기 전까지) 몬스터 느려짐 + 플레이어 이동 제어
+	void		Set_EpicTargetRun(bool _run) { m_bEpicTargetRun = _run; }
+	bool		Get_EpicTargetRun() { return m_bEpicTargetRun; }
+
 
 public:
 	void		Bullet_Change_To_Brim();
@@ -130,8 +135,6 @@ private:
 	// Bullet 상태 저장
 	BULLETID			m_eCurBulletState;
 
-	list<CGameObject*>	m_PlayerBulletList;
-
 	//움직이는 속도
 	_float				m_fMoveSpeed;
 
@@ -157,6 +160,10 @@ private:
 	CGameObject*		m_pCamera;
 
 	bool				m_bEpicTargetRun;
+
+private:
+	list<CGameObject*>	m_PlayerBulletList;
+	list<CGameObject*>	m_EpicMarkList;
 
 public:
 	/*static CPlayer*		Create(LPDIRECT3DDEVICE9	pGraphicDev);*/
