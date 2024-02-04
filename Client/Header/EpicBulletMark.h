@@ -12,14 +12,14 @@ class CCalculator;
 
 END
 
-class CEpicBullet : public CGameObject
+class CEpicBulletMark : public CGameObject
 {
 private:
-	explicit CEpicBullet(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CEpicBullet(const CEpicBullet& rhs);
-	virtual ~CEpicBullet();
+	explicit CEpicBulletMark(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CEpicBulletMark(const CEpicBulletMark& rhs);
+	virtual ~CEpicBulletMark();
 
-	enum EPICSTATE{ EPIC_TARGET, EPIC_BULLET, EPIC_EFFECT, EPIC_END };
+	enum EPICMARKSTATE { EPIC_MARK_TARGET, EPIC_MARK_TRACE, EPIC_MARK_END };
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -30,24 +30,21 @@ public:
 	void		Motion_Change();
 
 public:
-	static CEpicBullet* Create(LPDIRECT3DDEVICE9	pGraphicDev, const _tchar* pLayerTag);
+	static CEpicBulletMark* Create(LPDIRECT3DDEVICE9	pGraphicDev);
 
 public:
-	void					Set_Bullet(int _num)
+	void					Set_Bullet_Mark(int _num)
 	{
 		switch (_num)
 		{
 		case 1:
-			m_eCurState = EPIC_TARGET;
+			m_eCurState = EPIC_MARK_TARGET;
 			break;
 		case 2:
-			m_eCurState = EPIC_BULLET;
+			m_eCurState = EPIC_MARK_TRACE;
 			break;
 		}
 	}
-
-	void					Set_Shoot(_vec3 shootpos);
-	void					Set_StartFall(bool start) { m_bStartFall = start; }
 
 private:
 	virtual HRESULT			Add_Component();
@@ -70,17 +67,12 @@ protected:
 
 	int						m_iPicNum;
 	_float					m_fSpriteSpeed;
-	_vec3					m_vShootPos;
-	_vec3					m_vTargetPos;
-	_vec3					m_vBulletSpeed;
 
-	bool					m_bStartFall;
-	bool					m_bEndingSetTarget;
 
 private:
 	_vec3		m_vBulletDir;
 	bool		m_bDead = false;
-	EPICSTATE	m_eCurState;
-	EPICSTATE	m_ePreState;
+	EPICMARKSTATE	m_eCurState;
+	EPICMARKSTATE	m_ePreState;
 };
 

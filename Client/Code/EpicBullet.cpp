@@ -29,6 +29,7 @@ HRESULT CEpicBullet::Ready_GameObject()
     m_fSpriteSpeed = 2;
     m_vBulletSpeed = _vec3(0, 5, 0);
     m_bStartFall = false;
+    m_bEndingSetTarget = false;
 
 	return S_OK;
 }
@@ -36,17 +37,29 @@ HRESULT CEpicBullet::Ready_GameObject()
 _int CEpicBullet::Update_GameObject(const _float& fTimeDelta)
 {
     CGameObject::Update_GameObject(fTimeDelta);
-    m_pCalculatorCom->Compute_Vill_Matrix(m_pTransformCom);
-    
+
+    if (m_eCurState == EPIC_TARGET)
+    {
+        m_pCalculatorCom->Compute_Vill_Matrix_X(m_pTransformCom);
+    }
+    else
+    {
+        m_pCalculatorCom->Compute_Vill_Matrix(m_pTransformCom);
+    }
+   
     Motion_Change();
 
     if (m_eCurState == EPIC_TARGET)
     {
-        POINT		ptMouse{};
-        GetCursorPos(&ptMouse);
-        ScreenToClient(g_hWnd, &ptMouse);
-        // SetCursorPos(pt.x, pt.y);
-        m_pTransformCom->Set_Pos(_vec3(ptMouse.x, 10, ptMouse.y));
+        CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
+        //NULL_CHECK_RETURN(pTerrainBufferCom, _vec3());
+
+        CTransform* pTerrainTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Terrain", L"Proto_Transform"));
+        //NULL_CHECK_RETURN(pTerrainTransCom, _vec3());
+
+        _vec3 targetpos = m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);
+        
+        m_pTransformCom->Set_Pos(_vec3(targetpos.x, targetpos.y+0.1, targetpos.z));
         //m_pTransformCom->Rotation(ROT_X, 90);
     }
    
@@ -60,7 +73,6 @@ _int CEpicBullet::Update_GameObject(const _float& fTimeDelta)
         if (m_vShootPos.y-(m_pTransformCom->m_vScale.y*0.5) <= 2)
         {
             m_eCurState = EPIC_EFFECT;
-            m_pTransformCom->m_vScale = { 1.2f, 1.2f, 1.2f };
             m_fFrame = 0;
         }
     } 
@@ -68,7 +80,6 @@ _int CEpicBullet::Update_GameObject(const _float& fTimeDelta)
     if (m_eCurState == EPIC_EFFECT)
     {
         m_fFrame += m_iPicNum * fTimeDelta * m_fSpriteSpeed;
-
         if (m_iPicNum < m_fFrame)
         {
             // 없애기
@@ -102,7 +113,15 @@ void CEpicBullet::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
     m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
-    m_pTextureCom->Set_Texture((_uint)0);
+    if (m_eCurState == EPIC_EFFECT)
+    {
+        m_pTextureCom->Set_Texture((_uint)m_fFrame);
+    }
+    else
+    {
+        m_pTextureCom->Set_Texture((_uint)0);
+    }
+    
 
     if (m_eCurState == EPIC_BULLET && m_bStartFall)
     {
@@ -129,16 +148,19 @@ void CEpicBullet::Motion_Change()
         switch (m_eCurState)
         {
         case EPIC_TARGET:
+            m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
             m_iPicNum = 1;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicTarget"));
             break;
         case EPIC_BULLET:
+            m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
             m_iPicNum = 1;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicBullet"));
             break;
         case EPIC_EFFECT:
+            m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
             m_iPicNum = 11;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicEff"));
@@ -154,6 +176,7 @@ CEpicBullet* CEpicBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pL
     CEpicBullet* pInstance = new CEpicBullet(pGraphicDev);
     pInstance->Set_MyLayer(pLayerTag);
 
+
     if (FAILED(pInstance->Ready_GameObject()))
     {
         Safe_Release(pInstance);
@@ -162,7 +185,7 @@ CEpicBullet* CEpicBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pL
     }
 
     // 시작 위치설정
-    //pInstance->m_pTransformCom->Set_Pos(_vec3(xPos,11, zPos));
+    pInstance->m_pTransformCom->Set_Pos(0,0,0);
 
     return pInstance;
 }
@@ -170,20 +193,26 @@ CEpicBullet* CEpicBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pL
 
 void CEpicBullet::Set_Shoot(_vec3 shootpos)
 {
-    m_eCurState = EPIC_BULLET;
-    m_vShootPos = shootpos + _vec3(0, 11, 0);
-    m_pTransformCom->Set_Pos(m_vShootPos);
+    // (다시 클릭했을때 재설정 되지 않도록)
+    if (m_bEndingSetTarget == false)
+    {
+        m_eCurState = EPIC_BULLET;
+        m_vShootPos = shootpos + _vec3(0, 11, 0);
+        m_pTransformCom->Set_Pos(m_vShootPos);
 
-    // 타겟 높이 고려해서 위치 지정
-    Engine::CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
-    NULL_CHECK(pTerrainBufferCom);
+        // 타겟 높이 고려해서 위치 지정
+        Engine::CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
+        NULL_CHECK(pTerrainBufferCom);
 
-    _vec3 vPos;
-    m_pTransformCom->Get_Info(INFO_POS, &vPos);
-    _float	fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
+        _vec3 vPos;
+        m_pTransformCom->Get_Info(INFO_POS, &vPos);
+        _float	fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
 
-    m_vTargetPos = _vec3(m_vShootPos.x, fHeight, m_vShootPos.z);
+        m_vTargetPos = _vec3(m_vShootPos.x, fHeight, m_vShootPos.z);
 
+        // 타겟 설정 끝남 (다시 클릭했을때 재설정 되지 않도록)
+        m_bEndingSetTarget = true;
+    }
 }
 
 HRESULT CEpicBullet::Add_Component()
@@ -215,6 +244,8 @@ HRESULT CEpicBullet::Add_Component()
     m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
     pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
+    m_pTransformCom->Set_Pos(0, 0, 0);
+    NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
     return S_OK;

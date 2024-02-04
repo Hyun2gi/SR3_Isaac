@@ -53,6 +53,8 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_bMouseYRotataion = true;
 	m_pTransformCom->Set_Pos(VTXCNTX / 2, 0, VTXCNTZ / 2);
 
+	m_bEpicTargetRun = false;
+
 	return S_OK;
 }
 
@@ -105,7 +107,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 		
-	if (m_bKeyBlock != true)
+	if (m_bKeyBlock == false)
 	{
 		Key_Input(fTimeDelta);
 	}
@@ -308,6 +310,10 @@ void CPlayer::Set_EpicFall()
 	{
 		if (!m_PlayerBulletList.empty())
 		{
+			// target 상태가 아님 (키보드 움직임 풀기)
+			// 몬스터 움직임 느려지는거 끝남
+			// 키보드 막는것도 끝
+			m_bEpicTargetRun = false;
 			dynamic_cast<CEpicBullet*>(m_PlayerBulletList.back())->Set_StartFall(true);
 		}
 	}
@@ -381,76 +387,81 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 	vScale = m_pTransformCom->m_vScale;
 
-	if (Engine::Get_DIKeyState(DIK_W) & 0x80)
+	// epictarget 쓰는 상태일때는 block됨
+	if (m_bEpicTargetRun == false)
 	{
-		m_eCurState = P_BACKWALK;
-		D3DXVec3Normalize(&vDir, &vDir);
-		
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		vPos += vDir * (m_fMoveSpeed) * fTimeDelta;
-
-		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-			&& vPos.x > vScale.x && vPos.z > vScale.z)
+		if (Engine::Get_DIKeyState(DIK_W) & 0x80)
 		{
-			m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+			m_eCurState = P_BACKWALK;
+			D3DXVec3Normalize(&vDir, &vDir);
+
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos += vDir * (m_fMoveSpeed)*fTimeDelta;
+
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			{
+				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+			}
+		}
+		else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
+		{
+			m_eCurState = P_IDLEWALK;
+			D3DXVec3Normalize(&vDir, &vDir);
+
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
+
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			{
+				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+			}
+		}
+		else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
+		{
+			m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
+
+			m_eCurState = P_LEFTWALK;
+			D3DXVec3Normalize(&vDir, &vDir);
+
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
+
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			{
+				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+			}
+
+		}
+		else if (Engine::Get_DIKeyState(DIK_D) & 0x80)
+		{
+			m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
+
+			m_eCurState = P_RIGHTWALK;
+			D3DXVec3Normalize(&vDir, &vDir);
+
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos += vDir * (m_fMoveSpeed)*fTimeDelta;
+
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			{
+				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+			}
+
+		}
+		else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
+		{
+			m_eCurState = P_THUMBS_UP;
+		}
+		else
+		{
+			m_eCurState = P_IDLE;
 		}
 	}
-	else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
-	{
-		m_eCurState = P_IDLEWALK;
-		D3DXVec3Normalize(&vDir, &vDir);
-
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
-
-		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-			&& vPos.x > vScale.x && vPos.z > vScale.z)
-		{
-			m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
-		}
-	}
-	else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
-	{
-		m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
-
-		m_eCurState = P_LEFTWALK;
-		D3DXVec3Normalize(&vDir, &vDir);
-
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
-
-		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-			&& vPos.x > vScale.x && vPos.z > vScale.z)
-		{
-			m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
-		}
-		
-	}
-	else if (Engine::Get_DIKeyState(DIK_D) & 0x80)
-	{
-		m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
-
-		m_eCurState = P_RIGHTWALK;
-		D3DXVec3Normalize(&vDir, &vDir);
-
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		vPos += vDir * (m_fMoveSpeed) * fTimeDelta;
-
-		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-			&& vPos.x > vScale.x && vPos.z > vScale.z)
-		{
-			m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
-		}
-		
-	}
-	else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
-	{
-		m_eCurState = P_THUMBS_UP;
-	}
-	else
-	{
-		m_eCurState = P_IDLE;
-	}
+	
 
 	// 총 delay는 누르지 않고 있어도 카운트 해야하기 때문에 돌려주기
 	if (m_fShootDelayTime != 0)
@@ -522,6 +533,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_PlayerBulletList.push_back(CEpicBullet::Create(m_pGraphicDev, m_pLayerTag));
 			dynamic_cast<CEpicBullet*>(m_PlayerBulletList.back())->Set_Bullet(1);
 			dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_EpicBullet();
+
+			//타겟상태
+			m_bEpicTargetRun = true;
 		}
 	}
 

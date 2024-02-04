@@ -72,6 +72,11 @@ public:
 	void		Set_Bool_MouseYRotation(bool checkY) { m_bMouseYRotataion = checkY; }
 	void		Set_Player_Pos(_vec3 pos);
 
+	// 에픽에투스 타겟상태가 진행되는지
+	// 타겟 상태일때 몬스터 느려짐 + 플레이어 이동 제어
+	void		Set_EpicTargetRun(bool _run) { m_bEpicTargetRun = _run; }
+	bool		Get_EpicTargetRun() { return m_bEpicTargetRun; }
+
 	float		Get_BulletSpeed() { return m_fBulletSpeed; }
 	int			Get_Coin() { return m_iCoin; }
 	void		Set_Bool_StartScene(bool _start) { m_bStartScene = _start; }
@@ -150,6 +155,9 @@ private:
 	bool				m_bMouseYRotataion;
 
 	CGameObject*		m_pCamera;
+
+	bool				m_bEpicTargetRun;
+
 public:
 	/*static CPlayer*		Create(LPDIRECT3DDEVICE9	pGraphicDev);*/
 

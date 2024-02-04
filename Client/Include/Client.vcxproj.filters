@@ -378,6 +378,9 @@
     <ClInclude Include="..\Header\Shop.h">
       <Filter>02. GameObject\09. MapObject\04. Shop</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\EpicBulletMark.h">
+      <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -550,6 +553,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Shop.cpp">
       <Filter>02. GameObject\09. MapObject\04. Shop</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EpicBulletMark.cpp">
+      <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
