@@ -49,35 +49,6 @@ namespace Engine
 
 	}INDEX32;	
 
-	//파티클 시스템 관련 구조체들
-	struct BoundingBox
-	{
-		BoundingBox();
-
-		bool isPointInside(D3DXVECTOR3& p);
-
-		D3DXVECTOR3 _min;
-		D3DXVECTOR3 _max;
-	};
-
-	struct Particle
-	{
-		D3DXVECTOR3 _position;
-		D3DCOLOR    _color;
-		static const DWORD FVF;
-	};
-
-	struct Attribute
-	{
-		_vec3 _vPosition;		// 월드 내 파티클 위치
-		_vec3 _vVelocity;		// 파티클의 속도 (초당 이동 단위)
-		_vec3 _vAcceleration;	// 파티클의 가속 (초당 이동 단위)
-		_float	_fLifeTime;		// 소멸까지의 시간
-		_float	_fAge;			// 파티클의 현재 나이
-		D3DXCOLOR _color;		// 컬러
-		D3DXCOLOR _colorFade;	// 컬러가 시간의 흐름에 따라 퇴색하는 방법
-		bool	_bIsAlive;		// 생존한 경유 true, 소멸 시 false
-	};
 
 }
 #endif // Engine_Struct_h__

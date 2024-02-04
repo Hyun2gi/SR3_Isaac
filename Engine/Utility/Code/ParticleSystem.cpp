@@ -1,7 +1,5 @@
 #include "..\..\Header\ParticleSystem.h"
 
-const DWORD Particle::FVF = D3DFVF_XYZ | D3DFVF_DIFFUSE;
-
 CParticleSystem::CParticleSystem()
 {
 	m_pGraphicDev = 0;
@@ -24,19 +22,19 @@ bool CParticleSystem::Ready_Particle(IDirect3DDevice9* pDevice, char* texFileNam
 	hr = pDevice->CreateVertexBuffer(
 		m_VbSize * sizeof(Particle),
 		D3DUSAGE_DYNAMIC | D3DUSAGE_POINTS | D3DUSAGE_WRITEONLY,
-		Particle::FVF,
+		D3DFVF_XYZ | D3DFVF_DIFFUSE,
 		D3DPOOL_DEFAULT, // D3DPOOL_MANAGED can't be used with D3DUSAGE_DYNAMIC 
 		&m_pVb,
 		0);
 
 	FAILED_CHECK_RETURN(hr, E_FAIL);
 
-	hr = D3DXCreateTextureFromFile(
-		pDevice,
-		texFileName,
-		&m_pTex);
+	//hr = D3DXCreateTextureFromFile(
+	//	pDevice,
+	//	texFileName,
+	//	&m_pTex);
 
-	FAILED_CHECK_RETURN(hr, E_FAIL);
+	//FAILED_CHECK_RETURN(hr, E_FAIL);
 
 	return S_OK;
 }
@@ -92,7 +90,7 @@ void CParticleSystem::Render()
 		Pre_Render();
 
 		m_pGraphicDev->SetTexture(0, m_pTex);
-		m_pGraphicDev->SetFVF(Particle::FVF);
+		m_pGraphicDev->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
 		m_pGraphicDev->SetStreamSource(0, m_pVb, 0, sizeof(Particle));
 
 		//
@@ -243,21 +241,46 @@ void CParticleSystem::Remove_Dead_Particles()
 	}
 }
 
-
-
-CParticleSystem * CParticleSystem::Create(const _float & fCallLimit)
-{
-	CParticleSystem *		pInstance = new CParticleSystem;
-
-	if (FAILED(pInstance->Ready_Frame(fCallLimit)))
-	{
-		MSG_BOX("Frame Create Failed");
-		return nullptr;
-	}
-
-	return pInstance;
-}
-
 void CParticleSystem::Free()
 {
 }
+
+//void Snow::resetParticle(Attribute* attribute)
+//{
+//	attribute->_bIsAlive = true;
+//
+//	// get random x, z coordinate for the position of the snow flake.
+//	GetRandomVector(
+//		&attribute->_vPosition,
+//		&m_tBoundingBox._min,
+//		&m_tBoundingBox._max);
+//
+//	// no randomness for height (y-coordinate).  Snow flake
+//	// always starts at the top of bounding box.
+//	attribute->_vPosition.y = m_tBoundingBox._max.y;
+//
+//	// snow flakes fall downwards and slightly to the left
+//	attribute->_vVelocity.x = GetRandomFloat(0.0f, 1.0f) * -3.0f;
+//	attribute->_vVelocity.y = GetRandomFloat(0.0f, 1.0f) * -10.0f;
+//	attribute->_vVelocity.z = 0.0f;
+//
+//	// white snow flake
+//	attribute->_color = D3DCOLOR_XRGB(255, 255, 255);
+//}
+//
+//void Snow::update(float timeDelta)
+//{
+//	std::list<Attribute>::iterator i;
+//	for (i = m_ParticlesList.begin(); i != m_ParticlesList.end(); i++)
+//	{
+//		i->_vPosition += i->_vVelocity * timeDelta;
+//
+//		// is the point outside bounds?
+//		if (m_tBoundingBox.isPointInside(i->_vPosition) == false)
+//		{
+//			// nope so kill it, but we want to recycle dead 
+//			// particles, so respawn it instead.
+//			resetParticle(&(*i));
+//		}
+//	}
+//}

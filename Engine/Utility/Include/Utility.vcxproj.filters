@@ -67,6 +67,15 @@
     <Filter Include="03. GameObject\UI">
       <UniqueIdentifier>{8061918a-84c3-48f7-8453-49bcd0056c7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="09. Particle">
+      <UniqueIdentifier>{dd27de29-01d9-4678-b6e0-e449320a990d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09. Particle\Manager">
+      <UniqueIdentifier>{0159b2e1-33ca-4eba-9494-e8938b575611}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09. Particle\ParticleScatter">
+      <UniqueIdentifier>{e0764337-d62e-4f33-9fec-4b868cade304}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Header\Management.h">
@@ -135,6 +144,15 @@
     <ClInclude Include="..\..\Header\UI.h">
       <Filter>03. GameObject\UI</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Header\ParticleSystem.h">
+      <Filter>09. Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\ParticleMgr.h">
+      <Filter>09. Particle\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\ParticleScatter.h">
+      <Filter>09. Particle\ParticleScatter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\Management.cpp">
@@ -199,6 +217,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\UI.cpp">
       <Filter>03. GameObject\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ParticleSystem.cpp">
+      <Filter>09. Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ParticleMgr.cpp">
+      <Filter>09. Particle\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ParticleScatter.cpp">
+      <Filter>09. Particle\ParticleScatter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

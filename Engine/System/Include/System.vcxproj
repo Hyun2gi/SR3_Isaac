@@ -181,8 +181,6 @@ call CopySystem.bat</Command>
     <ClCompile Include="..\Code\ImGuiMgr.cpp" />
     <ClCompile Include="..\Code\InputDev.cpp" />
     <ClCompile Include="..\Code\MyFont.cpp" />
-    <ClCompile Include="..\Code\ParticleMgr.cpp" />
-    <ClCompile Include="..\Code\ParticleSystem.cpp" />
     <ClCompile Include="..\Code\SoundMgr.cpp" />
     <ClCompile Include="..\Code\Timer.cpp" />
     <ClCompile Include="..\Code\TimerMgr.cpp" />
@@ -212,8 +210,6 @@ call CopySystem.bat</Command>
     <ClInclude Include="..\..\Header\ImGuiMgr.h" />
     <ClInclude Include="..\..\Header\InputDev.h" />
     <ClInclude Include="..\..\Header\MyFont.h" />
-    <ClInclude Include="..\..\Header\ParticleMgr.h" />
-    <ClInclude Include="..\..\Header\ParticleSystem.h" />
     <ClInclude Include="..\..\Header\SoundMgr.h" />
     <ClInclude Include="..\..\Header\Timer.h" />
     <ClInclude Include="..\..\Header\TimerMgr.h" />
