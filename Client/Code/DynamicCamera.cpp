@@ -530,10 +530,12 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 			// 에픽에투스일때 위로 고정
 			if (m_bEpic == true)
 			{
+				//에픽에투스 상태임
 				m_eCurState = C_EPIC;
-				m_vEye = _vec3(VTXCNTX / 2, 50, VTXCNTZ / 2);
-				m_vAt = playerPos + playerDir * 2;
+				// 키보드 사용할 수 있게끔
 				CPlayer::GetInstance()->Set_KeyBlock(false);
+				// 타겟 설정할때는 카메라 마우스 이동 막기
+				m_bFix = true;
 				return;
 			}
 
@@ -769,6 +771,7 @@ void CDynamicCamera::OnMoveToOriginPos()
 void CDynamicCamera::Set_EpicBullet()
 {
 	m_bEpic = true;
+	m_vStartAtPosition = m_vAt;
 	m_vStartEyePosition = m_vEye;
 	_vec3 target = _vec3(VTXCNTX / 2, 20, VTXCNTZ / 2);
 	OnMoveTargetCamera(1.f, 7.f, target, false, 0);
