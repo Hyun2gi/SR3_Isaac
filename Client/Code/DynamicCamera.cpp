@@ -255,7 +255,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 					{
 						m_bCollisionWall = false;
 						m_vEye = m_vGoalPosition;
-						//m_fAngleY = 0;
+						m_fAngleY = 0;
 						m_vAt = playerPos + playerDir * 2;
 						m_vCameraPosDir = m_vEye - m_vAt;
 					}
@@ -365,7 +365,7 @@ void CDynamicCamera::Mouse_Move()
 		D3DXQuaternionRotationMatrix(&qRot, &matRotY);
 		D3DXVec3Cross(&vCross, &m_vUp, &vLook);
 
-		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f) < 35)
+		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f) < 30)
 		{
 			m_fAngleY -= (dwMouseMoveY / 10.f);
 			D3DXQuaternionRotationAxis(&qRot, &vCross, -D3DXToRadian(dwMouseMoveY / 10.f));
@@ -821,6 +821,8 @@ void CDynamicCamera::Set_EpicBullet()
 	_vec3		playerPos;
 	_vec3		playerDir;
 
+	m_fAngleY = 0;
+
 	playerInfo->Get_Info(INFO_POS, &playerPos);
 	playerInfo->Get_Info(INFO_LOOK, &playerDir);
 
@@ -837,6 +839,7 @@ void CDynamicCamera::Set_Shoot_End_Epic()
 	m_eAfterState = C_PLAYERCHASE;
 	m_bChaseInit = true;
 	m_eCurState = C_MOVE_TO_TARGET;
+	m_fAngleY = 0;
 
 	CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
