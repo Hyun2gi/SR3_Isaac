@@ -28,22 +28,17 @@ void CParticleScatter::Reset_Partice(Attribute* attribute)
 {
 	attribute->_bIsAlive = true;
 
-	// get random x, z coordinate for the position of the snow flake.
 	GetRandomVector(
 		&attribute->_vPosition,
 		&m_tBoundingBox._min,
 		&m_tBoundingBox._max);
 
-	// no randomness for height (y-coordinate).  Snow flake
-	// always starts at the top of bounding box.
 	attribute->_vPosition.y = m_tBoundingBox._max.y;
 
-	// snow flakes fall downwards and slightly to the left
 	attribute->_vVelocity.x = GetRandomFloat(0.0f, 1.0f) * -3.0f;
 	attribute->_vVelocity.y = GetRandomFloat(0.0f, 1.0f) * -10.0f;
 	attribute->_vVelocity.z = 0.0f;
 
-	// white snow flake
 	attribute->_color = D3DCOLOR_XRGB(255, 255, 255);
 }
 
@@ -54,11 +49,8 @@ void CParticleScatter::Update_Particle(_float fTimeDelat)
 	{
 		i->_vPosition += i->_vVelocity * fTimeDelat;
 
-		// is the point outside bounds?
 		if (m_tBoundingBox.isPointInside(i->_vPosition) == false)
 		{
-			// nope so kill it, but we want to recycle dead 
-			// particles, so respawn it instead.
 			Reset_Partice(&(*i));
 		}
 	}
