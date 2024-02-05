@@ -618,6 +618,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pLeftWall->Get_Transform()->m_vAngle;
+			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(m_vecConnectRoom[WALL_LEFT]);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_RIGHT:
@@ -625,8 +626,9 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 
 			vTempPos = m_pRightWall->Get_Transform()->m_vInfo[INFO_POS];
 
-			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x - DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pRightWall->Get_Transform()->m_vAngle;
+			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(m_vecConnectRoom[WALL_RIGHT]);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_TOP:
@@ -634,8 +636,9 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 
 			vTempPos = m_pTopWall->Get_Transform()->m_vInfo[INFO_POS];
 
-			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x, DOOR_Y_INTERVAL, vTempPos.z - DOOR_X_INTERVAL);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pTopWall->Get_Transform()->m_vAngle;
+			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(m_vecConnectRoom[WALL_TOP]);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_BOTTOM:
@@ -643,8 +646,9 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 
 			vTempPos = m_pBottomWall->Get_Transform()->m_vInfo[INFO_POS];
 
-			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
+			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x, DOOR_Y_INTERVAL, vTempPos.z + DOOR_X_INTERVAL);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pBottomWall->Get_Transform()->m_vAngle;
+			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(m_vecConnectRoom[WALL_BOTTOM]);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		}
@@ -822,7 +826,7 @@ HRESULT CLoadStage::Door_Collision()
 				// 스테이지 변경
 				Engine::CScene* pScene = nullptr;
 
-				pScene = CLoadStage::Create(m_pGraphicDev, 3);
+				pScene = CLoadStage::Create(m_pGraphicDev, dynamic_cast<CDoor*>(pObj)->Get_Stage_Num_Key());
 				NULL_CHECK_RETURN(pScene, -1);
 
 				FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
