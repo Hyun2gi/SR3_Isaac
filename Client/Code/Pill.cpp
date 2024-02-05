@@ -21,6 +21,7 @@ HRESULT CPill::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+	m_pTransformCom->m_vScale = { 0.4,0.4,0.4 };
 	m_bDead = false;
 
 	// 랜덤으로 설정
@@ -65,7 +66,7 @@ _int CPill::Update_GameObject(const _float& fTimeDelta)
 
 	Item_Spawn_Action();
 
-	Engine::Add_RenderGroup(RENDER_ALPHA, this);
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
 	return 0;
 }
@@ -236,6 +237,8 @@ HRESULT CPill::Add_Component()
 	pComponent = m_pCalculCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
+
+	return S_OK;
 }
 
 void CPill::Motion_Change()

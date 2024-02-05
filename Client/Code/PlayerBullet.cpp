@@ -22,6 +22,7 @@ HRESULT CPlayerBullet::Ready_GameObject()
 {
     FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+    m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
     m_fAccTimeDelta = 0;
     m_fCallLimit = 1.5;
     m_fBulletSpeed = CPlayer::GetInstance()->Get_BulletSpeed();

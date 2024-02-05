@@ -205,6 +205,8 @@ HRESULT CCoin::Add_Component()
 	pComponent = m_pCalculCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
+
+	return S_OK;
 }
 
 void CCoin::Motion_Change()
