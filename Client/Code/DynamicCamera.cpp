@@ -75,12 +75,12 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_eCurState == C_EPIC)
 	{
-		m_vEye = _vec3(VTXCNTX / 2, 20, VTXCNTZ / 2);
 		CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 		_vec3		playerPos;
 
 		playerInfo->Get_Info(INFO_POS, &playerPos);
+		m_vEye = _vec3(playerPos.x, 20, playerPos.z);
 
 		//m_vAt = playerPos;
 	}
