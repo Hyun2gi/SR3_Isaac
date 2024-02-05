@@ -5,13 +5,15 @@
 
 CShop::CShop(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMapObj(pGraphicDev),
-	m_pShopNpc(nullptr)
+	m_pShopNpc(nullptr),
+	m_pPill(nullptr), m_pEpic(nullptr), m_pHeart(nullptr)
 {
 }
 
 CShop::CShop(const CShop& rhs)
 	: CMapObj(rhs),
-	m_pShopNpc(rhs.m_pShopNpc)
+	m_pShopNpc(rhs.m_pShopNpc),
+	m_pPill(rhs.m_pPill), m_pEpic(rhs.m_pEpic), m_pHeart(rhs.m_pHeart)
 {
 }
 
@@ -22,7 +24,7 @@ CShop::~CShop()
 HRESULT CShop::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(10.f, 2.f, 10.f);
+	m_pTransformCom->Set_Pos(30.f, 1.f, 25.f);
 
 	return S_OK;
 }
@@ -31,8 +33,8 @@ _int CShop::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (m_pShopNpc == nullptr)
-		Create_NPC();
+	Create_Obj();
+	
 
 
 
@@ -109,30 +111,42 @@ HRESULT CShop::Add_Component()
 	return S_OK;
 }
 
-void CShop::Create_NPC()
+void CShop::Create_Obj()
 {
-	_vec3 vPos;
+	_vec3 vPos, vDir;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-	m_pShopNpc = CShopNpc::Create(m_pGraphicDev);
-	m_pShopNpc->Set_MyLayer(m_vecMyLayer[0]);
-	m_pShopNpc->Get_TransformCom()->Set_Pos(vPos);
+	m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
 
 	if (m_pShopNpc == nullptr)
-		return;
-}
-
-void CShop::Create_Item() // Item 클래스의 Get_Transform 등등 필요함
-{
-	_vec3 vPos;
-	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-	/*for (int i = 0; i < 3; ++i)
 	{
-		CPill* pPill = CPill::Create(m_pGraphicDev);
-		pPill->Set_MyLayer(m_vecMyLayer[0]);
-		pPill->Get_Trans
-	}*/
+		m_pShopNpc = CShopNpc::Create(m_pGraphicDev);
+		m_pShopNpc->Set_MyLayer(m_vecMyLayer[0]);
+		m_pShopNpc->Get_TransformCom()->Set_Pos(vPos);
+	}
+
+	if (m_pPill == nullptr)
+	{
+		_vec3 vPillPos = { vPos.x - INTERVALX, vPos.y, vPos.z - INTERVALZ };
+		m_pPill = CPill::Create(m_pGraphicDev, 3, vPillPos, vDir);
+		m_pPill->Set_MyLayer(m_vecMyLayer[0]);
+		//dynamic_cast<CTransform*>(m_pPill->Get_Component())
+	}
+
+	if (m_pEpic == nullptr)
+	{
+		_vec3 vEpicPos = { vPos.x, vPos.y, vPos.z - INTERVALZ };
+		m_pEpic = CEpic::Create(m_pGraphicDev, 3, vEpicPos, vDir);
+		m_pEpic->Set_MyLayer(m_vecMyLayer[0]);
+		//dynamic_cast<CTransform*>(m_pPill->Get_Component())
+	}
+
+	if (m_pHeart == nullptr)
+	{
+		_vec3 vHeartPos = { vPos.x + INTERVALX, vPos.y, vPos.z - INTERVALZ };
+		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir);
+		m_pHeart->Set_MyLayer(m_vecMyLayer[0]);
+		//dynamic_cast<CTransform*>(m_pPill->Get_Component())
+	}
 }
 
 CShop* CShop::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -154,7 +168,14 @@ void CShop::Free()
 	Safe_Release<CShopNpc*>(m_pShopNpc);
 	m_pShopNpc = nullptr;
 
-	for_each(m_ItemVec.begin(), m_ItemVec.end(), CDeleteObj());
+	Safe_Release<CPill*>(m_pPill);
+	m_pPill = nullptr;
+
+	Safe_Release<CEpic*>(m_pEpic);
+	m_pEpic = nullptr;
+
+	Safe_Release<CHeart*>(m_pHeart);
+	m_pHeart = nullptr;
 
 	__super::Free();
 }

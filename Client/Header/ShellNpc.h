@@ -13,8 +13,8 @@ private:
 	enum NPCSTATE { NPC_IDLE, NPC_GAMING, NPC_END };
 
 public:
-	void			Set_Game_True() { m_eCurState = NPC_GAMING; }
-	void			Set_Game_False() { m_eCurState = NPC_IDLE; }
+	void			Set_NpC_Game() { m_bGame = !m_bGame; }
+	_bool			Get_NPC_Game() { return m_bGame; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -27,6 +27,7 @@ private:
 	virtual void		Motion_Change()						override;
 
 private:
+	_bool					m_bGame;
 
 	NPCSTATE				m_ePreState;
 	NPCSTATE				m_eCurState;

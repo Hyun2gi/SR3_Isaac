@@ -4,6 +4,7 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
+
 CShellGame::CShellGame(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMapObj(pGraphicDev),
 	m_pShellNpc(nullptr)
@@ -23,17 +24,24 @@ CShellGame::~CShellGame()
 HRESULT CShellGame::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(0.f, 3.f, 0.f);
+	m_pTransformCom->Set_Pos(20.f, 1.f, 30.f);
+
+	m_fSpeed = 0.1f;
+
+	m_fCallLimit = 2.f;
+
+	m_iShake_Lev = 0; // Shaking 단계
 
 	m_bGame = false;
+	m_bShellShaking = false;
+	m_bReward = false;
 
 	return S_OK;
 }
 
 _int CShellGame::Update_GameObject(const _float& fTimeDelta)
 {
-	_vec3 vPos;
-	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (m_pShellNpc == nullptr)
 		Create_NPC();
@@ -50,7 +58,20 @@ _int CShellGame::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	CGameObject::Update_GameObject(fTimeDelta);
+	if (Engine::Get_DIKeyState(DIK_K) & 0x80) // 테스트용 (추후 제거)
+	{
+		m_bGame = true;
+	}
+
+	if (dynamic_cast<CShellNpc*>(m_pShellNpc)->Get_NPC_Game())
+	{
+		m_bGame = true;
+	}
+
+	if (m_bGame)
+	{
+		Game(fTimeDelta);
+	}
 
 	return 0;
 }
@@ -132,7 +153,6 @@ void CShellGame::Create_NPC()
 	m_pShellNpc = CShellNpc::Create(m_pGraphicDev);
 	m_pShellNpc->Set_MyLayer(m_vecMyLayer[0]);
 	m_pShellNpc->Get_TransformCom()->Set_Pos(vPos);
-	m_pShellNpc->Set_Game_False();
 
 	if (m_pShellNpc == nullptr)
 		return;
@@ -150,9 +170,147 @@ void CShellGame::Create_Shell()
 	{
 		CShell* pShell = CShell::Create(m_pGraphicDev);
 		pShell->Set_MyLayer(m_vecMyLayer[0]);
-		pShell->Get_TransformCom()->Set_Pos(vPos.x + fScalar, vPos.y, vPos.z);
+		pShell->Get_TransformCom()->Set_Pos(vPos.x + fScalar, vPos.y, vPos.z - 1.5f);
 		m_vecShell.push_back(pShell);
-		fScalar += 1.f;
+		fScalar += INTERVALX;
+	}
+}
+
+void CShellGame::Game(const _float& fTimeDelta)
+{
+	// 제일 우측 Shell 하나가 위로 들어졌다 내려옴
+	// npc 상태 Gaming 으로 변환 / 일정 시간 동안 shell 섞임
+
+	if (!m_bShellShaking)
+	{
+		// npc 의 상태 변화
+
+		// Shell 3번 위로 
+		dynamic_cast<CShell*>(m_vecShell.back())->Set_StartUp();
+
+		if (dynamic_cast<CShell*>(m_vecShell.back())->Get_Shaking_Ready())
+		{
+			m_bShellShaking = true;
+			Resetting_ShellPos();
+		}
+	}
+	else
+	{
+		Shaking_Shell(fTimeDelta);
+	}
+}
+
+void CShellGame::Shaking_Shell(const _float& fTimeDelta)
+{
+	_vec3 vFirstPos, vSecPos, vThridPos, vGamePos;
+
+	m_pTransformCom->Get_Info(INFO_POS, &vGamePos); // 게임 자체의 위치
+
+	m_vecShell.front()->Get_TransformCom()->Get_Info(INFO_POS, &vFirstPos); // 1번 Shell
+
+	vector<CShell*>::iterator iter = m_vecShell.begin();
+	iter++;
+	(*iter)->Get_TransformCom()->Get_Info(INFO_POS, &vSecPos); // 2번 Shell
+
+	m_vecShell.back()->Get_TransformCom()->Get_Info(INFO_POS, &vThridPos); // 3번 Shell
+
+	if (0 == m_iShake_Lev) // 1 <-> 2
+	{
+		vFirstPos.x += m_fSpeed;
+		vSecPos.x -= m_fSpeed;
+
+		if ((vGamePos.x <= vFirstPos.x) && (vGamePos.x - INTERVALX) >= vSecPos.x)
+		{
+			vFirstPos.x = vGamePos.x;
+			vSecPos.x = vGamePos.x - INTERVALX;
+			++m_iShake_Lev;
+		}
+	}
+	else if (1 == m_iShake_Lev) // 1 <-> 3
+	{
+		vFirstPos.x += m_fSpeed;
+		vThridPos.x -= m_fSpeed;
+
+		if ((vGamePos.x + INTERVALX) <= vFirstPos.x && vGamePos.x >= vThridPos.x)
+		{
+			vFirstPos.x = vGamePos.x + INTERVALX;
+			vThridPos.x = vGamePos.x;
+			++m_iShake_Lev;
+		}
+	}
+	else if (2 == m_iShake_Lev) // 2 <-> 1
+	{
+		vSecPos.x += m_fSpeed;
+		vFirstPos.x -= m_fSpeed;
+
+		if ((vGamePos.x + INTERVALX) <= vSecPos.x && vGamePos.x - INTERVALX >= vFirstPos.x)
+		{
+			vSecPos.x = vGamePos.x + INTERVALX;
+			vFirstPos.x = vGamePos.x - INTERVALX;
+
+			m_iShake_Lev = 0;
+			m_fSpeed += 0.1f;
+		}
+	}
+
+	if (0.5 <= m_fSpeed) // 게임 종료
+	{
+		m_fSpeed = 0.1f;
+		m_iShake_Lev = 0;
+		m_bShellShaking = false;
+		m_bGame = false;
+		m_bReward = true;
+
+		m_pShellNpc->Set_NpC_Game(); // Npc의 상태를 다시 false 로
+
+		Setting_RewardShell(); // 3개 중 하나의 Shell 을 당첨으로 설정
+	}
+
+	m_vecShell.front()->Get_TransformCom()->Set_Pos(vFirstPos);
+	(*iter)->Get_TransformCom()->Set_Pos(vSecPos);
+	m_vecShell.back()->Get_TransformCom()->Set_Pos(vThridPos);
+}
+
+void CShellGame::Resetting_ShellPos()
+{
+	_vec3 vFirstPos, vSecPos, vThridPos, vGamePos;
+
+	m_pTransformCom->Get_Info(INFO_POS, &vGamePos); // 게임 자체의 위치
+
+	m_vecShell.front()->Get_TransformCom()->Set_Pos(vGamePos.x - INTERVALX, vGamePos.y, vGamePos.z - 1.5f);
+
+	vector<CShell*>::iterator iter = m_vecShell.begin();
+	iter++;
+	(*iter)->Get_TransformCom()->Set_Pos(vGamePos.x, vGamePos.y, vGamePos.z - 1.5f);
+
+	m_vecShell.back()->Get_TransformCom()->Set_Pos(vGamePos.x + INTERVALX, vGamePos.y, vGamePos.z - 1.5f);
+}
+
+void CShellGame::Setting_RewardShell()
+{
+	// 랜덤으로 당첨 Shell 선택
+	DWORD dwSeed = time(NULL) % 1000;
+	srand(dwSeed);
+
+	int iRewardShell = rand() % 3;
+
+	switch (iRewardShell)
+	{
+	case 0:
+		m_vecShell.front()->Setting_Reward();
+		break;
+	case 1:
+	{
+		vector<CShell*>::iterator iter = m_vecShell.begin();
+		iter++;
+		(*iter)->Setting_Reward();
+		break;
+	}
+	case 2:
+		m_vecShell.back()->Setting_Reward();
+		break;
+	default:
+		break;
 	}
 }
 
