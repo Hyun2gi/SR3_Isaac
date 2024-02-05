@@ -36,6 +36,8 @@ private:
 	void				Create_Obj();
 
 private:
+	_bool				m_bIsLayerInsert;
+
 	CShopNpc*			m_pShopNpc;
 	
 	CPill*				m_pPill;

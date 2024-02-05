@@ -181,8 +181,7 @@ void CStage::Insert_Child()
 	//}
 
 	// Shop
-	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shop") != nullptr &&
-		dynamic_cast<CShop*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shop"))->Get_Item_NULL())
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shop") != nullptr)
 	{
 		dynamic_cast<CShop*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shop"))->Set_Item_ToStage(m_mapLayer.at(L"GameItem"));
 	}
@@ -517,7 +516,7 @@ void CStage::Run_Collision_Func()
 	if (pObj)
 	{
 		//Ãæµ¹µÊ
-		dynamic_cast<CPill*>(pObj)->Run_Item_Effect();
+		dynamic_cast<CHeart*>(pObj)->Run_Item_Effect();
 	}
 }
 
