@@ -20,7 +20,7 @@ CMapObj::CMapObj(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev),
 	m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTargetTransCom(nullptr), m_pTextureCom(nullptr), m_pCalculator(nullptr),
 	m_iHitCount(0), m_iLimitHit(0), m_iPicNum(1), m_fFrameSpeed(0.f), m_fCallLimit(0.f), m_fAccTimeDelta(0.f),
-	m_bDead(false), m_bItemDrop(false), m_bHit(false), m_eDropItem(COIN)
+	m_bDead(false), m_bItemDrop(false), m_bHit(false), m_eDropItem(COIN), m_eObjType(OBJECT_TYPE_END), m_eObjID(MOBJID_NONE)
 {
 }
 
@@ -30,7 +30,7 @@ CMapObj::CMapObj(const CMapObj& rhs)
 	m_pTextureCom(rhs.m_pTextureCom), m_pCalculator(rhs.m_pCalculator),
 	m_iHitCount(rhs.m_iHitCount), m_iLimitHit(rhs.m_iLimitHit), m_iPicNum(rhs.m_iPicNum), m_fFrameSpeed(rhs.m_fFrameSpeed),
 	m_fCallLimit(rhs.m_fCallLimit), m_fAccTimeDelta(rhs.m_fAccTimeDelta),
-	m_bDead(rhs.m_bDead), m_bItemDrop(rhs.m_bItemDrop), m_bHit(rhs.m_bHit), m_eDropItem(rhs.m_eDropItem)
+	m_bDead(rhs.m_bDead), m_bItemDrop(rhs.m_bItemDrop), m_bHit(rhs.m_bHit), m_eDropItem(rhs.m_eDropItem), m_eObjType(rhs.m_eObjType), m_eObjID(rhs.m_eObjID)
 {
 }
 
@@ -148,14 +148,14 @@ CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer)
 	}
 	case Engine::COIN:
 	{
-		CItem* pItem = CCoin::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
+		CItem* pItem = CCoin::Create(m_pGraphicDev, iSpawnPos, vPos, vLook,2);
 		pItem->Set_MyLayer(L"GameItem");
 		return pItem;
 		break;
 	}
 	case Engine::HEART:
 	{
-		CItem* pItem = CHeart::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
+		CItem* pItem = CHeart::Create(m_pGraphicDev, iSpawnPos, vPos, vLook,6);
 		pItem->Set_MyLayer(L"GameItem");
 		return pItem;
 		break;

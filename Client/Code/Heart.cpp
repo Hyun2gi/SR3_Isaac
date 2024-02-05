@@ -3,9 +3,12 @@
 #include "Export_Utility.h"
 #include "Player.h"
 
-CHeart::CHeart(LPDIRECT3DDEVICE9 pGraphicDev)
+CHeart::CHeart(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
     : CItem(pGraphicDev)
 {
+    DWORD dwSeed = (iID << 16) | (time(NULL) % 1000);
+    srand(dwSeed);
+    m_iRandNum = rand() % 180;
 }
 
 CHeart::CHeart(const CHeart& rhs)
@@ -25,6 +28,8 @@ HRESULT CHeart::Ready_GameObject()
     m_fFrame = 0;
     m_iCoin = 3;
 
+    m_pTransformCom->m_vScale = { 0.5,0.5,0.5 };
+
     return S_OK;
 }
 
@@ -41,8 +46,6 @@ _int CHeart::Update_GameObject(const _float& fTimeDelta)
     _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     _float	fHeight = m_pCalculCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
-
-    m_pTransformCom->Set_Pos(VTXCNTX / 2, fHeight + 1, VTXCNTZ / 2);
 
     if (m_eCurItemPlace == SP_SLOT)
     {
@@ -105,19 +108,26 @@ void CHeart::Run_Item_Effect()
 {
     if (m_eCurItemPlace == SP_SHOP)
     {
-        // 구매해야할 경우
-        if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
-        {
-            CPlayer::GetInstance()->Set_Coin(-m_iCoin);
-            m_bDead = true;
-            CPlayer::GetInstance()->Set_Hp(1);
+        if (CPlayer::GetInstance()->Get_Hp() < CPlayer::GetInstance()->Get_MaxHp())
+        {   
+            // 구매해야할 경우
+            if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
+            {
+                CPlayer::GetInstance()->Set_Coin(-m_iCoin);
+                m_bDead = true;
+                CPlayer::GetInstance()->Set_Hp(1);
+                float hp = CPlayer::GetInstance()->Get_Hp();
+            }
         }
     }
     else if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT)
     {
-        // 그냥 바로 적용
-        m_bDead = true;
-        CPlayer::GetInstance()->Set_Hp(1);
+        if (CPlayer::GetInstance()->Get_Hp() < CPlayer::GetInstance()->Get_MaxHp())
+        {
+            // 그냥 바로 적용
+            m_bDead = true;
+            CPlayer::GetInstance()->Set_Hp(1);
+        }
     }
 }
 
@@ -135,8 +145,6 @@ void CHeart::Item_Spawn_Action()
 
     if (m_eCurItemPlace == SP_SLOT)
     {
-
-        m_pTransformCom->Set_Pos(itemPos.x + m_vLookVec.x * 0.2, itemPos.y - 0.3, itemPos.z + m_vLookVec.z * 0.2);
 
         _vec3 temp;
         m_pTransformCom->Get_Info(INFO_POS, &temp);
@@ -196,15 +204,17 @@ HRESULT CHeart::Add_Component()
     pComponent = m_pCalculCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
+
+    return S_OK;
 }
 
 void CHeart::Motion_Change()
 {
 }
 
-CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
+CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look, int iID)
 {
-    CHeart* pInstance = new CHeart(pGraphicDev);
+    CHeart* pInstance = new CHeart(pGraphicDev, iID);
     srand((unsigned)time(NULL));
 
     if (spawnspot == 1)

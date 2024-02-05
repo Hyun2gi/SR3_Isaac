@@ -5,9 +5,12 @@
 #include "Export_Utility.h"
 #include "Player.h"
 
-CCoin::CCoin(LPDIRECT3DDEVICE9 pGraphicDev)
+CCoin::CCoin(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
 	: CItem(pGraphicDev)
 {
+	DWORD dwSeed = (iID << 16) | (time(NULL) % 1000);
+	srand(dwSeed);
+	m_iRandNum = rand() % 180;
 }
 
 CCoin::CCoin(const CCoin& rhs)
@@ -205,6 +208,8 @@ HRESULT CCoin::Add_Component()
 	pComponent = m_pCalculCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
+
+	return S_OK;
 }
 
 void CCoin::Motion_Change()
@@ -217,12 +222,12 @@ void CCoin::Motion_Change()
 		case COIN_IDLE:
 			m_fPicNum = 6;
 			m_fSpriteSpeed = 2.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Coin", L"Proto_CoinTexture_IDLE"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_CoinTexture_IDLE"));
 			break;
 		case COIN_GET:
 			m_fPicNum = 5;
 			m_fSpriteSpeed = 3.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Coin", L"Proto_CoinTexture_EFFECT"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_CoinTexture_EFFECT"));
 			break;
 		}
 
@@ -230,9 +235,9 @@ void CCoin::Motion_Change()
 	}
 }
 
-CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
+CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look, int iID)
 {
-	CCoin* pInstance = new CCoin(pGraphicDev);
+	CCoin* pInstance = new CCoin(pGraphicDev, iID);
 	//정확한 위치 설정
 
 	srand((unsigned)time(NULL));

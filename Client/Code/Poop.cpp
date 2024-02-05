@@ -29,6 +29,7 @@ HRESULT CPoop::Ready_GameObject()
 	m_bReduce = true;
 
 	m_eDropItem = COIN;
+	m_eObjType = POOP;
 
 	return S_OK;
 }
@@ -36,9 +37,6 @@ HRESULT CPoop::Ready_GameObject()
 _int CPoop::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
-
-	/*if (Engine::Get_DIKeyState(DIK_Z) & 0x80)
-		Hit();*/
 
 	if (m_bHit)
 		Hit();

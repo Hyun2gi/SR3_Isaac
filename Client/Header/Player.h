@@ -65,13 +65,30 @@ public:
 	void		Set_MoveSpeed(float _movespeed){ m_fMoveSpeed += _movespeed; }
 	void		Set_BulletSpeed(float _bulletspeed){ m_fBulletSpeed += _bulletspeed; }
 	void		Set_AttackSpeed(float _attackspeed){ m_fAttackSpeed += _attackspeed; }
-	void		Set_Hp(float _hp) { if (m_fHp + _hp <= m_fMaxHp){ m_fHp += _hp;} }
+	void		Set_Hp(float _hp) 
+	{ 
+		if (m_fHp + _hp <= m_fMaxHp)
+		{ 
+			m_fHp += _hp;
+		}
+		else
+		{
+			// 풀피로 차게
+			m_fHp = m_fMaxHp;
+		}
+	}
+
+
+
 	void		Set_To_MaxHp() { m_fHp = m_fMaxHp; }
 	void		Set_Coin(int _coin) { m_iCoin += _coin; }
 	void		Set_LayerTag(_tchar* pLayerTag) { m_pLayerTag = pLayerTag; }
 	void		Set_Bool_MouseYRotation(bool checkY) { m_bMouseYRotataion = checkY; }
 	void		Set_Player_Pos(_vec3 pos);
+	void		Set_Hp_To_MaxHp() { m_fHp = m_fMaxHp; }
 
+	float		Get_MaxHp() { return m_fMaxHp; }
+	float		Get_Hp() { return m_fHp; }
 	float		Get_BulletSpeed() { return m_fBulletSpeed; }
 	int			Get_Coin() { return m_iCoin; }
 	void		Set_Bool_StartScene(bool _start) { m_bStartScene = _start; }
@@ -92,6 +109,7 @@ public:
 	void		Change_LastEpicMark_To_Trace(); // 마지막 epic을 trace로 변경
 
 	int			Get_PlayerCurState();
+	int			Get_PlayerBulletState();
 
 	// 에픽에투스 타겟상태가 진행되는지
 	// 타겟 상태일때(지형선택하고 떨어지기 전까지) 몬스터 느려짐 + 플레이어 이동 제어

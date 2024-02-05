@@ -178,9 +178,6 @@
     <Filter Include="02. GameObject\09. MapObject\04. Shop\01. Npc">
       <UniqueIdentifier>{bcd8ebdb-ba64-4b52-a7be-c7675b1b7d64}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\09. MapObject\04. Shop\01. ShopItem">
-      <UniqueIdentifier>{1fbbcebe-be4e-431b-a381-5b0bfda6c8fe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\09. MapObject\05. Shell Game">
       <UniqueIdentifier>{99b253de-1d5c-40b9-96ec-1f7f7d30bc40}</UniqueIdentifier>
     </Filter>
@@ -198,6 +195,9 @@
     </Filter>
     <Filter Include="01. Scene\TestStage">
       <UniqueIdentifier>{a456cd8f-534c-4c44-857e-cd111315878a}</UniqueIdentifier>
+      </Filter>
+    <Filter Include="02. GameObject\01. Monster\07. Dople">
+      <UniqueIdentifier>{abde9124-881e-468f-b101-78530c11b45e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -389,6 +389,7 @@
     </ClInclude>
     <ClInclude Include="..\Header\TestStage.h">
       <Filter>01. Scene\TestStage</Filter>
+      <Filter>02. GameObject\01. Monster\07. Dople</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -571,6 +572,7 @@
     </ClCompile>
     <ClCompile Include="..\Code\TestStage.cpp">
       <Filter>01. Scene\TestStage</Filter>
+      <Filter>02. GameObject\01. Monster\07. Dople</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

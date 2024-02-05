@@ -17,6 +17,7 @@ public:
 
 	_bool			Get_Reward() { return m_bReward; }
 	void			Setting_Reward() { m_bReward = true;}
+	void			Setting_Reward_False() { m_bReward = false; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;

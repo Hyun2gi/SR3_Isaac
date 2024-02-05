@@ -29,7 +29,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 		m_pGraphicDev = pGraphicDev;
 
-		m_eCurBulletState = P_BULLET_EPIC; // P_BULLET_BRIMSTONE
+		m_eCurBulletState = P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
 		m_ePreState = P_END;
 
 		// 딜레이 시간 초기화
@@ -452,6 +452,19 @@ int CPlayer::Get_PlayerCurState()
 		return 5;
 	case P_THUMBS_UP:
 		return 6;
+	}
+}
+
+int CPlayer::Get_PlayerBulletState()
+{
+	switch (m_eCurBulletState)
+	{
+	case P_BULLET_IDLE:
+		return 0;
+	case P_BULLET_BRIMSTONE:
+		return 1;
+	case P_BULLET_EPIC:
+		return 2;
 	}
 }
 

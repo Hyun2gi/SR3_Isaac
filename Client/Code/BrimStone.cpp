@@ -21,6 +21,8 @@ HRESULT CBrimStone::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+	m_pTransformCom->m_vScale = { 0.7,0.7,0.7 };
+
 	m_bDead = false;
 	m_fFrame = 0;
 	m_iCoin = 4;
@@ -87,6 +89,8 @@ HRESULT CBrimStone::Add_Component()
 	pComponent = m_pCalculCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
+
+	return S_OK;
 }
 
 void CBrimStone::Motion_Change()

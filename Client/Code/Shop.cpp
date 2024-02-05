@@ -21,10 +21,27 @@ CShop::~CShop()
 {
 }
 
+void CShop::Set_Item_ToStage(CLayer* pLayer)
+{
+	if (!m_bIsLayerInsert)
+	{
+		if (m_pPill != nullptr && m_pEpic != nullptr && m_pHeart != nullptr)
+		{
+			pLayer->Add_GameObject(L"Pill", m_pPill);
+			pLayer->Add_GameObject(L"Epic", m_pEpic);
+			pLayer->Add_GameObject(L"Heart", m_pHeart);
+
+			m_bIsLayerInsert = true;
+		}
+	}
+}
+
 HRESULT CShop::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(30.f, 1.f, 25.f);
+	m_pTransformCom->Set_Pos(10.f, 1.f, 30.f);
+
+	m_bIsLayerInsert = false;
 
 	return S_OK;
 }
@@ -34,9 +51,6 @@ _int CShop::Update_GameObject(const _float& fTimeDelta)
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	Create_Obj();
-	
-
-
 
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->Update_GameObject(fTimeDelta);
@@ -85,21 +99,6 @@ HRESULT CShop::Add_Component()
 
 #pragma endregion NPC Texture
 
-	// 필요 없는 거 아닌강
-#pragma region Item Texture
-
-	// Pill
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ItemTexture_Pill"));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_ItemTexture_Pill", pComponent });
-
-	// Epic
-
-	// Heart
-
-#pragma endregion Item Texture
-
-
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
@@ -128,24 +127,21 @@ void CShop::Create_Obj()
 	{
 		_vec3 vPillPos = { vPos.x - INTERVALX, vPos.y, vPos.z - INTERVALZ };
 		m_pPill = CPill::Create(m_pGraphicDev, 3, vPillPos, vDir);
-		m_pPill->Set_MyLayer(m_vecMyLayer[0]);
-		//dynamic_cast<CTransform*>(m_pPill->Get_Component())
+		m_pPill->Set_MyLayer(L"GameItem");
 	}
 
 	if (m_pEpic == nullptr)
 	{
 		_vec3 vEpicPos = { vPos.x, vPos.y, vPos.z - INTERVALZ };
 		m_pEpic = CEpic::Create(m_pGraphicDev, 3, vEpicPos, vDir);
-		m_pEpic->Set_MyLayer(m_vecMyLayer[0]);
-		//dynamic_cast<CTransform*>(m_pPill->Get_Component())
+		m_pEpic->Set_MyLayer(L"GameItem");
 	}
 
 	if (m_pHeart == nullptr)
 	{
-		_vec3 vHeartPos = { vPos.x + INTERVALX, vPos.y, vPos.z - INTERVALZ };
-		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir);
-		m_pHeart->Set_MyLayer(m_vecMyLayer[0]);
-		//dynamic_cast<CTransform*>(m_pPill->Get_Component())
+		_vec3 vHeartPos = { vPos.x + INTERVALX, vPos.y, vPos.z - INTERVALZ }; // INTERVALZ
+		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir,6);
+		m_pHeart->Set_MyLayer(L"GameItem");
 	}
 }
 

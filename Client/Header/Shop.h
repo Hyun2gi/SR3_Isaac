@@ -13,12 +13,15 @@
 class CShop : public CMapObj
 {
 private:
-	const _float INTERVALX = 1.f;
+	const _float INTERVALX = 1.5f;
 	const _float INTERVALZ = 2.f;
 private:
 	explicit CShop(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CShop(const CShop& rhs);
 	virtual ~CShop();
+
+public:
+	void			Set_Item_ToStage(CLayer* pLayer);
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -32,6 +35,8 @@ private:
 	void				Create_Obj();
 
 private:
+	_bool				m_bIsLayerInsert;
+
 	CShopNpc*			m_pShopNpc;
 	
 	CPill*				m_pPill;

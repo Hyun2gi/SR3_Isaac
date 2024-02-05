@@ -21,6 +21,16 @@ CShellGame::~CShellGame()
 {
 }
 
+void CShellGame::Set_ShellObj_ToStage(CLayer* pLayer)
+{
+	pLayer->Add_GameObject(L"ShellNpc", m_pShellNpc);
+
+	for (auto& iter : m_vecShell)
+	{
+		pLayer->Add_GameObject(L"Shell", iter);
+	}
+}
+
 HRESULT CShellGame::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
