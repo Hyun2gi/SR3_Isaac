@@ -34,7 +34,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fShootDelayTime = 0;
 	m_fDelayTime = 0; 
 	m_bKeyBlock = false;
-	m_fSpriteSpeed = 1.5f;
+	m_fSpriteSpeed = 0.9f;
 
 	m_fFrame = 0.f;
 	m_fPicNum = 0.f;
@@ -422,6 +422,27 @@ void CPlayer::Clear_EpicBulletMark()
 void CPlayer::Change_LastEpicMark_To_Trace()
 {
 	dynamic_cast<CEpicBulletMark*>(m_EpicMarkList.back())->Set_Bullet_Mark(2);
+}
+
+int CPlayer::Get_PlayerCurState()
+{
+	switch (m_eCurState)
+	{
+	case P_IDLE:
+		return 0;
+	case P_IDLEWALK:
+		return 1;
+	case P_BACKWALK:
+		return 2;
+	case P_LEFTWALK:
+		return 3;
+	case P_RIGHTWALK:
+		return 4;
+	case P_SHOOTWALK:
+		return 5;
+	case P_THUMBS_UP:
+		return 6;
+	}
 }
 
 void CPlayer::Bullet_Change_To_Brim()

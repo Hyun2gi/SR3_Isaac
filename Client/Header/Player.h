@@ -97,6 +97,7 @@ public:
 	void		Set_EpicTargetRun(bool _run) { m_bEpicTargetRun = _run; }
 	bool		Get_EpicTargetRun() { return m_bEpicTargetRun; }
 
+	int			Get_PlayerCurState();
 
 public:
 	void		Bullet_Change_To_Brim();

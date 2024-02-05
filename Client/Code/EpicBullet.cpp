@@ -40,7 +40,7 @@ _int CEpicBullet::Update_GameObject(const _float& fTimeDelta)
 
     if (m_eCurState == EPIC_TARGET)
     {
-        m_pCalculatorCom->Compute_Vill_Matrix_X(m_pTransformCom);
+        //m_pCalculatorCom->Compute_Vill_Matrix_X(m_pTransformCom);
     }
     else
     {
@@ -151,12 +151,14 @@ void CEpicBullet::Motion_Change()
         {
         case EPIC_TARGET:
             m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
+            m_pTransformCom->m_vAngle = { 90,0,0 };
             m_iPicNum = 1;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicTarget"));
             break;
         case EPIC_BULLET:
             m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
+            m_pTransformCom->m_vAngle = { 0,0,0 };
             m_iPicNum = 1;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicBullet"));
