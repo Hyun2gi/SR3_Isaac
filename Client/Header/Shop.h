@@ -13,7 +13,7 @@
 class CShop : public CMapObj
 {
 private:
-	const _float INTERVALX = 1.f;
+	const _float INTERVALX = 1.5f;
 	const _float INTERVALZ = 2.f;
 private:
 	explicit CShop(LPDIRECT3DDEVICE9 pGraphicDev);

@@ -132,23 +132,7 @@ void CStage::Drop_ITem()
 	}
 
 	// ¸ð´ÚºÒ
-	//if (Get_GameObject(L"MapObj", L"Campfire") != nullptr) //
-	//{
-	//	if (dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Get_Dead() &&
-	//		!dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Get_Drop())
-	//	{
-	//		Engine::CGameObject* pGameObject = nullptr;
-
-	//		ITEM_TYPE eType = dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Get_ItemType();
-	//		wstring wstrObjTag = dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Get_DropItemTag();
-
-	//		pGameObject = dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"));
-	//		m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
-
-	//		dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Set_Drop();
-	//	}
-	//}
-	if (Get_GameObject(L"MapObj", L"Fire") != nullptr) //
+	if (Get_GameObject(L"MapObj", L"Fire") != nullptr)
 	{
 		if (dynamic_cast<CMapObj*>(Get_GameObject(L"MapObj", L"Fire"))->Get_Dead() &&
 			!dynamic_cast<CMapObj*>(Get_GameObject(L"MapObj", L"Fire"))->Get_Drop())
@@ -567,7 +551,6 @@ void CStage::Moster_Collision()
 		CGameObject* pDople = m_mapLayer.at(L"GameMst")->Collision_GameObject(Get_GameObject(L"MapObj", L"Spike"));
 		if (pDople)
 		{
-			//dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
 			dynamic_cast<CDople*>(pDople)->Hit();
 		}
 	}
@@ -592,10 +575,9 @@ void CStage::MapObj_Collision()
 					dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
 					break;
 				}
-				else if (0 == dynamic_cast<CMapObj*>(pMapObj)->Get_ObjID()) // CAMPFIRE == dynamic_cast<CMapObj*>(pMapObj)->Get_Type()
+				else if (0 == dynamic_cast<CMapObj*>(pMapObj)->Get_ObjID())
 				{
 					dynamic_cast<CFire*>(pMapObj)->Set_Hit();
-					//dynamic_cast<CMapObj*>(pMapObj)->Set_Hit(); // dynamic_cast<CFire*>(pMapObj)->Set_Hit();
 					break;
 				}
 				else
