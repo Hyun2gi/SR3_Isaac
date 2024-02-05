@@ -76,6 +76,9 @@
     <Filter Include="09. Particle\ParticleScatter">
       <UniqueIdentifier>{e0764337-d62e-4f33-9fec-4b868cade304}</UniqueIdentifier>
     </Filter>
+    <Filter Include="09. Particle\ParticleExplosion">
+      <UniqueIdentifier>{653a4a0c-2b7f-4a19-ad94-13e2b63ce640}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Header\Management.h">
@@ -153,6 +156,9 @@
     <ClInclude Include="..\..\Header\ParticleScatter.h">
       <Filter>09. Particle\ParticleScatter</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Header\ParticleExplosion.h">
+      <Filter>09. Particle\ParticleExplosion</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\Management.cpp">
@@ -226,6 +232,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ParticleScatter.cpp">
       <Filter>09. Particle\ParticleScatter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ParticleExplosion.cpp">
+      <Filter>09. Particle\ParticleExplosion</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

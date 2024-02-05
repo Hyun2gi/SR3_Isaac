@@ -9,8 +9,7 @@ CParticleSystem::CParticleSystem()
 
 CParticleSystem::~CParticleSystem()
 {
-	Engine::Safe_Release(m_pVb);
-	Engine::Safe_Release(m_pTex);
+
 }
 
 bool CParticleSystem::Ready_Particle(IDirect3DDevice9* pDevice, char* texFileName)
@@ -61,7 +60,6 @@ void CParticleSystem::Add_Particle()
 
 void CParticleSystem::Pre_Render()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, false);
 	m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, true);
 	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, true);
 	m_pGraphicDev->SetRenderState(D3DRS_POINTSIZE, FtoDw(m_fSize));
@@ -121,23 +119,14 @@ void CParticleSystem::Render()
 		{
 			if (i->_bIsAlive)
 			{
-				//
-				// Copy a batch of the living particles to the
-				// next vertex buffer segment
-				//
 				v->_position = i->_vPosition;
 				v->_color = (D3DCOLOR)i->_color;
 				v++; // next element;
 
 				numParticlesInBatch++; //increase batch counter
 
-				// if this batch full?
 				if (numParticlesInBatch == m_VbBatchSize)
 				{
-					//
-					// Draw the last batch of particles that was
-					// copied to the vertex buffer. 
-					//
 					m_pVb->Unlock();
 
 					m_pGraphicDev->DrawPrimitive(
@@ -145,16 +134,8 @@ void CParticleSystem::Render()
 						m_VbOffset,
 						m_VbBatchSize);
 
-					//
-					// While that batch is drawing, start filling the
-					// next batch with particles.
-					//
-
-					// move the offset to the start of the next batch
 					m_VbOffset += m_VbBatchSize;
 
-					// don't offset into memory thats outside the vb's range.
-					// If we're at the end, start at the beginning.
 					if (m_VbOffset >= m_VbSize)
 						m_VbOffset = 0;
 
@@ -171,11 +152,6 @@ void CParticleSystem::Render()
 
 		m_pVb->Unlock();
 
-		// its possible that the LAST batch being filled never 
-		// got rendered because the condition 
-		// (numParticlesInBatch == _vbBatchSize) would not have
-		// been satisfied.  We draw the last partially filled batch now.
-
 		if (numParticlesInBatch)
 		{
 			m_pGraphicDev->DrawPrimitive(
@@ -184,12 +160,7 @@ void CParticleSystem::Render()
 				numParticlesInBatch);
 		}
 
-		// next block
 		m_VbOffset += m_VbBatchSize;
-
-		//
-		// reset render states
-		//
 
 		Post_Render();
 	}
@@ -197,7 +168,6 @@ void CParticleSystem::Render()
 
 void CParticleSystem::Post_Render()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, true);
 	m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, false);
 	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, false);
 	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
@@ -245,6 +215,8 @@ void CParticleSystem::Remove_Dead_Particles()
 
 void CParticleSystem::Free()
 {
+	Engine::Safe_Release(m_pVb);
+	Engine::Safe_Release(m_pTex);
 }
 
 //void Snow::resetParticle(Attribute* attribute)

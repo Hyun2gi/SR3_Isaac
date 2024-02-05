@@ -45,6 +45,8 @@
 #include "HeartHalf.h"
 
 
+
+
 CTestStage::CTestStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
 {
@@ -64,6 +66,18 @@ HRESULT CTestStage::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_MapObj(L"MapObj"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
+
+
+	//BoundingBox boundingBox;
+	//boundingBox._min = D3DXVECTOR3(-10.0f, -10.0f, -10.0f);
+	//boundingBox._max = D3DXVECTOR3(10.0f, 10.0f, 10.0f);
+
+	//pTest = new CParticleScatter(&boundingBox, 500);
+	//pTest->Ready_Particle(m_pGraphicDev, "../Bin/Resource/Texture/Particle/DustParticles3.dds");
+
+	_vec3 origin(0.0f, 0.0f, 5.0f);
+	pTest = new CParticleExplosion(&origin, 100);
+	pTest->Ready_Particle(m_pGraphicDev, "../Bin/Resource/Texture/Particle/explosion.png");
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 
@@ -97,6 +111,7 @@ Engine::_int CTestStage::Update_Scene(const _float& fTimeDelta)
 	//Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f); // Second Timer 테스트용 코드
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
+	pTest->Update_Particle(fTimeDelta);
 	return __super::Update_Scene(fTimeDelta);
 }
 
@@ -108,6 +123,7 @@ void CTestStage::LateUpdate_Scene()
 
 void CTestStage::Render_Scene()
 {
+	pTest->Render();
 	// DEBUG
 }
 
@@ -613,5 +629,6 @@ CTestStage* CTestStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CTestStage::Free()
 {
+	Safe_Release(pTest);
 	__super::Free();
 }

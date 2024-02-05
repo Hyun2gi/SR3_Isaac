@@ -15,7 +15,7 @@ CParticleScatter::CParticleScatter(BoundingBox* boundingBox, int numParticles)
 
 CParticleScatter::~CParticleScatter()
 {
-
+	Free();
 }
 
 void CParticleScatter::Free()
@@ -35,9 +35,9 @@ void CParticleScatter::Reset_Partice(Attribute* attribute)
 
 	attribute->_vPosition.y = m_tBoundingBox._max.y;
 
-	attribute->_vVelocity.x = GetRandomFloat(0.0f, 1.0f) * -3.0f;
-	attribute->_vVelocity.y = GetRandomFloat(0.0f, 1.0f) * -10.0f;
-	attribute->_vVelocity.z = 0.0f;
+	attribute->_vVelocity.x = GetRandomFloat(0.0f, 1.f) * -10.0f;
+	attribute->_vVelocity.y = GetRandomFloat(0.0f, 1.f) * -10.0f;
+	attribute->_vVelocity.z = GetRandomFloat(0.0f, 1.f) * -10.0f;
 
 	attribute->_color = D3DCOLOR_XRGB(255, 255, 255);
 }

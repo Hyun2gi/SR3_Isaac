@@ -3,11 +3,11 @@
 
 BEGIN(Engine)
 
-class ENGINE_DLL CParticleScatter : public CParticleSystem
+class ENGINE_DLL CParticleExplosion : public CParticleSystem
 {
 public:
-	explicit CParticleScatter(BoundingBox* boundingBox, int numParticles);
-	virtual ~CParticleScatter();
+	explicit CParticleExplosion(_vec3* vOrigin, int numParticles);
+	virtual ~CParticleExplosion();
 
 public:
 	virtual void Reset_Partice(Attribute* attribute) override;

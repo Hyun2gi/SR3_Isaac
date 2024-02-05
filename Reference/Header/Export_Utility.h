@@ -20,6 +20,9 @@
 
 #include "UI.h"
 
+#include "ParticleScatter.h"
+#include "ParticleExplosion.h"
+
 BEGIN(Engine)
 
 // Management

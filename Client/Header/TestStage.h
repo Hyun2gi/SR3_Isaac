@@ -2,6 +2,14 @@
 
 #include "Scene.h"
 
+BEGIN(Engine)
+
+class CParticleScatter;
+class CParticleExplosion;
+
+END
+
+
 class CTestStage : public Engine::CScene
 {
 private:
@@ -36,6 +44,9 @@ private:
 
 public:
 	static CTestStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
+
+private:
+	CParticleExplosion* pTest;
 
 private:
 	virtual void Free() override;
