@@ -92,6 +92,7 @@ public:
 	void		Change_LastEpicMark_To_Trace(); // 마지막 epic을 trace로 변경
 
 	int			Get_PlayerCurState();
+	int			Get_PlayerBulletState();
 
 	// 에픽에투스 타겟상태가 진행되는지
 	// 타겟 상태일때(지형선택하고 떨어지기 전까지) 몬스터 느려짐 + 플레이어 이동 제어
