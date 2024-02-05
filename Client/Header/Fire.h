@@ -21,6 +21,7 @@ public:
 private:
 	virtual HRESULT		Add_Component()						override;
 	virtual void		Hit()								override;
+	virtual void		Set_Item_Value()					override;
 
 public:
 	static CFire*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
