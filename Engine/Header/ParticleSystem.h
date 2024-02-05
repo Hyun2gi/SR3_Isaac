@@ -75,6 +75,8 @@ public:
 	bool Is_Empty();
 	bool Is_Dead();
 
+	void	Set_Velocity_Speed(_float fSpeed) { m_fVelocitySpeed = fSpeed; }
+
 	DWORD FtoDw(float f)
 	{
 		return *((DWORD*)&f);
@@ -126,6 +128,8 @@ protected:
 	DWORD						m_VbSize;
 	DWORD						m_VbOffset;
 	DWORD						m_VbBatchSize;
+
+	_float						m_fVelocitySpeed;
 
 private:
 	virtual void	Free();

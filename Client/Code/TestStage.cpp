@@ -76,8 +76,9 @@ HRESULT CTestStage::Ready_Scene()
 	//pTest->Ready_Particle(m_pGraphicDev, "../Bin/Resource/Texture/Particle/DustParticles3.dds");
 
 	_vec3 origin(0.0f, 0.0f, 5.0f);
-	pTest = new CParticleExplosion(&origin, 100);
-	pTest->Ready_Particle(m_pGraphicDev, "../Bin/Resource/Texture/Particle/explosion.png");
+	pTest = new CParticleSplash(&origin, 10);
+	pTest->Ready_Particle(m_pGraphicDev, "../Bin/Resource/Texture/Particle/bloodtear.png");
+	pTest->Create_Texture(L"../Bin/Resource/Texture/Particle/BloodExp2/BloodExp_%d.png", 7);
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 

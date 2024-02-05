@@ -6,6 +6,7 @@ BEGIN(Engine)
 
 class CParticleScatter;
 class CParticleExplosion;
+class CParticleSplash;
 
 END
 
@@ -46,7 +47,7 @@ public:
 	static CTestStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
-	CParticleExplosion* pTest;
+	CParticleSplash* pTest;
 
 private:
 	virtual void Free() override;

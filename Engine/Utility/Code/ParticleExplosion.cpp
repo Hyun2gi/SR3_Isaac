@@ -9,6 +9,10 @@ CParticleExplosion::CParticleExplosion(_vec3* vOrigin, int numParticles)
 	m_VbOffset = 0;
 	m_VbBatchSize = 512;
 
+	m_vMinVelocity = _vec3(-0.5f, 0.0f, -1.0f);
+	m_vMinVelocity = _vec3(0.5f, 1.0f, 1.0f);
+	m_fVelocitySpeed = 2.f;
+
 	for (int i = 0; i < numParticles; i++)
 		Add_Particle();
 }
@@ -29,20 +33,17 @@ void CParticleExplosion::Reset_Partice(Attribute* attribute)
 	attribute->_bIsAlive = true;
 	attribute->_vPosition = m_vOrigin;
 
-	D3DXVECTOR3 min = D3DXVECTOR3(-0.5f, 0.0f, -1.0f);
-	D3DXVECTOR3 max = D3DXVECTOR3(0.5f, 1.0f, 1.0f);
-
 	GetRandomVector(
 		&attribute->_vVelocity,
-		&min,
-		&max);
+		&m_vMinVelocity,
+		&m_vMinVelocity);
 
 	// normalize to make spherical
 	D3DXVec3Normalize(
 		&attribute->_vVelocity,
 		&attribute->_vVelocity);
 
-	attribute->_vVelocity *= 1.5f;
+	attribute->_vVelocity *= m_fVelocitySpeed;
 
 	attribute->_color = D3DXCOLOR(
 		1.f,

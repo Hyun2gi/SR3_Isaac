@@ -79,6 +79,9 @@
     <Filter Include="09. Particle\ParticleExplosion">
       <UniqueIdentifier>{653a4a0c-2b7f-4a19-ad94-13e2b63ce640}</UniqueIdentifier>
     </Filter>
+    <Filter Include="09. Particle\ParticleSplash">
+      <UniqueIdentifier>{132cfc97-5ef7-48c7-b5f7-7c2b0f936ac6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Header\Management.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="..\..\Header\ParticleExplosion.h">
       <Filter>09. Particle\ParticleExplosion</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Header\ParticleSplash.h">
+      <Filter>09. Particle\ParticleSplash</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\Management.cpp">
@@ -235,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ParticleExplosion.cpp">
       <Filter>09. Particle\ParticleExplosion</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ParticleSplash.cpp">
+      <Filter>09. Particle\ParticleSplash</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
