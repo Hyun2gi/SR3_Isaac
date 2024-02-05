@@ -22,6 +22,7 @@ private:
 	virtual HRESULT		Add_Component()						override;
 	virtual	void		Motion_Change()						override;
 	virtual void		Hit()								override;
+	virtual void		Set_Item_Value()					override;
 
 private:
 	_bool				m_bAni;

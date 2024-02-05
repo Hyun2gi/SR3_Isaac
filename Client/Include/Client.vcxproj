@@ -168,6 +168,7 @@
     <ClInclude Include="..\Header\CubeObject.h" />
     <ClInclude Include="..\Header\Dip.h" />
     <ClInclude Include="..\Header\Door.h" />
+    <ClInclude Include="..\Header\Dople.h" />
     <ClInclude Include="..\Header\DynamicCamera.h" />
     <ClInclude Include="..\Header\Effect.h" />
     <ClInclude Include="..\Header\Epic.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="..\Code\CubeObject.cpp" />
     <ClCompile Include="..\Code\Dip.cpp" />
     <ClCompile Include="..\Code\Door.cpp" />
+    <ClCompile Include="..\Code\Dople.cpp" />
     <ClCompile Include="..\Code\DynamicCamera.cpp" />
     <ClCompile Include="..\Code\Effect.cpp" />
     <ClCompile Include="..\Code\Epic.cpp" />

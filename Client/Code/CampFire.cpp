@@ -20,6 +20,11 @@ CCampFire::~CCampFire()
 {
 }
 
+void CCampFire::Set_Fire_ToStage(CLayer* pLayer)
+{
+	pLayer->Add_GameObject(L"Fire", m_pFire);
+}
+
 HRESULT CCampFire::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -29,13 +34,19 @@ HRESULT CCampFire::Ready_GameObject()
 
 	m_bCreate = false;
 
+	m_eDropItem = COIN;
+
 	return S_OK;
 }
 
 _int CCampFire::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_pFire != nullptr && m_pFire->Get_Dead())
+	{
 		m_bDead = true;
+		Set_Item_Value();
+		Setting_ItemTag();
+	}
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
@@ -95,6 +106,30 @@ HRESULT CCampFire::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
 
 	return S_OK;
+}
+
+void CCampFire::Set_Item_Value()
+{
+	DWORD dwSeed = time(NULL) % 1000;
+	srand(dwSeed);
+
+	int iResult = rand() % 6;
+
+	switch (iResult)
+	{
+	case 0:
+		m_eDropItem = COIN;
+	case 1:
+		m_eDropItem = HEART;
+	case 2:
+		m_eDropItem = HEART_HALF;
+	case 3:
+		m_eDropItem = SAD_ONION;
+	case 4:
+		m_eDropItem = TRINKET;
+	case 5:
+		m_eDropItem = PILL_0;
+	}
 }
 
 void CCampFire::Create_Wood()

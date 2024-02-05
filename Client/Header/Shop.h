@@ -13,6 +13,9 @@
 class CShop : public CMapObj
 {
 private:
+	const _float INTERVALX = 1.f;
+	const _float INTERVALZ = 2.f;
+private:
 	explicit CShop(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CShop(const CShop& rhs);
 	virtual ~CShop();
@@ -26,12 +29,14 @@ public:
 private:
 	virtual HRESULT		Add_Component()						override;
 
-	void				Create_NPC();
-	void				Create_Item();
+	void				Create_Obj();
 
 private:
 	CShopNpc*			m_pShopNpc;
-	vector<CItem*>		m_ItemVec;
+	
+	CPill*				m_pPill;
+	CEpic*				m_pEpic;
+	CHeart*				m_pHeart;
 
 public:
 	static CShop* Create(LPDIRECT3DDEVICE9 pGraphicDev);

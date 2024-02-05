@@ -14,6 +14,7 @@
 #include "Squirt.h"
 #include "Leaper.h"
 #include "Charger.h"
+#include "Dople.h"
 
 #include "Monstro.h"
 #include "Mom.h"
@@ -60,6 +61,7 @@ HRESULT CStage::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_Monster(L"GameMst"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
+	FAILED_CHECK_RETURN(Ready_Layer_MapObj(L"MapObj"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
@@ -89,12 +91,8 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 	// 아이템 드랍
 	Drop_ITem();
 
-	// Normal Fly 추가
-	//if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"NormalFly") == nullptr)
-	//{
-	//	dynamic_cast<CAttackFly*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"AttackFly"))
-	//		->Set_NormalFly_ToStage(m_mapLayer.at(L"GameMst"));
-	//}
+	// 자식 클래스 Layer에 Insert
+	Insert_Child();
 
 	//Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f); // Second Timer 테스트용 코드
 
@@ -115,13 +113,6 @@ void CStage::Render_Scene()
 
 void CStage::Drop_ITem()
 {
-	// 똥 / 모닥불 -> 같은 자리에 점프하며 생성
-	// 슬롯머신 -> 점프하며 대각선으로 뱉어냄
-	// 야바위 -> 점프하며 대각선으로 뱉어냄
-	// CGameObject* pObj = m_mapLayer.at(L"GameItem")->Collision_GameObject(CPlayer::GetInstance());
-	//Get_GameObject
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SkyBox", pGameObject), E_FAIL);
-	
 	// 똥
 	if (Get_GameObject(L"GameLogic", L"Poop") != nullptr)
 	{
@@ -130,28 +121,78 @@ void CStage::Drop_ITem()
 		{
 			Engine::CGameObject* pGameObject = nullptr;
 			// Create_Item( ) : 2인자 : spawn Pos 정수 넣어주면 됨
-			pGameObject = dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Create_Item(COIN, 2, m_mapLayer.at(L"GameItem"));
-			m_mapLayer.at(L"GameItem")->Add_GameObject(L"Coin", pGameObject);
+			ITEM_TYPE eType = dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_ItemType();
+			wstring wstrObjTag = dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_DropItemTag();
+
+			pGameObject = dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"));
+			m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
+
 			dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Set_Drop();
 		}
-}
+	}
 
-	//if (Get_GameObject(L"GameLogic", L"Campfire") != nullptr)
-	//{
-	//	// 모닥불
-	//	if (dynamic_cast<CCampFire*>(Get_GameObject(L"GameLogic", L"Campfire"))->Get_Dead())
-	//	{
-	//		Engine::CGameObject* pGameObject = nullptr;
+	// 모닥불
+	if (Get_GameObject(L"MapObj", L"Campfire") != nullptr)
+	{
+		if (dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Get_Dead() &&
+			!dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Get_Drop())
+		{
+			Engine::CGameObject* pGameObject = nullptr;
 
-	//		pGameObject = CHeart::Create(m_pGraphicDev, 2);
-	//		pGameObject->Set_MyLayer(L"GameItem");
-	//		FAILED_CHECK_RETURN(m_mapLayer.at(L"GameItem")->Add_GameObject(L"Heart", pGameObject));
-	//	}
-	//}
+			ITEM_TYPE eType = dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Get_ItemType();
+			wstring wstrObjTag = dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Get_DropItemTag();
+
+			pGameObject = dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"));
+			m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
+
+			dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Set_Drop();
+		}
+	}
 
 	// 슬롯머신
 
 	// 야바위
+	// npc 와의 충돌   ----> 야바위 객체가 아니어도 해당 함수가 호출됨 (이것까지 레이어를 나누어야 하는...? 먼가 이상함 아닌가?)
+	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
+	{
+		if (dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc() != nullptr)
+		{
+			if (!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc()->Get_NPC_Game())
+			{
+				CGameObject* pShellNpc = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
+				if (pShellNpc)
+				{
+					dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
+				}
+			}
+		}
+
+	}
+
+	// shell 과의 충돌
+	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
+	{
+		//if(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame")))
+	}
+}
+
+void CStage::Insert_Child()
+{
+	// Normal Fly 추가
+	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"AttackFly") != nullptr &&
+		m_mapLayer.at(L"GameMst")->Get_GameObject(L"NormalFly") == nullptr)
+	{
+		dynamic_cast<CAttackFly*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"AttackFly"))
+			->Set_NormalFly_ToStage(m_mapLayer.at(L"GameMst"));
+	}
+
+	// Fire (Campfire) 추가
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Campfire") != nullptr &&
+		m_mapLayer.at(L"MapObj")->Get_GameObject(L"Fire") == nullptr)
+	{
+		dynamic_cast<CCampFire*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"Campfire"))
+			->Set_Fire_ToStage(m_mapLayer.at(L"MapObj"));
+	}
 }
 
 HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
@@ -196,48 +237,6 @@ HRESULT CStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pGameObject->Set_MyLayer(pLayerTag);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
-
-#pragma region Object
-
-	// Poop
-	pGameObject = CPoop::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
-
-	// CampFire
-	pGameObject = CCampFire::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
-
-	//// Spike
-	//pGameObject = CSpike::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
-
-	//// SlotMC
-	//pGameObject = CSlotMC::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
-
-	//// Shop
-	pGameObject = CShop::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Shop", pGameObject), E_FAIL);
-
-	//// Shell Game
-	//pGameObject = CShellGame::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
-
-#pragma endregion Object
-
-
 
 	/*for (_int i = 0; i < 50; ++i)
 	{
@@ -309,6 +308,12 @@ HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	//pGameObject->Set_MyLayer(pLayerTag);
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Charger", pGameObject), E_FAIL);
+
+	// Dople
+	pGameObject = CDople::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dople", pGameObject), E_FAIL);
 
 	//// Monstro
 	//pGameObject = CMonstro::Create(m_pGraphicDev);
@@ -397,6 +402,54 @@ HRESULT CStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
+
+	return S_OK;
+}
+
+HRESULT CStage::Ready_Layer_MapObj(const _tchar* pLayerTag)
+{
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	Engine::CGameObject* pGameObject = nullptr;
+
+	// Poop
+	pGameObject = CPoop::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
+
+	// CampFire
+	pGameObject = CCampFire::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
+
+	// Spike
+	pGameObject = CSpike::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
+
+	//// SlotMC
+	//pGameObject = CSlotMC::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
+
+	// Shop
+	pGameObject = CShop::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Shop", pGameObject), E_FAIL);
+
+	// Shell Game
+	pGameObject = CShellGame::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
 }
@@ -494,7 +547,7 @@ void CStage::Moster_Collision()
 			iter != pBulletList->end();)
 		{
 			CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(*iter);
-			// AttackFly 는 고민해볼 것
+
 			if (pMonster)
 			{
 				dynamic_cast<CMonster*>(pMonster)->Hit();
@@ -504,11 +557,43 @@ void CStage::Moster_Collision()
 				++iter;
 		}
 	}
+
+	if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr)
+	{
+		CGameObject* pDople = m_mapLayer.at(L"GameMst")->Collision_GameObject(Get_GameObject(L"MapObj", L"Spike"));
+		if (pDople)
+		{
+			//dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
+			dynamic_cast<CDople*>(pDople)->Hit();
+		}
+	}
 }
 
 void CStage::MapObj_Collision()
 {
-	//if(m_mapLayer.at(L"GameLogic"))
+	// MapObj 와 PlayerBullet 의 충돌
+	if (m_mapLayer.at(L"MapObj") != nullptr)
+	{
+		list<CGameObject*>* pBulletList = CPlayer::GetInstance()->Get_Player_BullletList();
+
+		for (list<CGameObject*>::iterator iter = pBulletList->begin();
+			iter != pBulletList->end();)
+		{
+			CGameObject* pMapObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(*iter); // 충돌이 안 됨
+
+			if (pMapObj) // 똥이고 모닥불일 때만
+			{
+				dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
+				break;
+			}
+			else
+				++iter;
+		}
+	}
+
+	// SlotMC 과 Shell Game 은 Player 와 충돌
+
+	// Shop Npc 는 Epic 과 충돌
 }
 
 CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)

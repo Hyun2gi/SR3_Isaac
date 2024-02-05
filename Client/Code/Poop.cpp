@@ -28,18 +28,19 @@ HRESULT CPoop::Ready_GameObject()
 	m_bAni = false;
 	m_bReduce = true;
 
+	m_eDropItem = COIN;
+
 	return S_OK;
 }
 
 _int CPoop::Update_GameObject(const _float& fTimeDelta)
 {
-
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	/*if (Engine::Key_Down(DIK_Z))
+	/*if (Engine::Get_DIKeyState(DIK_Z) & 0x80)
 		Hit();*/
 
-	if (Engine::Get_DIKeyState(DIK_Z) & 0x80)
+	if (m_bHit)
 		Hit();
 
 	if (m_bAni)
@@ -134,6 +135,32 @@ void CPoop::Hit()
 	else
 	{
 		m_bDead = true;
+		Set_Item_Value();
+		Setting_ItemTag();
+	}
+}
+
+void CPoop::Set_Item_Value()
+{
+	DWORD dwSeed = time(NULL) % 1000;
+	srand(dwSeed);
+	
+	int iResult = rand() % 6;
+
+	switch (iResult)
+	{
+	case 0:
+		m_eDropItem =  COIN;
+	case 1:
+		m_eDropItem = HEART;
+	case 2:
+		m_eDropItem = HEART_HALF;
+	case 3:
+		m_eDropItem = SAD_ONION;
+	case 4:
+		m_eDropItem = TRINKET;
+	case 5:
+		m_eDropItem = PILL_0;
 	}
 }
 
