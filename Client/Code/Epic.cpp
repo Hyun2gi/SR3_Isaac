@@ -25,6 +25,8 @@ HRESULT CEpic::Ready_GameObject()
     m_fFrame = 0;
     m_iCoin = 15;
 
+    m_pTransformCom->m_vScale = { 0.7,0.7,0.7 };
+
     return S_OK;
 }
 
@@ -159,6 +161,8 @@ HRESULT CEpic::Add_Component()
     pComponent = m_pCalculCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
+
+    return S_OK;
 }
 
 void CEpic::Motion_Change()

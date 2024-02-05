@@ -136,7 +136,7 @@ void CShop::Create_Obj()
 	if (m_pPill == nullptr)
 	{
 		_vec3 vPillPos = { vPos.x - INTERVALX, vPos.y, vPos.z - INTERVALZ };
-		m_pPill = CPill::Create(m_pGraphicDev, 3, vPillPos, vDir);
+		m_pPill = CPill::Create(m_pGraphicDev, 2, vPillPos, vDir);
 		m_pPill->Set_MyLayer(m_vecMyLayer[0]);
 		m_pPill->Get_Transform()->Set_Pos(vPillPos);
 	}
