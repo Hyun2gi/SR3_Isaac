@@ -6,12 +6,17 @@
 #include "Wood.h"
 #include "Fire.h"
 
+#include "Layer.h"
+
 class CCampFire : public CMapObj
 {
 private:
 	explicit CCampFire(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CCampFire(const CCampFire& rhs);
 	virtual ~CCampFire();
+
+public:
+	void			Set_Fire_ToStage(CLayer* pLayer);
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -21,6 +26,7 @@ public:
 
 private:
 	virtual HRESULT		Add_Component()						override;
+	virtual void		Set_Item_Value()					override;
 
 	void				Create_Wood();
 	void				Create_Fire();

@@ -20,7 +20,7 @@ CMapObj::CMapObj(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev),
 	m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTargetTransCom(nullptr), m_pTextureCom(nullptr), m_pCalculator(nullptr),
 	m_iHitCount(0), m_iLimitHit(0), m_iPicNum(1), m_fFrameSpeed(0.f), m_fCallLimit(0.f), m_fAccTimeDelta(0.f),
-	m_bDead(false), m_bItemDrop(false)
+	m_bDead(false), m_bItemDrop(false), m_bHit(false), m_eDropItem(COIN)
 {
 }
 
@@ -30,7 +30,7 @@ CMapObj::CMapObj(const CMapObj& rhs)
 	m_pTextureCom(rhs.m_pTextureCom), m_pCalculator(rhs.m_pCalculator),
 	m_iHitCount(rhs.m_iHitCount), m_iLimitHit(rhs.m_iLimitHit), m_iPicNum(rhs.m_iPicNum), m_fFrameSpeed(rhs.m_fFrameSpeed),
 	m_fCallLimit(rhs.m_fCallLimit), m_fAccTimeDelta(rhs.m_fAccTimeDelta),
-	m_bDead(rhs.m_bDead), m_bItemDrop(rhs.m_bItemDrop)
+	m_bDead(rhs.m_bDead), m_bItemDrop(rhs.m_bItemDrop), m_bHit(rhs.m_bHit), m_eDropItem(rhs.m_eDropItem)
 {
 }
 
@@ -45,16 +45,14 @@ HRESULT CMapObj::Ready_GameObject()
 
 _int CMapObj::Update_GameObject(const _float& fTimeDelta)
 {
-	if(!m_bItemDrop)
-		CGameObject::Update_GameObject(fTimeDelta);
+	CGameObject::Update_GameObject(fTimeDelta);
 
 	return 0;
 }
 
 void CMapObj::LateUpdate_GameObject()
 {
-	if(!m_bItemDrop)
-		__super::LateUpdate_GameObject();
+	__super::LateUpdate_GameObject();
 }
 
 void CMapObj::Render_GameObject()
@@ -79,6 +77,39 @@ bool CMapObj::Check_Time(const _float& fTimeDelta)
 	return false;
 }
 
+void CMapObj::Setting_ItemTag()
+{
+	switch (m_eDropItem)
+	{
+	case Engine::BRIM:
+		m_wstrDropItemTag = L"BrimStone";
+		break;
+	case Engine::EPIC:
+		m_wstrDropItemTag = L"Epic";
+		break;
+	case Engine::SAD_ONION:
+		m_wstrDropItemTag = L"SadOnion";
+		break;
+	case Engine::TRINKET:
+		m_wstrDropItemTag = L"WhipWorm";
+		break;
+	case Engine::COIN:
+		m_wstrDropItemTag = L"Coin";
+		break;
+	case Engine::HEART:
+		m_wstrDropItemTag = L"Heart";
+		break;
+	case Engine::HEART_HALF:
+		m_wstrDropItemTag = L"HeartHalf";
+		break;
+	case Engine::PILL_0:
+		m_wstrDropItemTag = L"Pill";
+		break;
+	default:
+		break;
+	}
+}
+
 CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer)
 {
 	_vec3 vPos, vLook;
@@ -88,17 +119,33 @@ CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer)
 	switch (eItemType)
 	{
 	case Engine::BRIM:
-		//CItem* pItem = CBrimStone::Create(m_pGraphicDev, iSpawnPos, vPos);
-		//pItem->Set_MyLayer(L"GameItem");
-
+	{
+		CItem* pItem = CBrimStone::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
+		pItem->Set_MyLayer(L"GameItem");
+		return pItem;
 		break;
+	}
 	case Engine::EPIC:
+	{
+		CItem* pItem = CEpic::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
+		pItem->Set_MyLayer(L"GameItem");
+		return pItem;
 		break;
+	}
 	case Engine::SAD_ONION:
+	{
+		CItem* pItem = CSadOnion::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
+		pItem->Set_MyLayer(L"GameItem");
+		return pItem;
 		break;
+	}
 	case Engine::TRINKET:
+	{
+		CItem* pItem = CWhipWorm::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
+		pItem->Set_MyLayer(L"GameItem");
+		return pItem;
 		break;
-
+	}
 	case Engine::COIN:
 	{
 		CItem* pItem = CCoin::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
@@ -106,13 +153,27 @@ CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer)
 		return pItem;
 		break;
 	}
-
 	case Engine::HEART:
+	{
+		CItem* pItem = CHeart::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
+		pItem->Set_MyLayer(L"GameItem");
+		return pItem;
 		break;
+	}
 	case Engine::HEART_HALF:
+	{
+		CItem* pItem = CHeartHalf::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
+		pItem->Set_MyLayer(L"GameItem");
+		return pItem;
 		break;
+	}
 	case Engine::PILL_0:
+	{
+		CItem* pItem = CPill::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
+		pItem->Set_MyLayer(L"GameItem");
+		return pItem;
 		break;
+	}
 	}
 }
 

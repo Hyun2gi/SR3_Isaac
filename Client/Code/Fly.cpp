@@ -24,7 +24,7 @@ CFly::~CFly()
 HRESULT CFly::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(_float(rand() % 20), 3.f, _float(rand() % 20));
+	m_pTransformCom->Set_Pos(_float(rand() % 20), 5.f, _float(rand() % 20));
 
 	m_iHp = 3;
 
@@ -161,6 +161,8 @@ void CFly::Change_Dir(const _float& fTimeDelta)
 {
 	m_iRandNum = rand() % 180;
 	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(_float(m_iRandNum)));
+
+	m_pTransformCom->Get_Info(INFO_POS, &m_vMoveLook);
 }
 
 void CFly::Move(const _float& fTimeDelta)
@@ -168,8 +170,13 @@ void CFly::Move(const _float& fTimeDelta)
 	_vec3		vDir;
 	m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
 
-	D3DXVec3Normalize(&vDir, &vDir);
-	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+	// LOOK 벡터로 이동 X 임의의 벡터를 사용
+
+	D3DXVec3Normalize(&m_vMoveLook, &m_vMoveLook);
+	m_pTransformCom->Move_Pos(&m_vMoveLook, m_fSpeed, fTimeDelta); // 값 조정 필요
+
+	/*D3DXVec3Normalize(&vDir, &vDir);
+	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);*/
 
 	m_eCurState = FLY_IDLE;
 }
