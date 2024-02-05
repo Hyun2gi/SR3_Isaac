@@ -38,11 +38,6 @@ public:
 		m_bDead = true;
 	}
 
-	void				Set_BulletDead()
-	{
-		m_bDead = true;
-	}
-
 private:
 	virtual HRESULT			Add_Component();
 	bool					Check_Time(const _float& fTimeDelta);
