@@ -102,7 +102,7 @@ void CMapObj::Setting_ItemTag()
 	case Engine::HEART_HALF:
 		m_wstrDropItemTag = L"HeartHalf";
 		break;
-	case Engine::PILL_0:
+	case Engine::PILL:
 		m_wstrDropItemTag = L"Pill";
 		break;
 	default:
@@ -167,7 +167,7 @@ CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer)
 		return pItem;
 		break;
 	}
-	case Engine::PILL_0:
+	case Engine::PILL:
 	{
 		CItem* pItem = CPill::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
 		pItem->Set_MyLayer(L"GameItem");
