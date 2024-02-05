@@ -224,7 +224,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			_vec3 vPos = m_vAt + m_vCameraPosDir;
 
 			// º®¿¡ ºÎµúÇûÀ»¶§
-			if ((vPos.x > VTXCNTX-15 || vPos.z > VTXCNTX- 15 || vPos.x < 15 || vPos.z < 15) && m_bCollisionWall == false)
+			if ((vPos.x > VTXCNTX-3 || vPos.z > VTXCNTX- 3 || vPos.x < 3 || vPos.z < 3) && m_bCollisionWall == false)
 			{
 				// ¹ÛÀ¸·Î ³ª°¬À»¶§
 				m_bCollisionWall = true;
@@ -252,7 +252,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 				{
 					m_bCollisionWall = false;
 					m_vEye = m_vGoalPosition;
-					m_fAngleY = 0;
+					//m_fAngleY = 0;
 					m_vAt = playerPos + playerDir * 2;
 					m_vCameraPosDir = m_vEye - m_vAt;
 				}
@@ -275,6 +275,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 					m_fAngleY = 0;
 					m_vEye = playerPos + _vec3(0, 2, 0);
 				}
+				m_vCameraPosDir = m_vEye - m_vAt;
 			}
 			else if (m_bCollisionWall == true && !CPlayer::GetInstance()->Get_SafeCamer_Area() && m_bFirstPerson == true)
 			{
