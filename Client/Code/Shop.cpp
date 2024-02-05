@@ -23,9 +23,18 @@ CShop::~CShop()
 
 void CShop::Set_Item_ToStage(CLayer* pLayer)
 {
-	pLayer->Add_GameObject(L"Pill", m_pPill);
-	pLayer->Add_GameObject(L"Epic", m_pEpic);
-	//pLayer->Add_GameObject(L"Heart", m_pHeart);
+	if (!m_bIsLayerInsert)
+	{
+		if (m_pPill != nullptr && m_pEpic != nullptr && m_pHeart != nullptr)
+		{
+			pLayer->Add_GameObject(L"Pill", m_pPill);
+			pLayer->Add_GameObject(L"Epic", m_pEpic);
+			pLayer->Add_GameObject(L"Heart", m_pHeart);
+
+			m_bIsLayerInsert = true;
+		}
+
+	}
 }
 
 _bool CShop::Get_Item_NULL()
@@ -41,6 +50,8 @@ HRESULT CShop::Ready_GameObject()
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->Set_Pos(30.f, 1.f, 25.f);
 
+	m_bIsLayerInsert = false;
+
 	return S_OK;
 }
 
@@ -53,14 +64,14 @@ _int CShop::Update_GameObject(const _float& fTimeDelta)
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->Update_GameObject(fTimeDelta);
 
-	if (m_pPill != nullptr)
-		m_pPill->Update_GameObject(fTimeDelta);
+	//if (m_pPill != nullptr)
+	//	m_pPill->Update_GameObject(fTimeDelta);
 
-	if (m_pEpic != nullptr)
-		m_pEpic->Update_GameObject(fTimeDelta);
+	//if (m_pEpic != nullptr)
+	//	m_pEpic->Update_GameObject(fTimeDelta);
 
-	if (m_pHeart != nullptr)
-		m_pHeart->Update_GameObject(fTimeDelta);
+	//if (m_pHeart != nullptr)
+	//	m_pHeart->Update_GameObject(fTimeDelta);
 
 	return 0;
 }
@@ -72,14 +83,14 @@ void CShop::LateUpdate_GameObject()
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->LateUpdate_GameObject();
 
-	if (m_pPill != nullptr)
-		m_pPill->LateUpdate_GameObject();
+	//if (m_pPill != nullptr)
+	//	m_pPill->LateUpdate_GameObject();
 
-	if (m_pEpic != nullptr)
-		m_pEpic->LateUpdate_GameObject();
+	//if (m_pEpic != nullptr)
+	//	m_pEpic->LateUpdate_GameObject();
 
-	if (m_pHeart != nullptr)
-		m_pHeart->LateUpdate_GameObject();
+	//if (m_pHeart != nullptr)
+	//	m_pHeart->LateUpdate_GameObject();
 }
 
 void CShop::Render_GameObject()
@@ -87,14 +98,14 @@ void CShop::Render_GameObject()
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->Render_GameObject();
 
-	if (m_pPill != nullptr)
-		m_pPill->Render_GameObject();
+	//if (m_pPill != nullptr)
+	//	m_pPill->Render_GameObject();
 
-	if (m_pEpic != nullptr)
-		m_pEpic->Render_GameObject();
+	//if (m_pEpic != nullptr)
+	//	m_pEpic->Render_GameObject();
 
-	if (m_pHeart != nullptr)
-		m_pHeart->Render_GameObject();
+	//if (m_pHeart != nullptr)
+	//	m_pHeart->Render_GameObject();
 }
 
 HRESULT CShop::Add_Component()
@@ -162,12 +173,12 @@ void CShop::Create_Obj()
 		m_pEpic->Set_MyLayer(L"GameItem");
 	}
 
-	/*if (m_pHeart == nullptr)
+	if (m_pHeart == nullptr)
 	{
 		_vec3 vHeartPos = { vPos.x + INTERVALX + 50.f, vPos.y, vPos.z - INTERVALZ };
 		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir);
 		m_pHeart->Set_MyLayer(L"GameItem");
-	}*/
+	}
 }
 
 CShop* CShop::Create(LPDIRECT3DDEVICE9 pGraphicDev)
