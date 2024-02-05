@@ -72,6 +72,8 @@ public:
 	void		Set_Bool_MouseYRotation(bool checkY) { m_bMouseYRotataion = checkY; }
 	void		Set_Player_Pos(_vec3 pos);
 
+	float		Get_MaxHp() { return m_fMaxHp; }
+	float		Get_Hp() { return m_fHp; }
 	float		Get_BulletSpeed() { return m_fBulletSpeed; }
 	int			Get_Coin() { return m_iCoin; }
 	void		Set_Bool_StartScene(bool _start) { m_bStartScene = _start; }
