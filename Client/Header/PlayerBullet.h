@@ -33,6 +33,10 @@ public:
 	{
 		m_fBulletSpeed = _speed;
 	}
+	void				Set_BulletDead()
+	{
+		m_bDead = true;
+	}
 
 	void				Set_BulletDead()
 	{
