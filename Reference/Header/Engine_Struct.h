@@ -48,5 +48,7 @@ namespace Engine
 		_ulong	_2;
 
 	}INDEX32;	
+
+
 }
 #endif // Engine_Struct_h__
