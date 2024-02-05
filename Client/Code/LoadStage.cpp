@@ -5,6 +5,7 @@
 #include "Export_Utility.h"
 
 #include "Player.h"
+#include "PlayerBullet.h"
 
 //환경
 #include "Terrain.h"
@@ -24,15 +25,27 @@
 
 //보스
 #include "Monstro.h"
+#include "Mom.h"
+#include "MomParts.h"
 
 //오브젝트
+#include "Poop.h"
+#include "CampFire.h"
+#include "Spike.h"
+#include "SlotMC.h"
+#include "Shop.h"
+#include "ShellGame.h"
+#include "Door.h"
+
+//아이템
 #include "Coin.h"
 #include "Pill.h"
 #include "BrimStone.h"
 #include "SadOnion.h"
 #include "WhipWorm.h"
 #include "Epic.h"
-#include "Door.h"
+#include "Heart.h"
+#include "HeartHalf.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
@@ -331,29 +344,61 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			{
 			case POOP:
 			{
+				pGameObject = CPoop::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
 
 				break;
 			}
 			case CAMPFIRE:
 			{
+				pGameObject = CCampFire::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
 
 				break;
 			}
 			case SPIKE:
 			{
+				pGameObject = CSpike::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
 
 				break;
 			}
 			case SHELL_GAME:
 			{
+				pGameObject = CShellGame::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
 
 				break;
 			}
 			case SLOT_MC:
 			{
+				pGameObject = CSlotMC::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
 
 				break;
 			}
+
+			//TODO: 샵 추가해야함
 			}
 			break;
 		}
@@ -374,25 +419,6 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			}
 			case ATTACK_FLY:
 			{
-				/*pGameObject = CAttackFly::Create(m_pGraphicDev, m_vecMonsterCount[ATTACK_FLY] * 13);
-				NULL_CHECK_RETURN(pGameObject, E_FAIL);
-				dynamic_cast<CAttackFly*>(pGameObject)->Set_CenterObj();
-				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS] 
-					= { iter.second.iX, iter.second.iY, iter.second.iZ };
-				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CenterFly", pGameObject), E_FAIL);
-
-				int iCount = m_vecMonsterCount[ATTACK_FLY] * 12 + 1;
-				for (int i = iCount; i < iCount + 12; ++i)
-				{
-					pGameObject = CAttackFly::Create(m_pGraphicDev, i);
-					pGameObject->Set_MyLayer(pLayerTag);
-					NULL_CHECK_RETURN(pGameObject, E_FAIL);
-					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
-				}
-
-				++m_vecMonsterCount[ATTACK_FLY];*/
-
 				pGameObject = CAttackFly::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
@@ -408,9 +434,9 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			{
 				pGameObject = CPacer::Create(m_pGraphicDev, m_vecMonsterCount[PACER]++);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pacer", pGameObject), E_FAIL);
-
-				++m_vecMonsterCount[PACER];
 
 				break;
 			}
@@ -418,14 +444,21 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			{
 				pGameObject = CLeaper::Create(m_pGraphicDev, m_vecMonsterCount[LEAPER]++);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Leaper", pGameObject), E_FAIL);
-
-				++m_vecMonsterCount[LEAPER];
 
 				break;
 			}
 			case SQUIRT:
 			{
+				pGameObject = CSquirt::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
 
 				break;
 			}
@@ -433,9 +466,10 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			{
 				pGameObject = CDip::Create(m_pGraphicDev, m_vecMonsterCount[DIP]++);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				pGameObject->Set_MyLayer(pLayerTag);
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dip", pGameObject), E_FAIL);
-
-				++m_vecMonsterCount[DIP];
 
 				break;
 			}
@@ -448,6 +482,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			{
 				pGameObject = CCharger::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Charger", pGameObject), E_FAIL);
 
 				++m_vecMonsterCount[CHARGER];
@@ -463,30 +499,39 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			{
 			case MONSTRO:
 			{
+				pGameObject = CMonstro::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				pGameObject->Set_MyLayer(pLayerTag);
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Monstro", pGameObject), E_FAIL);
 
 				break;
 			}
-			case MOM_LEG:
+			case MOM:
 			{
+				pGameObject = CMom::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
+					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				pGameObject->Set_MyLayer(pLayerTag);
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Mom", pGameObject), E_FAIL);
 
 				break;
 			}
-			case MOM_EYE:
+			case MOM_PARTS:
 			{
-
+				for (int i = 0; i < 4; ++i)
+				{
+					pGameObject = CMomParts::Create(m_pGraphicDev, i);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
+				}
 				break;
 			}
-			case MOM_HAND:
-			{
-
-				break;
-			}
-			case MOM_SKIN:
-			{
-
-				break;
-			}
-
+	
 			}
 			break;
 		}
@@ -496,6 +541,10 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			{
 			case BRIM:
 			{
+				//pGameObject = CCoin::Create(m_pGraphicDev);
+				//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				//pGameObject->Set_MyLayer(pLayerTag);
+				//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Coin", pGameObject), E_FAIL);
 
 				break;
 			}
@@ -529,27 +578,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 				break;
 			}
-			case PILL_0:
-			{
-
-				break;
-			}
-			case PILL_1:
-			{
-
-				break;
-			}
-			case PILL_2:
-			{
-
-				break;
-			}
-			case PILL_3:
-			{
-
-				break;
-			}
-			case PILL_4:
+			case PILL:
 			{
 
 				break;
@@ -786,9 +815,9 @@ HRESULT CLoadStage::Door_Collision()
 
 			if (pObj) // 충돌된 문 존재
 			{
-				_vec3 playerpos;
-				dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &playerpos);
-				CPlayer::GetInstance()->Set_StartPosition(playerpos);
+				//_vec3 playerpos;
+				//dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &playerpos);
+				//CPlayer::GetInstance()->Set_StartPosition(playerpos);
 
 				// 스테이지 변경
 				Engine::CScene* pScene = nullptr;
@@ -806,6 +835,7 @@ HRESULT CLoadStage::Door_Collision()
 CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType)
 {
 	CLoadStage *	pInstance = new CLoadStage(pGraphicDev);
+	CPlayer::GetInstance()->Set_Bool_StartScene(true);
 
 	if (FAILED(pInstance->Ready_Scene(iType)))
 	{
