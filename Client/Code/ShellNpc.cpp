@@ -28,6 +28,7 @@ HRESULT CShellNpc::Ready_GameObject()
 	m_bGame = false;
 
 	m_ePreState = NPC_END;
+	m_eObjID = MOBJID_SHELL_NPC;
 
 	return S_OK;
 }

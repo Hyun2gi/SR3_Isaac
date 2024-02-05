@@ -22,16 +22,18 @@ protected:
 	explicit CMapObj(const CMapObj& rhs);
 	virtual ~CMapObj();
 
-	enum MAPOBJID{MOBJ_POOP, MOBJ_FIRE, MOBJ_SPIKE, MOBJ_SLOTMC, };
+enum MAPOBJID { MOBJID_FIRE, MOBJID_SLOTMC_MC, MOBJID_SHELL_NPC, MOBJID_SHELL, MOBJID_NONE };
 
 public:
 	_bool			Get_Dead() { return m_bDead; }
 	_bool			Get_Drop() { return m_bItemDrop; }
 	void			Set_Drop() { m_bItemDrop = true; }
 	void			Set_Hit() { m_bHit = true; }
+	OBJECT_TYPE		Get_Type() { return m_eObjType; }
+	MAPOBJID		Get_ObjID() { return m_eObjID; }
 
 	ITEM_TYPE		Get_ItemType() { return m_eDropItem; }
-	wstring			Get_DropItemTag() { return m_wstrDropItemTag; }
+	wstring         Get_DropItemTag() { return m_wstrDropItemTag; }
 
 	Engine::CTransform* Get_TransformCom() { return m_pTransformCom; }
 
@@ -74,7 +76,10 @@ protected:
 	_float					m_fFrameSpeed;
 
 	ITEM_TYPE				m_eDropItem;
-	wstring					m_wstrDropItemTag;
+	wstring				    m_wstrDropItemTag;
+
+	OBJECT_TYPE				m_eObjType;
+	MAPOBJID				m_eObjID;
 
 public:
 	static CMapObj* Create(LPDIRECT3DDEVICE9 pGraphicDev);

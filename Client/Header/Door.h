@@ -21,6 +21,11 @@ public:
 	void			Set_Collision() { m_bCollision = true; }
 	_bool			Get_Collision() { return m_bCollision; }
 
+	_int			Get_Stage_Num_Key() { return m_iStageNumKey; }
+	void			Set_Stage_Num_Key(_int iStageNumKey) { m_iStageNumKey = iStageNumKey; }
+
+	string			Get_Stage_Texture_Key() { return m_strStageKey; }
+
 public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
@@ -40,6 +45,8 @@ private:
 	
 	DOORSTATE			m_ePreState;
 	DOORSTATE			m_eCurState;
+
+	_int				m_iStageNumKey;
 
 public:
 	static CDoor*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
