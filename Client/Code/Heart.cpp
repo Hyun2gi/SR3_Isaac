@@ -138,8 +138,6 @@ void CHeart::Item_Spawn_Action()
     if (m_eCurItemPlace == SP_SLOT)
     {
 
-        m_pTransformCom->Set_Pos(itemPos.x + m_vLookVec.x * 0.2, itemPos.y - 0.3, itemPos.z + m_vLookVec.z * 0.2);
-
         _vec3 temp;
         m_pTransformCom->Get_Info(INFO_POS, &temp);
 

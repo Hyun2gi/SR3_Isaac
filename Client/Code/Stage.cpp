@@ -516,7 +516,7 @@ void CStage::Run_Collision_Func()
 	if (pObj)
 	{
 		//Ãæµ¹µÊ
-		dynamic_cast<CHeart*>(pObj)->Run_Item_Effect();
+		dynamic_cast<CItem*>(pObj)->Run_Item_Effect();
 	}
 }
 

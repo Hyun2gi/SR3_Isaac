@@ -22,7 +22,6 @@ private:
 
 public:
 	void			Set_Item_ToStage(CLayer* pLayer);
-	_bool			Get_Item_NULL();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;

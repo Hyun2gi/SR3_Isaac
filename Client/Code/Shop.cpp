@@ -33,22 +33,13 @@ void CShop::Set_Item_ToStage(CLayer* pLayer)
 
 			m_bIsLayerInsert = true;
 		}
-
 	}
-}
-
-_bool CShop::Get_Item_NULL()
-{
-	if (m_pPill == nullptr && m_pEpic == nullptr && m_pHeart == nullptr) // 세 아이템 모두 존재
-		return true;
-	else
-		return false;
 }
 
 HRESULT CShop::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(30.f, 1.f, 25.f);
+	m_pTransformCom->Set_Pos(10.f, 1.f, 30.f);
 
 	m_bIsLayerInsert = false;
 
@@ -64,15 +55,6 @@ _int CShop::Update_GameObject(const _float& fTimeDelta)
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->Update_GameObject(fTimeDelta);
 
-	//if (m_pPill != nullptr)
-	//	m_pPill->Update_GameObject(fTimeDelta);
-
-	//if (m_pEpic != nullptr)
-	//	m_pEpic->Update_GameObject(fTimeDelta);
-
-	//if (m_pHeart != nullptr)
-	//	m_pHeart->Update_GameObject(fTimeDelta);
-
 	return 0;
 }
 
@@ -82,30 +64,12 @@ void CShop::LateUpdate_GameObject()
 
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->LateUpdate_GameObject();
-
-	//if (m_pPill != nullptr)
-	//	m_pPill->LateUpdate_GameObject();
-
-	//if (m_pEpic != nullptr)
-	//	m_pEpic->LateUpdate_GameObject();
-
-	//if (m_pHeart != nullptr)
-	//	m_pHeart->LateUpdate_GameObject();
 }
 
 void CShop::Render_GameObject()
 {
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->Render_GameObject();
-
-	//if (m_pPill != nullptr)
-	//	m_pPill->Render_GameObject();
-
-	//if (m_pEpic != nullptr)
-	//	m_pEpic->Render_GameObject();
-
-	//if (m_pHeart != nullptr)
-	//	m_pHeart->Render_GameObject();
 }
 
 HRESULT CShop::Add_Component()
@@ -175,7 +139,7 @@ void CShop::Create_Obj()
 
 	if (m_pHeart == nullptr)
 	{
-		_vec3 vHeartPos = { vPos.x + INTERVALX + 50.f, vPos.y, vPos.z - INTERVALZ };
+		_vec3 vHeartPos = { vPos.x + INTERVALX, vPos.y, vPos.z - INTERVALZ }; // INTERVALZ
 		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir);
 		m_pHeart->Set_MyLayer(L"GameItem");
 	}
