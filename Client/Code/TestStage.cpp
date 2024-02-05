@@ -68,17 +68,21 @@ HRESULT CTestStage::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
 
-	//BoundingBox boundingBox;
-	//boundingBox._min = D3DXVECTOR3(-10.0f, -10.0f, -10.0f);
-	//boundingBox._max = D3DXVECTOR3(10.0f, 10.0f, 10.0f);
+	BoundingBox boundingBox;
+	boundingBox._min = D3DXVECTOR3(-10.0f, -10.0f, -10.0f);
+	boundingBox._max = D3DXVECTOR3(10.0f, 10.0f, 10.0f);
 
-	//pTest = new CParticleScatter(&boundingBox, 500);
-	//pTest->Ready_Particle(m_pGraphicDev, "../Bin/Resource/Texture/Particle/DustParticles3.dds");
+	pScatter = new CParticleScatter(&boundingBox, 500);
+	pScatter->Ready_Particle(m_pGraphicDev);
 
 	_vec3 origin(0.0f, 0.0f, 5.0f);
-	pTest = new CParticleSplash(&origin, 10);
-	pTest->Ready_Particle(m_pGraphicDev, "../Bin/Resource/Texture/Particle/bloodtear.png");
-	pTest->Create_Texture(L"../Bin/Resource/Texture/Particle/BloodExp2/BloodExp_%d.png", 7);
+	pExp = new CParticleExplosion(&origin, 10);
+	pExp->Ready_Particle(m_pGraphicDev);
+
+	_vec3 origin2(0.0f, 0.0f, 5.0f);
+	pSpl = new CParticleSplash(&origin2, 10);
+	pSpl->Ready_Particle(m_pGraphicDev);
+	pSpl->Create_Texture(L"../Bin/Resource/Texture/Particle/BloodExp2/BloodExp_%d.png", 7);
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 
@@ -112,7 +116,9 @@ Engine::_int CTestStage::Update_Scene(const _float& fTimeDelta)
 	//Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f); // Second Timer 테스트용 코드
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
-	pTest->Update_Particle(fTimeDelta);
+	pScatter->Update_Particle(fTimeDelta);
+	pExp->Update_Particle(fTimeDelta);
+	pSpl->Update_Particle(fTimeDelta);
 	return __super::Update_Scene(fTimeDelta);
 }
 
@@ -124,7 +130,9 @@ void CTestStage::LateUpdate_Scene()
 
 void CTestStage::Render_Scene()
 {
-	pTest->Render();
+	pScatter->Render();
+	pExp->Render();
+	pSpl->Render();
 	// DEBUG
 }
 
@@ -630,6 +638,8 @@ CTestStage* CTestStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CTestStage::Free()
 {
-	Safe_Release(pTest);
+	Safe_Release(pScatter);
+	Safe_Release(pExp);
+	Safe_Release(pSpl);
 	__super::Free();
 }

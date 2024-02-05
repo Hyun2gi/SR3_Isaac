@@ -62,7 +62,7 @@ protected:
 	virtual ~CParticleSystem();
 
 public:
-	virtual bool Ready_Particle(IDirect3DDevice9* pDevice, char* texFileName);
+	virtual bool Ready_Particle(IDirect3DDevice9* pDevice) = 0;
 	virtual void Reset();
 	virtual void Reset_Partice(Attribute* attribute) = 0;
 	virtual void Add_Particle();
@@ -74,6 +74,8 @@ public:
 
 	bool Is_Empty();
 	bool Is_Dead();
+
+	void	Set_Velocity_Speed(_float fSpeed) { m_fVelocitySpeed = fSpeed; }
 
 	DWORD FtoDw(float f)
 	{
@@ -126,6 +128,8 @@ protected:
 	DWORD						m_VbSize;
 	DWORD						m_VbOffset;
 	DWORD						m_VbBatchSize;
+
+	_float						m_fVelocitySpeed;
 
 private:
 	virtual void	Free();

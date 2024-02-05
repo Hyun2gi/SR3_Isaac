@@ -47,7 +47,9 @@ public:
 	static CTestStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
-	CParticleSplash* pTest;
+	CParticleScatter* pScatter;
+	CParticleExplosion* pExp;
+	CParticleSplash* pSpl;
 
 private:
 	virtual void Free() override;

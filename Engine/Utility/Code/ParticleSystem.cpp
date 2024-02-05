@@ -12,34 +12,6 @@ CParticleSystem::~CParticleSystem()
 
 }
 
-bool CParticleSystem::Ready_Particle(IDirect3DDevice9* pDevice, char* texFileName)
-{
-	m_pGraphicDev = pDevice;
-
-	HRESULT hr = 0;
-
-	hr = pDevice->CreateVertexBuffer(
-		m_VbSize * sizeof(Particle),
-		D3DUSAGE_DYNAMIC | D3DUSAGE_POINTS | D3DUSAGE_WRITEONLY,
-		D3DFVF_XYZ | D3DFVF_DIFFUSE,
-		D3DPOOL_DEFAULT, // D3DPOOL_MANAGED can't be used with D3DUSAGE_DYNAMIC 
-		&m_pVb,
-		0);
-
-	FAILED_CHECK_RETURN(hr, E_FAIL);
-
-	wstring wstr = wstring(texFileName, texFileName + strlen(texFileName));
-
-	hr = D3DXCreateTextureFromFile(
-		pDevice,
-		wstr.c_str(),
-		&m_pTex);
-
-	FAILED_CHECK_RETURN(hr, E_FAIL);
-
-	return S_OK;
-}
-
 void CParticleSystem::Reset()
 {
 	list<Attribute>::iterator i;

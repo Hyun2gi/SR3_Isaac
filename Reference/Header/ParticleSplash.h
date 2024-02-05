@@ -12,6 +12,7 @@ public:
 	virtual ~CParticleSplash();
 
 public:
+	bool Ready_Particle(IDirect3DDevice9* pDevice) override;
 	virtual void Reset_Partice(Attribute* attribute) override;
 	virtual void Update_Particle(_float fTimeDelat) override;
 	virtual void Render() override;

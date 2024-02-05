@@ -62,7 +62,7 @@ protected:
 	virtual ~CParticleSystem();
 
 public:
-	virtual bool Ready_Particle(IDirect3DDevice9* pDevice, char* texFileName);
+	virtual bool Ready_Particle(IDirect3DDevice9* pDevice) = 0;
 	virtual void Reset();
 	virtual void Reset_Partice(Attribute* attribute) = 0;
 	virtual void Add_Particle();

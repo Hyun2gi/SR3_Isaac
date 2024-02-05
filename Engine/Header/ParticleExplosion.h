@@ -10,6 +10,7 @@ public:
 	virtual ~CParticleExplosion();
 
 public:
+	bool Ready_Particle(IDirect3DDevice9* pDevice) override;
 	virtual void Reset_Partice(Attribute* attribute) override;
 	virtual void Update_Particle(_float fTimeDelat) override;
 
@@ -24,6 +25,5 @@ private:
 
 private:
 	_vec3 m_vMinVelocity, m_vMaxVelocity;
-	
 };
 END
