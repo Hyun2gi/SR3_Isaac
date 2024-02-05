@@ -455,6 +455,19 @@ int CPlayer::Get_PlayerCurState()
 	}
 }
 
+int CPlayer::Get_PlayerBulletState()
+{
+	switch (m_eCurBulletState)
+	{
+	case P_BULLET_IDLE:
+		return 0;
+	case P_BULLET_BRIMSTONE:
+		return 1;
+	case P_BULLET_EPIC:
+		return 2;
+	}
+}
+
 void CPlayer::Bullet_Change_To_Brim()
 {
 	if (!m_PlayerBulletList.empty())
