@@ -74,16 +74,23 @@ void CHeartHalf::Run_Item_Effect()
         // 구매해야할 경우
         if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
         {
-            CPlayer::GetInstance()->Set_Coin(-m_iCoin);
-            m_bDead = true;
-            CPlayer::GetInstance()->Set_Hp(0.5);
+            if (CPlayer::GetInstance()->Get_Hp() < CPlayer::GetInstance()->Get_MaxHp())
+            {
+                CPlayer::GetInstance()->Set_Coin(-m_iCoin);
+                m_bDead = true;
+                CPlayer::GetInstance()->Set_Hp(0.5);
+            }            
         }
     }
     else if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT)
     {
-        // 그냥 바로 적용
-        m_bDead = true;
-        CPlayer::GetInstance()->Set_Hp(0.5);
+        if (CPlayer::GetInstance()->Get_Hp() < CPlayer::GetInstance()->Get_MaxHp())
+        {
+            // 그냥 바로 적용
+            m_bDead = true;
+            CPlayer::GetInstance()->Set_Hp(0.5);
+        }
+        
     }
 }
 

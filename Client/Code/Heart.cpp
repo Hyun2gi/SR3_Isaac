@@ -25,7 +25,7 @@ HRESULT CHeart::Ready_GameObject()
     m_fFrame = 0;
     m_iCoin = 3;
 
-    m_pTransformCom->m_vScale = { 0.7,0.7,0.7 };
+    m_pTransformCom->m_vScale = { 0.5,0.5,0.5 };
 
     return S_OK;
 }
@@ -43,8 +43,6 @@ _int CHeart::Update_GameObject(const _float& fTimeDelta)
     _vec3 vPos;
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     _float	fHeight = m_pCalculCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
-
-    m_pTransformCom->Set_Pos(VTXCNTX / 2, fHeight + 1, VTXCNTZ / 2);
 
     if (m_eCurItemPlace == SP_SLOT)
     {
@@ -107,19 +105,26 @@ void CHeart::Run_Item_Effect()
 {
     if (m_eCurItemPlace == SP_SHOP)
     {
-        // 구매해야할 경우
-        if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
-        {
-            CPlayer::GetInstance()->Set_Coin(-m_iCoin);
-            m_bDead = true;
-            CPlayer::GetInstance()->Set_Hp(1);
+        if (CPlayer::GetInstance()->Get_Hp() < CPlayer::GetInstance()->Get_MaxHp())
+        {   
+            // 구매해야할 경우
+            if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
+            {
+                CPlayer::GetInstance()->Set_Coin(-m_iCoin);
+                m_bDead = true;
+                CPlayer::GetInstance()->Set_Hp(1);
+                float hp = CPlayer::GetInstance()->Get_Hp();
+            }
         }
     }
     else if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT)
     {
-        // 그냥 바로 적용
-        m_bDead = true;
-        CPlayer::GetInstance()->Set_Hp(1);
+        if (CPlayer::GetInstance()->Get_Hp() < CPlayer::GetInstance()->Get_MaxHp())
+        {
+            // 그냥 바로 적용
+            m_bDead = true;
+            CPlayer::GetInstance()->Set_Hp(1);
+        }
     }
 }
 
