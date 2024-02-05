@@ -29,6 +29,7 @@ HRESULT CPoop::Ready_GameObject()
 	m_bReduce = true;
 
 	m_eDropItem = COIN;
+	m_eObjType = POOP;
 
 	return S_OK;
 }
