@@ -91,13 +91,16 @@ public:
 	void		Clear_EpicBulletMark(); // 씬 이동때마다 바닥에 있는 에픽 흔적 지우기
 	void		Change_LastEpicMark_To_Trace(); // 마지막 epic을 trace로 변경
 
+	int			Get_PlayerCurState();
 
 	// 에픽에투스 타겟상태가 진행되는지
 	// 타겟 상태일때(지형선택하고 떨어지기 전까지) 몬스터 느려짐 + 플레이어 이동 제어
 	void		Set_EpicTargetRun(bool _run) { m_bEpicTargetRun = _run; }
 	bool		Get_EpicTargetRun() { return m_bEpicTargetRun; }
 
-	int			Get_PlayerCurState();
+	// 몬스터가 누워야할 타이밍
+	bool		Get_EpicLieTiming() { return m_bEpicLieTiming; }
+	bool		Set_EpicLieTiming(bool timing) { m_bEpicLieTiming = timing; }
 
 public:
 	void		Bullet_Change_To_Brim();
@@ -161,6 +164,10 @@ private:
 	CGameObject*		m_pCamera;
 
 	bool				m_bEpicTargetRun;
+	bool				m_bEpicLieTiming;
+
+	// 한번만 초기화하기
+	bool				m_bInitialize = false;
 
 private:
 	list<CGameObject*>	m_PlayerBulletList;

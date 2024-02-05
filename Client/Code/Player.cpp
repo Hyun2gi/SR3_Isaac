@@ -24,37 +24,43 @@ CPlayer::~CPlayer()
 
 HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pGraphicDev = pGraphicDev;
+	if (m_bInitialize == false)
+	{
+		FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
+		m_pGraphicDev = pGraphicDev;
 
-	m_eCurBulletState = P_BULLET_EPIC; // P_BULLET_BRIMSTONE
-	m_ePreState = P_END;
+		m_eCurBulletState = P_BULLET_EPIC; // P_BULLET_BRIMSTONE
+		m_ePreState = P_END;
 
-	// 딜레이 시간 초기화
-	m_fShootDelayTime = 0;
-	m_fDelayTime = 0; 
-	m_bKeyBlock = false;
-	m_fSpriteSpeed = 0.9f;
+		// 딜레이 시간 초기화
+		m_fShootDelayTime = 0;
+		m_fDelayTime = 0;
+		m_bKeyBlock = false;
+		m_fSpriteSpeed = 0.9f;
 
-	m_fFrame = 0.f;
-	m_fPicNum = 0.f;
+		m_fFrame = 0.f;
+		m_fPicNum = 0.f;
 
-	m_fMaxHp = 3;
-	m_fHp = 3;
-	m_iCoin = 100;
+		m_fMaxHp = 3;
+		m_fHp = 3;
+		m_iCoin = 100;
 
-	m_fMoveSpeed = 10;
-	m_fBulletSpeed = 60;
+		m_fMoveSpeed = 10;
+		m_fBulletSpeed = 60;
 
-	// 총알 장전 시간
-	m_fAttackSpeed = 20; 
-	m_bStartScene = true;
+		// 총알 장전 시간
+		m_fAttackSpeed = 20;
+		m_bStartScene = true;
 
-	//m_pTransformCom->m_vScale = { 2.f, 1.f, 1.f };
-	m_bMouseYRotataion = true;
-	m_pTransformCom->Set_Pos(VTXCNTX / 2, 0, VTXCNTZ / 2);
+		//m_pTransformCom->m_vScale = { 2.f, 1.f, 1.f };
+		m_bMouseYRotataion = true;
 
-	m_bEpicTargetRun = false;
+		m_bEpicTargetRun = false;
+		m_bEpicLieTiming = false;
+
+		m_bInitialize = true;
+	}
+	
 
 	return S_OK;
 }
@@ -604,6 +610,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 				//epicmark도 시작
 				Plus_EpicBulletMark(_vec3(targetpos.x, 0, targetpos.z));
+
+				m_bEpicLieTiming = false;
 			}
 			
 		}
@@ -623,6 +631,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 			//타겟상태
 			m_bEpicTargetRun = true;
+			m_bEpicLieTiming = true;
 		}
 	}
 
