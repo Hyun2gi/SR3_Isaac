@@ -21,6 +21,10 @@ private:
 	virtual ~CShop();
 
 public:
+	void			Set_Item_ToStage(CLayer* pLayer);
+	_bool			Get_Item_NULL();
+
+public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
 	virtual void	LateUpdate_GameObject()					 override;
