@@ -149,7 +149,7 @@ HRESULT CEpicBulletMark::Add_Component()
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
-    m_pTransformCom->m_vAngle = _vec3(90, 0, 0);
+    m_pTransformCom->m_vAngle = _vec3(95, 0, 0);
 
     return S_OK;
 }
