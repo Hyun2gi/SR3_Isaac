@@ -239,27 +239,32 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 				D3DXVECTOR3 _movevec;
 				m_vCameraPosDir = -(playerDir);
 				m_vGoalPosition = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
-				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
-				m_vEye = _movevec;
-				m_vCameraPosDir = m_vEye - m_vAt;
-				//1인칭 시점 아님
-				m_bFirstPerson = false;
-
-				_vec3 distance = m_vEye - m_vGoalPosition;
-
-				// 내가 원하는 카메라 위치와 지금 위치가 차이가 별로 안나면
-				if (D3DXVec3Length(&distance) < 30)
+				
+				if ((m_vGoalPosition.x <= VTXCNTX-1 && m_vGoalPosition.z <= VTXCNTX-1 && m_vGoalPosition.x >= 1 && m_vGoalPosition.z >= 1))
 				{
-					m_bCollisionWall = false;
-					m_vEye = m_vGoalPosition;
-					//m_fAngleY = 0;
-					m_vAt = playerPos + playerDir * 2;
+					D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
+					m_vEye = _movevec;
 					m_vCameraPosDir = m_vEye - m_vAt;
+					//1인칭 시점 아님
+					m_bFirstPerson = false;
+
+					_vec3 distance = m_vEye - m_vGoalPosition;
+
+					// 내가 원하는 카메라 위치와 지금 위치가 차이가 별로 안나면
+					if (D3DXVec3Length(&distance) < 30)
+					{
+						m_bCollisionWall = false;
+						m_vEye = m_vGoalPosition;
+						//m_fAngleY = 0;
+						m_vAt = playerPos + playerDir * 2;
+						m_vCameraPosDir = m_vEye - m_vAt;
+					}
 				}
 			}
 			else if (m_bCollisionWall == true && !CPlayer::GetInstance()->Get_SafeCamer_Area() && m_bFirstPerson == false)
 			{
-				// 밖으로 나간 상태여서 1인칭 또는 가까워 졌으나 카메라는 안정권에 들어왔을때 점점 가까워짐
+				// 밖으로 나간 상태
+				// 카메라와 가까워지게
 				D3DXVECTOR3 _movevec;
 				m_vCameraPosDir = -(playerDir);
 				m_vGoalPosition = playerPos + _vec3(0, 3, 0);
@@ -279,7 +284,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			}
 			else if (m_bCollisionWall == true && !CPlayer::GetInstance()->Get_SafeCamer_Area() && m_bFirstPerson == true)
 			{
-				// 밖으로 나간 상태여서 1인칭 또는 가까워 졌으나 카메라는 안정권에 들어왔을때 점점 가까워짐
+				// 1인칭 시점으로 전환
 				D3DXVECTOR3 _movevec;
 				m_vCameraPosDir = -(playerDir);
 				m_vGoalPosition = playerPos + _vec3(0, 2, 0);
