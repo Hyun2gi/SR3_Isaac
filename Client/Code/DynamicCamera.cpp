@@ -224,7 +224,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			_vec3 vPos = m_vAt + m_vCameraPosDir;
 
 			// º®¿¡ ºÎµúÇûÀ»¶§
-			if ((vPos.x > VTXCNTX || vPos.z > VTXCNTX || vPos.x < 0 || vPos.z < 0) && m_bCollisionWall == false)
+			if ((vPos.x > VTXCNTX-15 || vPos.z > VTXCNTX- 15 || vPos.x < 15 || vPos.z < 15) && m_bCollisionWall == false)
 			{
 				// ¹ÛÀ¸·Î ³ª°¬À»¶§
 				m_bCollisionWall = true;
@@ -282,9 +282,10 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 				D3DXVECTOR3 _movevec;
 				m_vCameraPosDir = -(playerDir);
 				m_vGoalPosition = playerPos + _vec3(0, 2, 0);
-				//D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
+				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
 				m_vEye = m_vGoalPosition;
 				m_vAt = playerPos + playerDir * 4 + _vec3(0, 1, 0);
+				m_vCameraPosDir = m_vEye - m_vAt;
 			}
 			else if (m_bCollisionWall == false)
 			{
