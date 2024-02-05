@@ -29,12 +29,14 @@ bool CParticleSystem::Ready_Particle(IDirect3DDevice9* pDevice, char* texFileNam
 
 	FAILED_CHECK_RETURN(hr, E_FAIL);
 
-	//hr = D3DXCreateTextureFromFile(
-	//	pDevice,
-	//	texFileName,
-	//	&m_pTex);
+	wstring wstr = wstring(texFileName, texFileName + strlen(texFileName));
 
-	//FAILED_CHECK_RETURN(hr, E_FAIL);
+	hr = D3DXCreateTextureFromFile(
+		pDevice,
+		wstr.c_str(),
+		&m_pTex);
+
+	FAILED_CHECK_RETURN(hr, E_FAIL);
 
 	return S_OK;
 }

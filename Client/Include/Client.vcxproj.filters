@@ -196,6 +196,9 @@
     <Filter Include="02. GameObject\09. MapObject\05. Shell Game\01. ShellNpc">
       <UniqueIdentifier>{af33f3d5-80c0-442d-9b1d-9bee1a32d282}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\TestStage">
+      <UniqueIdentifier>{a456cd8f-534c-4c44-857e-cd111315878a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -381,6 +384,12 @@
     <ClInclude Include="..\Header\EpicBulletMark.h">
       <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Dople.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\TestStage.h">
+      <Filter>01. Scene\TestStage</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -556,6 +565,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\EpicBulletMark.cpp">
       <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Dople.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestStage.cpp">
+      <Filter>01. Scene\TestStage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
