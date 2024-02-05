@@ -76,11 +76,19 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	//	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
+	BoundingBox boundingBox;
+	boundingBox._min = D3DXVECTOR3(-10.0f, -5.0f, -10.0f);
+	boundingBox._max = D3DXVECTOR3(10.0f, 5.0f, 10.0f);
+
+	pParticleScatter = new CParticleScatter(&boundingBox, 15);
+	pParticleScatter->Ready_Particle(m_pGraphicDev);
+
 	return S_OK;
 }
 
 Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 {	
+	pParticleScatter->Update_Particle(fTimeDelta);
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
@@ -161,6 +169,7 @@ void CLoadStage::LateUpdate_Scene()
 void CLoadStage::Render_Scene()
 {
 	// DEBUG
+	pParticleScatter->Render();
 }
 
 HRESULT CLoadStage::Load_Level_Data()
@@ -854,5 +863,6 @@ CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType)
 
 void CLoadStage::Free()
 {
+	Safe_Release(pParticleScatter);
 	__super::Free();
 }

@@ -71,7 +71,7 @@ void CParticleScatter::Reset_Partice(Attribute* attribute)
 		0.5f,
 		0.5f,
 		0.5f,
-		0.7f);
+		0.5f);
 }
 
 void CParticleScatter::Update_Particle(_float fTimeDelat)

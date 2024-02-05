@@ -1,5 +1,5 @@
 #pragma once
-#include "Base.h"
+#include "GameObject.h"
 
 #include "Engine_Define.h"
 
@@ -55,7 +55,7 @@ struct Attribute
 	bool	_bIsAlive;		// 생존한 경유 true, 소멸 시 false
 };
 
-class ENGINE_DLL CParticleSystem : public CBase
+class ENGINE_DLL CParticleSystem : public CGameObject
 {
 protected:
 	explicit CParticleSystem();

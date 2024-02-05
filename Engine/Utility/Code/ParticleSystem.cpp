@@ -32,8 +32,8 @@ void CParticleSystem::Add_Particle()
 
 void CParticleSystem::Pre_Render()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, true);
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, true);
+	m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
+	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_POINTSIZE, FtoDw(m_fSize));
 	m_pGraphicDev->SetRenderState(D3DRS_POINTSIZE_MIN, FtoDw(0.0f));
 
@@ -46,7 +46,7 @@ void CParticleSystem::Pre_Render()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 }
@@ -140,9 +140,9 @@ void CParticleSystem::Render()
 
 void CParticleSystem::Post_Render()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, false);
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, false);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+	m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, FALSE);
+	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, FALSE);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 
 bool CParticleSystem::Is_Empty()
