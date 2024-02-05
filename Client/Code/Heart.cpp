@@ -3,9 +3,12 @@
 #include "Export_Utility.h"
 #include "Player.h"
 
-CHeart::CHeart(LPDIRECT3DDEVICE9 pGraphicDev)
+CHeart::CHeart(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
     : CItem(pGraphicDev)
 {
+    DWORD dwSeed = (iID << 16) | (time(NULL) % 1000);
+    srand(dwSeed);
+    m_iRandNum = rand() % 180;
 }
 
 CHeart::CHeart(const CHeart& rhs)
@@ -209,9 +212,9 @@ void CHeart::Motion_Change()
 {
 }
 
-CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
+CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look, int iID)
 {
-    CHeart* pInstance = new CHeart(pGraphicDev);
+    CHeart* pInstance = new CHeart(pGraphicDev, iID);
     srand((unsigned)time(NULL));
 
     if (spawnspot == 1)

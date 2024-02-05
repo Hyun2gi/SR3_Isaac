@@ -140,7 +140,7 @@ void CShop::Create_Obj()
 	if (m_pHeart == nullptr)
 	{
 		_vec3 vHeartPos = { vPos.x + INTERVALX, vPos.y, vPos.z - INTERVALZ }; // INTERVALZ
-		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir);
+		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir,6);
 		m_pHeart->Set_MyLayer(L"GameItem");
 	}
 }
