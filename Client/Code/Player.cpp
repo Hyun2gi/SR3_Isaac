@@ -34,7 +34,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	m_fShootDelayTime = 0;
 	m_fDelayTime = 0; 
 	m_bKeyBlock = false;
-	m_fSpriteSpeed = 1.5f;
+	m_fSpriteSpeed = 0.9f;
 
 	m_fFrame = 0.f;
 	m_fPicNum = 0.f;

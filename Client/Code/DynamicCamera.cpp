@@ -215,6 +215,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			{
 				m_vEye = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
 			}
+			m_bFirstPerson = false;
 		}
 		else
 		{
@@ -222,39 +223,74 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			// 플레이어에서 해당방향만큼 계산
 			_vec3 vPos = m_vAt + m_vCameraPosDir;
 
-			if (m_bCollisionWall == true && !CPlayer::GetInstance()->Get_Camera_WallBlock())
+			// 벽에 부딪혔을때
+			if ((vPos.x > VTXCNTX || vPos.z > VTXCNTX || vPos.x < 0 || vPos.z < 0) && m_bCollisionWall == false)
 			{
-				// 카메라가 안정권에 들어오면 다시 멀어지기
-				m_vCameraPosDir = -(playerDir);
-				_vec3	moveCamPos = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
-				// void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
-				OnMoveTargetCamera(0.2f, 10.f, moveCamPos, false, 0);
-				m_bCollisionWall = false;
-				m_bChaseInit = true;
-				m_fAngleY = 0;
-				return;
-			}
-
-
-			if ((m_bCollisionWall == false && CPlayer::GetInstance()->Get_Camera_WallBlock()) &&
-				(vPos.x > VTXCNTX + 2 || vPos.z > VTXCNTX + 2 || vPos.x < -2 || vPos.z < -2))
-			{
-				// 처음 벽에 닿았을때 가까이 가도록
-				// 현재 벽에 닿은 상태가 아니고 플레이어가 끝에 닿을때
-				// 또는 카메라가 랜드 밖에 벗어났을때
-				m_vCameraPosDir = -(playerDir);
-				_vec3	moveCamPos = m_vAt + m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
-				// void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition)
-				OnMoveTargetCamera(0.6f, 8.f, moveCamPos, false, 0);
-
-				m_fAngleY = 0;
-				m_bChaseInit = true;
+				// 밖으로 나갔을때
 				m_bCollisionWall = true;
-
 			}
-			else
+
+
+			// 벽에 부딪히고 safe_area에 있으면
+			if (m_bCollisionWall == true && CPlayer::GetInstance()->Get_SafeCamer_Area())
 			{
+				// 플레이어가 안전지대에 들어옴
+				// 다시 멀어지게끔
+				D3DXVECTOR3 _movevec;
+				m_vCameraPosDir = -(playerDir);
+				m_vGoalPosition = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
+				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
+				m_vEye = _movevec;
+				m_vCameraPosDir = m_vEye - m_vAt;
+				//1인칭 시점 아님
+				m_bFirstPerson = false;
+
+				_vec3 distance = m_vEye - m_vGoalPosition;
+
+				// 내가 원하는 카메라 위치와 지금 위치가 차이가 별로 안나면
+				if (D3DXVec3Length(&distance) < 30)
+				{
+					m_bCollisionWall = false;
+					m_vEye = m_vGoalPosition;
+					m_fAngleY = 0;
+					m_vAt = playerPos + playerDir * 2;
+					m_vCameraPosDir = m_vEye - m_vAt;
+				}
+			}
+			else if (m_bCollisionWall == true && !CPlayer::GetInstance()->Get_SafeCamer_Area() && m_bFirstPerson == false)
+			{
+				// 밖으로 나간 상태여서 1인칭 또는 가까워 졌으나 카메라는 안정권에 들어왔을때 점점 가까워짐
+				D3DXVECTOR3 _movevec;
+				m_vCameraPosDir = -(playerDir);
+				m_vGoalPosition = playerPos + _vec3(0, 3, 0);
+				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 5);
+				m_vEye = _movevec;
+				m_vAt = playerPos + playerDir * 2;
+				m_bFirstPerson = false;
+				_vec3 distance = m_vEye - m_vAt;
+
+				if (D3DXVec3Length(&distance) < 4)
+				{
+					m_bFirstPerson = true;
+					m_fAngleY = 0;
+					m_vEye = playerPos + _vec3(0, 2, 0);
+				}
+			}
+			else if (m_bCollisionWall == true && !CPlayer::GetInstance()->Get_SafeCamer_Area() && m_bFirstPerson == true)
+			{
+				// 밖으로 나간 상태여서 1인칭 또는 가까워 졌으나 카메라는 안정권에 들어왔을때 점점 가까워짐
+				D3DXVECTOR3 _movevec;
+				m_vCameraPosDir = -(playerDir);
+				m_vGoalPosition = playerPos + _vec3(0, 2, 0);
+				//D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
+				m_vEye = m_vGoalPosition;
+				m_vAt = playerPos + playerDir * 4 + _vec3(0, 1, 0);
+			}
+			else if (m_bCollisionWall == false)
+			{
+				// 안정권
 				m_vEye = m_vAt + m_vCameraPosDir;
+				m_bFirstPerson = false;
 			}
 
 		}
@@ -773,7 +809,15 @@ void CDynamicCamera::Set_EpicBullet()
 	m_bEpic = true;
 	m_vStartAtPosition = m_vAt;
 	m_vStartEyePosition = m_vEye;
-	_vec3 target = _vec3(VTXCNTX / 2, 20, VTXCNTZ / 2);
+	CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3		playerPos;
+	_vec3		playerDir;
+
+	playerInfo->Get_Info(INFO_POS, &playerPos);
+	playerInfo->Get_Info(INFO_LOOK, &playerDir);
+
+	_vec3 target = _vec3(playerPos.x, 20, playerPos.z);
 	OnMoveTargetCamera(1.f, 7.f, target, false, 0);
 }
 
