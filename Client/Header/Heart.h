@@ -5,7 +5,7 @@
 
 class CHeart : public CItem
 {
-	explicit CHeart(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CHeart(LPDIRECT3DDEVICE9 pGraphicDev, int iID);
 	explicit CHeart(const CHeart& rhs);
 	virtual ~CHeart();
 
@@ -27,9 +27,10 @@ private:
 private:
 	// 랜덤값으로 한 이미지 지정하면 계속 유지
 	_float					m_fPicNum;
+	_int					m_iRandNum;
 
 public:
-	static CHeart* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look);
+	static CHeart* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look, int iID);
 
 private:
 	virtual void		Free()									override;

@@ -5,9 +5,12 @@
 #include "Export_Utility.h"
 #include "Player.h"
 
-CCoin::CCoin(LPDIRECT3DDEVICE9 pGraphicDev)
+CCoin::CCoin(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
 	: CItem(pGraphicDev)
 {
+	DWORD dwSeed = (iID << 16) | (time(NULL) % 1000);
+	srand(dwSeed);
+	m_iRandNum = rand() % 180;
 }
 
 CCoin::CCoin(const CCoin& rhs)
@@ -232,9 +235,9 @@ void CCoin::Motion_Change()
 	}
 }
 
-CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
+CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look, int iID)
 {
-	CCoin* pInstance = new CCoin(pGraphicDev);
+	CCoin* pInstance = new CCoin(pGraphicDev, iID);
 	//정확한 위치 설정
 
 	srand((unsigned)time(NULL));
