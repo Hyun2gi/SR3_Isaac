@@ -42,10 +42,15 @@ HRESULT CShell::Ready_GameObject()
 
 _int CShell::Update_GameObject(const _float& fTimeDelta)
 {
+	m_eDropItem = COIN;
+	Setting_ItemTag();
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (m_bStartUp)
 		Start_Up(fTimeDelta);
+
+	
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 

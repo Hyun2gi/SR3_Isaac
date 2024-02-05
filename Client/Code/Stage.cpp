@@ -171,6 +171,15 @@ void CStage::Insert_Child()
 		dynamic_cast<CCampFire*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"Campfire"))
 			->Set_Fire_ToStage(m_mapLayer.at(L"MapObj"));
 	}
+
+	// Shell Game (Npc) Ãß°¡
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame") != nullptr &&
+		m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellNpc") == nullptr &&
+		m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shell") == nullptr)
+	{
+		dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))
+			->Set_ShellObj_ToStage(m_mapLayer.at(L"MapObj"));
+	}
 }
 
 HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
@@ -592,7 +601,23 @@ void CStage::MapObj_Collision()
 					}
 					else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID())
 					{
-						dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
+
+						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward())
+						{
+							Engine::CGameObject* pGameObject = nullptr;
+
+							ITEM_TYPE eType = dynamic_cast<CShell*>(pShellObj)->Get_ItemType();
+							wstring wstrObjTag = dynamic_cast<CShell*>(pShellObj)->Get_DropItemTag();
+
+							pGameObject = dynamic_cast<CShell*>(pShellObj)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"));
+							m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
+
+							dynamic_cast<CShell*>(pShellObj)->Setting_Reward_False();
+						}
+						else
+						{
+							int i = 1;
+						}
 					}
 				}
 			}
