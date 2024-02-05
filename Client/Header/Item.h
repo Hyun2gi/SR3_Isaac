@@ -42,6 +42,7 @@ public:
 	void			Set_LookDir(_vec3 dir) { m_vLookVec = dir; }
 	void			Set_MoveSpeed(float speed) { m_fMoveSpeed = speed; }
 	CTransform*		Get_Transform() { return m_pTransformCom; }
+	bool			Get_Item_Dead() { return m_bDead; }
 
 protected:
 	virtual HRESULT			Add_Component();
