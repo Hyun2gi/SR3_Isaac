@@ -60,6 +60,10 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 
 		m_bInitialize = true;
 	}
+	else
+	{
+		dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_ChaseInit(true);
+	}
 	
 
 	return S_OK;

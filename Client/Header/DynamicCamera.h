@@ -66,6 +66,8 @@ public:
 	void				Set_EpicBullet();
 	void				Set_Shoot_End_Epic(); 
 
+	void				Set_ChaseInit(bool _init) { m_bChaseInit = _init; }
+
 private:
 	virtual void Free();
 	void		Key_Input(const _float& fTimeDelta);
