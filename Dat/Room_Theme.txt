@@ -1,1 +1,1 @@
-Normal,Boss,Arcade,Devil,Treasure,Challenge,
+Basement,Arcade,Sheol,

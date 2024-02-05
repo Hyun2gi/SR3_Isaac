@@ -40,6 +40,7 @@ public:
 	virtual void	Item_Spawn_Action();
 	void			Set_SpawnPos(_vec3 pos) { m_vSpawnPos = pos; }
 	void			Set_LookDir(_vec3 dir) { m_vLookVec = dir; }
+	void			Set_MoveSpeed(float speed) { m_fMoveSpeed = speed; }
 
 protected:
 	virtual HRESULT			Add_Component();

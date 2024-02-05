@@ -28,6 +28,7 @@ HRESULT CStageToolGui::Ready_ImGuiTools(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev
 {
     m_bIsOpend = false;
     m_iSelectedStageIndex = 0;
+    m_vPickingPos = { 0, 0, 0 };
 
     m_pGraphicDev = pGraphicDev;
 

@@ -61,11 +61,11 @@ void CWall::Render_GameObject()
 {	
 	if (!m_bIsDeleted) return;
 
-	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-	m_pTextureCom->Set_Texture(0);
+	//m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
+	//m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	//m_pTextureCom->Set_Texture(0);
 
-	m_pBufferCom->Render_Buffer();
+	//m_pBufferCom->Render_Buffer();
 
 	//m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
@@ -117,13 +117,13 @@ HRESULT CWall::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag, int iAxis)
 	return S_OK;
 }
 
-HRESULT CWall::Set_Texture_Tag(const _tchar* pTextureTag, int iAxis)
+void CWall::Set_Texture_Tag(const _tchar* pTextureTag, int iAxis)
 {
 	CComponent* pComponent = nullptr;
 
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(pTextureTag));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ pTextureTag, pComponent });
+	//pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(pTextureTag));
+	//NULL_CHECK_RETURN(pComponent, E_FAIL);
+	//m_mapComponent[ID_STATIC].insert({ pTextureTag, pComponent });
 
 	switch (iAxis)
 	{

@@ -39,7 +39,7 @@ public:
 	virtual void Render_GameObject()						 override;
 
 	HRESULT			Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag, int iAxis);
-	HRESULT			Set_Texture_Tag(const _tchar* pTextureTag, int iAxis);
+	void			Set_Texture_Tag(const _tchar* pTextureTag, int iAxis);
 
 	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
 
@@ -56,7 +56,7 @@ private:
 
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	Engine::CTexture* m_pTextureCom;
+	//Engine::CTexture* m_pTextureCom;
 
 	bool m_bIsDeleted;
 

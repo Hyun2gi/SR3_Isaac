@@ -113,5 +113,5 @@ void CMainApp::Free()
 	Engine::Release_Utility();
 	Engine::Release_System();
 
-	//CPlayer::GetInstance()->DestroyInstance();
+	CPlayer::GetInstance()->DestroyInstance();
 }

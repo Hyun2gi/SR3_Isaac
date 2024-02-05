@@ -8,6 +8,7 @@
 #include "BrimStoneBullet.h"
 #include "DynamicCamera.h"
 #include "EpicBullet.h"
+#include "EpicBulletMark.h"
 
 IMPLEMENT_SINGLETON(CPlayer)
 
@@ -52,6 +53,8 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	//m_pTransformCom->m_vScale = { 2.f, 1.f, 1.f };
 	m_bMouseYRotataion = true;
 	m_pTransformCom->Set_Pos(VTXCNTX / 2, 0, VTXCNTZ / 2);
+
+	m_bEpicTargetRun = false;
 
 	return S_OK;
 }
@@ -105,7 +108,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 		
-	if (m_bKeyBlock != true)
+	if (m_bKeyBlock == false)
 	{
 		Key_Input(fTimeDelta);
 	}
@@ -153,6 +156,28 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
+	if (!m_EpicMarkList.empty())
+	{
+		int		iResult = 0;
+		for (auto& iter = m_EpicMarkList.begin();
+			iter != m_EpicMarkList.end(); )
+		{
+			iResult = dynamic_cast<CEpicBulletMark*>(*iter)->Update_GameObject(fTimeDelta);
+
+			if (1 == iResult)
+			{
+				//Safe_Delete<CGameObject*>(*iter);
+				Safe_Release<CGameObject*>(*iter);
+				iter = m_PlayerBulletList.erase(iter);
+			}
+			else
+			{
+				++iter;
+			}
+		}
+		
+	}
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 
@@ -182,6 +207,14 @@ void CPlayer::LateUpdate_GameObject()
 			{
 				dynamic_cast<CEpicBullet*>(iter)->LateUpdate_GameObject();
 			}
+		}
+	}
+
+	if (!m_EpicMarkList.empty())
+	{
+		for (auto& iter : m_EpicMarkList)
+		{
+			dynamic_cast<CEpicBulletMark*>(iter)->LateUpdate_GameObject();
 		}
 	}
 
@@ -308,6 +341,10 @@ void CPlayer::Set_EpicFall()
 	{
 		if (!m_PlayerBulletList.empty())
 		{
+			// target 상태가 아님 (키보드 움직임 풀기)
+			// 몬스터 움직임 느려지는거 끝남
+			// 키보드 막는것도 끝
+			m_bEpicTargetRun = false;
 			dynamic_cast<CEpicBullet*>(m_PlayerBulletList.back())->Set_StartFall(true);
 		}
 	}
@@ -355,6 +392,38 @@ bool CPlayer::Get_SafeCamer_Area()
 	}
 }
 
+void CPlayer::Plus_EpicBulletMark(_vec3 pos)
+{
+	// 바닥위에 나오도록
+	_vec3 tempPos = pos;
+	Engine::CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
+	NULL_CHECK(pTerrainBufferCom);
+	_float	fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&tempPos, pTerrainBufferCom->Get_VtxPos());
+	tempPos = _vec3(tempPos.x, fHeight + 0.2, tempPos.z);
+
+	m_EpicMarkList.push_back(CEpicBulletMark::Create(m_pGraphicDev, m_pLayerTag, tempPos));
+}
+
+
+// 씬 이동때마다 바닥에 있는 에픽 흔적 지우기
+void CPlayer::Clear_EpicBulletMark()
+{
+	if (!m_PlayerBulletList.empty())
+	{
+		for (auto& iter = m_PlayerBulletList.begin();
+			iter != m_PlayerBulletList.end(); )
+		{
+			Safe_Release<CGameObject*>(*iter);
+			iter = m_PlayerBulletList.erase(iter);
+		}
+	}
+}
+
+void CPlayer::Change_LastEpicMark_To_Trace()
+{
+	dynamic_cast<CEpicBulletMark*>(m_EpicMarkList.back())->Set_Bullet_Mark(2);
+}
+
 void CPlayer::Bullet_Change_To_Brim()
 {
 	if (!m_PlayerBulletList.empty())
@@ -381,76 +450,81 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 	vScale = m_pTransformCom->m_vScale;
 
-	if (Engine::Get_DIKeyState(DIK_W) & 0x80)
+	// epictarget 쓰는 상태일때는 block됨
+	if (m_bEpicTargetRun == false)
 	{
-		m_eCurState = P_BACKWALK;
-		D3DXVec3Normalize(&vDir, &vDir);
-		
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		vPos += vDir * (m_fMoveSpeed) * fTimeDelta;
-
-		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-			&& vPos.x > vScale.x && vPos.z > vScale.z)
+		if (Engine::Get_DIKeyState(DIK_W) & 0x80)
 		{
-			m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+			m_eCurState = P_BACKWALK;
+			D3DXVec3Normalize(&vDir, &vDir);
+
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos += vDir * (m_fMoveSpeed)*fTimeDelta;
+
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			{
+				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+			}
+		}
+		else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
+		{
+			m_eCurState = P_IDLEWALK;
+			D3DXVec3Normalize(&vDir, &vDir);
+
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
+
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			{
+				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+			}
+		}
+		else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
+		{
+			m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
+
+			m_eCurState = P_LEFTWALK;
+			D3DXVec3Normalize(&vDir, &vDir);
+
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
+
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			{
+				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+			}
+
+		}
+		else if (Engine::Get_DIKeyState(DIK_D) & 0x80)
+		{
+			m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
+
+			m_eCurState = P_RIGHTWALK;
+			D3DXVec3Normalize(&vDir, &vDir);
+
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos += vDir * (m_fMoveSpeed)*fTimeDelta;
+
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			{
+				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+			}
+
+		}
+		else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
+		{
+			m_eCurState = P_THUMBS_UP;
+		}
+		else
+		{
+			m_eCurState = P_IDLE;
 		}
 	}
-	else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
-	{
-		m_eCurState = P_IDLEWALK;
-		D3DXVec3Normalize(&vDir, &vDir);
-
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
-
-		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-			&& vPos.x > vScale.x && vPos.z > vScale.z)
-		{
-			m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
-		}
-	}
-	else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
-	{
-		m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
-
-		m_eCurState = P_LEFTWALK;
-		D3DXVec3Normalize(&vDir, &vDir);
-
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
-
-		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-			&& vPos.x > vScale.x && vPos.z > vScale.z)
-		{
-			m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
-		}
-		
-	}
-	else if (Engine::Get_DIKeyState(DIK_D) & 0x80)
-	{
-		m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
-
-		m_eCurState = P_RIGHTWALK;
-		D3DXVec3Normalize(&vDir, &vDir);
-
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		vPos += vDir * (m_fMoveSpeed) * fTimeDelta;
-
-		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-			&& vPos.x > vScale.x && vPos.z > vScale.z)
-		{
-			m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
-		}
-		
-	}
-	else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
-	{
-		m_eCurState = P_THUMBS_UP;
-	}
-	else
-	{
-		m_eCurState = P_IDLE;
-	}
+	
 
 	// 총 delay는 누르지 않고 있어도 카운트 해야하기 때문에 돌려주기
 	if (m_fShootDelayTime != 0)
@@ -506,6 +580,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				_vec3 targetpos = m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);
 				dynamic_cast<CEpicBullet*>(m_PlayerBulletList.back())->Set_Shoot(_vec3(targetpos.x, 0, targetpos.z));
 				dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_Shoot_End_Epic();
+
+				//epicmark도 시작
+				Plus_EpicBulletMark(_vec3(targetpos.x, 0, targetpos.z));
 			}
 			
 		}
@@ -522,6 +599,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_PlayerBulletList.push_back(CEpicBullet::Create(m_pGraphicDev, m_pLayerTag));
 			dynamic_cast<CEpicBullet*>(m_PlayerBulletList.back())->Set_Bullet(1);
 			dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_EpicBullet();
+
+			//타겟상태
+			m_bEpicTargetRun = true;
 		}
 	}
 
@@ -656,6 +736,16 @@ void CPlayer::Free()
 		{
 			Safe_Release<CGameObject*>(*iter);
 			iter = m_PlayerBulletList.erase(iter);
+		}
+	}
+
+	if (!m_EpicMarkList.empty())
+	{
+		for (auto& iter = m_EpicMarkList.begin();
+			iter != m_EpicMarkList.end(); )
+		{
+			Safe_Release<CGameObject*>(*iter);
+			iter = m_EpicMarkList.erase(iter);
 		}
 	}
 	

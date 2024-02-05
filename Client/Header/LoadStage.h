@@ -80,7 +80,6 @@ private:
 	CWall* m_pBottomWall;
 
 	int m_iCurStageKey;
-	string m_strCurStageTheme;
 
 	bool m_bIsCreated;
 
@@ -89,6 +88,10 @@ private:
 
 	//맵에 설치될 몬스터, 오브젝트를 저장하는 맵
 	map<int, LoadObj> m_mapLoadObj;
+
+	// 맵의 테마와 타입을 저장할 벡터
+	// 테마, 타입 순으로 저장된다. (0번은 테마, 1번은 타입)
+	vector<string> m_vecStageInfo;
 
 	// 맵에 배치한 몬스터의 개수를 카운트해주는 벡터
 	vector<int> m_vecMonsterCount;
