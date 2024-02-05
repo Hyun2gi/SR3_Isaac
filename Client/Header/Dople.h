@@ -3,14 +3,14 @@
 #include "Monster.h"
 #include "GameObject.h"
 
-class CFly : public CMonster
+class CDople : public CMonster
 {
 private:
-	explicit CFly(LPDIRECT3DDEVICE9 pGraphicDev, int iID);
-	explicit CFly(const CFly& rhs);
-	virtual ~CFly();
+	explicit CDople(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CDople(const CDople& rhs);
+	virtual ~CDople();
 
-	enum FLYSTATE {FLY_IDLE, FLY_DEAD, FLY_END};
+	enum DOPLESTATE { DP_IDLE, DP_WALK, DP_BACK, DP_LEFT, DP_RIGHT, DP_DEAD, DP_END };
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -23,24 +23,20 @@ private:
 	virtual void		Motion_Change()						override;
 	virtual void		Face_Camera()						override;
 
-	void				Change_Dir(const _float& fTimeDelta);
-	void				Move(const _float& fTimeDelta);
+	void				Follow_Player();
 
 private:
-	_int					m_iRandNum;
-	_int					m_iPicNum;
+	_int				m_iPicNum;
 	_float				m_fFrameSpeed = 1.f;
 
-	_vec3				m_vMoveLook;
-
-	FLYSTATE			m_ePreState;
-	FLYSTATE			m_eCurState;
+	DOPLESTATE			m_ePreState;
+	DOPLESTATE			m_eCurState;
 
 public:
-	static CFly* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID);
+	static CDople* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
 private:
-	virtual void		Free()									override;
+	virtual void	Free()									override;
 
 };
 

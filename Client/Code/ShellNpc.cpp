@@ -25,6 +25,8 @@ HRESULT CShellNpc::Ready_GameObject()
 	m_iPicNum = 1;
 	m_fFrameSpeed = 1.f;
 
+	m_bGame = false;
+
 	m_ePreState = NPC_END;
 
 	return S_OK;
@@ -32,17 +34,19 @@ HRESULT CShellNpc::Ready_GameObject()
 
 _int CShellNpc::Update_GameObject(const _float& fTimeDelta)
 {
+	m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
+
+	if (m_iPicNum < m_fFrame)
+		m_fFrame = 0.f;
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (NPC_IDLE == m_eCurState)
+	if (m_bGame)
 	{
-		
+		m_eCurState = NPC_GAMING;
 	}
-	else if (NPC_GAMING == m_eCurState)
-	{
-
-	}
-
+	else
+		m_eCurState = NPC_IDLE;
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -108,10 +112,11 @@ void CShellNpc::Motion_Change()
 
 		case CShellNpc::NPC_GAMING:
 			m_iPicNum = 6;
-			m_fFrameSpeed = 1.f;
+			m_fFrameSpeed = 0.7f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"ShellGame", L"Proto_ShellNpcGameTexture"));
 			break;
 		}
+		m_ePreState = m_eCurState;
 	}
 }
 

@@ -21,10 +21,19 @@ CShell::~CShell()
 HRESULT CShell::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
+	//m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
+
+	m_fSpeed = 0.2f;
+
+	m_fCallLimit = 0.3f;
 
 	m_iPicNum = 1;
 	m_fFrameSpeed = 1.f;
+
+	m_bStartUp = false;
+	m_bMoveDown = false;
+	m_bShaking_Ready = false;
+	m_bReward = false;
 
 	return S_OK;
 }
@@ -33,7 +42,8 @@ _int CShell::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
-
+	if (m_bStartUp)
+		Start_Up(fTimeDelta);
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -86,6 +96,37 @@ HRESULT CShell::Add_Component()
 
 void CShell::Hit()
 {
+}
+
+void CShell::Start_Up(const _float& fTimeDelta)
+{
+	// 게임 시작 _ 위로 올라갔다 내려옴
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	if (!m_bMoveDown)
+	{
+		vPos.y += m_fSpeed;
+
+		if (vPos.y >= 3.f)
+		{
+			vPos.y = 3.f;
+			if(Check_Time(fTimeDelta))
+				m_bMoveDown = true;
+		}
+	}
+	else
+	{
+		vPos.y -= m_fSpeed;
+
+		if (vPos.y <= 1.f) // 임의 값이라 조정 필요
+		{
+			vPos.y = 1.f;
+			m_bStartUp = false;
+			m_bShaking_Ready = true;
+		}
+	}
+	m_pTransformCom->Set_Pos(vPos);
 }
 
 CShell* CShell::Create(LPDIRECT3DDEVICE9 pGraphicDev)
