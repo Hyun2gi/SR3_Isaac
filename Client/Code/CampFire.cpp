@@ -35,6 +35,7 @@ HRESULT CCampFire::Ready_GameObject()
 	m_bCreate = false;
 
 	m_eDropItem = COIN;
+	m_eObjType = CAMPFIRE;
 
 	return S_OK;
 }
