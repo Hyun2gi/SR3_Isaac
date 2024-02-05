@@ -160,7 +160,7 @@ void CPoop::Set_Item_Value()
 	case 4:
 		m_eDropItem = TRINKET;
 	case 5:
-		m_eDropItem = PILL_0;
+		m_eDropItem = PILL;
 	}
 }
 
