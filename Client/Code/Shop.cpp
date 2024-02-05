@@ -34,12 +34,18 @@ _int CShop::Update_GameObject(const _float& fTimeDelta)
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	Create_Obj();
-	
-
-
 
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->Update_GameObject(fTimeDelta);
+
+	if (m_pPill != nullptr)
+		m_pPill->Update_GameObject(fTimeDelta);
+
+	if (m_pEpic != nullptr)
+		m_pEpic->Update_GameObject(fTimeDelta);
+
+	if (m_pHeart != nullptr)
+		m_pHeart->Update_GameObject(fTimeDelta);
 
 	return 0;
 }
@@ -50,12 +56,30 @@ void CShop::LateUpdate_GameObject()
 
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->LateUpdate_GameObject();
+
+	if (m_pPill != nullptr)
+		m_pPill->LateUpdate_GameObject();
+
+	if (m_pEpic != nullptr)
+		m_pEpic->LateUpdate_GameObject();
+
+	if (m_pHeart != nullptr)
+		m_pHeart->LateUpdate_GameObject();
 }
 
 void CShop::Render_GameObject()
 {
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->Render_GameObject();
+
+	if (m_pPill != nullptr)
+		m_pPill->Render_GameObject();
+
+	if (m_pEpic != nullptr)
+		m_pEpic->Render_GameObject();
+
+	if (m_pHeart != nullptr)
+		m_pHeart->Render_GameObject();
 }
 
 HRESULT CShop::Add_Component()
@@ -84,21 +108,6 @@ HRESULT CShop::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_ShopNpcDeadTexture", pComponent });
 
 #pragma endregion NPC Texture
-
-	// 필요 없는 거 아닌강
-#pragma region Item Texture
-
-	// Pill
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ItemTexture_Pill"));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_ItemTexture_Pill", pComponent });
-
-	// Epic
-
-	// Heart
-
-#pragma endregion Item Texture
-
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -129,7 +138,7 @@ void CShop::Create_Obj()
 		_vec3 vPillPos = { vPos.x - INTERVALX, vPos.y, vPos.z - INTERVALZ };
 		m_pPill = CPill::Create(m_pGraphicDev, 3, vPillPos, vDir);
 		m_pPill->Set_MyLayer(m_vecMyLayer[0]);
-		//dynamic_cast<CTransform*>(m_pPill->Get_Component())
+		m_pPill->Get_Transform()->Set_Pos(vPillPos);
 	}
 
 	if (m_pEpic == nullptr)
@@ -137,7 +146,7 @@ void CShop::Create_Obj()
 		_vec3 vEpicPos = { vPos.x, vPos.y, vPos.z - INTERVALZ };
 		m_pEpic = CEpic::Create(m_pGraphicDev, 3, vEpicPos, vDir);
 		m_pEpic->Set_MyLayer(m_vecMyLayer[0]);
-		//dynamic_cast<CTransform*>(m_pPill->Get_Component())
+		m_pEpic->Get_Transform()->Set_Pos(vEpicPos);
 	}
 
 	if (m_pHeart == nullptr)
@@ -145,7 +154,7 @@ void CShop::Create_Obj()
 		_vec3 vHeartPos = { vPos.x + INTERVALX, vPos.y, vPos.z - INTERVALZ };
 		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir);
 		m_pHeart->Set_MyLayer(m_vecMyLayer[0]);
-		//dynamic_cast<CTransform*>(m_pPill->Get_Component())
+		m_pHeart->Get_Transform()->Set_Pos(vHeartPos);
 	}
 }
 
