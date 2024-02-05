@@ -4,12 +4,12 @@
 #include "Export_Utility.h"
 
 CDoor::CDoor(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CMapObj(pGraphicDev)
+	: CMapObj(pGraphicDev), m_iStageNumKey(0)
 {
 }
 
 CDoor::CDoor(const CDoor& rhs)
-	: CMapObj(rhs)
+	: CMapObj(rhs), m_iStageNumKey(0)
 {
 }
 
