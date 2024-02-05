@@ -75,12 +75,12 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_eCurState == C_EPIC)
 	{
-		m_vEye = _vec3(VTXCNTX / 2, 20, VTXCNTZ / 2);
 		CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 		_vec3		playerPos;
 
 		playerInfo->Get_Info(INFO_POS, &playerPos);
+		m_vEye = _vec3(playerPos.x, 20, playerPos.z);
 
 		//m_vAt = playerPos;
 	}
@@ -224,7 +224,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			_vec3 vPos = m_vAt + m_vCameraPosDir;
 
 			// º®¿¡ ºÎµúÇûÀ»¶§
-			if ((vPos.x > VTXCNTX || vPos.z > VTXCNTX || vPos.x < 0 || vPos.z < 0) && m_bCollisionWall == false)
+			if ((vPos.x > VTXCNTX-3 || vPos.z > VTXCNTX- 3 || vPos.x < 3 || vPos.z < 3) && m_bCollisionWall == false)
 			{
 				// ¹ÛÀ¸·Î ³ª°¬À»¶§
 				m_bCollisionWall = true;
@@ -252,7 +252,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 				{
 					m_bCollisionWall = false;
 					m_vEye = m_vGoalPosition;
-					m_fAngleY = 0;
+					//m_fAngleY = 0;
 					m_vAt = playerPos + playerDir * 2;
 					m_vCameraPosDir = m_vEye - m_vAt;
 				}
@@ -275,6 +275,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 					m_fAngleY = 0;
 					m_vEye = playerPos + _vec3(0, 2, 0);
 				}
+				m_vCameraPosDir = m_vEye - m_vAt;
 			}
 			else if (m_bCollisionWall == true && !CPlayer::GetInstance()->Get_SafeCamer_Area() && m_bFirstPerson == true)
 			{
@@ -282,9 +283,10 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 				D3DXVECTOR3 _movevec;
 				m_vCameraPosDir = -(playerDir);
 				m_vGoalPosition = playerPos + _vec3(0, 2, 0);
-				//D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
+				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
 				m_vEye = m_vGoalPosition;
 				m_vAt = playerPos + playerDir * 4 + _vec3(0, 1, 0);
+				m_vCameraPosDir = m_vEye - m_vAt;
 			}
 			else if (m_bCollisionWall == false)
 			{
