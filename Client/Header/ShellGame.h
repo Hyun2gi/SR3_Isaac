@@ -6,12 +6,14 @@
 #include "ShellNpc.h"
 #include "Shell.h"
 
+#include "Layer.h"
+
 class CShellGame : public CMapObj
 {
 private:
 	const float SCALAR_X = -0.9f;
 	const float SCALAR_Y = 0.1f;
-	const float INTERVALX = 1.f;
+	const float INTERVALX = 1.5f;
 
 private:
 	explicit CShellGame(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -22,6 +24,7 @@ public:
 	_bool				Get_Game_Reward() { return m_bReward; } // 보상 받을 수 있는지
 	vector<CShell*>		Get_ShellVec() { return m_vecShell; }
 	CShellNpc*			Get_ShellNpc() { return m_pShellNpc; }
+	void				Set_ShellObj_ToStage(CLayer* pLayer);
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
