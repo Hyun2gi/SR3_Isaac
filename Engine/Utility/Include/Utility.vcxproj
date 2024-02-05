@@ -176,8 +176,11 @@ call CopyUtility.bat</Command>
     <ClInclude Include="..\..\Header\Light.h" />
     <ClInclude Include="..\..\Header\LightMgr.h" />
     <ClInclude Include="..\..\Header\Management.h" />
+    <ClInclude Include="..\..\Header\ParticleBurst.h" />
+    <ClInclude Include="..\..\Header\ParticleExplosion.h" />
     <ClInclude Include="..\..\Header\ParticleMgr.h" />
     <ClInclude Include="..\..\Header\ParticleScatter.h" />
+    <ClInclude Include="..\..\Header\ParticleSplash.h" />
     <ClInclude Include="..\..\Header\ParticleSystem.h" />
     <ClInclude Include="..\..\Header\Pipeline.h" />
     <ClInclude Include="..\..\Header\ProtoMgr.h" />
@@ -202,8 +205,11 @@ call CopyUtility.bat</Command>
     <ClCompile Include="..\Code\Light.cpp" />
     <ClCompile Include="..\Code\LightMgr.cpp" />
     <ClCompile Include="..\Code\Management.cpp" />
+    <ClCompile Include="..\Code\ParticleBurst.cpp" />
+    <ClCompile Include="..\Code\ParticleExplosion.cpp" />
     <ClCompile Include="..\Code\ParticleMgr.cpp" />
     <ClCompile Include="..\Code\ParticleScatter.cpp" />
+    <ClCompile Include="..\Code\ParticleSplash.cpp" />
     <ClCompile Include="..\Code\ParticleSystem.cpp" />
     <ClCompile Include="..\Code\Pipeline.cpp" />
     <ClCompile Include="..\Code\ProtoMgr.cpp" />

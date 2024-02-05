@@ -9,34 +9,7 @@ CParticleSystem::CParticleSystem()
 
 CParticleSystem::~CParticleSystem()
 {
-	Engine::Safe_Release(m_pVb);
-	Engine::Safe_Release(m_pTex);
-}
 
-bool CParticleSystem::Ready_Particle(IDirect3DDevice9* pDevice, char* texFileName)
-{
-	m_pGraphicDev = pDevice;
-
-	HRESULT hr = 0;
-
-	hr = pDevice->CreateVertexBuffer(
-		m_VbSize * sizeof(Particle),
-		D3DUSAGE_DYNAMIC | D3DUSAGE_POINTS | D3DUSAGE_WRITEONLY,
-		D3DFVF_XYZ | D3DFVF_DIFFUSE,
-		D3DPOOL_DEFAULT, // D3DPOOL_MANAGED can't be used with D3DUSAGE_DYNAMIC 
-		&m_pVb,
-		0);
-
-	FAILED_CHECK_RETURN(hr, E_FAIL);
-
-	//hr = D3DXCreateTextureFromFile(
-	//	pDevice,
-	//	texFileName,
-	//	&m_pTex);
-
-	//FAILED_CHECK_RETURN(hr, E_FAIL);
-
-	return S_OK;
 }
 
 void CParticleSystem::Reset()
@@ -59,9 +32,8 @@ void CParticleSystem::Add_Particle()
 
 void CParticleSystem::Pre_Render()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, false);
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, true);
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, true);
+	m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
+	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_POINTSIZE, FtoDw(m_fSize));
 	m_pGraphicDev->SetRenderState(D3DRS_POINTSIZE_MIN, FtoDw(0.0f));
 
@@ -74,7 +46,7 @@ void CParticleSystem::Pre_Render()
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
 	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
 
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, true);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 }
@@ -114,28 +86,19 @@ void CParticleSystem::Render()
 		//
 		// Until all particles have been rendered.
 		//
-		std::list<Attribute>::iterator i;
+		list<Attribute>::iterator i;
 		for (i = m_ParticlesList.begin(); i != m_ParticlesList.end(); i++)
 		{
 			if (i->_bIsAlive)
 			{
-				//
-				// Copy a batch of the living particles to the
-				// next vertex buffer segment
-				//
 				v->_position = i->_vPosition;
 				v->_color = (D3DCOLOR)i->_color;
 				v++; // next element;
 
 				numParticlesInBatch++; //increase batch counter
 
-				// if this batch full?
 				if (numParticlesInBatch == m_VbBatchSize)
 				{
-					//
-					// Draw the last batch of particles that was
-					// copied to the vertex buffer. 
-					//
 					m_pVb->Unlock();
 
 					m_pGraphicDev->DrawPrimitive(
@@ -143,16 +106,8 @@ void CParticleSystem::Render()
 						m_VbOffset,
 						m_VbBatchSize);
 
-					//
-					// While that batch is drawing, start filling the
-					// next batch with particles.
-					//
-
-					// move the offset to the start of the next batch
 					m_VbOffset += m_VbBatchSize;
 
-					// don't offset into memory thats outside the vb's range.
-					// If we're at the end, start at the beginning.
 					if (m_VbOffset >= m_VbSize)
 						m_VbOffset = 0;
 
@@ -169,11 +124,6 @@ void CParticleSystem::Render()
 
 		m_pVb->Unlock();
 
-		// its possible that the LAST batch being filled never 
-		// got rendered because the condition 
-		// (numParticlesInBatch == _vbBatchSize) would not have
-		// been satisfied.  We draw the last partially filled batch now.
-
 		if (numParticlesInBatch)
 		{
 			m_pGraphicDev->DrawPrimitive(
@@ -182,12 +132,7 @@ void CParticleSystem::Render()
 				numParticlesInBatch);
 		}
 
-		// next block
 		m_VbOffset += m_VbBatchSize;
-
-		//
-		// reset render states
-		//
 
 		Post_Render();
 	}
@@ -195,10 +140,9 @@ void CParticleSystem::Render()
 
 void CParticleSystem::Post_Render()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_LIGHTING, true);
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, false);
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, false);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, false);
+	m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, FALSE);
+	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, FALSE);
+	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 
 bool CParticleSystem::Is_Empty()
@@ -243,44 +187,6 @@ void CParticleSystem::Remove_Dead_Particles()
 
 void CParticleSystem::Free()
 {
+	Engine::Safe_Release(m_pVb);
+	Engine::Safe_Release(m_pTex);
 }
-
-//void Snow::resetParticle(Attribute* attribute)
-//{
-//	attribute->_bIsAlive = true;
-//
-//	// get random x, z coordinate for the position of the snow flake.
-//	GetRandomVector(
-//		&attribute->_vPosition,
-//		&m_tBoundingBox._min,
-//		&m_tBoundingBox._max);
-//
-//	// no randomness for height (y-coordinate).  Snow flake
-//	// always starts at the top of bounding box.
-//	attribute->_vPosition.y = m_tBoundingBox._max.y;
-//
-//	// snow flakes fall downwards and slightly to the left
-//	attribute->_vVelocity.x = GetRandomFloat(0.0f, 1.0f) * -3.0f;
-//	attribute->_vVelocity.y = GetRandomFloat(0.0f, 1.0f) * -10.0f;
-//	attribute->_vVelocity.z = 0.0f;
-//
-//	// white snow flake
-//	attribute->_color = D3DCOLOR_XRGB(255, 255, 255);
-//}
-//
-//void Snow::update(float timeDelta)
-//{
-//	std::list<Attribute>::iterator i;
-//	for (i = m_ParticlesList.begin(); i != m_ParticlesList.end(); i++)
-//	{
-//		i->_vPosition += i->_vVelocity * timeDelta;
-//
-//		// is the point outside bounds?
-//		if (m_tBoundingBox.isPointInside(i->_vPosition) == false)
-//		{
-//			// nope so kill it, but we want to recycle dead 
-//			// particles, so respawn it instead.
-//			resetParticle(&(*i));
-//		}
-//	}
-//}
