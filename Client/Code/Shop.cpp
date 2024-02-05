@@ -21,6 +21,21 @@ CShop::~CShop()
 {
 }
 
+void CShop::Set_Item_ToStage(CLayer* pLayer)
+{
+	pLayer->Add_GameObject(L"Pill", m_pPill);
+	pLayer->Add_GameObject(L"Epic", m_pEpic);
+	//pLayer->Add_GameObject(L"Heart", m_pHeart);
+}
+
+_bool CShop::Get_Item_NULL()
+{
+	if (m_pPill == nullptr && m_pEpic == nullptr && m_pHeart == nullptr) // 세 아이템 모두 존재
+		return true;
+	else
+		return false;
+}
+
 HRESULT CShop::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -137,25 +152,22 @@ void CShop::Create_Obj()
 	{
 		_vec3 vPillPos = { vPos.x - INTERVALX, vPos.y, vPos.z - INTERVALZ };
 		m_pPill = CPill::Create(m_pGraphicDev, 3, vPillPos, vDir);
-		m_pPill->Set_MyLayer(m_vecMyLayer[0]);
-		m_pPill->Get_Transform()->Set_Pos(vPillPos);
+		m_pPill->Set_MyLayer(L"GameItem");
 	}
 
 	if (m_pEpic == nullptr)
 	{
 		_vec3 vEpicPos = { vPos.x, vPos.y, vPos.z - INTERVALZ };
 		m_pEpic = CEpic::Create(m_pGraphicDev, 3, vEpicPos, vDir);
-		m_pEpic->Set_MyLayer(m_vecMyLayer[0]);
-		m_pEpic->Get_Transform()->Set_Pos(vEpicPos);
+		m_pEpic->Set_MyLayer(L"GameItem");
 	}
 
-	if (m_pHeart == nullptr)
+	/*if (m_pHeart == nullptr)
 	{
-		_vec3 vHeartPos = { vPos.x + INTERVALX, vPos.y, vPos.z - INTERVALZ };
+		_vec3 vHeartPos = { vPos.x + INTERVALX + 50.f, vPos.y, vPos.z - INTERVALZ };
 		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir);
-		m_pHeart->Set_MyLayer(m_vecMyLayer[0]);
-		m_pHeart->Get_Transform()->Set_Pos(vHeartPos);
-	}
+		m_pHeart->Set_MyLayer(L"GameItem");
+	}*/
 }
 
 CShop* CShop::Create(LPDIRECT3DDEVICE9 pGraphicDev)

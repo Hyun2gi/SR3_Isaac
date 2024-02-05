@@ -173,6 +173,20 @@ void CStage::Insert_Child()
 			->Set_Fire_ToStage(m_mapLayer.at(L"MapObj"));
 	}
 
+	//// SlotMC
+	//if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC") != nullptr &&
+	//	m_mapLayer.at(L"MapObj")->Get_GameObject(L"Machine") == nullptr)
+	//{
+
+	//}
+
+	// Shop
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shop") != nullptr &&
+		dynamic_cast<CShop*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shop"))->Get_Item_NULL())
+	{
+		dynamic_cast<CShop*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shop"))->Set_Item_ToStage(m_mapLayer.at(L"GameItem"));
+	}
+
 	// Shell Game (Npc) Ãß°¡
 	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame") != nullptr &&
 		m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellNpc") == nullptr &&
@@ -181,6 +195,8 @@ void CStage::Insert_Child()
 		dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))
 			->Set_ShellObj_ToStage(m_mapLayer.at(L"MapObj"));
 	}
+
+
 }
 
 HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
@@ -501,7 +517,7 @@ void CStage::Run_Collision_Func()
 	if (pObj)
 	{
 		//Ãæµ¹µÊ
-		dynamic_cast<CItem*>(pObj)->Run_Item_Effect();
+		dynamic_cast<CPill*>(pObj)->Run_Item_Effect();
 	}
 }
 
