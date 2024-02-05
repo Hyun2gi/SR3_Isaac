@@ -40,7 +40,7 @@ bool CParticleScatter::Ready_Particle(IDirect3DDevice9* pDevice)
 
 	FAILED_CHECK_RETURN(hr, E_FAIL);
 
-	wstring wstr = L"../Bin/Resource/Texture/Particle/dust.png";
+	wstring wstr = L"../Bin/Resource/Texture/Particle/fingerbone.png";
 
 	hr = D3DXCreateTextureFromFile(
 		pDevice,
@@ -63,11 +63,15 @@ void CParticleScatter::Reset_Partice(Attribute* attribute)
 
 	attribute->_vPosition.y = m_tBoundingBox._max.y;
 
-	attribute->_vVelocity.x = GetRandomFloat(0.0f, 1.f) * -10.0f;
-	attribute->_vVelocity.y = GetRandomFloat(0.0f, 1.f) * -10.0f;
-	attribute->_vVelocity.z = GetRandomFloat(0.0f, 1.f) * -10.0f;
+	attribute->_vVelocity.x = GetRandomFloat(0.0f, 1.f) * -5.0f;
+	attribute->_vVelocity.y = GetRandomFloat(0.0f, 1.f) * -5.0f;
+	attribute->_vVelocity.z = GetRandomFloat(-0.5f, 0.7f) * -5.0f;
 
-	attribute->_color = D3DCOLOR_XRGB(255, 255, 255);
+	attribute->_color = D3DXCOLOR(
+		0.5f,
+		0.5f,
+		0.5f,
+		0.7f);
 }
 
 void CParticleScatter::Update_Particle(_float fTimeDelat)

@@ -1,35 +1,33 @@
 #include "..\..\Header\ParticleSystem.h"
-#include "ParticleSplash.h"
+#include "ParticleBurst.h"
 #include "Export_Utility.h"
 
-CParticleSplash::CParticleSplash(_vec3* vOrigin, int numParticles)
+CParticleBurst::CParticleBurst(_vec3* vOrigin, int numParticles)
 {
 	m_vOrigin = *vOrigin;
-	m_fSize = 1.f;
+	m_fSize = 0.5f;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
 	m_VbBatchSize = 512;
-	m_fGravity = -8.f;
+	m_fGravity = -10.f;
 
 	for (int i = 0; i < numParticles; i++)
 		Add_Particle();
-
-	//CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Mom/MomLeg.png")
 }
 
-CParticleSplash::~CParticleSplash()
+CParticleBurst::~CParticleBurst()
 {
 	Free();
 }
 
-void CParticleSplash::Free()
+void CParticleBurst::Free()
 {
 	Engine::Safe_Release(m_pTexture);
 	Engine::Safe_Release(m_pVb);
 	Engine::Safe_Release(m_pTex);
 }
 
-bool CParticleSplash::Ready_Particle(IDirect3DDevice9* pDevice)
+bool CParticleBurst::Ready_Particle(IDirect3DDevice9* pDevice)
 {
 	m_pGraphicDev = pDevice;
 
@@ -48,29 +46,13 @@ bool CParticleSplash::Ready_Particle(IDirect3DDevice9* pDevice)
 	return S_OK;
 }
 
-void CParticleSplash::Reset_Partice(Attribute* attribute)
+void CParticleBurst::Reset_Partice(Attribute* attribute)
 {
 	attribute->_bIsAlive = true;
 	attribute->_vPosition = m_vOrigin;
 
-	_vec3 vMin;
-	_vec3 vMax;
-
-	m_bIsLeft = false;
-
-	if (rand() % 2 != 0)
-		m_bIsLeft = true;
-
-	if (m_bIsLeft)
-	{
-		vMin = _vec3(-1.f, 1.0f, -0.8f);
-		vMax = _vec3(-0.5f, 1.0f, 0.8f);
-	}
-	else
-	{
-		vMin = _vec3(0.5f, 1.0f, -0.8f);
-		vMax = _vec3(1.f, 1.0f, 0.8f);
-	}
+	_vec3 vMin = _vec3(-0.5f, 1.5f, -0.8f);
+	_vec3 vMax = _vec3(0.5f, 2.0f, 0.8f);
 
 	GetRandomVector(
 		&attribute->_vVelocity,
@@ -82,7 +64,7 @@ void CParticleSplash::Reset_Partice(Attribute* attribute)
 		&attribute->_vVelocity,
 		&attribute->_vVelocity);
 
-	attribute->_vVelocity *= 3.f;
+	attribute->_vVelocity *= 6.f;
 
 	attribute->_color = D3DXCOLOR(
 		0.5f,
@@ -97,10 +79,10 @@ void CParticleSplash::Reset_Partice(Attribute* attribute)
 	//	1.0f);
 
 	attribute->_fAge = 0.0f;
-	attribute->_fLifeTime = 0.8f;
+	attribute->_fLifeTime = 2.f;
 }
 
-void CParticleSplash::Update_Particle(_float fTimeDelat)
+void CParticleBurst::Update_Particle(_float fTimeDelat)
 {
 	m_fFrame += m_iPicNum * fTimeDelat * m_fFrameSpeed;
 
@@ -126,17 +108,14 @@ void CParticleSplash::Update_Particle(_float fTimeDelat)
 	}
 }
 
-void CParticleSplash::Render()
+void CParticleBurst::Render()
 {
 	if (!m_ParticlesList.empty())
 	{
-		//
-		// set render states
-		//
-
 		Pre_Render();
 
-		m_pTexture->Set_Texture((_uint)m_fFrame);
+		m_pTexture->Set_Texture(m_iRandNum);
+
 		m_pGraphicDev->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
 		m_pGraphicDev->SetStreamSource(0, m_pVb, 0, sizeof(Particle));
 
@@ -213,8 +192,12 @@ void CParticleSplash::Render()
 	}
 }
 
-void CParticleSplash::Create_Texture(const _tchar* pTexturePath, _int iMaxFrame)
+void CParticleBurst::Create_Texture()
 {
-	m_iPicNum = iMaxFrame;
-	m_pTexture = CTexture::Create(m_pGraphicDev, TEX_NORMAL, pTexturePath, iMaxFrame);
+	m_iPicNum = 8;
+
+	m_iRandNum = rand() % m_iPicNum;
+
+	m_pTexture = CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Particle/Gibs/gibs_%d.png", m_iPicNum);
+
 }

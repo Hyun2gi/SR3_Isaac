@@ -23,6 +23,7 @@
 #include "ParticleScatter.h"
 #include "ParticleExplosion.h"
 #include "ParticleSplash.h"
+#include "ParticleBurst.h"
 
 BEGIN(Engine)
 

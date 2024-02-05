@@ -7,6 +7,7 @@ BEGIN(Engine)
 class CParticleScatter;
 class CParticleExplosion;
 class CParticleSplash;
+class CParticleBurst;
 
 END
 
@@ -50,6 +51,7 @@ private:
 	CParticleScatter* pScatter;
 	CParticleExplosion* pExp;
 	CParticleSplash* pSpl;
+	CParticleBurst* pBst;
 
 private:
 	virtual void Free() override;
