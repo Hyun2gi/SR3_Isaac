@@ -110,7 +110,7 @@ void CMapObj::Setting_ItemTag()
 	}
 }
 
-CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer)
+CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer, _int iIndex)
 {
 	_vec3 vPos, vLook;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -148,14 +148,14 @@ CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer)
 	}
 	case Engine::COIN:
 	{
-		CItem* pItem = CCoin::Create(m_pGraphicDev, iSpawnPos, vPos, vLook,2);
+		CItem* pItem = CCoin::Create(m_pGraphicDev, iSpawnPos, vPos, vLook, iIndex);
 		pItem->Set_MyLayer(L"GameItem");
 		return pItem;
 		break;
 	}
 	case Engine::HEART:
 	{
-		CItem* pItem = CHeart::Create(m_pGraphicDev, iSpawnPos, vPos, vLook,6);
+		CItem* pItem = CHeart::Create(m_pGraphicDev, iSpawnPos, vPos, vLook, iIndex);
 		pItem->Set_MyLayer(L"GameItem");
 		return pItem;
 		break;

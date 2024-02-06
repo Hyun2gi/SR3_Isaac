@@ -43,7 +43,7 @@ public:
 	virtual void	LateUpdate_GameObject()					 override;
 	virtual void	Render_GameObject()						 override;
 
-	CItem*			Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer);
+	CItem*			Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer, _int iIndex);
 
 protected:
 	virtual HRESULT			Add_Component();
