@@ -53,6 +53,8 @@ private:
 	CParticleSplash* pSpl;
 	CParticleBurst* pBst;
 
+	D3DXCOLOR temp = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+
 private:
 	virtual void Free() override;
 
