@@ -69,11 +69,12 @@ void CParticleScatter::Reset_Partice(Attribute* attribute)
 	attribute->_vVelocity.y = GetRandomFloat(0.0f, 1.f) * -5.0f;
 	attribute->_vVelocity.z = GetRandomFloat(-0.5f, 0.7f) * -5.0f;
 
+
 	attribute->_color = D3DXCOLOR(
-		0.5f,
-		0.5f,
-		0.5f,
-		0.1f);
+	GetRandomFloat(0.0f, 1.0f),
+	GetRandomFloat(0.0f, 1.0f),
+	GetRandomFloat(0.0f, 1.0f),
+	1.0f);
 }
 
 void CParticleScatter::Update_Particle(_float fTimeDelat)

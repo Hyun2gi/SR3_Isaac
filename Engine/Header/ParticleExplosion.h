@@ -21,7 +21,7 @@ public:
 	}
 
 public:
-	static CParticleExplosion* Create(IDirect3DDevice9* pDevice, _vec3 vPos, _float fSize = 0.25f, _int iCount = 30);
+	static CParticleExplosion* Create(IDirect3DDevice9* pDevice, _vec3 vPos, _float fSize = 0.25f, _int iCount = 10);
 
 private:
 	virtual void	Free() override;

@@ -8,7 +8,7 @@ class CTexture;
 class ENGINE_DLL CParticleBurst : public CParticleSystem
 {
 public:
-	explicit CParticleBurst(_vec3* vOrigin, int numParticles);
+	explicit CParticleBurst(_vec3* vOrigin, int numParticles, _float fSize);
 	virtual ~CParticleBurst();
 
 public:
@@ -18,6 +18,9 @@ public:
 	virtual void Render_GameObject() override;
 
 	void	Create_Texture();
+
+	static CParticleBurst* Create(IDirect3DDevice9* pDevice, _vec3 vPos, _float fSize = 0.5f, _int iCount = 10);
+
 
 private:
 	virtual void	Free() override;

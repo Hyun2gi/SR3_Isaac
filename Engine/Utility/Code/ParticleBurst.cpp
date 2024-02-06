@@ -2,7 +2,7 @@
 #include "ParticleBurst.h"
 #include "Export_Utility.h"
 
-CParticleBurst::CParticleBurst(_vec3* vOrigin, int numParticles)
+CParticleBurst::CParticleBurst(_vec3* vOrigin, int numParticles, _float fSize)
 {
 	m_vOrigin = *vOrigin;
 	m_fSize = 0.5f;
@@ -196,4 +196,20 @@ void CParticleBurst::Create_Texture()
 
 	m_pTexture = CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Particle/Gibs/gibs_%d.png", m_iPicNum);
 
+}
+
+CParticleBurst* CParticleBurst::Create(IDirect3DDevice9* pDevice, _vec3 vPos, _float fSize, _int iCount)
+{
+	CParticleBurst* pInstance = new CParticleBurst(&vPos, iCount, fSize);
+
+	if (FAILED(pInstance->Ready_Particle(pDevice)))
+	{
+		Safe_Release(pInstance);
+		MSG_BOX("ParticleBurst Create Failed");
+		return nullptr;
+	}
+
+	pInstance->Create_Texture();
+
+	return pInstance;
 }
