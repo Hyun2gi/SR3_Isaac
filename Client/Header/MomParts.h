@@ -30,8 +30,6 @@ private:
 	void				Set_RandNum();
 	void				Change_State();
 
-	virtual void		Hit();
-
 private:
 	// º¯¼ö
 	_int				m_iRandNum;

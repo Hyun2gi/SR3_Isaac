@@ -538,9 +538,7 @@ void CStage::Door_Collision()
 
 void CStage::Moster_Collision()
 {
-	// 몬스터 충돌 관련 처리 함수
-
-	// 몬스터 <- 총알
+	// Monster <-> Bullet 충돌
 	if (m_mapLayer.at(L"GameMst") != nullptr)
 	{
 		list<CGameObject*>* pBulletList = CPlayer::GetInstance()->Get_Player_BullletList();
@@ -552,14 +550,21 @@ void CStage::Moster_Collision()
 
 			if (pMonster)
 			{
-				dynamic_cast<CMonster*>(pMonster)->Hit();
-				break;
+				// Dople 이 아닐 때만
+				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
+				{
+					dynamic_cast<CMonster*>(pMonster)->Hit();
+					break;
+				}
+				else
+					++iter;
 			}
 			else
 				++iter;
 		}
 	}
 
+	// Dople <-> Spike 충돌
 	if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr)
 	{
 		CGameObject* pDople = m_mapLayer.at(L"GameMst")->Collision_GameObject(Get_GameObject(L"MapObj", L"Spike"));
@@ -572,7 +577,7 @@ void CStage::Moster_Collision()
 
 void CStage::MapObj_Collision()
 {
-	// MapObj 와 PlayerBullet 의 충돌
+	// MapObj <-> PlayerBullet 충돌
 	if (m_mapLayer.at(L"MapObj") != nullptr)
 	{
 		list<CGameObject*>* pBulletList = CPlayer::GetInstance()->Get_Player_BullletList();
@@ -622,6 +627,8 @@ void CStage::MapObj_Collision()
 		dynamic_cast<CMachine*>(pMapObj)->Set_Game();
 		break;
 	}*/
+
+	// SlotMC <-> Player 의 충돌
 	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC") != nullptr)
 	{
 		CGameObject* pMachine = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
@@ -641,8 +648,7 @@ void CStage::MapObj_Collision()
 
 	// Shop Npc 는 Epic 과 충돌
 
-	// 야바위
-	// npc 와의 충돌
+	// 야바위 충돌
 	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
 	{
 		if (dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc() != nullptr)
@@ -653,8 +659,7 @@ void CStage::MapObj_Collision()
 
 				if (pShellObj)
 				{
-					// Npc 와의 충돌
-					if (2 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID())
+					if (2 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Npc <-> Player 충돌
 					{
 						if (0 < CPlayer::GetInstance()->Get_Coin())
 						{
@@ -662,7 +667,7 @@ void CStage::MapObj_Collision()
 							dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
 						}
 					}
-					else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID())
+					else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Shell <-> Player 충돌
 					{
 						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward())
 						{

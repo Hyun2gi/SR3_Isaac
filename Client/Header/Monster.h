@@ -22,9 +22,9 @@ protected:
 	virtual ~CMonster();
 
 public:
-	void		Hit() { m_bHit = true; }
-	_bool		Get_IsBoss() { return m_bBoss; }
-	_bool		Get_MstType() { return m_eMstType; }
+	void			Hit() { m_bHit = true; }
+	_bool			Get_IsBoss() { return m_bBoss; }
+	MONSTER_TYPE	Get_MstType() { return m_eMstType; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
