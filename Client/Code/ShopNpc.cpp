@@ -21,7 +21,7 @@ CShopNpc::~CShopNpc()
 HRESULT CShopNpc::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->m_vScale = { 1.5f, 1.5f, 1.5f };
+	m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
 
 	m_iPicNum = 2;
 	m_fFrameSpeed = 1.f;

@@ -165,6 +165,7 @@
     <ClInclude Include="..\Header\CenterFly.h" />
     <ClInclude Include="..\Header\Charger.h" />
     <ClInclude Include="..\Header\Coin.h" />
+    <ClInclude Include="..\Header\CoinFont.h" />
     <ClInclude Include="..\Header\CubeObject.h" />
     <ClInclude Include="..\Header\Dip.h" />
     <ClInclude Include="..\Header\Door.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="..\Code\CenterFly.cpp" />
     <ClCompile Include="..\Code\Charger.cpp" />
     <ClCompile Include="..\Code\Coin.cpp" />
+    <ClCompile Include="..\Code\CoinFont.cpp" />
     <ClCompile Include="..\Code\CubeObject.cpp" />
     <ClCompile Include="..\Code\Dip.cpp" />
     <ClCompile Include="..\Code\Door.cpp" />

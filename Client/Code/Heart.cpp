@@ -44,8 +44,6 @@ _int CHeart::Update_GameObject(const _float& fTimeDelta)
     m_pTransformCom->Get_Info(INFO_POS, &vPos);
     _float	fHeight = m_pCalculCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
 
-    m_pTransformCom->Set_Pos(VTXCNTX / 2, fHeight + 1, VTXCNTZ / 2);
-
     if (m_eCurItemPlace == SP_SLOT)
     {
         // Å©°Ô Æ¢¾î³ª¿È

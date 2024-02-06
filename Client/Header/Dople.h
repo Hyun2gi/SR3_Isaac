@@ -23,7 +23,8 @@ private:
 	virtual void		Motion_Change()						override;
 	virtual void		Face_Camera()						override;
 
-	void				Follow_Player();
+	void				Follow_Player(const _float& fTimeDelta);
+	void				Change_State();
 
 private:
 	_int				m_iPicNum;

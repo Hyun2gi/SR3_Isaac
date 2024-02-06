@@ -34,6 +34,7 @@ private:
 private:
 	// º¯¼ö
 	_bool				m_bCreate;
+	_bool				m_bGame;
 
 	CMachine*			m_pMachine;
 	vector<CSlotCard*>	m_pCardList;

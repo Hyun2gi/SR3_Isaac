@@ -27,6 +27,8 @@ HRESULT CMachine::Ready_GameObject()
 
 	m_ePreState = MC_END;
 
+	m_eObjID = MOBJID_SLOTMC_MC;
+
 	return S_OK;
 }
 
@@ -54,7 +56,6 @@ _int CMachine::Update_GameObject(const _float& fTimeDelta)
 	if (m_bBroken)
 	{
 		m_eCurState = MC_BROKEN;
-
 	}
 	else
 		m_eCurState = MC_IDLE;
