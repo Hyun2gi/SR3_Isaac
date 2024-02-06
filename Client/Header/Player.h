@@ -99,6 +99,7 @@ public:
 
 
 	void		Set_Item_Get_Anim();
+	void		Set_Item_Get_Anim_Bad();
 	void		Set_Camera(CGameObject* _cam) { m_pCamera = _cam; }
 
 	bool		Get_Camera_WallBlock();
@@ -120,6 +121,9 @@ public:
 	bool		Get_EpicLieTiming() { return m_bEpicLieTiming; }
 	bool		Set_EpicLieTiming(bool timing) { m_bEpicLieTiming = timing; }
 
+	// 피격처리
+	void		Set_Attacked();
+
 public:
 	void		Bullet_Change_To_Brim();
 
@@ -129,6 +133,7 @@ private:
 	_vec3			Picking_OnTerrain();
 	void			Motion_Change();
 	bool			Check_Time(const _float& fTimeDelta);
+	void			Specific_Motion(const _float& fTimeDelta);
 
 private:
 	// 씬이 시작할때 한가운데에 스폰하기 위해서 bool 값으로 씬이 시작하는지 확인

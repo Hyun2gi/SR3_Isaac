@@ -99,30 +99,8 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		m_fFrame = 0.f;	
 	}
 
-	if (m_eCurState == P_THUMBS_UP)
-	{
-		m_fDelayTime += fTimeDelta;
-
-		if (m_fDelayTime > 2)
-		{
-			m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
-		}
-
-		if (m_fFrame > 2)
-		{
-			m_fFrame = 2;
-		}
-
-		// 2초 동안 따봉
-		if (m_fDelayTime > 4)
-		{
-			m_eCurState = P_IDLE;
-			m_fDelayTime = 0; // 딜레이 시간 초기화
-			m_fFrame = 0.f;
-			m_bKeyBlock = false; // key 입력 활성화
-			dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToOriginPos();
-		}
-	}
+	// 특정 모션 처리
+	Specific_Motion(fTimeDelta);
 		
 	if (m_bKeyBlock == false)
 	{
@@ -384,6 +362,14 @@ void CPlayer::Set_Item_Get_Anim()
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToPlayerFront();
 }
 
+void CPlayer::Set_Item_Get_Anim_Bad()
+{
+	m_bKeyBlock = true;
+	m_eCurState = P_GET_BAD_ITEM;
+	m_fDelayTime = 0;
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToPlayerFront();
+}
+
 bool CPlayer::Get_Camera_WallBlock()
 {
 	_vec3	vPos, vScale;
@@ -486,6 +472,14 @@ int CPlayer::Get_PlayerBulletState()
 	case P_BULLET_EPIC:
 		return 2;
 	}
+}
+
+void CPlayer::Set_Attacked()
+{
+	m_eCurState = P_ATTACKED;
+	// 키막기
+	m_bKeyBlock = true;
+	m_fDelayTime = 0.f;
 }
 
 void CPlayer::Bullet_Change_To_Brim()
@@ -601,7 +595,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 		else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
 		{
-			m_eCurState = P_THUMBS_UP;
+			Set_Attacked();
 		}
 		else
 		{
@@ -831,7 +825,7 @@ void CPlayer::Motion_Change()
 			break;
 		case P_THUMBS_UP:
 			m_fPicNum = 3;
-			m_fSpriteSpeed = 0.7f;
+			m_fSpriteSpeed = 1.f;
 			m_bKeyBlock = true; //key 막기
 			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_THUMBS_UP"));
 			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_THUMBS_UP"));
@@ -840,13 +834,13 @@ void CPlayer::Motion_Change()
 			m_fPicNum = 1;
 			m_fSpriteSpeed = 1.f;
 			m_bKeyBlock = true; //key 막기
-			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_Get_GOOD_ITEM"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_GET_BAD_ITEM"));
 			break;
 		case P_ATTACKED:
 			m_fPicNum = 1;
 			m_fSpriteSpeed = 1.f;
 			m_bKeyBlock = true; //key 막기
-			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_Get_GOOD_ITEM"));
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_ATTACKED"));
 			break;
 		}
 
@@ -865,6 +859,61 @@ bool CPlayer::Check_Time(const _float& fTimeDelta)
 	}
 
 	return false;
+}
+
+void CPlayer::Specific_Motion(const _float& fTimeDelta)
+{
+	if (m_eCurState == P_ATTACKED)
+	{
+		m_fDelayTime += fTimeDelta;
+
+		if (m_fDelayTime > 0.1)
+		{
+			m_eCurState = P_IDLE;
+			m_fDelayTime = 0; // 딜레이 시간 초기화
+			m_fFrame = 0.f;
+			m_bKeyBlock = false; // key 입력 활성화
+		}
+	}
+
+	if (m_eCurState == P_GET_BAD_ITEM)
+	{
+		m_fDelayTime += fTimeDelta;
+
+		if (m_fDelayTime > 1.5)
+		{
+			m_eCurState = P_IDLE;
+			m_fDelayTime = 0; // 딜레이 시간 초기화
+			m_fFrame = 0.f;
+			m_bKeyBlock = false; // key 입력 활성화
+			dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToOriginPos();
+		}
+	}
+
+	if (m_eCurState == P_THUMBS_UP)
+	{
+		m_fDelayTime += fTimeDelta;
+
+		if (m_fDelayTime > 2)
+		{
+			m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
+		}
+
+		if (m_fFrame > 2)
+		{
+			m_fFrame = 2;
+		}
+
+		// 2초 동안 따봉
+		if (m_fDelayTime > 4)
+		{
+			m_eCurState = P_IDLE;
+			m_fDelayTime = 0; // 딜레이 시간 초기화
+			m_fFrame = 0.f;
+			m_bKeyBlock = false; // key 입력 활성화
+			dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToOriginPos();
+		}
+	}
 }
 
 void CPlayer::Free()
