@@ -13,6 +13,9 @@ private:
 	enum PARTSSTATE{MOM_DOOR, MOM_EYE, MOM_SKIN, MOM_HAND, MOM_END};
 
 public:
+	BOSS_TYPE		Get_BossType() { return m_eBossType; }
+
+public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
 	virtual void	LateUpdate_GameObject()					 override;
@@ -27,8 +30,6 @@ private:
 	void				Set_RandNum();
 	void				Change_State();
 
-	virtual void		Hit();
-
 private:
 	// º¯¼ö
 	_int				m_iRandNum;
@@ -38,6 +39,8 @@ private:
 
 	PARTSSTATE			m_ePreState;
 	PARTSSTATE			m_eCurState;
+
+	BOSS_TYPE			m_eBossType;
 
 public:
 	static CMomParts* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex);

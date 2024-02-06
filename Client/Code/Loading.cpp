@@ -74,7 +74,7 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_DopleBackTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Dople/DopleBack_%d.png", 5)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_DopleLeftTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Dople/DopleLeft_%d.png", 8)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_DopleRightTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Dople/DopleRight_%d.png", 8)), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_DopleDeadTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Dople/DopleDead.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_DopleDeadTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Dople/DopleDead_%d.png", 2)), E_FAIL);
 
 	// Boss - Monstro
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MonstroTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Monstro/Monstro_%d.png", 3)), E_FAIL);

@@ -32,6 +32,8 @@ HRESULT CFly::Ready_GameObject()
 	m_fSpeed = 2.f;
 
 	m_ePreState = FLY_END;
+	
+	m_eMstType = FLY;
 
 	return S_OK;
 }

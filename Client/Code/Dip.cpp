@@ -36,6 +36,8 @@ HRESULT CDip::Ready_GameObject()
 
 	m_ePreState = DIP_END;
 
+	m_eMstType = DIP;
+
 	return S_OK;
 }
 

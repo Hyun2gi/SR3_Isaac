@@ -39,6 +39,9 @@ HRESULT CMonstro::Ready_GameObject()
 
 	m_eCurState = MONSTRO_END;
 
+	m_bBoss = true;
+	m_eBossType = MONSTRO;
+
 	return S_OK;
 }
 

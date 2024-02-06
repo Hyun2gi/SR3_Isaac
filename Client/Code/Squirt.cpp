@@ -33,6 +33,8 @@ HRESULT CSquirt::Ready_GameObject()
 
 	m_ePreState = SQU_END;
 
+	m_eMstType = SQUIRT;
+
 	return S_OK;
 }
 

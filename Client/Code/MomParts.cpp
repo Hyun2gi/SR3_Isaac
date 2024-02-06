@@ -31,6 +31,9 @@ HRESULT CMomParts::Ready_GameObject()
 
 	m_ePreState = MOM_END;
 
+	m_bBoss = true;
+	m_eBossType = MONSTRO;
+
 	return S_OK;
 }
 
@@ -188,10 +191,6 @@ void CMomParts::Change_State()
 		m_eCurState = MOM_HAND;
 	else if (3 == (m_iRandNum % 4))
 		m_eCurState = MOM_DOOR;
-}
-
-void CMomParts::Hit()
-{
 }
 
 void CMomParts::Setting_Value()
