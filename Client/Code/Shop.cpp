@@ -176,7 +176,7 @@ void CShop::Create_Obj()
 	if (m_pHeart == nullptr)
 	{
 		_vec3 vHeartPos = { vPos.x + INTERVALX, vPos.y - 0.5f, vPos.z - INTERVALZ }; // INTERVALZ
-		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir);
+		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir, 0);
 		m_pHeart->Set_MyLayer(L"GameItem");
 
 		// Coin font
