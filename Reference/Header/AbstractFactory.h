@@ -4,6 +4,8 @@
 
 BEGIN(Engine)
 
+//class CParticleSystem;
+
 //template<typename T>
 class ENGINE_DLL CAbstractFactory : public CBase
 {
@@ -12,6 +14,8 @@ public:
 	{
 		return *((DWORD*)&f);
 	}
+
+	//static CParticleSystem* Create
 
 public:
 	CAbstractFactory() {}

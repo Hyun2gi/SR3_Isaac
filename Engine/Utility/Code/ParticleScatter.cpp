@@ -3,10 +3,10 @@
 
 #include "Export_Utility.h"
 
-CParticleScatter::CParticleScatter(BoundingBox* boundingBox, int numParticles)
+CParticleScatter::CParticleScatter(BoundingBox* boundingBox, int numParticles, _float fSize)
 {
 	m_tBoundingBox = *boundingBox;
-	m_fSize = 0.25f;
+	m_fSize = fSize;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
 	m_VbBatchSize = 512;
@@ -90,4 +90,23 @@ void CParticleScatter::Update_Particle(_float fTimeDelat)
 	}
 
 	Engine::Add_RenderGroup(RENDER_PARTICLES, this);
+}
+
+CParticleScatter* CParticleScatter::Create(IDirect3DDevice9* pDevice, _vec3 vMin, _vec3 vMax, _float fSize, _int iCount)
+{
+	BoundingBox boundingBox;
+	boundingBox._min = vMin;
+	boundingBox._max = vMax;
+
+	CParticleScatter* pInstance = new CParticleScatter(&boundingBox, iCount, fSize);
+
+	if (FAILED(pInstance->Ready_Particle(pDevice)))
+	{
+		Safe_Release(pInstance);
+		MSG_BOX("ParticleScatter Create Failed");
+		return nullptr;
+	}
+
+	return pInstance;
+
 }

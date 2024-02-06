@@ -3,10 +3,10 @@
 
 #include "Export_Utility.h"
 
-CParticleExplosion::CParticleExplosion(_vec3* vOrigin, int numParticles)
+CParticleExplosion::CParticleExplosion(_vec3* vOrigin, int numParticles, _float fSize)
 {
 	m_vOrigin = *vOrigin;
-	m_fSize = 0.7f;
+	m_fSize = fSize;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
 	m_VbBatchSize = 512;
@@ -109,4 +109,18 @@ void CParticleExplosion::Update_Particle(_float fTimeDelat)
 	}
 
 	Engine::Add_RenderGroup(RENDER_PARTICLES, this);
+}
+
+CParticleExplosion* CParticleExplosion::Create(IDirect3DDevice9* pDevice, _vec3 vPos, _float fSize, _int iCount)
+{
+	CParticleExplosion* pInstance = new CParticleExplosion(&vPos, iCount, fSize);
+
+	if (FAILED(pInstance->Ready_Particle(pDevice)))
+	{
+		Safe_Release(pInstance);
+		MSG_BOX("ParticleExplosion Create Failed");
+		return nullptr;
+	}
+
+	return pInstance;
 }
