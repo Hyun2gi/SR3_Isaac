@@ -254,9 +254,15 @@ CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _v
 		pInstance->Set_SpawnPos(pos);
 	}
 
-	float fAngle = (float)(rand() % 100 - 50);
+	float fAngle = (float)(rand() % 60 - 30);
 	_matrix mat;
-	_vec3 templook = look;
+
+	_vec3 playerpos;
+	CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+	_vec3		playerPos;
+	playerInfo->Get_Info(INFO_POS, &playerPos);
+
+	_vec3 templook = playerPos - pos;
 	D3DXMatrixRotationY(&mat, fAngle);
 	D3DXVec3TransformCoord(&templook, &templook, &mat);
 	pInstance->Set_LookDir(templook);
