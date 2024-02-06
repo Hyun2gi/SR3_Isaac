@@ -27,10 +27,11 @@ private:
 
 private:
 	// 벽을 하나로해서 여러개의 큐브를 띄우기 위해 큐브를 가지고 있게하려고 만든 벡터배열
+	bool m_bStartScene;
 	vector<CCubeObject*> m_vecCubes;
 
 public:
-	static CFloor*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
+	static CFloor*		Create(LPDIRECT3DDEVICE9	pGraphicDev, bool bStart = false);
 
 private:
 	virtual void Free() override;
