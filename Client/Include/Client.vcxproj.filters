@@ -387,15 +387,14 @@
     <ClInclude Include="..\Header\EpicBulletMark.h">
       <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\TestStage.h">
-      <Filter>01. Scene\TestStage</Filter>
-      <Filter>02. GameObject\01. Monster\07. Dople</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CoinFont.h">
       <Filter>02. GameObject\09. MapObject\04. Shop\02. Font</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Dople.h">
       <Filter>02. GameObject\01. Monster\07. Dople</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\TestStage.h">
+      <Filter>01. Scene\TestStage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -573,15 +572,14 @@
     <ClCompile Include="..\Code\EpicBulletMark.cpp">
       <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\TestStage.cpp">
-      <Filter>01. Scene\TestStage</Filter>
-      <Filter>02. GameObject\01. Monster\07. Dople</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CoinFont.cpp">
       <Filter>02. GameObject\09. MapObject\04. Shop\02. Font</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Dople.cpp">
       <Filter>02. GameObject\01. Monster\07. Dople</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestStage.cpp">
+      <Filter>01. Scene\TestStage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
