@@ -612,6 +612,13 @@ void CStage::Moster_Collision()
 
 			if (pMonster)
 			{
+				// 일반 총알일때 이펙트 보여주려고 해당부분 처리
+				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
+				{
+					// 일반 총알 충돌처리
+					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
+				}
+
 				// Dople 이 아닐 때만
 				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
 				{
@@ -651,6 +658,13 @@ void CStage::MapObj_Collision()
 
 			if (pMapObj)
 			{
+				// 일반 총알일때 이펙트 보여주려고 해당부분 처리
+				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
+				{
+					// 일반 총알 충돌처리
+					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
+				}
+
 				if (POOP == dynamic_cast<CMapObj*>(pMapObj)->Get_Type())
 				{
 					dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();

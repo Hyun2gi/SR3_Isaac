@@ -133,6 +133,11 @@ void CHeart::Run_Item_Effect()
 
 void CHeart::Item_Spawn_Action()
 {
+    // SP_IDLE, // ±×³É ÀÖÀ½
+    //	SP_SLOT, // ½½·Ô ¸Ó½Å¿¡¼­ ³ª¿È (¸¹ÀÌ Æ¢¾î³ª¿È)
+    //	SP_OBJECT, // OBJECT¿¡¼­ ³ª¿È (Á¶±Ý Æ¢¾î³ª¿È)
+    //	SP_SHOP, // ¼¥¿¡¼­ ±¸¸Å
+
     Engine::CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
     NULL_CHECK(pTerrainBufferCom);
 
@@ -145,6 +150,8 @@ void CHeart::Item_Spawn_Action()
 
     if (m_eCurItemPlace == SP_SLOT)
     {
+
+        m_pTransformCom->Set_Pos(itemPos.x + m_vLookVec.x * 0.2, itemPos.y - 0.3, itemPos.z + m_vLookVec.z * 0.2);
 
         _vec3 temp;
         m_pTransformCom->Get_Info(INFO_POS, &temp);
@@ -214,8 +221,7 @@ void CHeart::Motion_Change()
 
 CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look, int iID)
 {
-    CHeart* pInstance = new CHeart(pGraphicDev, iID);
-    srand((unsigned)time(NULL));
+    CHeart* pInstance = new CHeart(pGraphicDev, iID *3);
 
     if (spawnspot == 1)
     {
@@ -237,14 +243,15 @@ CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, 
     D3DXMatrixRotationY(&mat, fAngle);
     D3DXVec3TransformCoord(&templook, &templook, &mat);
     pInstance->Set_LookDir(templook);
+    pInstance->Set_Item_SpawnSpot(spawnspot);
 
     if (FAILED(pInstance->Ready_GameObject()))
     {
         Safe_Release(pInstance);
-        MSG_BOX("Heart Create Failed");
+        MSG_BOX("heart Create Failed");
         return nullptr;
     }
-    pInstance->Set_Item_SpawnSpot(spawnspot);
+
 
     return pInstance;
 }

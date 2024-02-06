@@ -111,7 +111,7 @@ void CCoin::Render_GameObject()
 void CCoin::Run_Item_Effect()
 {
 	// 튀어나올때 먹지 않도록
-	if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT)
+	if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT && m_eCurState != COIN_GET)
 	{
 		m_eCurState = COIN_GET;
 		// 첫 이미지부터 시작
@@ -237,10 +237,8 @@ void CCoin::Motion_Change()
 
 CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look, int iID)
 {
-	CCoin* pInstance = new CCoin(pGraphicDev, iID);
+	CCoin* pInstance = new CCoin(pGraphicDev, iID*3);
 	//정확한 위치 설정
-
-	srand((unsigned)time(NULL));
 	
 	if (spawnspot == 1)
 	{
@@ -262,6 +260,7 @@ CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _v
 	D3DXMatrixRotationY(&mat, fAngle);
 	D3DXVec3TransformCoord(&templook, &templook, &mat);
 	pInstance->Set_LookDir(templook);
+	pInstance->Set_Item_SpawnSpot(spawnspot);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
@@ -269,7 +268,7 @@ CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _v
 		MSG_BOX("COIN Create Failed");
 		return nullptr;
 	}
-	pInstance->Set_Item_SpawnSpot(spawnspot);
+	
 
 	return pInstance;
 }
