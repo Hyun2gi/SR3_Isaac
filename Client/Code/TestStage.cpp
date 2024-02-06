@@ -157,7 +157,7 @@ void CTestStage::Drop_ITem()
 			ITEM_TYPE eType = dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_ItemType();
 			wstring wstrObjTag = dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Get_DropItemTag();
 
-			pGameObject = dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"));
+			pGameObject = dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"), 0);
 			m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
 
 			dynamic_cast<CPoop*>(Get_GameObject(L"GameLogic", L"Poop"))->Set_Drop();
@@ -175,7 +175,7 @@ void CTestStage::Drop_ITem()
 			ITEM_TYPE eType = dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Get_ItemType();
 			wstring wstrObjTag = dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Get_DropItemTag();
 
-			pGameObject = dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"));
+			pGameObject = dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"), 0);
 			m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
 
 			dynamic_cast<CCampFire*>(Get_GameObject(L"MapObj", L"Campfire"))->Set_Drop();
@@ -612,7 +612,7 @@ void CTestStage::MapObj_Collision()
 		for (list<CGameObject*>::iterator iter = pBulletList->begin();
 			iter != pBulletList->end();)
 		{
-			CGameObject* pMapObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(*iter); // Ãæµ¹ÀÌ ¾È µÊ
+			CGameObject* pMapObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(*iter);
 
 			if (pMapObj) // ¶ËÀÌ°í ¸ð´ÚºÒÀÏ ¶§¸¸
 			{

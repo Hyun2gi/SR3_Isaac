@@ -124,7 +124,7 @@ void CStage::Drop_ITem()
 			ITEM_TYPE eType = dynamic_cast<CPoop*>(Get_GameObject(L"MapObj", L"Poop"))->Get_ItemType();
 			wstring wstrObjTag = dynamic_cast<CPoop*>(Get_GameObject(L"MapObj", L"Poop"))->Get_DropItemTag();
 
-			pGameObject = dynamic_cast<CPoop*>(Get_GameObject(L"MapObj", L"Poop"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"));
+			pGameObject = dynamic_cast<CPoop*>(Get_GameObject(L"MapObj", L"Poop"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"), 0);
 			m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
 
 			dynamic_cast<CPoop*>(Get_GameObject(L"MapObj", L"Poop"))->Set_Drop();
@@ -142,7 +142,7 @@ void CStage::Drop_ITem()
 			ITEM_TYPE eType = dynamic_cast<CFire*>(Get_GameObject(L"MapObj", L"Fire"))->Get_ItemType();
 			wstring wstrObjTag = dynamic_cast<CFire*>(Get_GameObject(L"MapObj", L"Fire"))->Get_DropItemTag();
 
-			pGameObject = dynamic_cast<CFire*>(Get_GameObject(L"MapObj", L"Fire"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"));
+			pGameObject = dynamic_cast<CFire*>(Get_GameObject(L"MapObj", L"Fire"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"), 0);
 			m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
 
 			dynamic_cast<CFire*>(Get_GameObject(L"MapObj", L"Fire"))->Set_Drop();
@@ -671,9 +671,11 @@ void CStage::MapObj_Collision()
 							ITEM_TYPE eType = dynamic_cast<CShell*>(pShellObj)->Get_ItemType();
 							wstring wstrObjTag = dynamic_cast<CShell*>(pShellObj)->Get_DropItemTag();
 
-							pGameObject = dynamic_cast<CShell*>(pShellObj)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"));
-							m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
-
+							for (int i = 0; i < 3; ++i)
+							{
+								pGameObject = dynamic_cast<CShell*>(pShellObj)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), i);
+								m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
+							}
 							dynamic_cast<CShell*>(pShellObj)->Setting_Reward_False();
 						}
 					}
