@@ -59,9 +59,10 @@ private:
 	//Engine::CTexture* m_pTextureCom;
 
 	bool m_bIsDeleted;
+	bool m_bStartScene;
 
 public:
-	static CWall*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
+	static CWall*		Create(LPDIRECT3DDEVICE9	pGraphicDev, bool bStartScene = false);
 
 private:
 	virtual void Free() override;

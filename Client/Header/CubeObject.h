@@ -25,7 +25,7 @@ public:
 	virtual void Render_GameObject()						 override;
 
 	HRESULT Set_Cute_Texture(const _tchar* pTextureTag);
-	void Set_Dst_Pos(_vec3 vDst) { m_vDstPos = m_vTempPos = vDst; }
+	void Set_Dst_Pos(_vec3 vDst);
 
 	bool	Get_Arrived() { return m_bIsArrived; }
 
@@ -38,10 +38,11 @@ private:
 	Engine::CTexture*	m_pTextureCom;
 
 public:
-	static CCubeObject*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
+	static CCubeObject*		Create(LPDIRECT3DDEVICE9	pGraphicDev, bool bStartScene);
 
 private:
 	bool m_bIsArrived;
+	bool m_bStartScene;
 
 	_vec3 m_vDstPos;
 	_vec3 m_vTempPos;

@@ -74,6 +74,18 @@ HRESULT CCubeObject::Set_Cute_Texture(const _tchar* pTextureTag)
 	m_mapComponent[ID_STATIC].insert({ pTextureTag, pComponent });
 }
 
+void CCubeObject::Set_Dst_Pos(_vec3 vDst)
+{
+	if(!m_bStartScene)
+		m_vDstPos = m_vTempPos = vDst;
+	else
+	{
+		m_pTransformCom->m_vInfo[INFO_POS] = vDst;
+		m_vDstPos = vDst;
+		m_bIsArrived = true;
+	}
+}
+
 HRESULT CCubeObject::Add_Component()
 {
 	CComponent*		pComponent = nullptr;
@@ -90,9 +102,10 @@ HRESULT CCubeObject::Add_Component()
 	return S_OK;
 }
 
-CCubeObject * CCubeObject::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CCubeObject * CCubeObject::Create(LPDIRECT3DDEVICE9 pGraphicDev, bool bStartScene)
 {
 	CCubeObject *	pInstance = new CCubeObject(pGraphicDev);
+	pInstance->m_bStartScene = bStartScene;
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
