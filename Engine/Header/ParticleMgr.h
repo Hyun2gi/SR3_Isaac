@@ -5,6 +5,8 @@
 
 BEGIN(Engine)
 
+class CParticleSystem;
+
 class ENGINE_DLL CParticleMgr : public CBase
 {
 	DECLARE_SINGLETON(CParticleMgr)
@@ -13,18 +15,17 @@ private:
 	virtual ~CParticleMgr();
 
 public:
-	void PlaySound(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume);
-	void PlayBGM(TCHAR* pSoundKey, _float fVolume);
-	void StopSound(CHANNEL_ID eID);
-	void StopAll();
-	void SetChannelVolume(CHANNEL_ID eID, _float fVolume);
+	void	Create_Scatter(_vec3 vMin, _vec3 vMax, _float fSize = 0.25f, _int iCount = 30);
+	void	Create_Explosion(_vec3 vPos, _vec3 vMin, _vec3 vMax, _float fSize = 0.5f, _int iCount = 10);
+	void	Create_Splash(_vec3 vPos, const _tchar* pTexturePath, _int iMaxFrame);
+	void	Create_Burst();
 
-	void	Ready_Sound();
-
-private:
-	void LoadSoundFile(); 
+	void	Update_Particles(_float fDeltaTime);
+	void	Render_Particles();
+	
 
 private:
+	list<CParticleSystem*> m_pParticles;
 
 private:
 	virtual void		Free(void);

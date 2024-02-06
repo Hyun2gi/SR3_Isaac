@@ -12,7 +12,7 @@ CParticleExplosion::CParticleExplosion(_vec3* vOrigin, int numParticles)
 	m_VbBatchSize = 512;
 
 	m_vMinVelocity = _vec3(-0.5f, 0.0f, -1.0f);
-	m_vMinVelocity = _vec3(0.5f, 1.0f, 1.0f);
+	m_vMaxVelocity = _vec3(0.5f, 1.0f, 1.0f);
 
 	for (int i = 0; i < numParticles; i++)
 		Add_Particle();
@@ -65,7 +65,7 @@ void CParticleExplosion::Reset_Partice(Attribute* attribute)
 	GetRandomVector(
 		&attribute->_vVelocity,
 		&m_vMinVelocity,
-		&m_vMinVelocity);
+		&m_vMaxVelocity);
 
 	// normalize to make spherical
 	D3DXVec3Normalize(

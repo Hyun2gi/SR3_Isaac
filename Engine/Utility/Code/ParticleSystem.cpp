@@ -36,18 +36,9 @@ void CParticleSystem::Render_GameObject()
 {
 	if (!m_ParticlesList.empty())
 	{
-		//
-		// set render states
-		//
-
-
 		m_pGraphicDev->SetTexture(0, m_pTex);
 		m_pGraphicDev->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
 		m_pGraphicDev->SetStreamSource(0, m_pVb, 0, sizeof(Particle));
-
-		//
-		// render batches one by one
-		//
 
 		// start at beginning if we're at the end of the vb
 		if (m_VbOffset >= m_VbSize)
@@ -63,9 +54,6 @@ void CParticleSystem::Render_GameObject()
 
 		DWORD numParticlesInBatch = 0;
 
-		//
-		// Until all particles have been rendered.
-		//
 		list<Attribute>::iterator i;
 		for (i = m_ParticlesList.begin(); i != m_ParticlesList.end(); i++)
 		{
@@ -127,12 +115,9 @@ bool CParticleSystem::Is_Dead()
 	list<Attribute>::iterator i;
 	for (i = m_ParticlesList.begin(); i != m_ParticlesList.end(); i++)
 	{
-		// is there at least one living particle?  If yes,
-		// the system is not dead.
 		if (i->_bIsAlive)
 			return false;
 	}
-	// no living particles found, the system must be dead.
 	return true;
 }
 
@@ -146,8 +131,6 @@ void CParticleSystem::Remove_Dead_Particles()
 	{
 		if (i->_bIsAlive == false)
 		{
-			// erase returns the next iterator, so no need to
-			// incrememnt to the next one ourselves.
 			i = m_ParticlesList.erase(i);
 		}
 		else
