@@ -3,9 +3,12 @@
 #include "Export_Utility.h"
 #include "Player.h"
 
-CHeart::CHeart(LPDIRECT3DDEVICE9 pGraphicDev)
+CHeart::CHeart(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
     : CItem(pGraphicDev)
 {
+    DWORD dwSeed = (iID << 16) | (time(NULL) % 1000);
+    srand(dwSeed);
+    m_iRandNum = rand() % 180;
 }
 
 CHeart::CHeart(const CHeart& rhs)
@@ -25,7 +28,7 @@ HRESULT CHeart::Ready_GameObject()
     m_fFrame = 0;
     m_iCoin = 3;
 
-    m_pTransformCom->m_vScale = { 0.7,0.7,0.7 };
+    m_pTransformCom->m_vScale = { 0.5,0.5,0.5 };
 
     return S_OK;
 }
@@ -105,19 +108,26 @@ void CHeart::Run_Item_Effect()
 {
     if (m_eCurItemPlace == SP_SHOP)
     {
-        // 구매해야할 경우
-        if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
-        {
-            CPlayer::GetInstance()->Set_Coin(-m_iCoin);
-            m_bDead = true;
-            CPlayer::GetInstance()->Set_Hp(1);
+        if (CPlayer::GetInstance()->Get_Hp() < CPlayer::GetInstance()->Get_MaxHp())
+        {   
+            // 구매해야할 경우
+            if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
+            {
+                CPlayer::GetInstance()->Set_Coin(-m_iCoin);
+                m_bDead = true;
+                CPlayer::GetInstance()->Set_Hp(1);
+                float hp = CPlayer::GetInstance()->Get_Hp();
+            }
         }
     }
     else if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT)
     {
-        // 그냥 바로 적용
-        m_bDead = true;
-        CPlayer::GetInstance()->Set_Hp(1);
+        if (CPlayer::GetInstance()->Get_Hp() < CPlayer::GetInstance()->Get_MaxHp())
+        {
+            // 그냥 바로 적용
+            m_bDead = true;
+            CPlayer::GetInstance()->Set_Hp(1);
+        }
     }
 }
 
@@ -202,9 +212,9 @@ void CHeart::Motion_Change()
 {
 }
 
-CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
+CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look, int iID)
 {
-    CHeart* pInstance = new CHeart(pGraphicDev);
+    CHeart* pInstance = new CHeart(pGraphicDev, iID);
     srand((unsigned)time(NULL));
 
     if (spawnspot == 1)

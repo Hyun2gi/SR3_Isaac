@@ -6,7 +6,7 @@
 class CCoin : public CItem
 {
 private:
-	explicit CCoin(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CCoin(LPDIRECT3DDEVICE9 pGraphicDev, int iID);
 	explicit CCoin(const CCoin& rhs);
 	virtual ~CCoin();
 
@@ -39,9 +39,10 @@ private:
 
 	// 코인 반짝 거리는거 자주 못하게 딜레이
 	_int					m_iDelay;
+	_int					m_iRandNum;
 
 public:
-	static CCoin* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look);
+	static CCoin* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look, int iID);
 
 private:
 	virtual void		Free()									override;

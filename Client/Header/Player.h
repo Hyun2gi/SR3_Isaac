@@ -26,7 +26,7 @@ private:
 	// BACKWALK : 뒷통수보면서 쏨
 	// SHOOTWALK : 쏘는 자세 (머리통이 작아짐)
 	// GOOD : 따봉
-	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_THUMBS_UP, P_END  };
+	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK,  P_THUMBS_UP, P_GET_GOOD_ITEM, P_END  };
 	
 	enum BULLETID
 	{	P_BULLET_IDLE, P_BULLET_BRIMSTONE, P_BULLET_EPIC, P_BULLET_END};
@@ -65,13 +65,30 @@ public:
 	void		Set_MoveSpeed(float _movespeed){ m_fMoveSpeed += _movespeed; }
 	void		Set_BulletSpeed(float _bulletspeed){ m_fBulletSpeed += _bulletspeed; }
 	void		Set_AttackSpeed(float _attackspeed){ m_fAttackSpeed += _attackspeed; }
-	void		Set_Hp(float _hp) { if (m_fHp + _hp <= m_fMaxHp){ m_fHp += _hp;} }
+	void		Set_Hp(float _hp) 
+	{ 
+		if (m_fHp + _hp <= m_fMaxHp)
+		{ 
+			m_fHp += _hp;
+		}
+		else
+		{
+			// 풀피로 차게
+			m_fHp = m_fMaxHp;
+		}
+	}
+
+
+
 	void		Set_To_MaxHp() { m_fHp = m_fMaxHp; }
 	void		Set_Coin(int _coin) { m_iCoin += _coin; }
 	void		Set_LayerTag(_tchar* pLayerTag) { m_pLayerTag = pLayerTag; }
 	void		Set_Bool_MouseYRotation(bool checkY) { m_bMouseYRotataion = checkY; }
 	void		Set_Player_Pos(_vec3 pos);
+	void		Set_Hp_To_MaxHp() { m_fHp = m_fMaxHp; }
 
+	float		Get_MaxHp() { return m_fMaxHp; }
+	float		Get_Hp() { return m_fHp; }
 	float		Get_BulletSpeed() { return m_fBulletSpeed; }
 	int			Get_Coin() { return m_iCoin; }
 	void		Set_Bool_StartScene(bool _start) { m_bStartScene = _start; }

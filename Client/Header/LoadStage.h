@@ -7,6 +7,12 @@
 class CFloor;
 class CWall;
 
+BEGIN(Engine)
+
+class CParticleScatter;
+
+END
+
 class CLoadStage : public Engine::CScene
 {
 private:
@@ -71,6 +77,8 @@ private:
 
 private:
 	CLoading* m_pLoading;
+
+	CParticleScatter* pParticleScatter;
 
 	//바닥과 벽면을 가지고있게 한다.
 	CFloor* m_pFloor;

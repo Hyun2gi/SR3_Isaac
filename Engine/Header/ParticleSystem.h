@@ -1,5 +1,5 @@
 #pragma once
-#include "Base.h"
+#include "GameObject.h"
 
 #include "Engine_Define.h"
 
@@ -55,14 +55,14 @@ struct Attribute
 	bool	_bIsAlive;		// 생존한 경유 true, 소멸 시 false
 };
 
-class ENGINE_DLL CParticleSystem : public CBase
+class ENGINE_DLL CParticleSystem : public CGameObject
 {
 protected:
 	explicit CParticleSystem();
 	virtual ~CParticleSystem();
 
 public:
-	virtual bool Ready_Particle(IDirect3DDevice9* pDevice, char* texFileName);
+	virtual bool Ready_Particle(IDirect3DDevice9* pDevice) = 0;
 	virtual void Reset();
 	virtual void Reset_Partice(Attribute* attribute) = 0;
 	virtual void Add_Particle();
@@ -74,6 +74,8 @@ public:
 
 	bool Is_Empty();
 	bool Is_Dead();
+
+	void	Set_Velocity_Speed(_float fSpeed) { m_fVelocitySpeed = fSpeed; }
 
 	DWORD FtoDw(float f)
 	{
@@ -126,6 +128,8 @@ protected:
 	DWORD						m_VbSize;
 	DWORD						m_VbOffset;
 	DWORD						m_VbBatchSize;
+
+	_float						m_fVelocitySpeed;
 
 private:
 	virtual void	Free();

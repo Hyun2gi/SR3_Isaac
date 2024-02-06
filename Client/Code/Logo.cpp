@@ -6,6 +6,7 @@
 
 #include "BackGround.h"
 #include "Stage.h"
+#include "TestStage.h"
 #include "LoadStage.h"
 #include "Player.h"
 
@@ -62,11 +63,11 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 			return 0;
 		}		
 
-		if (GetAsyncKeyState('2'))
+		if (GetAsyncKeyState(VK_BACK))
 		{
 			Engine::CScene* pScene = nullptr;
 
-			pScene = CLoadStage::Create(m_pGraphicDev, 2);
+			pScene = CTestStage::Create(m_pGraphicDev);
 			NULL_CHECK_RETURN(pScene, -1);
 
 			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);

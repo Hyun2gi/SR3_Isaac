@@ -176,6 +176,7 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_RIGHT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_right_%d.png", 8)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_LEFT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_left_%d.png", 8)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_THUMBS_UP", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_thumbs_up_%d.png", 2)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_Get_GOOD_ITEM", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_get_good_item.png", 1)), E_FAIL);
 
 	//눈물추가
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/Tear_%d.png", 13)), E_FAIL);
@@ -298,7 +299,7 @@ _uint CLoading::Loading_ForStage()
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_RIGHT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_right_%d.png", 8)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_LEFT", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_left_%d.png", 8)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_THUMBS_UP", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_thumbs_up_%d.png", 2)), E_FAIL);
-	//FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_THUMBS_UP", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_thumbs_up_%d.png", 2)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_Get_GOOD_ITEM", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_get_good_item.png", 1)), E_FAIL);
 
 	//눈물추가
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/Tear_%d.png", 13)), E_FAIL);

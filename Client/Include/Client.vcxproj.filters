@@ -193,6 +193,9 @@
     <Filter Include="02. GameObject\09. MapObject\05. Shell Game\01. ShellNpc">
       <UniqueIdentifier>{af33f3d5-80c0-442d-9b1d-9bee1a32d282}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\TestStage">
+      <UniqueIdentifier>{a456cd8f-534c-4c44-857e-cd111315878a}</UniqueIdentifier>
+      </Filter>
     <Filter Include="02. GameObject\01. Monster\07. Dople">
       <UniqueIdentifier>{abde9124-881e-468f-b101-78530c11b45e}</UniqueIdentifier>
     </Filter>
@@ -385,6 +388,10 @@
       <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Dople.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\TestStage.h">
+      <Filter>01. Scene\TestStage</Filter>
       <Filter>02. GameObject\01. Monster\07. Dople</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\CoinFont.h">
@@ -567,6 +574,10 @@
       <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Dople.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\TestStage.cpp">
+      <Filter>01. Scene\TestStage</Filter>
       <Filter>02. GameObject\01. Monster\07. Dople</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\CoinFont.cpp">

@@ -148,14 +148,14 @@ CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer)
 	}
 	case Engine::COIN:
 	{
-		CItem* pItem = CCoin::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
+		CItem* pItem = CCoin::Create(m_pGraphicDev, iSpawnPos, vPos, vLook,2);
 		pItem->Set_MyLayer(L"GameItem");
 		return pItem;
 		break;
 	}
 	case Engine::HEART:
 	{
-		CItem* pItem = CHeart::Create(m_pGraphicDev, iSpawnPos, vPos, vLook);
+		CItem* pItem = CHeart::Create(m_pGraphicDev, iSpawnPos, vPos, vLook,6);
 		pItem->Set_MyLayer(L"GameItem");
 		return pItem;
 		break;
