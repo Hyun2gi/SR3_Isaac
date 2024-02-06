@@ -7,6 +7,7 @@ CParticleSystem::CParticleSystem()
 	m_pGraphicDev = 0;
 	m_pVb = 0;
 	m_pTex = 0;
+	m_bIsDead = false;
 }
 
 CParticleSystem::~CParticleSystem()
@@ -30,6 +31,21 @@ void CParticleSystem::Add_Particle()
 	Reset_Partice(&attribute);
 
 	m_ParticlesList.push_back(attribute);
+}
+
+void CParticleSystem::Update_Particle(_float fTimeDelat)
+{
+	list<Attribute>::iterator i;
+
+	for (i = m_ParticlesList.begin(); i != m_ParticlesList.end(); i++)
+	{
+		if (i->_bIsAlive)
+			break;
+
+		m_bIsDead = true;
+	}
+
+	Engine::Add_RenderGroup(RENDER_PARTICLES, this);
 }
 
 void CParticleSystem::Render_GameObject()

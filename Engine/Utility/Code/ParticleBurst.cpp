@@ -106,6 +106,8 @@ void CParticleBurst::Update_Particle(_float fTimeDelat)
 				i->_bIsAlive = false;
 		}
 	}
+
+	__super::Update_Particle(fTimeDelat);
 }
 
 void CParticleBurst::Render_GameObject()

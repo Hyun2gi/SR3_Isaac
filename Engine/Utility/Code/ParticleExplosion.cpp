@@ -108,7 +108,7 @@ void CParticleExplosion::Update_Particle(_float fTimeDelat)
 		}
 	}
 
-	Engine::Add_RenderGroup(RENDER_PARTICLES, this);
+	__super::Update_Particle(fTimeDelat);
 }
 
 CParticleExplosion* CParticleExplosion::Create(IDirect3DDevice9* pDevice, _vec3 vPos, _float fSize, _int iCount)

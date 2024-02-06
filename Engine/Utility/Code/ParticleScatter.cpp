@@ -90,7 +90,7 @@ void CParticleScatter::Update_Particle(_float fTimeDelat)
 		}
 	}
 
-	Engine::Add_RenderGroup(RENDER_PARTICLES, this);
+	__super::Update_Particle(fTimeDelat);
 }
 
 CParticleScatter* CParticleScatter::Create(IDirect3DDevice9* pDevice, _vec3 vMin, _vec3 vMax, _float fSize, _int iCount)

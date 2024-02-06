@@ -66,7 +66,7 @@ public:
 	virtual void Reset();
 	virtual void Reset_Partice(Attribute* attribute) = 0;
 	virtual void Add_Particle();
-	virtual void Update_Particle(_float fTimeDelat) = 0;
+	virtual void Update_Particle(_float fTimeDelat);
 
 	virtual void Render_GameObject();
 
@@ -76,6 +76,8 @@ public:
 	_float Get_Size() { return m_fSize; }
 
 	void	Set_Velocity_Speed(_float fSpeed) { m_fVelocitySpeed = fSpeed; }
+
+	bool Get_Dead() { return m_bIsDead; }
 
 	float GetRandomFloat(float lowBound, float highBound)
 	{
@@ -125,6 +127,8 @@ protected:
 	DWORD						m_VbBatchSize;
 
 	_float						m_fVelocitySpeed;
+
+	bool						m_bIsDead;
 
 private:
 	virtual void	Free();

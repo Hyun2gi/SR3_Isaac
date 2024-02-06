@@ -43,8 +43,21 @@ void CParticleMgr::Create_Burst(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _floa
 
 void CParticleMgr::Update_Particles(_float fDeltaTime)
 {
-	for (auto& iter : m_pParticleList)
-		iter->Update_Particle(fDeltaTime);
+	for (auto i = m_pParticleList.begin(); i != m_pParticleList.end();)
+	{
+		(*i)->Update_Particle(fDeltaTime);
+
+		if ((*i)->Get_Dead())
+		{
+			Safe_Release((*i));
+			i = m_pParticleList.erase(i);
+		}
+		else
+		{
+			i++;
+		}
+	}
+
 }
 
 void CParticleMgr::Render_Particles()

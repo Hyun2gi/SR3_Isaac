@@ -126,7 +126,7 @@ void CParticleSplash::Update_Particle(_float fTimeDelat)
 		}
 	}
 
-	Engine::Add_RenderGroup(RENDER_PARTICLES, this);
+	__super::Update_Particle(fTimeDelat);
 }
 
 void CParticleSplash::Render_GameObject()
