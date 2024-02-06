@@ -35,6 +35,7 @@ HRESULT CSlotMC::Ready_GameObject()
 
 	m_bCreate = false;
 	m_bGame = false;
+	m_bReward = false;
 
 	return S_OK;
 }
@@ -61,10 +62,10 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	if (m_pMachine->Get_Dead())
+	/*if (m_pMachine->Get_Dead())
 		m_bGame = true;
 	else
-		m_bGame = false;
+		m_bGame = false;*/
 
 	if (m_bGame)
 	{
@@ -74,15 +75,12 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 		{
 			iter->Set_Random();
 		}
+
+
 	}
 
-	//if (m_pMachine != nullptr && !(m_pMachine->Get_Dead()))
-	//{
-	//	if (Engine::Get_DIKeyState(DIK_G) & 0x80)// 이후 플레이어와의 충돌로 변경
-	//	{
-	//		
-	//	}
-	//}
+	Set_Item_Value();
+	Setting_ItemTag();
 
 	return 0;
 }
@@ -164,6 +162,39 @@ HRESULT CSlotMC::Add_Component()
 	return S_OK;
 }
 
+void CSlotMC::Set_Item_Value()
+{
+	if (m_pCardList.front()->Get_Reward())
+	{
+		int iReward = m_pCardList.front()->Get_RewardItem();
+
+		if (0 != iReward)
+		{
+			switch (iReward)
+			{
+			case 1: // 코인
+				m_eDropItem = COIN;
+				break;
+			case 2: // 하트
+				m_eDropItem = HEART;
+				break;
+			default:
+				m_eDropItem = PILL;
+				break;
+			}
+
+			m_bReward = true;
+			m_bGame = false;
+		}
+	}
+
+	//if (m_pCardList.front()->Get_Reward())
+	//{
+	//	m_bGame = false;
+	//	// 보상 생성
+	//}
+}
+
 void CSlotMC::Create_Machine()
 {
 	_vec3 vPos;
@@ -188,7 +219,7 @@ void CSlotMC::Create_Card()
 	{
 		CSlotCard* pCard = CSlotCard::Create(m_pGraphicDev);
 		pCard->Set_MyLayer(m_vecMyLayer[0]);
-		pCard->Get_TransformCom()->Set_Pos(vPos.x + fScalar, vPos.y - SCALAR_Y, vPos.z - 0.1f);
+		pCard->Get_TransformCom()->Set_Pos(vPos.x + fScalar, vPos.y - SCALAR_Y, vPos.z - 0.2f);
 		pCard->Set_Index(i);
 		m_pCardList.push_back(pCard);
 		fScalar += 0.73f;

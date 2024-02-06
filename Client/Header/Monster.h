@@ -25,6 +25,7 @@ public:
 	void			Hit() { m_bHit = true; }
 	_bool			Get_IsBoss() { return m_bBoss; }
 	MONSTER_TYPE	Get_MstType() { return m_eMstType; }
+	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
