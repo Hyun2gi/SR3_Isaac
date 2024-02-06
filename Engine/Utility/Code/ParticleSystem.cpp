@@ -19,9 +19,7 @@ void CParticleSystem::Reset()
 {
 	list<Attribute>::iterator i;
 	for (i = m_ParticlesList.begin(); i != m_ParticlesList.end(); i++)
-	{
 		Reset_Partice(&(*i));
-	}
 }
 
 void CParticleSystem::Add_Particle()
