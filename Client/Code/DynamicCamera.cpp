@@ -596,10 +596,17 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 				return;
 			}
 
-			if (m_eAfterState == C_PLAYERCHASE)
+			if (m_eAfterState == C_PLAYERCHASE && m_bFix == false)
 			{
 				m_eCurState = C_PLAYERCHASE;
 				m_bChaseInit = true;
+				m_bFix = false;
+			}
+			else if (m_eAfterState == C_PLAYERCHASE && m_bFix == true)
+			{
+				// 도착지점에서 바뀌지 않을경우에는 bChaseInit = false를 해줘야 새로운 자리를 잡지 않음
+				m_eCurState = C_PLAYERCHASE;
+				m_bChaseInit = false;
 				m_bFix = false;
 			}
 			else if (m_eAfterState == C_MOVE_TO_TARGET)
@@ -760,6 +767,7 @@ void CDynamicCamera::OnMoveToPlayerFront()
 	playerInfo->Get_Info(INFO_LOOK, &playerDir);
 
 	m_vOriginAtPosition = m_vAt;
+	m_vStartEyePosition = m_vEye;
 
 	m_bFix = true;
 	D3DXVec3Normalize(&playerDir, &playerDir);
@@ -796,19 +804,19 @@ void CDynamicCamera::OnMoveToOriginPos()
 
 	_vec3	moveCamPos;
 
-	if (m_bCollisionWall == false)
+	/*if (m_bCollisionWall == false)
 	{
 		moveCamPos = playerPos + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
 	}
 	else
 	{
 		moveCamPos = playerPos + m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
-	}
+	}*/
 
 	m_eCurState = C_MOVE_TO_TARGET;
-	m_vCameraPosDir = m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
+	//m_vCameraPosDir = m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
 
-	OnMoveTargetCamera(1.f, 7.f, moveCamPos, false, 0);
+	OnMoveTargetCamera(2.f, 7.f, m_vStartEyePosition, true, 0);
 }
 
 void CDynamicCamera::Set_EpicBullet()

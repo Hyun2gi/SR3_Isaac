@@ -95,11 +95,11 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		m_fFrame = 0.f;	
 	}
 
-
 	if (m_eCurState == P_THUMBS_UP)
 	{
 		m_fDelayTime += fTimeDelta;
 
+		m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
 		if (m_fFrame > 1)
 		{
 			m_fFrame = 1;
@@ -756,7 +756,7 @@ void CPlayer::Motion_Change()
 			break;
 		case P_THUMBS_UP:
 			m_fPicNum = 2;
-			m_fSpriteSpeed = 2.f;
+			m_fSpriteSpeed = 0.5f;
 			m_bKeyBlock = true; //key ¸·±â
 			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_THUMBS_UP"));
 			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_THUMBS_UP"));
