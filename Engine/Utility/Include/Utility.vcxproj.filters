@@ -85,6 +85,12 @@
     <Filter Include="09. Particle\ParticleBurst">
       <UniqueIdentifier>{353b67bd-eb3e-44be-9ba1-e423e2404ab8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="09. Particle\ParticleSplashLeft">
+      <UniqueIdentifier>{12bf1650-5303-4e47-bfb7-9686ada2f055}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09. Particle\ParticleSplashRight">
+      <UniqueIdentifier>{9e770353-b616-4f56-b18c-75042e1772ff}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Header\Management.h">
@@ -171,6 +177,12 @@
     <ClInclude Include="..\..\Header\ParticleBurst.h">
       <Filter>09. Particle\ParticleBurst</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Header\ParticleSplashLeft.h">
+      <Filter>09. Particle\ParticleSplashLeft</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\ParticleSplashRight.h">
+      <Filter>09. Particle\ParticleSplashRight</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\Management.cpp">
@@ -253,6 +265,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\ParticleBurst.cpp">
       <Filter>09. Particle\ParticleBurst</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ParticleSplashLeft.cpp">
+      <Filter>09. Particle\ParticleSplashLeft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ParticleSplashRight.cpp">
+      <Filter>09. Particle\ParticleSplashRight</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

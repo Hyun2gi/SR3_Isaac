@@ -95,9 +95,11 @@ HRESULT CTestStage::Ready_Scene()
 	//파티클 사용 예
 	// 맵에 흩뿌려지는 파티클 (딱히 추가할 일 없음)
 	Engine::Create_Scatter(m_pGraphicDev, _vec3(-10.0f, -5.0f, -10.0f), _vec3(10.0f, 5.0f, 10.0f));
-	Engine::Create_Explosion(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
-	Engine::Create_Splash(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
-	Engine::Create_Burst(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
+	//Engine::Create_Explosion(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
+	//Engine::Create_Splash(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
+	Engine::Create_Splash_Left(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
+	Engine::Create_Splash_Right(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
+	//Engine::Create_Burst(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
 
 	return S_OK;
 }

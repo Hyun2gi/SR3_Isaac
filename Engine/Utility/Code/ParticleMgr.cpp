@@ -34,6 +34,20 @@ void CParticleMgr::Create_Splash(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, cons
 	m_pParticleList.emplace_back(pParticle);
 }
 
+void CParticleMgr::Create_Splash_Left(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, const _tchar* pTexturePath, _int iMaxFrame, _float fSize, _int iCount)
+{
+	CParticleSplashLeft* pParticle = CParticleSplashLeft::Create(pGraphicDev, vPos, pTexturePath, iMaxFrame, fSize, iCount);
+
+	m_pParticleList.emplace_back(pParticle);
+}
+
+void CParticleMgr::Create_Splash_Right(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, const _tchar* pTexturePath, _int iMaxFrame, _float fSize, _int iCount)
+{
+	CParticleSplashRight* pParticle = CParticleSplashRight::Create(pGraphicDev, vPos, pTexturePath, iMaxFrame, fSize, iCount);
+
+	m_pParticleList.emplace_back(pParticle);
+}
+
 void CParticleMgr::Create_Burst(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fSize, _int iCount)
 {
 	CParticleBurst* pParticle = CParticleBurst::Create(pGraphicDev, vPos, fSize, iCount);

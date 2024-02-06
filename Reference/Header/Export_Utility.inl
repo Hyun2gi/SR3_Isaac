@@ -79,6 +79,16 @@ inline void Create_Splash(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, const _tcha
 	CParticleMgr::GetInstance()->Create_Splash(pGraphicDev, vPos, pTexturePath, iMaxFrame, fSize, iCount);
 }
 
+inline void Create_Splash_Left(LPDIRECT3DDEVICE9 pDevice, _vec3 vPos, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
+{
+	CParticleMgr::GetInstance()->Create_Splash_Left(pDevice, vPos, pTextruePath, iMaxFrame, fSize, iCount);
+}
+
+inline void Create_Splash_Right(LPDIRECT3DDEVICE9 pDevice, _vec3 vPos, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
+{
+	CParticleMgr::GetInstance()->Create_Splash_Right(pDevice, vPos, pTextruePath, iMaxFrame, fSize, iCount);
+}
+
 inline void Create_Burst(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fSize, _int iCount)
 {
 	CParticleMgr::GetInstance()->Create_Burst(pGraphicDev, vPos, fSize, iCount);
