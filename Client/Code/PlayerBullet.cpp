@@ -27,6 +27,13 @@ HRESULT CPlayerBullet::Ready_GameObject()
     m_fCallLimit = 1.5;
     m_fBulletSpeed = CPlayer::GetInstance()->Get_BulletSpeed();
 
+    m_bCollision = false;
+
+    m_ePreState = IDLEBULLET_END;
+    m_eCurState = IDLEBULLET_IDLE;
+
+    m_fFrame = 0;
+
     return S_OK;
 }
 
@@ -35,20 +42,46 @@ _int CPlayerBullet::Update_GameObject(const _float& fTimeDelta)
     CGameObject::Update_GameObject(fTimeDelta);
     m_pCalculatorCom->Compute_Vill_Matrix(m_pTransformCom);
 
-    if (Check_Time(fTimeDelta))
+    if (m_bCollision)
+    {
+        m_eCurState = IDLEBULLET_EFFECT;
+    }
+
+    Motion_Change();
+
+   
+    // 충돌하지 않고 시간이 다되면 바로 DEAD 처리
+    if (Check_Time(fTimeDelta) && m_eCurState == IDLEBULLET_IDLE)
     {
         // 시간 다 되면 삭제
         m_bDead = true;
     }
 
+    // 시간다돼서
     if (m_bDead == true)
     {
         return 1;
     }
 
-    m_fBulletSpeed += 0.2 * fTimeDelta;
+    if (m_eCurState == IDLEBULLET_EFFECT)
+    {
+        //마지막 이미지가 나오면 dead
+        m_fFrame += m_iPicNum * fTimeDelta * m_fSpriteSpeed;
 
-    m_pTransformCom->Move_Pos(&m_vBulletDir, m_fBulletSpeed, fTimeDelta);
+        if (m_iPicNum < m_fFrame)
+        {
+            m_fFrame = 0;
+            // 없애기
+            m_bDead = true;
+        }
+    }
+    else if (m_eCurState == IDLEBULLET_IDLE)
+    {
+        m_fBulletSpeed += 0.2 * fTimeDelta;
+
+        m_pTransformCom->Move_Pos(&m_vBulletDir, m_fBulletSpeed, fTimeDelta);
+    }
+    
 
     Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -70,7 +103,15 @@ void CPlayerBullet::Render_GameObject()
     m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
     m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
-    m_pTextureCom->Set_Texture((_uint)0);
+    if (m_eCurState == IDLEBULLET_IDLE)
+    {
+        m_pTextureCom->Set_Texture((_uint)0);
+    }
+    else
+    {
+        m_pTextureCom->Set_Texture((_uint)m_fFrame);
+    }
+   
 
     m_pBufferCom->Render_Buffer();
 
@@ -85,6 +126,10 @@ HRESULT CPlayerBullet::Add_Component()
     pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(Engine::Clone_Proto(L"Proto_RcTex"));
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
+
+    pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTear_Effect"));
+    NULL_CHECK_RETURN(pComponent, E_FAIL);
+    m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTear_Effect", pComponent });
 
     pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTear"));
     NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -128,11 +173,35 @@ bool CPlayerBullet::Check_Time(const _float& fTimeDelta)
 
     if (m_fAccTimeDelta >= m_fCallLimit)
     {
-        m_fAccTimeDelta = 0.f;
+        //m_fAccTimeDelta = 0.f;
         return true;
     }
 
     return false;
+}
+
+void CPlayerBullet::Motion_Change()
+{
+    if (m_ePreState != m_eCurState)
+    {
+        m_fFrame = 0.f;
+        switch (m_eCurState)
+        {
+        case IDLEBULLET_IDLE:
+            m_iPicNum = 1;
+            m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTear"));
+            break;
+        case IDLEBULLET_EFFECT:
+            m_iPicNum = 10;
+            m_fSpriteSpeed = 3.f;
+            m_fAccTimeDelta = 0;
+            m_fFrame = 0;
+            m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTear_Effect"));
+            break;
+        }
+
+        m_ePreState = m_eCurState;
+    }
 }
 
 CPlayerBullet* CPlayerBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _tchar* pLayerTag)
