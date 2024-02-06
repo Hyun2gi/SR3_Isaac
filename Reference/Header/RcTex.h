@@ -22,6 +22,8 @@ public:
 private:
 	LPDIRECT3DDEVICE9 m_pDev;
 
+	D3DXCOLOR		m_dwColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
+
 private:
 	virtual void	Free();
 };

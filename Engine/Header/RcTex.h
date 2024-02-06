@@ -15,12 +15,16 @@ public:
 	virtual HRESULT		Ready_Buffer();
 	virtual void		Render_Buffer();
 
+	void	Set_Color(D3DXCOLOR _color) { m_dwColor = _color; }
+
 public:
 	static CRcTex*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual CComponent*	Clone();
 
 private:
 	LPDIRECT3DDEVICE9 m_pDev;
+
+	D3DXCOLOR		m_dwColor = D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f);
 
 private:
 	virtual void	Free();

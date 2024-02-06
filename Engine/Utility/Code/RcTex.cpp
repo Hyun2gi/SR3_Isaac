@@ -39,35 +39,19 @@ HRESULT CRcTex::Ready_Buffer()
 
 	pVertex[0].vPosition = { -1.f, 1.f, 0.f };
 	pVertex[0].vTexUV = { 0.f, 0.f };
-	pVertex[0].dwColor = D3DXCOLOR(
-		1.0f,
-		1.0f,
-		1.0f,
-		1.0f);
+	pVertex[0].dwColor = m_dwColor;
 
 	pVertex[1].vPosition = { 1.f, 1.f, 0.f };
 	pVertex[1].vTexUV = { 1.f, 0.f };
-	pVertex[1].dwColor = D3DXCOLOR(
-		1.0f,
-		1.0f,
-		1.0f,
-		1.0f);
+	pVertex[1].dwColor = m_dwColor;
 
 	pVertex[2].vPosition = { 1.f, -1.f, 0.f };
 	pVertex[2].vTexUV = { 1.f, 1.f };
-	pVertex[2].dwColor = D3DXCOLOR(
-		1.0f,
-		1.0f,
-		1.0f,
-		1.0f);
+	pVertex[2].dwColor = m_dwColor;
 		
 	pVertex[3].vPosition = { -1.f, -1.f, 0.f };
 	pVertex[3].vTexUV = { 0.f, 1.f };
-	pVertex[3].dwColor = D3DXCOLOR(
-		1.0f,
-		1.0f,
-		1.0f,
-		1.0f);
+	pVertex[3].dwColor = m_dwColor;
 
 	m_pVB->Unlock();
 
@@ -91,6 +75,7 @@ HRESULT CRcTex::Ready_Buffer()
 
 void CRcTex::Render_Buffer()
 {
+	Ready_Buffer();
 	CVIBuffer::Render_Buffer();
 }
 
