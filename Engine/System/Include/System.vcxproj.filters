@@ -49,6 +49,9 @@
     <Filter Include="07. SoundMgr\fmod">
       <UniqueIdentifier>{2ca9b2aa-1074-4eda-99b6-809acb7a5f1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="08. AbstractFactory">
+      <UniqueIdentifier>{77dee523-80a8-45ba-b54b-979cbab82c79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\GraphicDev.cpp">
@@ -187,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\fmod\fmod_output.h">
       <Filter>07. SoundMgr\fmod</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Header\AbstractFactory.h">
+      <Filter>08. AbstractFactory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

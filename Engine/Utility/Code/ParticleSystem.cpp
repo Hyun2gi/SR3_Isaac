@@ -53,13 +53,13 @@ void CParticleSystem::Pre_Render()
 
 void CParticleSystem::Render()
 {
+		Pre_Render();
 	if (!m_ParticlesList.empty())
 	{
 		//
 		// set render states
 		//
 
-		Pre_Render();
 
 		m_pGraphicDev->SetTexture(0, m_pTex);
 		m_pGraphicDev->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
@@ -134,8 +134,8 @@ void CParticleSystem::Render()
 
 		m_VbOffset += m_VbBatchSize;
 
-		Post_Render();
 	}
+		Post_Render();
 }
 
 void CParticleSystem::Post_Render()
