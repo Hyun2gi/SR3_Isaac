@@ -108,12 +108,10 @@ void CParticleBurst::Update_Particle(_float fTimeDelat)
 	}
 }
 
-void CParticleBurst::Render()
+void CParticleBurst::Render_GameObject()
 {
 	if (!m_ParticlesList.empty())
 	{
-		Pre_Render();
-
 		m_pTexture->Set_Texture(m_iRandNum);
 
 		m_pGraphicDev->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
@@ -187,8 +185,6 @@ void CParticleBurst::Render()
 		}
 
 		m_VbOffset += m_VbBatchSize;
-
-		Post_Render();
 	}
 }
 

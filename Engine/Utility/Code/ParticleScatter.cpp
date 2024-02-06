@@ -1,6 +1,8 @@
 #include "..\..\Header\ParticleSystem.h"
 #include "ParticleScatter.h"
 
+#include "Export_Utility.h"
+
 CParticleScatter::CParticleScatter(BoundingBox* boundingBox, int numParticles)
 {
 	m_tBoundingBox = *boundingBox;
@@ -71,7 +73,7 @@ void CParticleScatter::Reset_Partice(Attribute* attribute)
 		0.5f,
 		0.5f,
 		0.5f,
-		0.5f);
+		0.1f);
 }
 
 void CParticleScatter::Update_Particle(_float fTimeDelat)
@@ -86,4 +88,6 @@ void CParticleScatter::Update_Particle(_float fTimeDelat)
 			Reset_Partice(&(*i));
 		}
 	}
+
+	Engine::Add_RenderGroup(RENDER_PARTICLES, this);
 }

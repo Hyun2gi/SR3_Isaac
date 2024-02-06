@@ -169,7 +169,7 @@ void CLoadStage::LateUpdate_Scene()
 void CLoadStage::Render_Scene()
 {
 	// DEBUG
-	pParticleScatter->Render();
+	pParticleScatter->Render_GameObject();
 }
 
 HRESULT CLoadStage::Load_Level_Data()

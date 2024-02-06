@@ -126,15 +126,13 @@ void CParticleSplash::Update_Particle(_float fTimeDelat)
 	}
 }
 
-void CParticleSplash::Render()
+void CParticleSplash::Render_GameObject()
 {
 	if (!m_ParticlesList.empty())
 	{
 		//
 		// set render states
 		//
-
-		Pre_Render();
 
 		m_pTexture->Set_Texture((_uint)m_fFrame);
 		m_pGraphicDev->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
@@ -208,8 +206,6 @@ void CParticleSplash::Render()
 		}
 
 		m_VbOffset += m_VbBatchSize;
-
-		Post_Render();
 	}
 }
 

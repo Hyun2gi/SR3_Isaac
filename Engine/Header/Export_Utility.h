@@ -5,6 +5,8 @@
 #include "Renderer.h"
 #include "LightMgr.h"
 
+#include "AbstractFactory.h"
+
 #include "TriCol.h"
 #include "RcCol.h"
 #include "RcTex.h"
@@ -24,6 +26,7 @@
 #include "ParticleExplosion.h"
 #include "ParticleSplash.h"
 #include "ParticleBurst.h"
+
 
 BEGIN(Engine)
 

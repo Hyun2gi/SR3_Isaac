@@ -68,19 +68,14 @@ public:
 	virtual void Add_Particle();
 	virtual void Update_Particle(_float fTimeDelat) = 0;
 
-	virtual void Pre_Render();
-	virtual void Render();
-	virtual void Post_Render();
+	virtual void Render_GameObject();
 
 	bool Is_Empty();
 	bool Is_Dead();
 
-	void	Set_Velocity_Speed(_float fSpeed) { m_fVelocitySpeed = fSpeed; }
+	_float Get_Size() { return m_fSize; }
 
-	DWORD FtoDw(float f)
-	{
-		return *((DWORD*)&f);
-	}
+	void	Set_Velocity_Speed(_float fSpeed) { m_fVelocitySpeed = fSpeed; }
 
 	float GetRandomFloat(float lowBound, float highBound)
 	{

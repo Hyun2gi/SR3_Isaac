@@ -30,6 +30,7 @@ void CRenderer::Render_GameObject(LPDIRECT3DDEVICE9 & pGraphicDev)
 	Render_NonAlpha(pGraphicDev);
 	Render_Alpha(pGraphicDev);
 	Render_Alpha_Sorting(pGraphicDev);
+	Render_Particles(pGraphicDev);
 	Render_UI(pGraphicDev);
 
 	Clear_RenderGroup();
@@ -105,6 +106,44 @@ void CRenderer::Render_Alpha_Sorting(LPDIRECT3DDEVICE9& pGraphicDev)
 		iter->Render_GameObject();
 
 	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+}
+
+void CRenderer::Render_Particles(LPDIRECT3DDEVICE9& pGraphicDev)
+{
+	pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
+	pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, TRUE);
+	pGraphicDev->SetRenderState(D3DRS_POINTSIZE_MIN, Engine::CAbstractFactory::FtoDw(0.0f));
+
+	// control the size of the particle relative to distance
+	pGraphicDev->SetRenderState(D3DRS_POINTSCALE_A, Engine::CAbstractFactory::FtoDw(0.0f));
+	pGraphicDev->SetRenderState(D3DRS_POINTSCALE_B, Engine::CAbstractFactory::FtoDw(0.0f));
+	pGraphicDev->SetRenderState(D3DRS_POINTSCALE_C, Engine::CAbstractFactory::FtoDw(1.0f));
+
+	// use alpha from texture
+	pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
+	pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
+
+	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+
+	m_RenderGroup[RENDER_PARTICLES].sort([](CGameObject* pDst, CGameObject* pSrc)->bool
+		{
+			return pDst->Get_ViewZ() > pSrc->Get_ViewZ();
+		});
+
+	for (auto& iter : m_RenderGroup[RENDER_PARTICLES])
+	{
+		_float size = dynamic_cast<CParticleSystem*>(iter)->Get_Size();
+
+		pGraphicDev->SetRenderState(D3DRS_POINTSIZE, Engine::CAbstractFactory::FtoDw(size));
+
+		iter->Render_GameObject();
+	}
+
+	pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, FALSE);
+	pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, FALSE);
 	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 

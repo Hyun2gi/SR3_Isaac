@@ -4,16 +4,13 @@
 
 BEGIN(Engine)
 
-template<typename T>
+//template<typename T>
 class ENGINE_DLL CAbstractFactory : public CBase
 {
 public:
-	static CObj* Create()
+	static DWORD FtoDw(float f)
 	{
-		CObj* pObj = new T;
-		pObj->Initialize();
-
-		return pObj;
+		return *((DWORD*)&f);
 	}
 
 public:

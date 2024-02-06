@@ -1,5 +1,7 @@
 #include "..\..\Header\ParticleSystem.h"
 
+#include "Export_Utility.h"
+
 CParticleSystem::CParticleSystem()
 {
 	m_pGraphicDev = 0;
@@ -30,30 +32,8 @@ void CParticleSystem::Add_Particle()
 	m_ParticlesList.push_back(attribute);
 }
 
-void CParticleSystem::Pre_Render()
+void CParticleSystem::Render_GameObject()
 {
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSIZE, FtoDw(m_fSize));
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSIZE_MIN, FtoDw(0.0f));
-
-	// control the size of the particle relative to distance
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALE_A, FtoDw(0.0f));
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALE_B, FtoDw(0.0f));
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALE_C, FtoDw(1.0f));
-
-	// use alpha from texture
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE);
-	m_pGraphicDev->SetTextureStageState(0, D3DTSS_ALPHAOP, D3DTOP_SELECTARG1);
-
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-	m_pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-	m_pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-}
-
-void CParticleSystem::Render()
-{
-		Pre_Render();
 	if (!m_ParticlesList.empty())
 	{
 		//
@@ -135,14 +115,6 @@ void CParticleSystem::Render()
 		m_VbOffset += m_VbBatchSize;
 
 	}
-		Post_Render();
-}
-
-void CParticleSystem::Post_Render()
-{
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, FALSE);
-	m_pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, FALSE);
-	m_pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
 }
 
 bool CParticleSystem::Is_Empty()
