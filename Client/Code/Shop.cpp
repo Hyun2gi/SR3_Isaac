@@ -39,7 +39,7 @@ void CShop::Set_Item_ToStage(CLayer* pLayer)
 HRESULT CShop::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(10.f, 1.f, 30.f);
+	m_pTransformCom->Set_Pos(10.f, 1.f, 25.f);
 
 	m_bIsLayerInsert = false;
 
@@ -52,8 +52,18 @@ _int CShop::Update_GameObject(const _float& fTimeDelta)
 
 	Create_Obj();
 
+	Check_Sell();
+
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->Update_GameObject(fTimeDelta);
+
+	if (!m_vecCoinFont.empty())
+	{
+		for (auto& iter : m_vecCoinFont)
+		{
+			iter->Update_GameObject(fTimeDelta);
+		}
+	}
 
 	return 0;
 }
@@ -64,12 +74,28 @@ void CShop::LateUpdate_GameObject()
 
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->LateUpdate_GameObject();
+
+	if (!m_vecCoinFont.empty())
+	{
+		for (auto& iter : m_vecCoinFont)
+		{
+			iter->LateUpdate_GameObject();
+		}
+	}
 }
 
 void CShop::Render_GameObject()
 {
 	if (m_pShopNpc != nullptr)
 		m_pShopNpc->Render_GameObject();
+
+	if (!m_vecCoinFont.empty())
+	{
+		for (auto& iter : m_vecCoinFont)
+		{
+			iter->Render_GameObject();
+		}
+	}
 }
 
 HRESULT CShop::Add_Component()
@@ -125,24 +151,44 @@ void CShop::Create_Obj()
 
 	if (m_pPill == nullptr)
 	{
-		_vec3 vPillPos = { vPos.x - INTERVALX, vPos.y, vPos.z - INTERVALZ };
+		_vec3 vPillPos = { vPos.x - INTERVALX, vPos.y - 0.5f, vPos.z - INTERVALZ };
 		m_pPill = CPill::Create(m_pGraphicDev, 3, vPillPos, vDir);
 		m_pPill->Set_MyLayer(L"GameItem");
+
+		// Coin font
+		m_vecCoinFont.push_back(CCoinFont::Create(m_pGraphicDev));
+		m_vecCoinFont.front()->Get_TransformCom()->Set_Pos(vPillPos.x, vPillPos.y + INTERVALY, vPillPos.z);
+		dynamic_cast<CCoinFont*>(m_vecCoinFont.front())->Set_State(1);
 	}
 
 	if (m_pEpic == nullptr)
 	{
-		_vec3 vEpicPos = { vPos.x, vPos.y, vPos.z - INTERVALZ };
+		_vec3 vEpicPos = { vPos.x, vPos.y - 0.5f, vPos.z - INTERVALZ };
 		m_pEpic = CEpic::Create(m_pGraphicDev, 3, vEpicPos, vDir);
 		m_pEpic->Set_MyLayer(L"GameItem");
+
+		// Coin font
+		m_vecCoinFont.push_back(CCoinFont::Create(m_pGraphicDev));
+		m_vecCoinFont.back()->Get_TransformCom()->Set_Pos(vEpicPos.x, vEpicPos.y + INTERVALY, vEpicPos.z);
+		dynamic_cast<CCoinFont*>(m_vecCoinFont.back())->Set_State(2);
 	}
 
 	if (m_pHeart == nullptr)
 	{
-		_vec3 vHeartPos = { vPos.x + INTERVALX, vPos.y, vPos.z - INTERVALZ }; // INTERVALZ
-		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir,6);
+		_vec3 vHeartPos = { vPos.x + INTERVALX, vPos.y - 0.5f, vPos.z - INTERVALZ }; // INTERVALZ
+		m_pHeart = CHeart::Create(m_pGraphicDev, 3, vHeartPos, vDir);
 		m_pHeart->Set_MyLayer(L"GameItem");
+
+		// Coin font
+		m_vecCoinFont.push_back(CCoinFont::Create(m_pGraphicDev));
+		m_vecCoinFont.back()->Get_TransformCom()->Set_Pos(vHeartPos.x, vHeartPos.y + INTERVALY, vHeartPos.z);
+		dynamic_cast<CCoinFont*>(m_vecCoinFont.back())->Set_State(0);
 	}
+}
+
+void CShop::Check_Sell()
+{
+	// 해당 아이템 Dead 시 CoinFont 사라지게
 }
 
 CShop* CShop::Create(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -172,6 +218,8 @@ void CShop::Free()
 
 	Safe_Release<CHeart*>(m_pHeart);
 	m_pHeart = nullptr;
+
+	for_each(m_vecCoinFont.begin(), m_vecCoinFont.end(), CDeleteObj());
 
 	__super::Free();
 }
