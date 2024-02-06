@@ -771,10 +771,10 @@ void CDynamicCamera::OnMoveToPlayerFront()
 
 	m_bFix = true;
 	D3DXVec3Normalize(&playerDir, &playerDir);
-	playerDir *= -3;
+	playerDir *= -4;
 	// 바라보는 대상은 플레이어
 	targetpos = playerPos + playerDir;
-	OnMoveTargetCamera(3, 5, targetpos, false, 4);
+	OnMoveTargetCamera(5, 5, targetpos, true, 4);
 }
 
 
@@ -816,7 +816,7 @@ void CDynamicCamera::OnMoveToOriginPos()
 	m_eCurState = C_MOVE_TO_TARGET;
 	//m_vCameraPosDir = m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
 
-	OnMoveTargetCamera(2.f, 7.f, m_vStartEyePosition, true, 0);
+	OnMoveTargetCamera(1.f, 7.f, m_vStartEyePosition, true, 0);
 }
 
 void CDynamicCamera::Set_EpicBullet()

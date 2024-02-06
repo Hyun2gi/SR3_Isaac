@@ -59,6 +59,10 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_bEpicLieTiming = false;
 
 		m_bInitialize = true;
+
+		m_bShoot = false;
+
+		m_iTempTimer = 0;
 	}
 	else
 	{
@@ -99,14 +103,18 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_fDelayTime += fTimeDelta;
 
-		m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
-		if (m_fFrame > 1)
+		if (m_fDelayTime > 2)
 		{
-			m_fFrame = 1;
+			m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
+		}
+
+		if (m_fFrame > 2)
+		{
+			m_fFrame = 2;
 		}
 
 		// 2초 동안 따봉
-		if (m_fDelayTime > 2)
+		if (m_fDelayTime > 4)
 		{
 			m_eCurState = P_IDLE;
 			m_fDelayTime = 0; // 딜레이 시간 초기화
@@ -279,9 +287,13 @@ HRESULT CPlayer::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_THUMBS_UP", pComponent });
 
-	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_Get_GOOD_ITEM"));
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_ATTACKED"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_Get_GOOD_ITEM", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_ATTACKED", pComponent });
+
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_GET_BAD_ITEM"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_GET_BAD_ITEM", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_IDLE"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -456,8 +468,10 @@ int CPlayer::Get_PlayerCurState()
 		return 5;
 	case P_THUMBS_UP:
 		return 6;
-	case P_GET_GOOD_ITEM:
-		return 6;
+	case P_GET_BAD_ITEM:
+		return 7;
+	case P_ATTACKED:
+		return 8;
 	}
 }
 
@@ -516,6 +530,11 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			{
 				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
 			}
+
+			if (m_bShoot)
+			{
+				m_eCurState = P_SHOOTWALK;
+			}
 		}
 		else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
 		{
@@ -529,6 +548,11 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				&& vPos.x > vScale.x && vPos.z > vScale.z)
 			{
 				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+			}
+
+			if (m_bShoot)
+			{
+				m_eCurState = P_SHOOTWALK;
 			}
 		}
 		else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
@@ -545,6 +569,11 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				&& vPos.x > vScale.x && vPos.z > vScale.z)
 			{
 				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+			}
+
+			if (m_bShoot)
+			{
+				m_eCurState = P_SHOOTWALK;
 			}
 
 		}
@@ -564,6 +593,11 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
 			}
 
+			if (m_bShoot)
+			{
+				m_eCurState = P_SHOOTWALK;
+			}
+
 		}
 		else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
 		{
@@ -571,7 +605,15 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 		else
 		{
-			m_eCurState = P_IDLE;
+			if (m_bShoot)
+			{
+				m_eCurState = P_SHOOTIDLE;
+			}
+			else
+			{
+				m_eCurState = P_IDLE;
+			}
+			
 		}
 	}
 	
@@ -590,14 +632,30 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	// 총알 발사
 	if (Engine::Get_DIMouseState(DIM_LB) & 0x80)
 	{
+		m_iTempTimer++;
 		if (m_eCurBulletState == P_BULLET_IDLE || m_eCurBulletState == P_BULLET_BRIMSTONE)
 		{
-			m_eCurState = P_SHOOTWALK;
+			if (m_eCurState != P_SHOOTWALK)
+			{
+				m_eCurState = P_SHOOTIDLE;
+			}
+
+			// 슛은 눌렀지만 슛은 못하고 있을때
+			if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTIDLE && m_iTempTimer > 30)
+			{
+				m_iTempTimer = 0;
+				m_eCurState = P_BACKIDLE;
+			}
+			else if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTWALK && m_iTempTimer > 30)
+			{
+				m_iTempTimer = 0;
+				m_eCurState = P_BACKWALK;
+			}
+
 			// m_fShootDelay가 0일때만 쏠 수 있음
 			if (m_fShootDelayTime == 0)
 			{
-				m_eCurState = P_SHOOTWALK;
-
+				m_bShoot = true;
 				if (m_eCurBulletState == P_BULLET_IDLE)
 				{
 					m_PlayerBulletList.push_back(CPlayerBullet::Create(m_pGraphicDev, m_pLayerTag));
@@ -639,6 +697,11 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			
 		}
 		
+	}
+	else
+	{
+		// 왼쪽 마우스 클릭안함
+		m_bShoot = false;
 	}
 
 	if ((Engine::Get_DIMouseState(DIM_RB) & 0x80) && m_eCurBulletState == P_BULLET_EPIC && m_eCurState!= P_SHOOTWALK)
@@ -736,8 +799,20 @@ void CPlayer::Motion_Change()
 			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK"));
 			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK"));
 			break;
+		case P_BACKIDLE:
+			m_fPicNum = 1;
+			m_fSpriteSpeed = 1.5f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK"));
+			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK"));
+			break;
 		case P_SHOOTWALK:
 			m_fPicNum = 11;
+			m_fSpriteSpeed = 1.5f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK_SMALL"));
+			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK_SMALL"));
+			break;
+		case P_SHOOTIDLE:
+			m_fPicNum = 1;
 			m_fSpriteSpeed = 1.5f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK_SMALL"));
 			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK_SMALL"));
@@ -755,13 +830,19 @@ void CPlayer::Motion_Change()
 			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_RIGHT"));
 			break;
 		case P_THUMBS_UP:
-			m_fPicNum = 2;
-			m_fSpriteSpeed = 0.5f;
+			m_fPicNum = 3;
+			m_fSpriteSpeed = 0.7f;
 			m_bKeyBlock = true; //key 막기
 			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_THUMBS_UP"));
 			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_THUMBS_UP"));
 			break;
-		case P_GET_GOOD_ITEM:
+		case P_GET_BAD_ITEM:
+			m_fPicNum = 1;
+			m_fSpriteSpeed = 1.f;
+			m_bKeyBlock = true; //key 막기
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_Get_GOOD_ITEM"));
+			break;
+		case P_ATTACKED:
 			m_fPicNum = 1;
 			m_fSpriteSpeed = 1.f;
 			m_bKeyBlock = true; //key 막기

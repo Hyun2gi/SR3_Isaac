@@ -26,7 +26,7 @@ private:
 	// BACKWALK : 뒷통수보면서 쏨
 	// SHOOTWALK : 쏘는 자세 (머리통이 작아짐)
 	// GOOD : 따봉
-	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK,  P_THUMBS_UP, P_GET_GOOD_ITEM, P_END  };
+	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_BACKIDLE, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_SHOOTIDLE,  P_THUMBS_UP, P_GET_BAD_ITEM, P_ATTACKED, P_END  };
 	
 	enum BULLETID
 	{	P_BULLET_IDLE, P_BULLET_BRIMSTONE, P_BULLET_EPIC, P_BULLET_END};
@@ -186,6 +186,12 @@ private:
 
 	// 한번만 초기화하기
 	bool				m_bInitialize = false;
+
+	// 총을 쏘는지 마는지
+	bool				m_bShoot; 
+
+	// 총쏠때 머리작아지는거 시간 격차두기용
+	int					m_iTempTimer;
 
 private:
 	list<CGameObject*>	m_PlayerBulletList;
