@@ -95,8 +95,6 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		m_fFrame = 0.f;	
 	}
 
-	
-
 
 	if (m_eCurState == P_THUMBS_UP)
 	{
@@ -245,6 +243,8 @@ void CPlayer::Render_GameObject()
 
 	m_pTextureCom->Set_Texture((_uint)m_fFrame);
 
+	
+
 	m_pBufferCom->Render_Buffer();
 	/*m_pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);*/
@@ -278,6 +278,10 @@ HRESULT CPlayer::Add_Component()
 	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_THUMBS_UP"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_THUMBS_UP", pComponent });
+
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_Get_GOOD_ITEM"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_Get_GOOD_ITEM", pComponent });
 
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_IDLE"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -364,7 +368,7 @@ void CPlayer::Set_Item_Get_Anim()
 {
 	m_bKeyBlock = true;
 	m_eCurState = P_THUMBS_UP;
-
+	m_fDelayTime = 0;
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToPlayerFront();
 }
 
@@ -451,6 +455,8 @@ int CPlayer::Get_PlayerCurState()
 	case P_SHOOTWALK:
 		return 5;
 	case P_THUMBS_UP:
+		return 6;
+	case P_GET_GOOD_ITEM:
 		return 6;
 	}
 }
@@ -754,6 +760,12 @@ void CPlayer::Motion_Change()
 			m_bKeyBlock = true; //key 막기
 			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_THUMBS_UP"));
 			//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_THUMBS_UP"));
+			break;
+		case P_GET_GOOD_ITEM:
+			m_fPicNum = 1;
+			m_fSpriteSpeed = 1.f;
+			m_bKeyBlock = true; //key 막기
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_Get_GOOD_ITEM"));
 			break;
 		}
 
