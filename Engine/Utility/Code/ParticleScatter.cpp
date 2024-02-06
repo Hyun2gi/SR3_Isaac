@@ -1,10 +1,12 @@
 #include "..\..\Header\ParticleSystem.h"
 #include "ParticleScatter.h"
 
-CParticleScatter::CParticleScatter(BoundingBox* boundingBox, int numParticles)
+#include "Export_Utility.h"
+
+CParticleScatter::CParticleScatter(BoundingBox* boundingBox, int numParticles, _float fSize)
 {
 	m_tBoundingBox = *boundingBox;
-	m_fSize = 0.25f;
+	m_fSize = fSize;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
 	m_VbBatchSize = 512;
@@ -67,11 +69,12 @@ void CParticleScatter::Reset_Partice(Attribute* attribute)
 	attribute->_vVelocity.y = GetRandomFloat(0.0f, 1.f) * -5.0f;
 	attribute->_vVelocity.z = GetRandomFloat(-0.5f, 0.7f) * -5.0f;
 
+
 	attribute->_color = D3DXCOLOR(
-		0.5f,
-		0.5f,
-		0.5f,
-		0.5f);
+	GetRandomFloat(0.0f, 1.0f),
+	GetRandomFloat(0.0f, 1.0f),
+	GetRandomFloat(0.0f, 1.0f),
+	1.0f);
 }
 
 void CParticleScatter::Update_Particle(_float fTimeDelat)
@@ -86,4 +89,25 @@ void CParticleScatter::Update_Particle(_float fTimeDelat)
 			Reset_Partice(&(*i));
 		}
 	}
+
+	__super::Update_Particle(fTimeDelat);
+}
+
+CParticleScatter* CParticleScatter::Create(IDirect3DDevice9* pDevice, _vec3 vMin, _vec3 vMax, _float fSize, _int iCount)
+{
+	BoundingBox boundingBox;
+	boundingBox._min = vMin;
+	boundingBox._max = vMax;
+
+	CParticleScatter* pInstance = new CParticleScatter(&boundingBox, iCount, fSize);
+
+	if (FAILED(pInstance->Ready_Particle(pDevice)))
+	{
+		Safe_Release(pInstance);
+		MSG_BOX("ParticleScatter Create Failed");
+		return nullptr;
+	}
+
+	return pInstance;
+
 }

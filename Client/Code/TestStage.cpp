@@ -68,29 +68,36 @@ HRESULT CTestStage::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
 
-	BoundingBox boundingBox;
-	boundingBox._min = D3DXVECTOR3(-10.0f, -5.0f, -10.0f);
-	boundingBox._max = D3DXVECTOR3(10.0f, 5.0f, 10.0f);
+	//BoundingBox boundingBox;
+	//boundingBox._min = D3DXVECTOR3(-10.0f, -5.0f, -10.0f);
+	//boundingBox._max = D3DXVECTOR3(10.0f, 5.0f, 10.0f);
 
-	pScatter = new CParticleScatter(&boundingBox, 30);
-	pScatter->Ready_Particle(m_pGraphicDev);
+	//pScatter = new CParticleScatter(&boundingBox, 30);
+	//pScatter->Ready_Particle(m_pGraphicDev);
 
-	_vec3 origin(0.0f, 0.0f, 5.0f);
-	pExp = new CParticleExplosion(&origin, 10);
-	pExp->Ready_Particle(m_pGraphicDev);
+	//_vec3 origin(0.0f, 0.0f, 5.0f);
+	//pExp = new CParticleExplosion(&origin, 10);
+	//pExp->Ready_Particle(m_pGraphicDev);
 
-	_vec3 origin2(0.0f, 0.0f, 5.0f);
-	pSpl = new CParticleSplash(&origin2, 10);
-	pSpl->Ready_Particle(m_pGraphicDev);
-	pSpl->Create_Texture(L"../Bin/Resource/Texture/Particle/BloodExp2/BloodExp_%d.png", 7);
+	//_vec3 origin2(0.0f, 0.0f, 5.0f);
+	//pSpl = new CParticleSplash(&origin2, 10);
+	//pSpl->Ready_Particle(m_pGraphicDev);
+	//pSpl->Create_Texture(L"../Bin/Resource/Texture/Particle/BloodExp2/BloodExp_%d.png", 7);
 
-	_vec3 origin3(0.0f, 0.0f, 5.0f);
-	pBst = new CParticleBurst(&origin3, 3);
-	pBst->Ready_Particle(m_pGraphicDev);
-	pBst->Create_Texture();
+	//_vec3 origin3(0.0f, 0.0f, 5.0f);
+	//pBst = new CParticleBurst(&origin3, 3);
+	//pBst->Ready_Particle(m_pGraphicDev);
+	//pBst->Create_Texture();
 
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
+
+	//파티클 사용 예
+	// 맵에 흩뿌려지는 파티클 (딱히 추가할 일 없음)
+	Engine::Create_Scatter(m_pGraphicDev, _vec3(-10.0f, -5.0f, -10.0f), _vec3(10.0f, 5.0f, 10.0f));
+	Engine::Create_Explosion(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
+	Engine::Create_Splash(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
+	Engine::Create_Burst(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
 
 	return S_OK;
 }
@@ -121,11 +128,14 @@ Engine::_int CTestStage::Update_Scene(const _float& fTimeDelta)
 
 	//Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f); // Second Timer 테스트용 코드
 
+	//Engine::
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
-	pScatter->Update_Particle(fTimeDelta);
-	pExp->Update_Particle(fTimeDelta);
-	pSpl->Update_Particle(fTimeDelta);
-	pBst->Update_Particle(fTimeDelta);
+
+	Engine::Update_Particles(fTimeDelta);
+	//pScatter->Update_Particle(fTimeDelta);
+	//pExp->Update_Particle(fTimeDelta);
+	//pSpl->Update_Particle(fTimeDelta);
+	//pBst->Update_Particle(fTimeDelta);
 	return __super::Update_Scene(fTimeDelta);
 }
 
@@ -137,10 +147,10 @@ void CTestStage::LateUpdate_Scene()
 
 void CTestStage::Render_Scene()
 {
-	pScatter->Render();
-	//pExp->Render();
-	//pSpl->Render();
-	pBst->Render();
+	//pScatter->Render_GameObject();
+	//pExp->Render_GameObject();
+	//pSpl->Render_GameObject();
+	//pBst->Render_GameObject();
 	// DEBUG
 }
 
@@ -646,9 +656,9 @@ CTestStage* CTestStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 
 void CTestStage::Free()
 {
-	Safe_Release(pScatter);
-	Safe_Release(pExp);
-	Safe_Release(pSpl);
-	Safe_Release(pBst);
+	//Safe_Release(pScatter);
+	//Safe_Release(pExp);
+	//Safe_Release(pSpl);
+	//Safe_Release(pBst);
 	__super::Free();
 }

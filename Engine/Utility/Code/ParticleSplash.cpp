@@ -1,11 +1,12 @@
 #include "..\..\Header\ParticleSystem.h"
 #include "ParticleSplash.h"
+
 #include "Export_Utility.h"
 
-CParticleSplash::CParticleSplash(_vec3* vOrigin, int numParticles)
+CParticleSplash::CParticleSplash(_vec3* vOrigin, int numParticles, _float fSize)
 {
 	m_vOrigin = *vOrigin;
-	m_fSize = 1.f;
+	m_fSize = fSize;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
 	m_VbBatchSize = 512;
@@ -124,17 +125,17 @@ void CParticleSplash::Update_Particle(_float fTimeDelat)
 				i->_bIsAlive = false;
 		}
 	}
+
+	__super::Update_Particle(fTimeDelat);
 }
 
-void CParticleSplash::Render()
+void CParticleSplash::Render_GameObject()
 {
 	if (!m_ParticlesList.empty())
 	{
 		//
 		// set render states
 		//
-
-		Pre_Render();
 
 		m_pTexture->Set_Texture((_uint)m_fFrame);
 		m_pGraphicDev->SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
@@ -208,8 +209,6 @@ void CParticleSplash::Render()
 		}
 
 		m_VbOffset += m_VbBatchSize;
-
-		Post_Render();
 	}
 }
 
@@ -217,4 +216,20 @@ void CParticleSplash::Create_Texture(const _tchar* pTexturePath, _int iMaxFrame)
 {
 	m_iPicNum = iMaxFrame;
 	m_pTexture = CTexture::Create(m_pGraphicDev, TEX_NORMAL, pTexturePath, iMaxFrame);
+}
+
+CParticleSplash* CParticleSplash::Create(IDirect3DDevice9* pDevice, _vec3 vPos, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
+{
+	CParticleSplash* pInstance = new CParticleSplash(&vPos, iCount, fSize);
+
+	if (FAILED(pInstance->Ready_Particle(pDevice)))
+	{
+		Safe_Release(pInstance);
+		MSG_BOX("CParticleSplash Create Failed");
+		return nullptr;
+	}
+
+	pInstance->Create_Texture(pTextruePath, iMaxFrame);
+
+	return pInstance;
 }

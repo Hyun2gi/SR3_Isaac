@@ -64,10 +64,43 @@ HRESULT		Ready_Light(LPDIRECT3DDEVICE9 pGraphicDev,
 	return CLightMgr::GetInstance()->Ready_Light(pGraphicDev, pLightInfo, iIndex);
 }
 
+inline void Create_Scatter(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vMin, _vec3 vMax, _float fSize, _int iCount)
+{
+	CParticleMgr::GetInstance()->Create_Scatter(pGraphicDev, vMin, vMax, fSize, iCount);
+}
+
+inline void Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fSize, _int iCount)
+{
+	CParticleMgr::GetInstance()->Create_Explosion(pGraphicDev, vPos, fSize, iCount);
+}
+
+inline void Create_Splash(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, const _tchar* pTexturePath, _int iMaxFrame, _float fSize, _int iCount)
+{
+	CParticleMgr::GetInstance()->Create_Splash(pGraphicDev, vPos, pTexturePath, iMaxFrame, fSize, iCount);
+}
+
+inline void Create_Burst(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fSize, _int iCount)
+{
+	CParticleMgr::GetInstance()->Create_Burst(pGraphicDev, vPos, fSize, iCount);
+}
+
+inline void Update_Particles(_float fDeltaTime)
+{
+	CParticleMgr::GetInstance()->Update_Particles(fDeltaTime);
+}
+
+inline void Render_Particles()
+{
+	CParticleMgr::GetInstance()->Render_Particles();
+}
+
 void Release_Utility()
 {
 	CLightMgr::DestroyInstance();
 	CRenderer::DestroyInstance();
 	CProtoMgr::DestroyInstance();
 	CManagement::DestroyInstance();
+	CParticleMgr::DestroyInstance();
 }
+
+
