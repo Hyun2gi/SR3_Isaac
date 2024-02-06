@@ -19,6 +19,8 @@ private:
 	explicit CPlayerBullet(const CPlayerBullet& rhs);
 	virtual ~CPlayerBullet();
 
+	enum IDLEBULLETSTATE {IDLEBULLET_IDLE, IDLEBULLET_EFFECT, IDLEBULLET_END};
+
 public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
@@ -37,10 +39,15 @@ public:
 	{
 		m_bDead = true;
 	}
+	void				Set_BulletCollision()
+	{
+		m_bCollision = true;
+	}
 
 private:
 	virtual HRESULT			Add_Component();
 	bool					Check_Time(const _float& fTimeDelta);
+	void					Motion_Change();
 
 
 private:
@@ -61,7 +68,13 @@ protected:
 private:
 	_vec3		m_vBulletDir;
 	bool		m_bDead = false;
+	bool		m_bCollision = false;
 
 	float		m_fBulletSpeed;
+	_int		m_iPicNum;
+	float		m_fSpriteSpeed;
+
+	IDLEBULLETSTATE		m_eCurState;
+	IDLEBULLETSTATE		m_ePreState;
 };
 

@@ -214,7 +214,7 @@ void CHeart::Motion_Change()
 
 CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look, int iID)
 {
-    CHeart* pInstance = new CHeart(pGraphicDev, iID);
+    CHeart* pInstance = new CHeart(pGraphicDev, iID *3);
     srand((unsigned)time(NULL));
 
     if (spawnspot == 1)
