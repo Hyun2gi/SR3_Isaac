@@ -128,6 +128,8 @@ void CRenderer::Render_Particles(LPDIRECT3DDEVICE9& pGraphicDev)
 	pGraphicDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	pGraphicDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
+	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+
 	m_RenderGroup[RENDER_PARTICLES].sort([](CGameObject* pDst, CGameObject* pSrc)->bool
 		{
 			return pDst->Get_ViewZ() > pSrc->Get_ViewZ();
@@ -142,6 +144,7 @@ void CRenderer::Render_Particles(LPDIRECT3DDEVICE9& pGraphicDev)
 		iter->Render_GameObject();
 	}
 
+	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	pGraphicDev->SetRenderState(D3DRS_POINTSPRITEENABLE, FALSE);
 	pGraphicDev->SetRenderState(D3DRS_POINTSCALEENABLE, FALSE);
 	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);

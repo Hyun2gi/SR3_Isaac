@@ -1,6 +1,8 @@
 #include "..\..\Header\ParticleSystem.h"
 #include "ParticleExplosion.h"
 
+#include "Export_Utility.h"
+
 CParticleExplosion::CParticleExplosion(_vec3* vOrigin, int numParticles)
 {
 	m_vOrigin = *vOrigin;
@@ -76,7 +78,7 @@ void CParticleExplosion::Reset_Partice(Attribute* attribute)
 		1.f,
 		1.f,
 		1.f,
-		1.0f);
+		0.5f);
 
 	//attribute->_color = D3DXCOLOR(
 	//	GetRandomFloat(0.0f, 1.0f),
@@ -105,4 +107,6 @@ void CParticleExplosion::Update_Particle(_float fTimeDelat)
 				i->_bIsAlive = false;
 		}
 	}
+
+	Engine::Add_RenderGroup(RENDER_PARTICLES, this);
 }

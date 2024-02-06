@@ -138,8 +138,8 @@ void CTestStage::LateUpdate_Scene()
 void CTestStage::Render_Scene()
 {
 	pScatter->Render_GameObject();
-	//pExp->Render();
-	//pSpl->Render();
+	pExp->Render_GameObject();
+	pSpl->Render_GameObject();
 	pBst->Render_GameObject();
 	// DEBUG
 }

@@ -1,5 +1,6 @@
 #include "..\..\Header\ParticleSystem.h"
 #include "ParticleSplash.h"
+
 #include "Export_Utility.h"
 
 CParticleSplash::CParticleSplash(_vec3* vOrigin, int numParticles)
@@ -124,6 +125,8 @@ void CParticleSplash::Update_Particle(_float fTimeDelat)
 				i->_bIsAlive = false;
 		}
 	}
+
+	Engine::Add_RenderGroup(RENDER_PARTICLES, this);
 }
 
 void CParticleSplash::Render_GameObject()
