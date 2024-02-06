@@ -20,6 +20,9 @@ public:
 	virtual CComponent*	Clone();
 
 private:
+	LPDIRECT3DDEVICE9 m_pDev;
+
+private:
 	virtual void	Free();
 };
 
