@@ -39,6 +39,9 @@ HRESULT CAttackFly::Ready_GameObject()
 
 	//Create_AttackFly();
 	m_bCreate = false;
+
+	m_eMstType = ATTACK_FLY;
+
 	return S_OK;
 }
 

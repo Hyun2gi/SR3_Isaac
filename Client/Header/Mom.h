@@ -13,6 +13,9 @@ private:
 	enum MOMSTATE{MOM_IDLE, MOM_ATTACK, MOM_WAIT, MOM_UP, MOM_END };
 
 public:
+	BOSS_TYPE		Get_BossType() { return m_eBossType; }
+
+public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
 	virtual void	LateUpdate_GameObject()					 override;
@@ -33,6 +36,7 @@ private:
 	_float				m_fFrameSpeed = 1.f;
 
 	MOMSTATE			m_eState;
+	BOSS_TYPE			m_eBossType;
 
 public:
 	static CMom*	Create(LPDIRECT3DDEVICE9 pGraphicDev);

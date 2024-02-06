@@ -31,6 +31,8 @@ HRESULT CPacer::Ready_GameObject()
 	m_fCallLimit = m_iRandNum % 4 + 2;
 	m_fSpeed = 4.f;
 
+	m_eMstType = PACER;
+
 	return S_OK;
 }
 

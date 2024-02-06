@@ -13,6 +13,9 @@ private:
 	enum MONSTROSTATE{MONSTRO_IDLE, MONSTRO_ATTACK, MONSTRO_MOVE, MONSTRO_UP, MONSTRO_DOWN, MONSTRO_END};
 
 public:
+	BOSS_TYPE		Get_BossType() { return m_eBossType; }
+
+public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
 	virtual void	LateUpdate_GameObject()					 override;
@@ -43,6 +46,8 @@ private:
 	MONSTROSTATE	m_eCurState;
 
 	list<CGameObject*> m_BulletList;
+
+	BOSS_TYPE		m_eBossType;
 
 public:
 	static CMonster*	Create(LPDIRECT3DDEVICE9 pGraphicDev);

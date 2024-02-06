@@ -39,6 +39,8 @@ HRESULT CLeaper::Ready_GameObject()
 
 	m_ePreState = LEAPER_END;
 
+	m_eMstType = LEAPER;
+
 	return S_OK;
 }
 

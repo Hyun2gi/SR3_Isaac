@@ -30,6 +30,8 @@ HRESULT CCharger::Ready_GameObject()
 
 	m_ePreState = CHARGER_END;
 
+	m_eMstType = CHARGER;
+
 	return S_OK;
 }
 

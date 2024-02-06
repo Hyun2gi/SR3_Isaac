@@ -23,6 +23,8 @@ protected:
 
 public:
 	void		Hit() { m_bHit = true; }
+	_bool		Get_IsBoss() { return m_bBoss; }
+	_bool		Get_MstType() { return m_eMstType; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -47,6 +49,8 @@ protected:
 	Engine::CTexture* m_pTextureCom;
 	Engine::CCalculator* m_pCalculCom;
 
+	_bool					m_bBoss;
+
 	_bool					m_bHit;
 	_bool					m_bDead;
 	_int					m_iHp;
@@ -60,6 +64,8 @@ protected:
 	_float					m_fSlowDelta;
 
 	_vec3					m_vOriginScale;
+
+	MONSTER_TYPE			m_eMstType;
 
 public:
 	static CMonster*		Create(LPDIRECT3DDEVICE9	pGraphicDev);

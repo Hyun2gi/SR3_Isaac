@@ -37,6 +37,8 @@ HRESULT CNormalFly::Ready_GameObject()
 
 	m_iPicNum = 0;
 
+	m_eMstType = ATTACK_FLY;
+
 	return S_OK;
 }
 

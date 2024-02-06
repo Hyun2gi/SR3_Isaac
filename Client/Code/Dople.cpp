@@ -29,6 +29,8 @@ HRESULT CDople::Ready_GameObject()
 
 	m_ePreState = DP_END;
 
+	m_eMstType = DOPLE;
+
 	return S_OK;
 }
 
@@ -38,7 +40,11 @@ _int CDople::Update_GameObject(const _float& fTimeDelta)
 
 	if (DP_DEAD == m_eCurState)
 	{
-		m_fFrame = 0.f;
+		if(1.f != m_fFrame)
+			m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
+
+		if (m_iPicNum < m_fFrame)
+			m_fFrame = 1.f;
 	}
 	else
 	{
@@ -192,8 +198,8 @@ void CDople::Motion_Change()
 			break;
 
 		case CDople::DP_DEAD:
-			m_iPicNum = 1;
-			m_fFrameSpeed = 1.f;
+			m_iPicNum = 2;
+			m_fFrameSpeed = 0.7f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Dople", L"Proto_DopleDeadTexture"));
 			break;
 
@@ -217,10 +223,10 @@ void CDople::Follow_Player(const _float& fTimeDelta)
 	CComponent* pComponent = CPlayer::GetInstance()->Get_Component_Player_Transform();
 	m_pTargetTransCom = dynamic_cast<CTransform*>(pComponent);
 
-	// LOOK 받으면 X 플레이어 상태를 받아서 조건문 처리하는 게 좋을 듯함
 	_vec3 vPlayerPos, vPlayerDir, vPos, vDir;
 	m_pTargetTransCom->Get_Info(INFO_POS, &vPlayerPos);
 	m_pTargetTransCom->Get_Info(INFO_LOOK, &vPlayerDir);
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
 	Change_State();
 
@@ -232,13 +238,11 @@ void CDople::Follow_Player(const _float& fTimeDelta)
 	else if (DP_BACK == m_eCurState)
 	{
 		vDir = vPlayerDir;
+		//vDir = (vPlayerDir * -1.f); // Spike 충돌 테스트용
 		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
 	}
-	else if (DP_LEFT == m_eCurState || DP_RIGHT == m_eCurState)
+	if (DP_LEFT == m_eCurState || DP_RIGHT == m_eCurState)
 	{
-		/*_vec3 vPlayerDir, vPos;
-		m_pTargetTransCom->Get_Info(INFO_LOOK, &vPlayerDir);*/
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
 		m_pTransformCom->Set_Pos(vPlayerPos.x, vPlayerPos.y, vPos.z);
 	}
 }

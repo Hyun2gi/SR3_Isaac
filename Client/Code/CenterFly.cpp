@@ -28,6 +28,8 @@ HRESULT CCenterFly::Ready_GameObject()
 
 	m_fSpeed = 1.f;
 
+	m_eMstType = ATTACK_FLY;
+
 	return S_OK;
 }
 
