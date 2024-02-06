@@ -173,12 +173,13 @@ void CStage::Insert_Child()
 			->Set_Fire_ToStage(m_mapLayer.at(L"MapObj"));
 	}
 
-	//// SlotMC
-	//if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC") != nullptr &&
-	//	m_mapLayer.at(L"MapObj")->Get_GameObject(L"Machine") == nullptr)
-	//{
-
-	//}
+	// SlotMC
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC") != nullptr &&
+		m_mapLayer.at(L"MapObj")->Get_GameObject(L"Machine") == nullptr)
+	{
+		dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))
+			->Set_Machine_ToStage(m_mapLayer.at(L"MapObj"));
+	}
 
 	// Shop
 	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shop") != nullptr)
@@ -194,8 +195,6 @@ void CStage::Insert_Child()
 		dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))
 			->Set_ShellObj_ToStage(m_mapLayer.at(L"MapObj"));
 	}
-
-
 }
 
 HRESULT CStage::Ready_Layer_Environment(const _tchar * pLayerTag)
@@ -434,11 +433,11 @@ HRESULT CStage::Ready_Layer_MapObj(const _tchar* pLayerTag)
 	pGameObject->Set_MyLayer(pLayerTag);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
 
-	//// SlotMC
-	//pGameObject = CSlotMC::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
+	// SlotMC
+	pGameObject = CSlotMC::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
 
 	// Shop
 	pGameObject = CShop::Create(m_pGraphicDev);
@@ -605,7 +604,40 @@ void CStage::MapObj_Collision()
 		}
 	}
 
-	// SlotMC 과 Shell Game 은 Player 와 충돌
+	//// SlotMC 과 Shell Game 은 Player 와 충돌
+	//if (Get_GameObject(L"MapObj", L"SlotMC") != nullptr) // 1
+	//{
+	//	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Machine"))
+	//	{
+	//		CGameObject* pMachine = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
+
+	//		if (pMachine && (1 == dynamic_cast<CMachine*>(pMachine)->Get_ObjID()))
+	//		{
+	//			dynamic_cast<CMachine*>(pMachine)->Set_Game();
+	//		}
+	//	}
+	//}
+	/*else if (1 == dynamic_cast<CMapObj*>(pMapObj)->Get_ObjID())
+	{
+		dynamic_cast<CMachine*>(pMapObj)->Set_Game();
+		break;
+	}*/
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC") != nullptr)
+	{
+		CGameObject* pMachine = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
+
+		if (pMachine)
+		{
+			if (1 == dynamic_cast<CMapObj*>(pMachine)->Get_ObjID())
+			{
+				if (0 < CPlayer::GetInstance()->Get_Coin())
+				{
+					CPlayer::GetInstance()->Set_Coin(-1);
+					dynamic_cast<CMachine*>(pMachine)->Set_Game();
+				}
+			}
+		}
+	}
 
 	// Shop Npc 는 Epic 과 충돌
 
@@ -624,7 +656,11 @@ void CStage::MapObj_Collision()
 					// Npc 와의 충돌
 					if (2 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID())
 					{
-						dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
+						if (0 < CPlayer::GetInstance()->Get_Coin())
+						{
+							CPlayer::GetInstance()->Set_Coin(-1);
+							dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
+						}
 					}
 					else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID())
 					{

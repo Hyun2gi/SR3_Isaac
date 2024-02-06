@@ -21,7 +21,7 @@ CDople::~CDople()
 HRESULT CDople::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->m_vScale = { 1.5f, 1.5f, 1.5f };
+	m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
 	m_pTransformCom->Set_Pos(20.f, 2.f, 25.f);
 
 	m_fCallLimit = 1.f;
@@ -66,7 +66,7 @@ _int CDople::Update_GameObject(const _float& fTimeDelta)
 	if (!m_bDead)
 	{
 		m_eCurState = DP_IDLE;
-		Follow_Player();
+		Follow_Player(fTimeDelta);
 	}
 
 	if (m_bHit)
@@ -212,18 +212,59 @@ void CDople::Face_Camera()
 
 }
 
-void CDople::Follow_Player()
+void CDople::Follow_Player(const _float& fTimeDelta)
 {
 	CComponent* pComponent = CPlayer::GetInstance()->Get_Component_Player_Transform();
 	m_pTargetTransCom = dynamic_cast<CTransform*>(pComponent);
 
 	// LOOK 받으면 X 플레이어 상태를 받아서 조건문 처리하는 게 좋을 듯함
-	_vec3 vPlayerPos;
+	_vec3 vPlayerPos, vPlayerDir, vPos, vDir;
 	m_pTargetTransCom->Get_Info(INFO_POS, &vPlayerPos);
+	m_pTargetTransCom->Get_Info(INFO_LOOK, &vPlayerDir);
 
-	// 좌, 우는 똑같이. 상, 하는 반대로
+	Change_State();
 
-	m_pTransformCom->Set_Pos(vPlayerPos.x, vPlayerPos.y, vPlayerPos.z + 5.f);
+	if (DP_WALK == m_eCurState)
+	{
+		vDir = (vPlayerDir * -1.f);
+		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+	}
+	else if (DP_BACK == m_eCurState)
+	{
+		vDir = vPlayerDir;
+		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+	}
+	else if (DP_LEFT == m_eCurState || DP_RIGHT == m_eCurState)
+	{
+		/*_vec3 vPlayerDir, vPos;
+		m_pTargetTransCom->Get_Info(INFO_LOOK, &vPlayerDir);*/
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		m_pTransformCom->Set_Pos(vPlayerPos.x, vPlayerPos.y, vPos.z);
+	}
+}
+
+void CDople::Change_State()
+{
+	int iPlayerState = CPlayer::GetInstance()->Get_PlayerCurState();
+
+	switch (iPlayerState)
+	{
+	case 0:
+		m_eCurState = DP_IDLE;
+		break;
+	case 1:
+		m_eCurState = DP_BACK;
+		break;
+	case 2:
+		m_eCurState = DP_WALK;
+		break;
+	case 3:
+		m_eCurState = DP_LEFT;
+		break;
+	case 4:
+		m_eCurState = DP_RIGHT;
+		break;
+	}
 }
 
 CDople* CDople::Create(LPDIRECT3DDEVICE9 pGraphicDev)

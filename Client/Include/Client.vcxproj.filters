@@ -199,6 +199,9 @@
     <Filter Include="02. GameObject\01. Monster\07. Dople">
       <UniqueIdentifier>{abde9124-881e-468f-b101-78530c11b45e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. MapObject\04. Shop\02. Font">
+      <UniqueIdentifier>{65ab906c-b664-46bf-8507-94df6929da74}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -391,6 +394,9 @@
       <Filter>01. Scene\TestStage</Filter>
       <Filter>02. GameObject\01. Monster\07. Dople</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\CoinFont.h">
+      <Filter>02. GameObject\09. MapObject\04. Shop\02. Font</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -573,6 +579,9 @@
     <ClCompile Include="..\Code\TestStage.cpp">
       <Filter>01. Scene\TestStage</Filter>
       <Filter>02. GameObject\01. Monster\07. Dople</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\CoinFont.cpp">
+      <Filter>02. GameObject\09. MapObject\04. Shop\02. Font</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

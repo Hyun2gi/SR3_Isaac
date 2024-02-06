@@ -1,54 +1,53 @@
 #include "stdafx.h"
-#include "Shell.h"
+#include "CoinFont.h"
 
 #include "Export_System.h"
 #include "Export_Utility.h"
 
-CShell::CShell(LPDIRECT3DDEVICE9 pGraphicDev)
+CCoinFont::CCoinFont(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMapObj(pGraphicDev)
 {
 }
 
-CShell::CShell(const CShell& rhs)
+CCoinFont::CCoinFont(const CCoinFont& rhs)
 	: CMapObj(rhs)
 {
 }
 
-CShell::~CShell()
+CCoinFont::~CCoinFont()
 {
 }
 
-HRESULT CShell::Ready_GameObject()
+void CCoinFont::Set_State(_int iState)
+{
+	switch (iState)
+	{
+	case 0:
+		m_eState = COIN_3;
+		break;
+	case 1:
+		m_eState = COIN_5;
+		break;
+	case 2:
+		m_eState = COIN_15;
+		break;
+	}
+}
+
+HRESULT CCoinFont::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	//m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
 
-	m_fSpeed = 0.2f;
-
-	m_fCallLimit = 0.3f;
-
-	m_iPicNum = 1;
-	m_fFrameSpeed = 1.f;
-
-	m_bStartUp = false;
-	m_bMoveDown = false;
-	m_bShaking_Ready = false;
-	m_bReward = false;
-
-	m_eObjID = MOBJID_SHELL;
+	m_eState = COIN_3;
 
 	return S_OK;
 }
 
-_int CShell::Update_GameObject(const _float& fTimeDelta)
+_int CCoinFont::Update_GameObject(const _float& fTimeDelta)
 {
-	m_eDropItem = COIN;
-	Setting_ItemTag();
-
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (m_bStartUp)
-		Start_Up(fTimeDelta);
+	
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -57,8 +56,10 @@ _int CShell::Update_GameObject(const _float& fTimeDelta)
 	return 0;
 }
 
-void CShell::LateUpdate_GameObject()
+void CCoinFont::LateUpdate_GameObject()
 {
+	Change_Texture();
+
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
@@ -66,7 +67,7 @@ void CShell::LateUpdate_GameObject()
 	__super::Compute_ViewZ(&vPos);
 }
 
-void CShell::Render_GameObject()
+void CCoinFont::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
@@ -76,7 +77,7 @@ void CShell::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CShell::Add_Component()
+HRESULT CCoinFont::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
@@ -84,9 +85,9 @@ HRESULT CShell::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ShellTexture"));
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_CoinFontTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_ShellTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_CoinFontTexture", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -99,56 +100,41 @@ HRESULT CShell::Add_Component()
 	return S_OK;
 }
 
-void CShell::Hit()
+void CCoinFont::Change_Texture()
+{
+	switch (m_eState)
+	{
+	case CCoinFont::COIN_3:
+		m_fFrame = 0.f;
+		break;
+	case CCoinFont::COIN_5:
+		m_fFrame = 1.f;
+		break;
+	case CCoinFont::COIN_15:
+		m_fFrame = 2.f;
+		break;
+	}
+}
+
+void CCoinFont::Fall_Down()
 {
 }
 
-void CShell::Start_Up(const _float& fTimeDelta)
+CCoinFont* CCoinFont::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
-	// 게임 시작 _ 위로 올라갔다 내려옴
-	_vec3 vPos;
-	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
-	if (!m_bMoveDown)
-	{
-		vPos.y += m_fSpeed;
-
-		if (vPos.y >= 3.f)
-		{
-			vPos.y = 3.f;
-			if(Check_Time(fTimeDelta))
-				m_bMoveDown = true;
-		}
-	}
-	else
-	{
-		vPos.y -= m_fSpeed;
-
-		if (vPos.y <= 1.f) // 임의 값이라 조정 필요
-		{
-			vPos.y = 1.f;
-			m_bStartUp = false;
-			m_bShaking_Ready = true;
-		}
-	}
-	m_pTransformCom->Set_Pos(vPos);
-}
-
-CShell* CShell::Create(LPDIRECT3DDEVICE9 pGraphicDev)
-{
-	CShell* pInstance = new CShell(pGraphicDev);
+	CCoinFont* pInstance = new CCoinFont(pGraphicDev);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("Shell Create Failed");
+		MSG_BOX("CoinFont Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
 }
 
-void CShell::Free()
+void CCoinFont::Free()
 {
 	__super::Free();
 }

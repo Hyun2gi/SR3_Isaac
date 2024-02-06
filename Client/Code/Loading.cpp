@@ -137,6 +137,8 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ShellNpcGameTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/ShellGame/ShellGaming_%d.png", 6)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ShellTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/ShellGame/ShellGame.png")), E_FAIL);
 
+	// CoinFont
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinFontTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Font/CoinFont_%d.png", 3)), E_FAIL);
 
 #pragma endregion MapObject
 

@@ -20,14 +20,21 @@ CSlotMC::~CSlotMC()
 {
 }
 
+void CSlotMC::Set_Machine_ToStage(CLayer* pLayer)
+{
+	if(m_bCreate)
+		pLayer->Add_GameObject(L"Machine", m_pMachine);
+}
+
 HRESULT CSlotMC::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(3.f, 2.f, 5.f);
+	m_pTransformCom->Set_Pos(25.f, 1.f, 20.f);
 
 	m_iLimitHit = 4;
 
 	m_bCreate = false;
+	m_bGame = false;
 
 	return S_OK;
 }
@@ -54,18 +61,28 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	if (m_pMachine != nullptr && !(m_pMachine->Get_Dead()))
-	{
-		if (Engine::Get_DIKeyState(DIK_G) & 0x80)// 이후 플레이어와의 충돌로 변경
-		{
-			m_pMachine->Set_Game();
+	if (m_pMachine->Get_Dead())
+		m_bGame = true;
+	else
+		m_bGame = false;
 
-			for (auto& iter : m_pCardList)
-			{
-				iter->Set_Random();
-			}
+	if (m_bGame)
+	{
+		m_pMachine->Set_Game();
+
+		for (auto& iter : m_pCardList)
+		{
+			iter->Set_Random();
 		}
 	}
+
+	//if (m_pMachine != nullptr && !(m_pMachine->Get_Dead()))
+	//{
+	//	if (Engine::Get_DIKeyState(DIK_G) & 0x80)// 이후 플레이어와의 충돌로 변경
+	//	{
+	//		
+	//	}
+	//}
 
 	return 0;
 }
@@ -171,7 +188,7 @@ void CSlotMC::Create_Card()
 	{
 		CSlotCard* pCard = CSlotCard::Create(m_pGraphicDev);
 		pCard->Set_MyLayer(m_vecMyLayer[0]);
-		pCard->Get_TransformCom()->Set_Pos(vPos.x + fScalar, vPos.y - SCALAR_Y, vPos.z);
+		pCard->Get_TransformCom()->Set_Pos(vPos.x + fScalar, vPos.y - SCALAR_Y, vPos.z - 0.1f);
 		pCard->Set_Index(i);
 		m_pCardList.push_back(pCard);
 		fScalar += 0.73f;
