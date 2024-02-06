@@ -31,8 +31,6 @@ private:
 	_int					m_iPicNum;
 	_float				m_fFrameSpeed = 1.f;
 
-	_vec3				m_vMoveLook;
-
 	FLYSTATE			m_ePreState;
 	FLYSTATE			m_eCurState;
 

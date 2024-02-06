@@ -61,7 +61,7 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 		if (0 >= m_iHp)
 		{
 			m_eCurState = FLY_DEAD;
-			//m_bDead = true;
+			m_bDead = true;
 		}
 	}
 

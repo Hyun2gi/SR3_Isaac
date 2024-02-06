@@ -65,6 +65,7 @@ protected:
 	_float					m_fSlowDelta;
 
 	_vec3					m_vOriginScale;
+	_vec3					m_vMoveLook;
 
 	MONSTER_TYPE			m_eMstType;
 
