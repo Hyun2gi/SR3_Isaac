@@ -50,6 +50,9 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
+	if (m_bDead)
+		return 1;
+
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -61,6 +64,9 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 		if (0 >= m_iHp)
 		{
 			m_bDead = true;
+			_vec3 vPos;
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
 		}
 	}
 
