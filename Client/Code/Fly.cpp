@@ -52,14 +52,6 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 			m_fFrame = 0.f;
 	}
 
-	// 추후 사망 처리 추가
-	// m_eState = FLY_DEAD;
-
-	if (m_bDead)
-	{
-		m_eCurState = FLY_DEAD;
-	}
-
 	if (m_bHit)
 	{
 		m_iHp -= 1;

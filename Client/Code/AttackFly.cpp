@@ -37,7 +37,6 @@ HRESULT CAttackFly::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
-	//Create_AttackFly();
 	m_bCreate = false;
 
 	m_eMstType = ATTACK_FLY;
@@ -55,6 +54,14 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 	{
 		Create_AttackFly();
 		m_bCreate = true;
+	}
+	else
+	{
+		if (Check_Fly_Dead())
+		{
+			m_CenterFly->Set_Dead();
+			m_bDead = true;
+		}
 	}
 
 	if (m_CenterFly != nullptr)
@@ -144,6 +151,16 @@ void CAttackFly::Create_AttackFly()
 		pNormalFly->Set_TargetTransform(m_CenterFly->Get_Transform());
 		m_NormalFlyList.push_back(pNormalFly);
 	}
+}
+
+_bool CAttackFly::Check_Fly_Dead()
+{
+	for (auto& iter : m_NormalFlyList)
+	{
+		if (!(iter->Get_Dead())) // 하나라도 살아있으면 false
+			return false;
+	}
+	return true;
 }
 
 CAttackFly* CAttackFly::Create(LPDIRECT3DDEVICE9 pGraphicDev)
