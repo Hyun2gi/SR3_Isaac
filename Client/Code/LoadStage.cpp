@@ -158,11 +158,13 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 void CLoadStage::LateUpdate_Scene()
 {
 	CPlayer::GetInstance()->LateUpdate_GameObject();
-	//Check_All_Dead();
 	__super::LateUpdate_Scene();
 
 	if (m_bIsCreated)
+	{
+		Check_All_Dead();
 		Door_Collision();
+	}
 }
 
 void CLoadStage::Render_Scene()
