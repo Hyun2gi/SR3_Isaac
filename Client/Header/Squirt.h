@@ -25,6 +25,7 @@ private:
 
 	void				Sliding(const _float& fTimeDelta);
 	void				Check_TargetPos();
+	void				Epic_Time();
 
 private:
 	_bool				m_bSliding;
@@ -38,6 +39,7 @@ private:
 	_vec3				m_vTargetPos;
 	_vec3				m_vDir;
 	_vec3				m_vBounceDir;
+	_vec3				m_vOriginAngle;
 
 	SQUIRTSTATE			m_ePreState;
 	SQUIRTSTATE			m_eCurState;
