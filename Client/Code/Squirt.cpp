@@ -7,6 +7,8 @@
 CSquirt::CSquirt(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev)
 {
+	DWORD dwSeed = time(NULL) % 1000;
+	srand(dwSeed);
 }
 
 CSquirt::CSquirt(const CSquirt& rhs)
@@ -29,7 +31,8 @@ HRESULT CSquirt::Ready_GameObject()
 	m_fSpeed = 2.f;
 
 	m_bSliding = false;
-	m_fAccel = 10.f;
+	m_bBounceWall = false;
+	m_fAccel = 8.f;
 
 	m_ePreState = SQU_END;
 
@@ -47,8 +50,6 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
-	Face_Camera();
-
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -63,7 +64,7 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	CGameObject::Update_GameObject(m_fSlowDelta);
+	Face_Camera();
 
 	if (Check_Time(m_fSlowDelta) && !m_bSliding)
 	{
@@ -78,6 +79,10 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	}
 	else
 		m_eCurState = SQU_IDLE;
+
+	CGameObject::Update_GameObject(m_fSlowDelta);
+
+	Fix_Y();
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -175,8 +180,33 @@ void CSquirt::Face_Camera()
 
 void CSquirt::Sliding(const _float& fTimeDelta)
 {
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
 	D3DXVec3Normalize(&m_vDir, &m_vDir);
+
 	m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed * m_fAccel, fTimeDelta);
+
+	if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x &&
+		vPos.z < VTXCNTZ - m_pTransformCom->m_vScale.z &&
+		vPos.x > m_pTransformCom->m_vScale.x &&
+		vPos.z > m_pTransformCom->m_vScale.z)
+	{
+		m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed * m_fAccel, fTimeDelta);
+	}
+	else
+	{
+		m_bBounceWall = true;
+		m_vBounceDir = m_vMoveLook * -1.f;
+		/*m_vMoveLook *= -1.f;
+		m_pTransformCom->Move_Pos(&-m_vDir, m_fSpeed * m_fAccel, fTimeDelta);*/
+	}
+
+	if (m_bBounceWall)
+	{
+		m_vMoveLook *= -1.f;
+		m_pTransformCom->Move_Pos(&-m_vDir, m_fSpeed * m_fAccel, fTimeDelta);
+	}
 
 	m_fAccel -= 0.1;
 

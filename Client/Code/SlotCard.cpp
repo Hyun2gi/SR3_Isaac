@@ -188,12 +188,14 @@ void CSlotCard::Check_Result()
 		m_fFrame = 3.f;
 		m_iReward = 1;
 		m_bReward = true;
+		m_eCurState = CARD_IDLE;
 		break;
 	case 8: // ÇÏÆ®
 	case 9:
 		m_fFrame = 6.f;
 		m_iReward = 2;
 		m_bReward = true;
+		m_eCurState = CARD_IDLE;
 		break;
 	default:
 		break;

@@ -156,7 +156,7 @@ void CStage::Drop_ITem()
 		{
 			//Get_GameObject(L"MapObj", L"SlotMC"))->Get_Reward() && // 문제 발생(메모리 못 읽어옴)
 			//!dynamic_cast<CMapObj*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Drop()
-			if (dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Reward() && // 문제 발생(메모리 못 읽어옴)
+			if (dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Reward() &&
 				!dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Drop()) // !dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Game()
 			{
 				CGameObject* pSlotMC = nullptr;
@@ -172,7 +172,6 @@ void CStage::Drop_ITem()
 					m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pDropItem);
 					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop();
 					dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Set_Reward();
-					//dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Reward();
 				}
 				else if (COIN == eType)
 				{
@@ -180,40 +179,12 @@ void CStage::Drop_ITem()
 					{
 						pDropItem = dynamic_cast<CMapObj*>(pSlotMC)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), i);
 						m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pDropItem);
-						dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop();
-						dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Reward();
 					}
+					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop();
+					dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Reward();
 				}
-				// 한번 이상 돌릴 때 값이 이상해지는?
-				// 두번째부터는 아예 해당 조건문으로 안 들어옴
-
-				//Engine::CGameObject* pGameObject = nullptr;
-
-				//ITEM_TYPE eType = dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_ItemType();
-				//wstring wstrObjTag = dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_DropItemTag();
-
-				//if (HEART == eType)
-				//{
-				//	pGameObject = dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), 0);
-				//	m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
-				//	dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Reward();
-				//	// 여기서 생성이 되는 건 맞는데 아래로 안 내려옴
-				//	dynamic_cast<CFire*>(Get_GameObject(L"MapObj", L"Fire"))->Set_Drop();
-				//}
-				//else if (COIN == eType)
-				//{
-				//	for (int i = 0; i < 3; ++i)
-				//	{
-				//		pGameObject = dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), i);
-				//		m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
-				//	}
-				//	dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Reward();
-				//	dynamic_cast<CFire*>(Get_GameObject(L"MapObj", L"Fire"))->Set_Drop();
-				//}
-				//dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Reward();
 			}
 		}
-		
 	}
 }
 
@@ -322,14 +293,14 @@ HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
- //	// Fly
-	//for (int i = 0; i < 10; ++i)
-	//{
-	//	pGameObject = CFly::Create(m_pGraphicDev, i * 2);
-	//	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//	pGameObject->Set_MyLayer(pLayerTag);
-	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
-	//}
+ 	// Fly
+	for (int i = 0; i < 10; ++i)
+	{
+		pGameObject = CFly::Create(m_pGraphicDev, i * 2);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		pGameObject->Set_MyLayer(pLayerTag);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
+	}
 
 	//// Attack Fly
 	//pGameObject = CAttackFly::Create(m_pGraphicDev);
@@ -373,11 +344,11 @@ HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
 	//pGameObject->Set_MyLayer(pLayerTag);
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Charger", pGameObject), E_FAIL);
 
-	// Dople
-	pGameObject = CDople::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dople", pGameObject), E_FAIL);
+	//// Dople
+	//pGameObject = CDople::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dople", pGameObject), E_FAIL);
 
 	//// Monstro
 	//pGameObject = CMonstro::Create(m_pGraphicDev);
@@ -639,7 +610,8 @@ void CStage::Moster_Collision()
 		CGameObject* pDople = m_mapLayer.at(L"GameMst")->Collision_GameObject(Get_GameObject(L"MapObj", L"Spike"));
 		if (pDople)
 		{
-			dynamic_cast<CDople*>(pDople)->Hit();
+			if(DOPLE == dynamic_cast<CMonster*>(pDople)->Get_MstType())
+				dynamic_cast<CDople*>(pDople)->Hit();
 		}
 	}
 }
@@ -697,6 +669,7 @@ void CStage::MapObj_Collision()
 				if (0 < CPlayer::GetInstance()->Get_Coin())
 				{
 					CPlayer::GetInstance()->Set_Coin(-1);
+					//dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Drop_False(); // 
 					dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Game();
 				}
 			}

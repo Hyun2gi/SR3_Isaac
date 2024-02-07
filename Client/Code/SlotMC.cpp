@@ -75,8 +75,6 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 		{
 			iter->Set_Random();
 		}
-
-
 	}
 
 	Set_Item_Value();
@@ -164,7 +162,7 @@ HRESULT CSlotMC::Add_Component()
 
 void CSlotMC::Set_Item_Value()
 {
-	if (m_pCardList.front()->Get_Reward())
+	if (Check_Reward())
 	{
 		int iReward = m_pCardList.front()->Get_RewardItem();
 
@@ -175,11 +173,12 @@ void CSlotMC::Set_Item_Value()
 			case 1: // 코인
 				m_eDropItem = COIN;
 				break;
+				
 			case 2: // 하트
 				m_eDropItem = HEART;
 				break;
+				
 			default:
-				m_eDropItem = PILL;
 				break;
 			}
 
@@ -187,12 +186,6 @@ void CSlotMC::Set_Item_Value()
 			m_bGame = false;
 		}
 	}
-
-	//if (m_pCardList.front()->Get_Reward())
-	//{
-	//	m_bGame = false;
-	//	// 보상 생성
-	//}
 }
 
 void CSlotMC::Create_Machine()
@@ -223,6 +216,19 @@ void CSlotMC::Create_Card()
 		pCard->Set_Index(i);
 		m_pCardList.push_back(pCard);
 		fScalar += 0.73f;
+	}
+}
+
+_bool CSlotMC::Check_Reward()
+{
+	if (!m_pCardList.empty())
+	{
+		for (auto& iter : m_pCardList)
+		{
+			if (iter->Get_Reward())
+				return true;
+		}
+		return false;
 	}
 }
 

@@ -45,10 +45,20 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
-		m_fFrame = 0.f;
+	{
+		if (m_bDead)
+			return 1;
+		else
+			m_fFrame = 0.f;
+	}
 
 	// 추후 사망 처리 추가
 	// m_eState = FLY_DEAD;
+
+	if (m_bDead)
+	{
+		m_eCurState = FLY_DEAD;
+	}
 
 	if (m_bHit)
 	{
@@ -65,12 +75,15 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	Face_Camera();
+	if (!m_bDead)
+	{
+		Face_Camera();
 
-	if (Check_Time(m_fSlowDelta))
-		Change_Dir(m_fSlowDelta);
+		if (Check_Time(m_fSlowDelta))
+			Change_Dir(m_fSlowDelta);
 
-	Move(m_fSlowDelta);
+		Move(m_fSlowDelta);
+	}
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
@@ -169,14 +182,24 @@ void CFly::Change_Dir(const _float& fTimeDelta)
 
 void CFly::Move(const _float& fTimeDelta)
 {
-	_vec3		vDir;
+	_vec3 vPos, vDir;
 	m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
+	
 
 	// LOOK 벡터로 이동 X 임의의 벡터를 사용
-
 	D3DXVec3Normalize(&m_vMoveLook, &m_vMoveLook);
-	m_pTransformCom->Move_Pos(&m_vMoveLook, m_fSpeed, fTimeDelta); // 값 조정 필요
 
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x &&
+		vPos.z < VTXCNTZ - m_pTransformCom->m_vScale.z &&
+		vPos.x > m_pTransformCom->m_vScale.x &&
+		vPos.z > m_pTransformCom->m_vScale.z &&
+		vPos.y > 0.f + m_pTransformCom->m_vScale.y &&
+		vPos.y < 30.f)
+	{
+		m_pTransformCom->Move_Pos(&m_vMoveLook, m_fSpeed, fTimeDelta); // 값 조정 필요
+	}
 	/*D3DXVec3Normalize(&vDir, &vDir);
 	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);*/
 

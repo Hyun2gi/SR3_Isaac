@@ -50,8 +50,6 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
-	Face_Camera();
-
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -66,7 +64,7 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	CGameObject::Update_GameObject(m_fSlowDelta);
+	Face_Camera();
 
 	if (Check_Time(m_fSlowDelta))
 	{
@@ -81,6 +79,10 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 	}
 	else
 		m_eCurState = DIP_IDLE;
+
+	CGameObject::Update_GameObject(m_fSlowDelta);
+
+	Fix_Y();
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -169,18 +171,33 @@ void CDip::Motion_Change()
 
 void CDip::Change_Dir()
 {
-	m_iRandNum = rand() % 180;
+	m_iRandNum = rand() % 180; // 180
 	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(_float(m_iRandNum)));
+
+	m_pTransformCom->Get_Info(INFO_POS, &m_vMoveLook);
 }
 
 void CDip::Sliding(const _float& fTimeDelta)
 {
-	_vec3		vDir, vPos;
+	_vec3 vPos, vDir;
 	m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
+
+	D3DXVec3Normalize(&m_vMoveLook, &m_vMoveLook);
+
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	D3DXVec3Normalize(&vDir, &vDir);
-	m_pTransformCom->Move_Pos(&vDir, m_fSpeed * m_fAccel, fTimeDelta);
+	if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x &&
+		vPos.z < VTXCNTZ - m_pTransformCom->m_vScale.z &&
+		vPos.x > m_pTransformCom->m_vScale.x &&
+		vPos.z > m_pTransformCom->m_vScale.z)
+	{
+		m_pTransformCom->Move_Pos(&m_vMoveLook, m_fSpeed * m_fAccel, fTimeDelta);
+	}
+	else
+	{
+		m_vMoveLook *= -1.f;
+		m_pTransformCom->Move_Pos(&m_vMoveLook, m_fSpeed * m_fAccel, fTimeDelta);
+	}
 
 	m_fAccel -= 0.01;
 

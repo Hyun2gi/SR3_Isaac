@@ -35,6 +35,7 @@ private:
 
 	void				Create_Machine();
 	void				Create_Card();
+	_bool				Check_Reward();
 
 private:
 	// º¯¼ö

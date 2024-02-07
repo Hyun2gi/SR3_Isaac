@@ -23,11 +23,13 @@ private:
 	virtual void		Motion_Change()						override;
 	virtual void		Face_Camera()						override;
 
-	void			Change_Dir(const _float& fTimeDelta);
+	void			Change_Dir();
 	void			Move(const _float& fTimeDelta);
 
 private:
 	_int				m_iRandNum;
+	_int				m_iPicNum;
+	_float				m_fFrameSpeed = 1.f;
 
 public:
 	static CPacer* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID);
