@@ -68,7 +68,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	{
 		dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_ChaseInit(true);
 	}
-	
+	m_vStartPos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 
 	return S_OK;
 }
@@ -84,7 +84,8 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
 		_float	fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
 
-		m_pTransformCom->Set_Pos(VTXCNTX / 2, fHeight + 1, VTXCNTZ / 2);
+		//m_pTransformCom->Set_Pos(VTXCNTX / 2, fHeight + 1, VTXCNTZ / 2);
+		m_pTransformCom->Set_Pos(m_vStartPos.x, fHeight + 1, m_vStartPos.z);
 		m_bStartScene = false;
 	}
 
@@ -309,11 +310,6 @@ void CPlayer::Set_Player_Pos(_vec3 pos)
 	m_pTransformCom->Set_Pos(pos); 
 }
 
-void CPlayer::Set_StartPosition(_vec3 _position)
-{
-	m_bStartScene = true;
-	m_pTransformCom->Set_Pos(_position);
-}
 
 void CPlayer::Set_MouseRotation(float xRad, float yRad)
 {

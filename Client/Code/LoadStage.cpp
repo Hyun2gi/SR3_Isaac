@@ -823,6 +823,7 @@ HRESULT CLoadStage::Door_Collision()
 				//dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &playerpos);
 				//CPlayer::GetInstance()->Set_StartPosition(playerpos);
 
+
 				// 스테이지 변경
 				Engine::CScene* pScene = nullptr;
 

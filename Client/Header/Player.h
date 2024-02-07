@@ -83,8 +83,6 @@ public:
 		}
 	}
 
-
-
 	void		Set_To_MaxHp() { m_fHp = m_fMaxHp; }
 	void		Set_Coin(int _coin) { m_iCoin += _coin; }
 	void		Set_LayerTag(_tchar* pLayerTag) { m_pLayerTag = pLayerTag; }
@@ -97,7 +95,6 @@ public:
 	float		Get_BulletSpeed() { return m_fBulletSpeed; }
 	int			Get_Coin() { return m_iCoin; }
 	void		Set_Bool_StartScene(bool _start) { m_bStartScene = _start; }
-	void		Set_StartPosition(_vec3 _position);
 	void		Set_MouseRotation(float xRad, float yRad);
 	void		Set_BulletType(int _bullet);
 	void		Set_EpicFall();
@@ -128,6 +125,10 @@ public:
 
 	// 피격처리
 	void		Set_Attacked();
+	// 공격당함 모션 받아오기(혜원언니)
+	bool		Get_Attacked() { if (m_eCurState == P_ATTACKED) { return true; } else { return false; } }
+
+	void		Set_StartPos(_vec3 start) { m_vStartPos = start; m_bStartScene = true; }
 
 public:
 	void		Bullet_Change_To_Brim();
@@ -202,6 +203,9 @@ private:
 
 	// 총쏠때 머리작아지는거 시간 격차두기용
 	int					m_iTempTimer;
+
+	// 시작지점
+	_vec3				m_vStartPos;
 
 private:
 	list<CGameObject*>	m_PlayerBulletList;
