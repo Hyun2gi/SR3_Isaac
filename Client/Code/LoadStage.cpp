@@ -7,6 +7,8 @@
 #include "Player.h"
 #include "PlayerBullet.h"
 
+#include "StageLoadMgr.h"
+
 //환경
 #include "Terrain.h"
 #include "DynamicCamera.h"
@@ -63,11 +65,12 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	m_bIsCreated = false;
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
+	FAILED_CHECK_RETURN(CStageLoadMgr::GetInstance()->Ready_StageLoadMgr(), E_FAIL);
 	
-	FAILED_CHECK_RETURN(Load_Level_Data(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_Stage_Data(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_Connected_Stage_Theme(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_Stage_Design_Data(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_Level_Data(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_Stage_Data(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_Connected_Stage_Theme(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_Stage_Design_Data(), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_RoomObject(L"RoomObject"), E_FAIL);
@@ -165,39 +168,7 @@ void CLoadStage::Render_Scene()
 
 HRESULT CLoadStage::Load_Level_Data()
 {
-	string strFilePath = "../../Dat/MapLevel.dat";
-
-	ifstream fin(strFilePath);
-
-	string strGetLine = "";
-	//코드를 한 줄 읽어온다. (스테이지에 대한 정보는 한줄로 저장하게 만들어뒀기 때문에 가능)
-
-	while (getline(fin, strGetLine))
-	{
-		vector<string> vecStr;
-		int iIndex = 0;
-
-		while (true) {
-			// , 위치 찾기
-			int pos = strGetLine.find_first_of(',', iIndex);
-
-			// ,를 찾지 못하면 종료
-			if (pos == string::npos) 
-				break;
-
-			// 분리된 문자열 출력
-			vecStr.push_back(strGetLine.substr(iIndex, pos - iIndex));
-			iIndex = pos + 1;
-			vecStr.push_back(strGetLine.substr(iIndex));
-		}
-
-		m_mapLevel.emplace(pair<int, string>(stoi(vecStr[0]), vecStr[1]));
-
-		vecStr.clear();
-	}
-
-	fin.close();
-
+	map<int, StageInfo> tempMap = CStageLoadMgr::GetInstance()->Get_StageInfo();
 
 	return S_OK;
 }
@@ -334,7 +305,9 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
-	for (auto& iter : m_mapLoadObj)
+	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_mapLoadObj;
+
+	for (auto& iter : mapLoadObj)
 	{
 		switch (iter.second.iType)
 		{
@@ -602,56 +575,63 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 
 	_vec3 vTempPos;
 
-	for (auto& iter : m_mapDoorTheme)
+	auto vecDoorTheme = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_vecConnectRoom;
+
+	int i = 0;
+	for (auto& iter : vecDoorTheme)
 	{
 		pGameObject = CDoor::Create(m_pGraphicDev);
 		NULL_CHECK_RETURN(pGameObject, E_FAIL);
 		pGameObject->Set_MyLayer(pLayerTag);
 
-		switch (iter.first)
+		if (1 > iter) continue;
+
+		switch (i)
 		{
 		case WALL_LEFT:
-			
-			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iter.second);
+
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(CStageLoadMgr::GetInstance()->Get_Door_TextureName(iter));
 
 			vTempPos = m_pLeftWall->Get_Transform()->m_vInfo[INFO_POS];
 
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pLeftWall->Get_Transform()->m_vAngle;
-			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(m_vecConnectRoom[WALL_LEFT]);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(iter);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_RIGHT:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iter.second);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(CStageLoadMgr::GetInstance()->Get_Door_TextureName(iter));
 
 			vTempPos = m_pRightWall->Get_Transform()->m_vInfo[INFO_POS];
 
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x - DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pRightWall->Get_Transform()->m_vAngle;
-			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(m_vecConnectRoom[WALL_RIGHT]);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(iter);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_TOP:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iter.second);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(CStageLoadMgr::GetInstance()->Get_Door_TextureName(iter));
 
 			vTempPos = m_pTopWall->Get_Transform()->m_vInfo[INFO_POS];
 
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x, DOOR_Y_INTERVAL, vTempPos.z - DOOR_X_INTERVAL);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pTopWall->Get_Transform()->m_vAngle;
-			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(m_vecConnectRoom[WALL_TOP]);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(iter);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_BOTTOM:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iter.second);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(CStageLoadMgr::GetInstance()->Get_Door_TextureName(iter));
 
 			vTempPos = m_pBottomWall->Get_Transform()->m_vInfo[INFO_POS];
 
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x, DOOR_Y_INTERVAL, vTempPos.z + DOOR_X_INTERVAL);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pBottomWall->Get_Transform()->m_vAngle;
-			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(m_vecConnectRoom[WALL_BOTTOM]);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(iter);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		}
+
+		++i;
 	}
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
@@ -713,7 +693,9 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	wstring wstrProto = L"Proto_";
 	wstring wstrTag, wstrTheme;
 
-	wstrTheme.assign(m_vecStageInfo[0].begin(), m_vecStageInfo[0].end());
+	string strType = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_strType;
+
+	wstrTheme.assign(strType.begin(), strType.end());
 
 	//바닥 추가
 	wstrTag = wstrProto + wstrTheme + L"FloorCubeTexture";
@@ -778,25 +760,6 @@ HRESULT CLoadStage::Ready_Layer_UI(const _tchar * pLayerTag)
 
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
-
-	return S_OK;
-}
-
-HRESULT CLoadStage::Ready_LightInfo()
-{
-	D3DLIGHT9			tLightInfo;
-	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
-
-	tLightInfo.Type = D3DLIGHT_POINT;
-
-	tLightInfo.Diffuse   = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Specular  = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Ambient	 = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-
-	tLightInfo.Direction = _vec3(1.f, -1.f, 1.f);
-	tLightInfo.Range = 2.f;
-
-	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
 
 	return S_OK;
 }

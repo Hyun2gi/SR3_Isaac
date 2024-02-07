@@ -63,7 +63,6 @@ private:
 	HRESULT			Ready_Layer_GameObject(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_Door(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
-	HRESULT			Ready_LightInfo();
 
 	HRESULT			Door_Collision();
 

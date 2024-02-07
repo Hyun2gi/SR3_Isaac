@@ -211,6 +211,7 @@
     <ClInclude Include="..\Header\Spike.h" />
     <ClInclude Include="..\Header\Squirt.h" />
     <ClInclude Include="..\Header\Stage.h" />
+    <ClInclude Include="..\Header\StageLoadMgr.h" />
     <ClInclude Include="..\Header\Terrain.h" />
     <ClInclude Include="..\Header\TestStage.h" />
     <ClInclude Include="..\Header\Wall.h" />
@@ -276,6 +277,7 @@
     <ClCompile Include="..\Code\Spike.cpp" />
     <ClCompile Include="..\Code\Squirt.cpp" />
     <ClCompile Include="..\Code\Stage.cpp" />
+    <ClCompile Include="..\Code\StageLoadMgr.cpp" />
     <ClCompile Include="..\Code\Terrain.cpp" />
     <ClCompile Include="..\Code\TestStage.cpp" />
     <ClCompile Include="..\Code\Wall.cpp" />
