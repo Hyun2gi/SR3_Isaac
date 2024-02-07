@@ -150,21 +150,21 @@ void CEpicBullet::Motion_Change()
         switch (m_eCurState)
         {
         case EPIC_TARGET:
-            m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
+            m_pTransformCom->m_vScale = { 1.f, 1.7f, 1.f };
             m_pTransformCom->m_vAngle = { 90,0,0 };
             m_iPicNum = 1;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicTarget"));
             break;
         case EPIC_BULLET:
-            m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
+            m_pTransformCom->m_vScale = { 2.2f, 2.2f, 2.2f };
             m_pTransformCom->m_vAngle = { 0,0,0 };
             m_iPicNum = 1;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicBullet"));
             break;
         case EPIC_EFFECT:
-            m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
+            m_pTransformCom->m_vScale = { 2.2f, 2.2f, 2.2f };
             m_iPicNum = 11;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicEff"));
