@@ -36,6 +36,9 @@ HRESULT CCenterFly::Ready_GameObject()
 _int CCenterFly::Update_GameObject(const _float& fTimeDelta)
 {
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+	
+	if (m_bDead)
+		return 1;
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 

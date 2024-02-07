@@ -48,7 +48,12 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
-		m_fFrame = 0.f;
+	{
+		if (m_bDead)
+			return 1;
+		else
+			m_fFrame = 0.f;
+	}
 
 	if (m_bHit)
 	{
@@ -60,25 +65,31 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 
 		if (0 >= m_iHp)
 		{
+			_vec3 vPos;
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			Engine::Create_Explosion(m_pGraphicDev, vPos);
 			m_bDead = true;
 		}
 	}
 
-	Face_Camera();
-
-	if (Check_Time(m_fSlowDelta))
+	if (!m_bDead)
 	{
-		Change_Dir();
-		m_bSliding = true;
-	}
+		Face_Camera();
 
-	if (m_bSliding)
-	{
-		m_eCurState = DIP_SLIDE;
-		Sliding(m_fSlowDelta);
+		if (Check_Time(m_fSlowDelta))
+		{
+			Change_Dir();
+			m_bSliding = true;
+		}
+
+		if (m_bSliding)
+		{
+			m_eCurState = DIP_SLIDE;
+			Sliding(m_fSlowDelta);
+		}
+		else
+			m_eCurState = DIP_IDLE;
 	}
-	else
-		m_eCurState = DIP_IDLE;
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
