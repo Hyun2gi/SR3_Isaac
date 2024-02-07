@@ -69,9 +69,9 @@ void CParticleSplashRight::Reset_Partice(Attribute* attribute)
 	attribute->_vVelocity *= 3.f;
 
 	attribute->_color = D3DXCOLOR(
-		0.5f,
-		0.5f,
-		0.5f,
+		1.f,
+		1.f,
+		1.f,
 		1.0f);
 
 	//attribute->_color = D3DXCOLOR(

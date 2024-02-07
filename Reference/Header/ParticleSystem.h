@@ -78,6 +78,7 @@ public:
 	void	Set_Velocity_Speed(_float fSpeed) { m_fVelocitySpeed = fSpeed; }
 
 	bool Get_Dead() { return m_bIsDead; }
+	bool Get_UsingTransform() { return m_bUsingTransform; }
 
 	float GetRandomFloat(float lowBound, float highBound)
 	{
@@ -132,6 +133,7 @@ protected:
 	_float						m_fVelocitySpeed;
 
 	bool						m_bIsDead;
+	bool						m_bUsingTransform;
 
 	_matrix						m_matWorld;
 
