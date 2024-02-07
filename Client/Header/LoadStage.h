@@ -59,6 +59,7 @@ private:
 
 	void			Copy_Stage();
 
+	bool			Check_Monster_Dead();
 	void			Check_All_Dead();
   
 	void			Item_Collision();

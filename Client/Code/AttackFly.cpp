@@ -57,11 +57,11 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 	}
 	else
 	{
-		/*if (Check_Fly_Dead())
+		if (Check_Fly_Dead())
 		{
 			m_CenterFly->Set_Dead();
 			m_bDead = true;
-		}*/
+		}
 	}
 
 	if (m_CenterFly != nullptr)
@@ -75,8 +75,8 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	/*if (m_bDead)
-		return 1;*/
+	if (m_bDead)
+		return 1;
 
 	return 0;
 }
