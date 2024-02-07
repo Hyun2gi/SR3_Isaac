@@ -150,7 +150,7 @@ void CAttackFly::Create_AttackFly()
 	for (int i = 1; i < 13; ++i)
 	{
 		CNormalFly* pNormalFly = CNormalFly::Create(m_pGraphicDev, i, m_vecMyLayer[0]);
-		//pNormalFly->Set_MyLayer(m_vecMyLayer[0]); // Create ¹Ù²Ü ÇÊ¿ä ¾øÀ» µíÇÔ
+		//pNormalFly->Set_MyLayer(m_vecMyLayer[0]); // Create ë°”ê¿€ í•„ìš” ì—†ì„ ë“¯í•¨
 		pNormalFly->Set_TargetTransform(m_CenterFly->Get_Transform());
 		m_NormalFlyList.push_back(pNormalFly);
 	}
@@ -160,7 +160,7 @@ _bool CAttackFly::Check_Fly_Dead()
 {
 	for (auto& iter : m_NormalFlyList)
 	{
-		if (!(iter->Get_Dead())) // ÇÏ³ª¶óµµ »ì¾ÆÀÖÀ¸¸é false
+		if (!(iter->Get_Dead())) // í•˜ë‚˜ë¼ë„ ì‚´ì•„ìˆìœ¼ë©´ false
 			return false;
 	}
 	return true;
