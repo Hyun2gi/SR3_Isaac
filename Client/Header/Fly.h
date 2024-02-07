@@ -29,7 +29,7 @@ private:
 private:
 	_int					m_iRandNum;
 	_int					m_iPicNum;
-	_float				m_fFrameSpeed = 1.f;
+	_float					m_fFrameSpeed = 1.f;
 
 	FLYSTATE			m_ePreState;
 	FLYSTATE			m_eCurState;

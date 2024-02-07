@@ -70,6 +70,9 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
+
 	Face_Camera();
 
 	if (Check_Time(m_fSlowDelta) && !m_bSliding)
@@ -91,6 +94,9 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	Fix_Y();
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+	if (m_bDead)
+		return 1;
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -162,13 +168,13 @@ void CSquirt::Motion_Change()
 		case CSquirt::SQU_IDLE:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Squirt", L"Proto_SquirtTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_SquirtTexture"));
 			break;
 
 		case CSquirt::SQU_SLIDE:
 			m_iPicNum = 3;
 			m_fFrameSpeed = 0.3f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Squirt", L"Proto_SquirtSlideTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_SquirtSlideTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;

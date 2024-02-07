@@ -58,8 +58,14 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 		if (0 >= m_iHp)
 		{
 			m_bDead = true;
+			_vec3 vPos;
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
 		}
 	}
+
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
 
 	Face_Camera();
 
@@ -73,6 +79,9 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 	Fix_Y();
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+	if (m_bDead)
+		return 1;
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 

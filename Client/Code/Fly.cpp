@@ -67,6 +67,9 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
+
 	if (!m_bDead)
 	{
 		Face_Camera();
@@ -151,13 +154,13 @@ void CFly::Motion_Change()
 		case CFly::FLY_IDLE:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 3.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Fly", L"Proto_FlyTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_FlyTexture"));
 			break;
 
 		case CFly::FLY_DEAD:
 			m_iPicNum = 11;
 			m_fFrameSpeed = 2.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Fly", L"Proto_FlyDeadTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_FlyDeadTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;
