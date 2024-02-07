@@ -304,20 +304,20 @@ HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
 	//}
 
-	//// Attack Fly
-	//pGameObject = CAttackFly::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
+	// Attack Fly
+	pGameObject = CAttackFly::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
 
-	// Dip
-	for (int i = 0; i < 15; ++i)
-	{
-		pGameObject = CDip::Create(m_pGraphicDev, i);
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		pGameObject->Set_MyLayer(pLayerTag);
-		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dip", pGameObject), E_FAIL);
-	}
+	//// Dip
+	//for (int i = 0; i < 15; ++i)
+	//{
+	//	pGameObject = CDip::Create(m_pGraphicDev, i);
+	//	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//	pGameObject->Set_MyLayer(pLayerTag);
+	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dip", pGameObject), E_FAIL);
+	//}
 
 	//// Pacer
 	//for (int i = 0; i < 6; ++i)
