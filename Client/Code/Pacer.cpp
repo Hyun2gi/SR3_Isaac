@@ -32,6 +32,7 @@ HRESULT CPacer::Ready_GameObject()
 	m_fSpeed = 4.f;
 
 	m_iPicNum = 10.f;
+	m_bEpicTime = false;
 
 	m_eMstType = PACER;
 
@@ -41,6 +42,11 @@ HRESULT CPacer::Ready_GameObject()
 _int CPacer::Update_GameObject(const _float& fTimeDelta)
 {
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	if (m_bEpicTime)
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.2f);
+	else
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
 
 	m_fFrame += m_iPicNum * m_fSlowDelta;
 
@@ -67,7 +73,17 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 	if (m_bHitColor)
 		Change_Color(fTimeDelta);
 
-	Face_Camera();
+	// Epic
+	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
+		m_bEpicTime = true;
+
+	if (m_bEpicTime)
+		Epic_Time();
+	else
+	{
+		m_vOriginAngle = m_pTransformCom->m_vAngle;
+		Face_Camera();
+	}
 
 	if (Check_Time(m_fSlowDelta))
 		Change_Dir();
@@ -172,6 +188,17 @@ void CPacer::Move(const _float& fTimeDelta)
 	else
 	{
 		m_pTransformCom->Move_Pos(&-m_vMoveLook, m_fSpeed, fTimeDelta);
+	}
+}
+
+void CPacer::Epic_Time()
+{
+	m_pTransformCom->m_vAngle = { 0.f, 0.f, 90.f };
+
+	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
+	{
+		m_pTransformCom->m_vAngle = m_vOriginAngle;
+		m_bEpicTime = false;
 	}
 }
 

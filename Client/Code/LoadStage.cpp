@@ -701,51 +701,49 @@ void CLoadStage::Item_Collision()
 
 void CLoadStage::Moster_Collision()
 {
+	// Monster <-> Bullet 충돌
+	if (m_mapLayer.at(L"GameMst") != nullptr)
 	{
-		// Monster <-> Bullet 충돌
-		if (m_mapLayer.at(L"GameMst") != nullptr)
+		list<CGameObject*>* pBulletList = CPlayer::GetInstance()->Get_Player_BullletList();
+
+		for (list<CGameObject*>::iterator iter = pBulletList->begin();
+			iter != pBulletList->end();)
 		{
-			list<CGameObject*>* pBulletList = CPlayer::GetInstance()->Get_Player_BullletList();
+			CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(*iter);
 
-			for (list<CGameObject*>::iterator iter = pBulletList->begin();
-				iter != pBulletList->end();)
+			if (pMonster)
 			{
-				CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(*iter);
-
-				if (pMonster)
+				// 일반 총알일때 이펙트 보여주려고 해당부분 처리
+				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
 				{
-					// 일반 총알일때 이펙트 보여주려고 해당부분 처리
-					if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
-					{
-						// 일반 총알 충돌처리
-						dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
-					}
+					// 일반 총알 충돌처리
+					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
+				}
 
-					// Dople 이 아닐 때만
-					if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
-					{
-						dynamic_cast<CMonster*>(pMonster)->Hit();
-						break;
-					}
-					else
-						++iter;
+				// Dople 이 아닐 때만
+				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
+				{
+					dynamic_cast<CMonster*>(pMonster)->Hit();
+					break;
 				}
 				else
 					++iter;
 			}
+			else
+				++iter;
 		}
+	}
 
-		// Dople <-> Spike 충돌
-		if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr)
+	// Dople <-> Spike 충돌
+	if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr)
+	{
+		CGameObject* pDople = m_mapLayer.at(L"GameMst")->Collision_GameObject(Get_GameObject(L"MapObj", L"Spike"));
+		if (pDople)
 		{
-			CGameObject* pDople = m_mapLayer.at(L"GameMst")->Collision_GameObject(Get_GameObject(L"MapObj", L"Spike"));
-			if (pDople)
-			{
-				if (DOPLE == dynamic_cast<CMonster*>(pDople)->Get_MstType())
-					dynamic_cast<CDople*>(pDople)->Hit();
-			}
+			if (DOPLE == dynamic_cast<CMonster*>(pDople)->Get_MstType())
+				dynamic_cast<CDople*>(pDople)->Hit();
 		}
-
+	}
 }
 
 void CLoadStage::MapObj_Collision()

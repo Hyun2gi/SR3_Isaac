@@ -47,6 +47,8 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 
 	if(m_bEpicTime)
 		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.2f);
+	else
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
 
 	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
@@ -77,7 +79,6 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 		Change_Color(fTimeDelta);
 
 	// Epic
-
 	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
 		m_bEpicTime = true;
 
@@ -88,7 +89,6 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 		m_vOriginAngle = m_pTransformCom->m_vAngle;
 		Face_Camera();
 	}
-	//Face_Camera();
 
 	if (Check_Time(m_fSlowDelta))
 	{
