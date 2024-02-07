@@ -29,6 +29,7 @@ private:
 	virtual HRESULT		Add_Component()						override;
 
 	void				Create_AttackFly();
+	_bool				Check_Fly_Dead();
 
 private:
 	// º¯¼ö
