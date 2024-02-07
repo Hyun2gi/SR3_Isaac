@@ -25,13 +25,17 @@ private:
 
 	void				Change_Dir();
 	void				Sliding(const _float& fTimeDelta);
+	void				Epic_Time();
 
 private:
 	_bool				m_bSliding;
+	_bool				m_bEpicTime;
 	_int				m_iRandNum;
 	_int				m_iPicNum;
 	_float				m_fFrameSpeed = 1.f;
 	_float				m_fAccel;
+
+	_vec3				m_vOriginAngle;
 
 	DIPSTATE			m_ePreState;
 	DIPSTATE			m_eCurState;
