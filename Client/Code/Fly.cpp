@@ -67,6 +67,9 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
+
 	if (!m_bDead)
 	{
 		Face_Camera();

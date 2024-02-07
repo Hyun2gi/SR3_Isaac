@@ -7,8 +7,8 @@
 CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev),
 	m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTargetTransCom(nullptr), m_pTextureCom(nullptr), m_pCalculCom(nullptr),
-	m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_fSecAccTimeDelta(0.f), m_fSlowDelta(0.f),
-	m_bDead(false), m_bHit(false), m_bBoss(false), m_eMstType(MONSTER_TYPE_END), m_bScaleReduce(true)
+	m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_fSecAccTimeDelta(0.f), m_fSlowDelta(0.f), m_fColorTimeDelta(0.f),
+	m_bDead(false), m_bHit(false), m_bBoss(false), m_eMstType(MONSTER_TYPE_END), m_bScaleReduce(true), m_bHitColor(false)
 {
 	m_vOriginScale = { 1.f, 1.f, 1.f };
 }
@@ -16,9 +16,9 @@ CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
 CMonster::CMonster(const CMonster& rhs)
 	: Engine::CGameObject(rhs),
 	m_pBufferCom(rhs.m_pBufferCom), m_pTransformCom(rhs.m_pTransformCom), m_pTargetTransCom(rhs.m_pTargetTransCom),
-	m_pTextureCom(rhs.m_pTextureCom), m_pCalculCom(rhs.m_pCalculCom),
+	m_pTextureCom(rhs.m_pTextureCom), m_pCalculCom(rhs.m_pCalculCom), m_fColorTimeDelta(rhs.m_fColorTimeDelta),
 	m_fCallLimit(rhs.m_fCallLimit), m_fAccTimeDelta(rhs.m_fAccTimeDelta), m_fSpeed(rhs.m_fSpeed), m_fSecAccTimeDelta(rhs.m_fSecAccTimeDelta), m_fSlowDelta(rhs.m_fSlowDelta),
-	m_bDead(rhs.m_bDead), m_bHit(rhs.m_bHit), m_bBoss(rhs.m_bBoss), m_eMstType(rhs.m_eMstType), m_bScaleReduce(rhs.m_bScaleReduce)
+	m_bDead(rhs.m_bDead), m_bHit(rhs.m_bHit), m_bBoss(rhs.m_bBoss), m_eMstType(rhs.m_eMstType), m_bScaleReduce(rhs.m_bScaleReduce), m_bHitColor(rhs.m_bHitColor)
 {
 }
 
@@ -74,6 +74,28 @@ void CMonster::Change_Scale() // 호출방법 고민
 	}
 }
 
+void CMonster::Change_Color(const _float& fTimeDelta)
+{
+	m_fColorTimeDelta += fTimeDelta;
+
+	if (m_fColorTimeDelta >= 0.2f)
+	{
+		D3DXCOLOR temp = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+		m_pBufferCom->Set_Color(temp);
+
+		m_fColorTimeDelta = 0.f;
+
+		m_bHitColor = false;
+
+		return;
+	}
+	else // 타이머가 돌 동안
+	{
+		D3DXCOLOR temp = D3DXCOLOR(1.f, 0.0f, 0.0f, 1.f);
+		m_pBufferCom->Set_Color(temp);
+	}
+}
+
 bool CMonster::Check_Time(const _float& fTimeDelta)
 {
 	m_fAccTimeDelta += fTimeDelta;
@@ -97,6 +119,11 @@ bool CMonster::Check_Time(const _float& fTimeDelta, float fLimit)
 		return true;
 	}
 
+	return false;
+}
+
+bool CMonster::Check_Color_Time(const _float& fTimeDelta)
+{
 	return false;
 }
 

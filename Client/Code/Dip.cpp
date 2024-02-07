@@ -59,6 +59,7 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 		Hit_PushBack(m_fSlowDelta);
 
 		m_bHit = false;
+		m_bHitColor = true;
 
 		if (0 >= m_iHp)
 		{
@@ -68,6 +69,9 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 			Engine::Create_Explosion(m_pGraphicDev,*(m_pTransformCom->Get_WorldMatrix()));
 		}
 	}
+
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
 
 	Face_Camera();
 

@@ -64,6 +64,9 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
+
 	Face_Camera();
 
 	if (Check_Time(m_fSlowDelta))
