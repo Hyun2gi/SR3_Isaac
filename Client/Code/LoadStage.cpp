@@ -91,7 +91,8 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	if (Check_Cube_Arrived() && !m_bIsCreated)
 	{
 		m_bIsCreated = true;
-		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"GameObject"), E_FAIL);
+		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
+		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
 	}
 
@@ -143,6 +144,8 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	if (Engine::Key_Down(DIK_P))
 	{
 		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f);
+
+		Copy_Stage();
 	}
 	if (Engine::Key_Down(DIK_O))
 	{
@@ -155,11 +158,11 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 void CLoadStage::LateUpdate_Scene()
 {
 	CPlayer::GetInstance()->LateUpdate_GameObject();
-	Check_All_Dead();
+	//Check_All_Dead();
 	__super::LateUpdate_Scene();
 
-	//if (m_bIsCreated)
-	//	Door_Collision();
+	if (m_bIsCreated)
+		Door_Collision();
 }
 
 void CLoadStage::Render_Scene()
@@ -248,6 +251,26 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			}
 			break;
 		}
+		
+		}
+	}
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
+}
+
+HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
+{
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	Engine::CGameObject* pGameObject = nullptr;
+
+	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_mapLoadObj;
+
+	for (auto& iter : mapLoadObj)
+	{
+		switch (iter.second.iType)
+		{
 		case MONSTER:
 		{
 			switch (iter.second.iIndex)
@@ -305,6 +328,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
 					= { iter.second.iX, iter.second.iY, iter.second.iZ };
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
+				
+				++m_vecMonsterCount[SQUIRT];
 
 				break;
 			}
@@ -381,62 +406,13 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			}
 			break;
 		}
-		case ITEM:
-		{
-			switch (iter.second.iIndex)
-			{
-			case BRIM:
-			{
-				//pGameObject = CCoin::Create(m_pGraphicDev);
-				//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-				//pGameObject->Set_MyLayer(pLayerTag);
-				//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Coin", pGameObject), E_FAIL);
-
-				break;
-			}
-			case EPIC:
-			{
-
-				break;
-			}
-			case SAD_ONION:
-			{
-
-				break;
-			}
-			case TRINKET:
-			{
-
-				break;
-			}
-			case COIN:
-			{
-
-				break;
-			}
-			case HEART:
-			{
-
-				break;
-			}
-			case HEART_HALF:
-			{
-
-				break;
-			}
-			case PILL:
-			{
-
-				break;
-			}
-
-			}
-			break;
-		}
+		
 		}
 	}
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
+
+	return S_OK;
 }
 
 HRESULT CLoadStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
@@ -676,6 +652,27 @@ bool CLoadStage::Check_Cube_Arrived()
 	
 }
 
+void CLoadStage::Copy_Stage()
+{
+	auto& map = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_mapLoadObj;
+
+
+	int iStageMonsterCount = 0;
+	for (auto& iter : m_vecMonsterCount) iStageMonsterCount += iter;
+
+	if (iStageMonsterCount)
+	{
+		for (auto iter = map.begin(); iter != map.end();)
+		{
+			if (MONSTER == (*iter).second.iType)
+				iter = map.erase(iter);
+			else
+				iter++;
+		}
+	}
+	
+}
+
 void CLoadStage::Check_All_Dead()
 {
 	int iCount = 0;
@@ -683,7 +680,7 @@ void CLoadStage::Check_All_Dead()
 	for (auto& iter : m_vecMonsterCount)
 		iCount += iter;
 
-	if(0 == iCount)
+	if(0 >= iCount)
 		dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Set_Open();
 }
 
