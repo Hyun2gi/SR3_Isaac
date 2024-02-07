@@ -26,6 +26,7 @@ HRESULT CBrimStone::Ready_GameObject()
 	m_bDead = false;
 	m_fFrame = 0;
 	m_iCoin = 4;
+	m_iUpTimer = 0;
 
 	return S_OK;
 }
@@ -37,6 +38,20 @@ _int CBrimStone::Update_GameObject(const _float& fTimeDelta)
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
 	if (m_bDead == true)
+	{
+		m_iUpTimer++;
+		CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+		_vec3		playerPos;
+
+		playerInfo->Get_Info(INFO_POS, &playerPos);
+
+		m_pTransformCom->Set_Pos(playerPos.x, 2.4, playerPos.z);
+
+		m_bDead = true;
+	}
+
+	if (m_bDead == true && m_iUpTimer > 135)
 	{
 		// Á×À½ Ã³¸®
 		return 1;

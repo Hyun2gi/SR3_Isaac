@@ -27,6 +27,7 @@ private:
 private:
 	// 랜덤값으로 한 이미지 지정하면 계속 유지
 	_float					m_fPicNum;
+	int						m_iUpTimer;
 
 public:
 	static CWhipWorm* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look);
