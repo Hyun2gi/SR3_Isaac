@@ -57,11 +57,11 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 	}
 	else
 	{
-		/*if (Check_Fly_Dead())
+		if (Check_Fly_Dead())
 		{
 			m_CenterFly->Set_Dead();
 			m_bDead = true;
-		}*/
+		}
 	}
 
 	if (m_CenterFly != nullptr)
@@ -75,8 +75,8 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	/*if (m_bDead)
-		return 1;*/
+	//if (m_bDead)
+		//return 1;
 
 	return 0;
 }
@@ -115,15 +115,15 @@ HRESULT CAttackFly::Add_Component()
 
 #pragma region Texture
 
-	//// IDLE
-	//pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_AttackFlyTexture"));
-	//NULL_CHECK_RETURN(pComponent, E_FAIL);
-	//m_mapComponent[ID_STATIC].insert({ L"Proto_AttackFlyTexture", pComponent });
+	// IDLE
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_AttackFlyTexture")); //Engine::Clone_Proto(L"Proto_AttackFlyTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_AttackFlyTexture", pComponent });
 
-	//// DEAD
-	//pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FlyDeadTexture"));
-	//NULL_CHECK_RETURN(pComponent, E_FAIL);
-	//m_mapComponent[ID_STATIC].insert({ L"Proto_FlyDeadTexture", pComponent });
+	// DEAD
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FlyDeadTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_FlyDeadTexture", pComponent });
 
 #pragma endregion Texture
 
