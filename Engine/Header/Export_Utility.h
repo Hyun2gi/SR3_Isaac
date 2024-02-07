@@ -4,6 +4,9 @@
 #include "ProtoMgr.h"
 #include "Renderer.h"
 #include "LightMgr.h"
+#include "ParticleMgr.h"
+
+#include "AbstractFactory.h"
 
 #include "TriCol.h"
 #include "RcCol.h"
@@ -23,7 +26,10 @@
 #include "ParticleScatter.h"
 #include "ParticleExplosion.h"
 #include "ParticleSplash.h"
+#include "ParticleSplashLeft.h"
+#include "ParticleSplashRight.h"
 #include "ParticleBurst.h"
+
 
 BEGIN(Engine)
 
@@ -52,10 +58,20 @@ inline HRESULT		Ready_Light(LPDIRECT3DDEVICE9 pGraphicDev,
 								const D3DLIGHT9* pLightInfo,
 								const _uint& iIndex);
 
+//ParticleMgr
+inline void	Create_Scatter(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vMin, _vec3 vMax, _float fSize = 0.25f, _int iCount = 30);
+inline void	Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fSize = 0.7f, _int iCount = 10);
+inline void	Create_Splash(LPDIRECT3DDEVICE9 pDevice, _vec3 vPos, const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/BloodExp2/BloodExp_%d.png", _int iMaxFrame = 7, _float fSize = 0.25f, _int iCount = 10);
+inline void	Create_Splash_Left(LPDIRECT3DDEVICE9 pDevice, _vec3 vPos, const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/BloodExp_Left/BloodExp_%d.png", _int iMaxFrame = 2, _float fSize = 0.5f, _int iCount = 15);
+inline void	Create_Splash_Right(LPDIRECT3DDEVICE9 pDevice, _vec3 vPos, const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/BloodExp_Right/BloodExp_%d.png", _int iMaxFrame = 2, _float fSize = 0.5f, _int iCount = 15);
+inline void	Create_Burst(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fSize = 0.5f, _int iCount = 10);
+
+inline void	Update_Particles(_float fDeltaTime);
+inline void	Render_Particles();
+
 
 // Release
 inline void				Release_Utility();
-
 
 #include "Export_Utility.inl"
 

@@ -6,7 +6,7 @@
 #include "CubeObject.h"
 
 CWall::CWall(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CGameObject(pGraphicDev)
+	: Engine::CGameObject(pGraphicDev), m_bStartScene(false)
 {
 }
 
@@ -84,7 +84,7 @@ HRESULT CWall::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag, int iAxis)
 		{
 			int iIdx = i * VTXCNTX + j;
 
-			pCube = CCubeObject::Create(m_pGraphicDev);
+			pCube = CCubeObject::Create(m_pGraphicDev, m_bStartScene);
 			
 			NULL_CHECK_RETURN(pCube, E_FAIL);
 			pCube->Set_Cute_Texture(pCubeTextureTag);
@@ -182,9 +182,10 @@ void CWall::Free_Cubes()
 	m_vecCubes.clear();
 }
 
-CWall * CWall::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CWall * CWall::Create(LPDIRECT3DDEVICE9 pGraphicDev, bool bStartScene)
 {
 	CWall *	pInstance = new CWall(pGraphicDev);
+	pInstance->m_bStartScene = bStartScene;
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{

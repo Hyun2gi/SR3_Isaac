@@ -5,11 +5,11 @@ BEGIN(Engine)
 
 class CTexture;
 
-class ENGINE_DLL CParticleSplash : public CParticleSystem
+class ENGINE_DLL CParticleSplashRight : public CParticleSystem
 {
 public:
-	explicit CParticleSplash(_vec3* vOrigin, int numParticles, _float fSize);
-	virtual ~CParticleSplash();
+	explicit CParticleSplashRight(_vec3* vOrigin, int numParticles, _float fSize);
+	virtual ~CParticleSplashRight();
 
 public:
 	bool Ready_Particle(IDirect3DDevice9* pDevice) override;
@@ -19,15 +19,14 @@ public:
 
 	void	Create_Texture(const _tchar* pTexturePath, _int iMaxFrame);
 
-	static CParticleSplash* Create(IDirect3DDevice9* pDevice, _vec3 vPos,
-		const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/BloodExp2/BloodExp_%d.png", _int iMaxFrame = 7,
+	static CParticleSplashRight* Create(IDirect3DDevice9* pDevice, _vec3 vPos,
+		const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/BloodExpRight/BloodExp_%d.png", _int iMaxFrame = 2,
 		_float fSize = 0.25f, _int iCount = 10);
 
 private:
 	virtual void	Free() override;
 
 private:
-	bool m_bIsLeft;
 	_float m_fGravity;
 
 	CTexture* m_pTexture;

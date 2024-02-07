@@ -201,6 +201,7 @@ call CopySystem.bat</Command>
     <ClInclude Include="..\..\..\imgui\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\..\..\imgui\imgui\imstb_textedit.h" />
     <ClInclude Include="..\..\..\imgui\imgui\imstb_truetype.h" />
+    <ClInclude Include="..\..\Header\AbstractFactory.h" />
     <ClInclude Include="..\..\Header\CollisionMgr.h" />
     <ClInclude Include="..\..\Header\Export_System.h" />
     <ClInclude Include="..\..\Header\FontMgr.h" />

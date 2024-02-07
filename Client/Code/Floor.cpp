@@ -6,7 +6,7 @@
 #include "CubeObject.h"
 
 CFloor::CFloor(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CGameObject(pGraphicDev)
+	: Engine::CGameObject(pGraphicDev), m_bStartScene(false)
 {
 }
 
@@ -75,7 +75,7 @@ HRESULT CFloor::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag)
 		{
 			int iIdx = i * VTXCNTZ + j;
 
-			pCube = CCubeObject::Create(m_pGraphicDev);
+			pCube = CCubeObject::Create(m_pGraphicDev, m_bStartScene);
 			NULL_CHECK_RETURN(pCube, E_FAIL);
 			pCube->Set_Cute_Texture(pCubeTextureTag);
 			CTransform* pTemp = dynamic_cast<CTransform*>(pCube->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
@@ -119,9 +119,10 @@ HRESULT CFloor::Add_Component()
 	return S_OK;
 }
 
-CFloor * CFloor::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+CFloor * CFloor::Create(LPDIRECT3DDEVICE9 pGraphicDev, bool bStartScene)
 {
 	CFloor *	pInstance = new CFloor(pGraphicDev);
+	pInstance->m_bStartScene = bStartScene;
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
