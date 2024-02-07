@@ -156,8 +156,8 @@ void CLoadStage::LateUpdate_Scene()
 	__super::LateUpdate_Scene();
 	CPlayer::GetInstance()->LateUpdate_GameObject();
 
-	if (m_bIsCreated)
-		Door_Collision();
+	//if (m_bIsCreated)
+	//	Door_Collision();
 }
 
 void CLoadStage::Render_Scene()
@@ -166,135 +166,6 @@ void CLoadStage::Render_Scene()
 	//pParticleScatter->Render_GameObject();
 }
 
-HRESULT CLoadStage::Load_Level_Data()
-{
-	map<int, StageInfo> tempMap = CStageLoadMgr::GetInstance()->Get_StageInfo();
-
-	return S_OK;
-}
-
-HRESULT CLoadStage::Load_Stage_Data()
-{
-	//.dat 파일을 불려올 경로를 설정해준다.
-	string strFilePath = "../../Dat/" + m_mapLevel.at(m_iCurStageKey) + ".dat";
-
-	ifstream fin(strFilePath);
-
-	string strGetLine = "";
-
-	while (getline(fin, strGetLine))
-	{
-		int iIndex = 0;
-
-		int iCount = 0;
-
-		while (true) {
-			// , 위치 찾기
-			int pos = strGetLine.find_first_of(',', iIndex);
-
-			if (3 < iCount)
-			{
-				m_vecStageInfo.push_back(strGetLine.substr(iIndex, pos - iIndex));
-
-				// ,를 찾지 못하면 종료
-				if (pos == string::npos)
-				{
-					break;
-				}
-			}
-			else
-			{
-				// 분리된 문자열 출력
-				m_vecConnectRoom.push_back(stoi(strGetLine.substr(iIndex, pos - iIndex)));
-			}
-			
-			iIndex = pos + 1;
-
-			iCount++;
-		}
-	}
-
-	fin.close();
-
-	return S_OK;
-}
-
-HRESULT CLoadStage::Load_Stage_Design_Data()
-{
-	string strFilePath = "../../Dat/" +
-		m_mapLevel[m_iCurStageKey] + "_Design.dat";
-
-	ifstream fin(strFilePath);
-
-	string strGetLine = "";
-	
-	int iMapKey = 0;
-
-	while (getline(fin, strGetLine))
-	{
-		vector<string> vecStr;
-		int iIndex = 0;
-
-		while (true) {
-			// , 위치 찾기
-			int pos = strGetLine.find_first_of(',', iIndex);
-
-			// ,를 찾지 못하면 종료
-			if (pos == string::npos) {
-				vecStr.push_back(strGetLine.substr(iIndex));
-				break;
-			}
-
-			// 분리된 문자열 출력
-			vecStr.push_back(strGetLine.substr(iIndex, pos - iIndex));
-			iIndex = pos + 1;
-		}
-
-		LoadObj tTemp = { stoi(vecStr[0]), stoi(vecStr[1]), stof(vecStr[2]), stof(vecStr[3]), stof(vecStr[4]) };
-
-		m_mapLoadObj.insert({ iMapKey, tTemp });
-		//int iType, int iIndex, float x, float y, float z
-		vecStr.clear();
-
-		++iMapKey;
-	}
-
-	fin.close();
-
-	return S_OK;
-
-}
-
-HRESULT CLoadStage::Load_Connected_Stage_Theme()
-{
-	int iIndex = 0;
-
-	for (auto& iter : m_vecConnectRoom)
-	{
-		if (iter != 0)
-		{
-			string strFilePath = "../../Dat/Stage_" +
-				to_string(iter) + ".dat";
-
-			ifstream fin(strFilePath);
-
-			string strLine = "";
-			getline(fin, strLine);
-			fin.close();
-
-			//m_mapDoorTheme.emplace({})
-			int pos = strLine.find_last_of(",") + 1;
-
-			string strStageTheme = strLine.substr(pos);
-
-			m_mapDoorTheme.insert({ iIndex, strStageTheme });
-		}
-
-		++iIndex;
-	}
-
-	return S_OK;
-}
 
 HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 {
@@ -580,15 +451,14 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 	int i = 0;
 	for (auto& iter : vecDoorTheme)
 	{
-		pGameObject = CDoor::Create(m_pGraphicDev);
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		pGameObject->Set_MyLayer(pLayerTag);
-
 		if (1 > iter) continue;
 
 		switch (i)
 		{
 		case WALL_LEFT:
+			pGameObject = CDoor::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pGameObject, E_FAIL);
+			pGameObject->Set_MyLayer(pLayerTag);
 
 			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(CStageLoadMgr::GetInstance()->Get_Door_TextureName(iter));
 
@@ -600,6 +470,10 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_RIGHT:
+			pGameObject = CDoor::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pGameObject, E_FAIL);
+			pGameObject->Set_MyLayer(pLayerTag);
+
 			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(CStageLoadMgr::GetInstance()->Get_Door_TextureName(iter));
 
 			vTempPos = m_pRightWall->Get_Transform()->m_vInfo[INFO_POS];
@@ -610,6 +484,10 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_TOP:
+			pGameObject = CDoor::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pGameObject, E_FAIL);
+			pGameObject->Set_MyLayer(pLayerTag);
+
 			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(CStageLoadMgr::GetInstance()->Get_Door_TextureName(iter));
 
 			vTempPos = m_pTopWall->Get_Transform()->m_vInfo[INFO_POS];
@@ -620,6 +498,10 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_BOTTOM:
+			pGameObject = CDoor::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pGameObject, E_FAIL);
+			pGameObject->Set_MyLayer(pLayerTag);
+
 			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(CStageLoadMgr::GetInstance()->Get_Door_TextureName(iter));
 
 			vTempPos = m_pBottomWall->Get_Transform()->m_vInfo[INFO_POS];
@@ -818,6 +700,5 @@ CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool b
 
 void CLoadStage::Free()
 {
-	//Safe_Release(pParticleScatter);
 	__super::Free();
 }

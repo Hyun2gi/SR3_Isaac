@@ -185,5 +185,5 @@ HRESULT CStageLoadMgr::Load_Data()
 void CStageLoadMgr::Free(void)
 {
 	//for_each(m_mapStageInfo.begin(), m_mapStageInfo.end(), CDeleteMap());
-	//m_mapStageInfo.clear();
+	m_mapStageInfo.clear();
 }
