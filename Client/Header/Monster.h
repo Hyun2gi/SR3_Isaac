@@ -22,6 +22,8 @@ protected:
 	virtual ~CMonster();
 
 public:
+	_bool			Get_Dead() { return m_bDead; }
+	void			Set_Dead() { m_bDead = true; }
 	void			Hit() { m_bHit = true; }
 	_bool			Get_IsBoss() { return m_bBoss; }
 	MONSTER_TYPE	Get_MstType() { return m_eMstType; }

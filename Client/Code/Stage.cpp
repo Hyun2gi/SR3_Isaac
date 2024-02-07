@@ -97,6 +97,7 @@ Engine::_int CStage::Update_Scene(const _float& fTimeDelta)
 	//Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f); // Second Timer 테스트용 코드
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
+	Engine::Update_Particles(fTimeDelta);
 	return __super::Update_Scene(fTimeDelta);
 }
 
@@ -109,6 +110,7 @@ void CStage::LateUpdate_Scene()
 void CStage::Render_Scene()
 {
 	// DEBUG
+	//Engine::Render_Particles();
 }
 
 void CStage::Drop_ITem()
@@ -308,14 +310,14 @@ HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
 	//pGameObject->Set_MyLayer(pLayerTag);
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
 
-	//// Dip
-	//for (int i = 0; i < 5; ++i)
-	//{
-	//	pGameObject = CDip::Create(m_pGraphicDev, i);
-	//	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//	pGameObject->Set_MyLayer(pLayerTag);
-	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dip", pGameObject), E_FAIL);
-	//}
+	// Dip
+	for (int i = 0; i < 5; ++i)
+	{
+		pGameObject = CDip::Create(m_pGraphicDev, i);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		pGameObject->Set_MyLayer(pLayerTag);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dip", pGameObject), E_FAIL);
+	}
 
 	//// Pacer
 	//for (int i = 0; i < 6; ++i)

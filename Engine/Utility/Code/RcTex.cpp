@@ -33,27 +33,7 @@ HRESULT CRcTex::Ready_Buffer()
 	
 	FAILED_CHECK_RETURN(CVIBuffer::Ready_Buffer(), E_FAIL);
 
-	VTXTEX*		pVertex = nullptr;
-
-	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
-
-	pVertex[0].vPosition = { -1.f, 1.f, 0.f };
-	pVertex[0].vTexUV = { 0.f, 0.f };
-	pVertex[0].dwColor = m_dwColor;
-
-	pVertex[1].vPosition = { 1.f, 1.f, 0.f };
-	pVertex[1].vTexUV = { 1.f, 0.f };
-	pVertex[1].dwColor = m_dwColor;
-
-	pVertex[2].vPosition = { 1.f, -1.f, 0.f };
-	pVertex[2].vTexUV = { 1.f, 1.f };
-	pVertex[2].dwColor = m_dwColor;
-		
-	pVertex[3].vPosition = { -1.f, -1.f, 0.f };
-	pVertex[3].vTexUV = { 0.f, 1.f };
-	pVertex[3].dwColor = m_dwColor;
-
-	m_pVB->Unlock();
+	Ready_VBuffer();
 
 	INDEX32*		pIndex = nullptr;
 
@@ -73,9 +53,37 @@ HRESULT CRcTex::Ready_Buffer()
 	return S_OK;
 }
 
+HRESULT CRcTex::Ready_VBuffer()
+{
+	VTXTEX* pVertex = nullptr;
+
+	m_pVB->Lock(0, 0, (void**)&pVertex, 0);
+
+	pVertex[0].vPosition = { -1.f, 1.f, 0.f };
+	pVertex[0].vTexUV = { 0.f, 0.f };
+	pVertex[0].dwColor = m_dwColor;
+
+	pVertex[1].vPosition = { 1.f, 1.f, 0.f };
+	pVertex[1].vTexUV = { 1.f, 0.f };
+	pVertex[1].dwColor = m_dwColor;
+
+	pVertex[2].vPosition = { 1.f, -1.f, 0.f };
+	pVertex[2].vTexUV = { 1.f, 1.f };
+	pVertex[2].dwColor = m_dwColor;
+
+	pVertex[3].vPosition = { -1.f, -1.f, 0.f };
+	pVertex[3].vTexUV = { 0.f, 1.f };
+	pVertex[3].dwColor = m_dwColor;
+
+	m_pVB->Unlock();
+
+
+	return S_OK;
+}
+
 void CRcTex::Render_Buffer()
 {
-	Ready_Buffer();
+	Ready_VBuffer();
 	CVIBuffer::Render_Buffer();
 }
 

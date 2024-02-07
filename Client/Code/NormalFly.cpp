@@ -49,7 +49,15 @@ _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
-		m_fFrame = 0.f;
+	{
+		if (m_bDead)
+		{
+			//m_fFrame = 10.f;
+			//m_iPicNum = 0.f;
+		}
+		else
+			m_fFrame = 0.f;
+	}
 
 	if (m_bHit)
 	{
@@ -62,13 +70,15 @@ _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 		if (0 >= m_iHp)
 		{
 			m_eCurState = FLY_DEAD;
-			//m_bDead = true;
+			m_bDead = true;
 		}
 	}
 
-	CGameObject::Update_GameObject(m_fSlowDelta);
 
-	Revolve_Center();
+	if(!m_bDead)
+		Revolve_Center();
+
+	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 	//m_pCalculCom->Compute_Vill_Matrix_X(m_pTransformCom);
@@ -126,20 +136,6 @@ HRESULT CNormalFly::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-//#pragma region Texture
-//
-//	// IDLE
-//	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_AttackFlyTexture"));
-//	NULL_CHECK_RETURN(pComponent, E_FAIL);
-//	m_mapComponent[ID_STATIC].insert({ L"Proto_AttackFlyTexture", pComponent });
-//
-//	// DEAD
-//	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FlyDeadTexture"));
-//	NULL_CHECK_RETURN(pComponent, E_FAIL);
-//	m_mapComponent[ID_STATIC].insert({ L"Proto_FlyDeadTexture", pComponent });
-//
-//#pragma endregion Texture
-
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
@@ -168,7 +164,7 @@ void CNormalFly::Motion_Change()
 
 		case CNormalFly::FLY_DEAD:
 			m_iPicNum = 11;
-			m_fFrameSpeed = 3.f;
+			m_fFrameSpeed = 1.f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"AttackFly", L"Proto_FlyDeadTexture"));
 			break;
 		}
