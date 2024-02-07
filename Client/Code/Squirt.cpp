@@ -23,7 +23,8 @@ CSquirt::~CSquirt()
 HRESULT CSquirt::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
+	m_pTransformCom->Set_Pos(0.f, 1.f, 0.f);
+	m_pTransformCom->m_vScale = { 1.5f, 1.5f, 1.5f };
 
 	m_iHp = 6;
 

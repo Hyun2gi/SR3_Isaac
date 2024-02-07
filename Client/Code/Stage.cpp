@@ -295,14 +295,14 @@ HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
- //	// Fly
-	//for (int i = 0; i < 10; ++i)
-	//{
-	//	pGameObject = CFly::Create(m_pGraphicDev, i * 2);
-	//	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//	pGameObject->Set_MyLayer(pLayerTag);
-	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
-	//}
+ 	// Fly
+	for (int i = 0; i < 10; ++i)
+	{
+		pGameObject = CFly::Create(m_pGraphicDev, i * 2);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		pGameObject->Set_MyLayer(pLayerTag);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
+	}
 
 	// Attack Fly
 	pGameObject = CAttackFly::Create(m_pGraphicDev);
