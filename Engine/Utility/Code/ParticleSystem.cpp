@@ -8,11 +8,11 @@ CParticleSystem::CParticleSystem()
 	m_pVb = 0;
 	m_pTex = 0;
 	m_bIsDead = false;
+	m_bUsingTransform = true;
 }
 
 CParticleSystem::~CParticleSystem()
 {
-
 }
 
 void CParticleSystem::Reset()

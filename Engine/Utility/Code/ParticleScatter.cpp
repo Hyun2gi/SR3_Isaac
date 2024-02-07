@@ -10,6 +10,7 @@ CParticleScatter::CParticleScatter(BoundingBox* boundingBox, int numParticles, _
 	m_VbSize = 2048;
 	m_VbOffset = 0;
 	m_VbBatchSize = 512;
+	m_bUsingTransform = false;
 
 	for (int i = 0; i < numParticles; i++)
 		Add_Particle();
@@ -69,12 +70,17 @@ void CParticleScatter::Reset_Partice(Attribute* attribute)
 	attribute->_vVelocity.y = GetRandomFloat(0.0f, 1.f) * -5.0f;
 	attribute->_vVelocity.z = GetRandomFloat(-0.5f, 0.7f) * -5.0f;
 
-
 	attribute->_color = D3DXCOLOR(
-	GetRandomFloat(0.0f, 1.0f),
-	GetRandomFloat(0.0f, 1.0f),
-	GetRandomFloat(0.0f, 1.0f),
-	1.0f);
+		0.7f,
+		0.7f,
+		0.7f,
+		1.0f);
+
+	//attribute->_color = D3DXCOLOR(
+	//GetRandomFloat(0.0f, 1.0f),
+	//GetRandomFloat(0.0f, 1.0f),
+	//GetRandomFloat(0.0f, 1.0f),
+	//1.0f);
 }
 
 void CParticleScatter::Update_Particle(_float fTimeDelat)

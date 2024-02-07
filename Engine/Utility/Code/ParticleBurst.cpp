@@ -2,9 +2,8 @@
 #include "ParticleBurst.h"
 #include "Export_Utility.h"
 
-CParticleBurst::CParticleBurst(_vec3* vOrigin, int numParticles, _float fSize)
+CParticleBurst::CParticleBurst(int numParticles, _float fSize)
 {
-	m_vOrigin = *vOrigin;
 	m_fSize = 0.5f;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
@@ -49,7 +48,7 @@ bool CParticleBurst::Ready_Particle(IDirect3DDevice9* pDevice)
 void CParticleBurst::Reset_Partice(Attribute* attribute)
 {
 	attribute->_bIsAlive = true;
-	attribute->_vPosition = m_vOrigin;
+	attribute->_vPosition = { m_matWorld._41, m_matWorld._42, m_matWorld._43 };
 
 	_vec3 vMin = _vec3(-0.5f, 1.5f, -0.8f);
 	_vec3 vMax = _vec3(0.5f, 2.0f, 0.8f);
@@ -200,9 +199,10 @@ void CParticleBurst::Create_Texture()
 
 }
 
-CParticleBurst* CParticleBurst::Create(IDirect3DDevice9* pDevice, _vec3 vPos, _float fSize, _int iCount)
+CParticleBurst* CParticleBurst::Create(IDirect3DDevice9* pDevice, _matrix matWorld, _float fSize, _int iCount)
 {
-	CParticleBurst* pInstance = new CParticleBurst(&vPos, iCount, fSize);
+	CParticleBurst* pInstance = new CParticleBurst(iCount, fSize);
+	pInstance->Set_World_Matrix(matWorld);
 
 	if (FAILED(pInstance->Ready_Particle(pDevice)))
 	{

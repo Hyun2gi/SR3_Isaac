@@ -6,7 +6,7 @@ BEGIN(Engine)
 class ENGINE_DLL CParticleExplosion : public CParticleSystem
 {
 public:
-	explicit CParticleExplosion(_vec3* vOrigin, int numParticles, _float fSize);
+	explicit CParticleExplosion(int numParticles, _float fSize);
 	virtual ~CParticleExplosion();
 
 public:
@@ -21,12 +21,13 @@ public:
 	}
 
 public:
-	static CParticleExplosion* Create(IDirect3DDevice9* pDevice, _vec3 vPos, _float fSize = 0.25f, _int iCount = 10);
+	static CParticleExplosion* Create(IDirect3DDevice9* pDevice, _matrix matWorld, _float fSize = 0.25f, _int iCount = 10);
 
 private:
 	virtual void	Free() override;
 
 private:
 	_vec3 m_vMinVelocity, m_vMaxVelocity;
+	_matrix m_matWorld;
 };
 END

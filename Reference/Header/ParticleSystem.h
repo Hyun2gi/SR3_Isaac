@@ -78,6 +78,7 @@ public:
 	void	Set_Velocity_Speed(_float fSpeed) { m_fVelocitySpeed = fSpeed; }
 
 	bool Get_Dead() { return m_bIsDead; }
+	bool Get_UsingTransform() { return m_bUsingTransform; }
 
 	float GetRandomFloat(float lowBound, float highBound)
 	{
@@ -101,6 +102,9 @@ public:
 		out->y = GetRandomFloat(min->y, max->y);
 		out->z = GetRandomFloat(min->z, max->z);
 	}
+
+	_matrix Get_World_Matrix() { return m_matWorld; }
+	void Set_World_Matrix(_matrix& matWorld) { m_matWorld = matWorld; }
 
 protected:
 	virtual void Remove_Dead_Particles();
@@ -129,6 +133,9 @@ protected:
 	_float						m_fVelocitySpeed;
 
 	bool						m_bIsDead;
+	bool						m_bUsingTransform;
+
+	_matrix						m_matWorld;
 
 private:
 	virtual void	Free();

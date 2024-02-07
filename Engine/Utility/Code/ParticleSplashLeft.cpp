@@ -3,9 +3,8 @@
 
 #include "Export_Utility.h"
 
-CParticleSplashLeft::CParticleSplashLeft(_vec3* vOrigin, int numParticles, _float fSize)
+CParticleSplashLeft::CParticleSplashLeft(int numParticles, _float fSize)
 {
-	m_vOrigin = *vOrigin;
 	m_fSize = fSize;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
@@ -52,7 +51,7 @@ bool CParticleSplashLeft::Ready_Particle(IDirect3DDevice9* pDevice)
 void CParticleSplashLeft::Reset_Partice(Attribute* attribute)
 {
 	attribute->_bIsAlive = true;
-	attribute->_vPosition = m_vOrigin;
+	attribute->_vPosition = { m_matWorld._41, m_matWorld._42, m_matWorld._43 };
 
 	_vec3 vMin = _vec3(-1.f, 1.0f, -0.8f);
 	_vec3 vMax = _vec3(-0.5f, 1.0f, 0.8f);
@@ -70,9 +69,9 @@ void CParticleSplashLeft::Reset_Partice(Attribute* attribute)
 	attribute->_vVelocity *= 3.f;
 
 	attribute->_color = D3DXCOLOR(
-		0.5f,
-		0.5f,
-		0.5f,
+		1.f,
+		1.f,
+		1.f,
 		1.0f);
 
 	//attribute->_color = D3DXCOLOR(
@@ -202,9 +201,10 @@ void CParticleSplashLeft::Create_Texture(const _tchar* pTexturePath, _int iMaxFr
 	m_pTexture = CTexture::Create(m_pGraphicDev, TEX_NORMAL, pTexturePath, iMaxFrame);
 }
 
-CParticleSplashLeft* CParticleSplashLeft::Create(IDirect3DDevice9* pDevice, _vec3 vPos, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
+CParticleSplashLeft* CParticleSplashLeft::Create(IDirect3DDevice9* pDevice, _matrix matWorld, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
 {
-	CParticleSplashLeft* pInstance = new CParticleSplashLeft(&vPos, iCount, fSize);
+	CParticleSplashLeft* pInstance = new CParticleSplashLeft(iCount, fSize);
+	pInstance->Set_World_Matrix(matWorld);
 
 	if (FAILED(pInstance->Ready_Particle(pDevice)))
 	{
