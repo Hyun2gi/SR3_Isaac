@@ -1,9 +1,9 @@
 #include "..\..\Header\ParticleSystem.h"
-#include "ParticleSplash.h"
+#include "ParticleSplashRight.h"
 
 #include "Export_Utility.h"
 
-CParticleSplash::CParticleSplash(_vec3* vOrigin, int numParticles, _float fSize)
+CParticleSplashRight::CParticleSplashRight(_vec3* vOrigin, int numParticles, _float fSize)
 {
 	m_vOrigin = *vOrigin;
 	m_fSize = fSize;
@@ -18,19 +18,19 @@ CParticleSplash::CParticleSplash(_vec3* vOrigin, int numParticles, _float fSize)
 	//CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Mom/MomLeg.png")
 }
 
-CParticleSplash::~CParticleSplash()
+CParticleSplashRight::~CParticleSplashRight()
 {
 	Free();
 }
 
-void CParticleSplash::Free()
+void CParticleSplashRight::Free()
 {
 	Engine::Safe_Release(m_pTexture);
 	Engine::Safe_Release(m_pVb);
 	Engine::Safe_Release(m_pTex);
 }
 
-bool CParticleSplash::Ready_Particle(IDirect3DDevice9* pDevice)
+bool CParticleSplashRight::Ready_Particle(IDirect3DDevice9* pDevice)
 {
 	m_pGraphicDev = pDevice;
 
@@ -49,29 +49,13 @@ bool CParticleSplash::Ready_Particle(IDirect3DDevice9* pDevice)
 	return S_OK;
 }
 
-void CParticleSplash::Reset_Partice(Attribute* attribute)
+void CParticleSplashRight::Reset_Partice(Attribute* attribute)
 {
 	attribute->_bIsAlive = true;
 	attribute->_vPosition = m_vOrigin;
 
-	_vec3 vMin;
-	_vec3 vMax;
-
-	m_bIsLeft = false;
-
-	if (rand() % 2 != 0)
-		m_bIsLeft = true;
-
-	if (m_bIsLeft)
-	{
-		vMin = _vec3(-1.f, 1.0f, -0.8f);
-		vMax = _vec3(-0.5f, 1.0f, 0.8f);
-	}
-	else
-	{
-		vMin = _vec3(0.5f, 1.0f, -0.8f);
-		vMax = _vec3(1.f, 1.0f, 0.8f);
-	}
+	_vec3 vMin = _vec3(0.5f, 1.0f, -0.8f);
+	_vec3 vMax = _vec3(1.f, 1.0f, 0.8f);
 
 	GetRandomVector(
 		&attribute->_vVelocity,
@@ -101,7 +85,7 @@ void CParticleSplash::Reset_Partice(Attribute* attribute)
 	attribute->_fLifeTime = 0.8f;
 }
 
-void CParticleSplash::Update_Particle(_float fTimeDelat)
+void CParticleSplashRight::Update_Particle(_float fTimeDelat)
 {
 	m_fFrame += m_iPicNum * fTimeDelat * m_fFrameSpeed;
 
@@ -129,7 +113,7 @@ void CParticleSplash::Update_Particle(_float fTimeDelat)
 	__super::Update_Particle(fTimeDelat);
 }
 
-void CParticleSplash::Render_GameObject()
+void CParticleSplashRight::Render_GameObject()
 {
 	if (!m_ParticlesList.empty())
 	{
@@ -212,15 +196,15 @@ void CParticleSplash::Render_GameObject()
 	}
 }
 
-void CParticleSplash::Create_Texture(const _tchar* pTexturePath, _int iMaxFrame)
+void CParticleSplashRight::Create_Texture(const _tchar* pTexturePath, _int iMaxFrame)
 {
 	m_iPicNum = iMaxFrame;
 	m_pTexture = CTexture::Create(m_pGraphicDev, TEX_NORMAL, pTexturePath, iMaxFrame);
 }
 
-CParticleSplash* CParticleSplash::Create(IDirect3DDevice9* pDevice, _vec3 vPos, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
+CParticleSplashRight* CParticleSplashRight::Create(IDirect3DDevice9* pDevice, _vec3 vPos, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
 {
-	CParticleSplash* pInstance = new CParticleSplash(&vPos, iCount, fSize);
+	CParticleSplashRight* pInstance = new CParticleSplashRight(&vPos, iCount, fSize);
 
 	if (FAILED(pInstance->Ready_Particle(pDevice)))
 	{

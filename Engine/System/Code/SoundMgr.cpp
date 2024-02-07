@@ -8,6 +8,7 @@ CSoundMgr::CSoundMgr()
 
 CSoundMgr::~CSoundMgr()
 {
+	Free();
 }
 
 void CSoundMgr::PlaySound(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)

@@ -70,7 +70,7 @@ private:
 	bool			Check_Cube_Arrived();
 
 public:
-	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType);
+	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene = false);
 
 private:
 	virtual void Free() override;
@@ -90,6 +90,7 @@ private:
 	int m_iCurStageKey;
 
 	bool m_bIsCreated;
+	bool m_bStartScene;
 
 	// 레벨 전체의 연결관계를 저장하는 맵
 	map<int, string> m_mapLevel;

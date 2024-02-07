@@ -1,16 +1,18 @@
 #include "..\..\Header\ParticleSystem.h"
 #include "ParticleExplosion.h"
 
-CParticleExplosion::CParticleExplosion(_vec3* vOrigin, int numParticles)
+#include "Export_Utility.h"
+
+CParticleExplosion::CParticleExplosion(_vec3* vOrigin, int numParticles, _float fSize)
 {
 	m_vOrigin = *vOrigin;
-	m_fSize = 0.7f;
+	m_fSize = fSize;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
 	m_VbBatchSize = 512;
 
 	m_vMinVelocity = _vec3(-0.5f, 0.0f, -1.0f);
-	m_vMinVelocity = _vec3(0.5f, 1.0f, 1.0f);
+	m_vMaxVelocity = _vec3(0.5f, 1.0f, 1.0f);
 
 	for (int i = 0; i < numParticles; i++)
 		Add_Particle();
@@ -63,7 +65,7 @@ void CParticleExplosion::Reset_Partice(Attribute* attribute)
 	GetRandomVector(
 		&attribute->_vVelocity,
 		&m_vMinVelocity,
-		&m_vMinVelocity);
+		&m_vMaxVelocity);
 
 	// normalize to make spherical
 	D3DXVec3Normalize(
@@ -76,7 +78,7 @@ void CParticleExplosion::Reset_Partice(Attribute* attribute)
 		1.f,
 		1.f,
 		1.f,
-		1.0f);
+		0.5f);
 
 	//attribute->_color = D3DXCOLOR(
 	//	GetRandomFloat(0.0f, 1.0f),
@@ -105,4 +107,20 @@ void CParticleExplosion::Update_Particle(_float fTimeDelat)
 				i->_bIsAlive = false;
 		}
 	}
+
+	__super::Update_Particle(fTimeDelat);
+}
+
+CParticleExplosion* CParticleExplosion::Create(IDirect3DDevice9* pDevice, _vec3 vPos, _float fSize, _int iCount)
+{
+	CParticleExplosion* pInstance = new CParticleExplosion(&vPos, iCount, fSize);
+
+	if (FAILED(pInstance->Ready_Particle(pDevice)))
+	{
+		Safe_Release(pInstance);
+		MSG_BOX("ParticleExplosion Create Failed");
+		return nullptr;
+	}
+
+	return pInstance;
 }

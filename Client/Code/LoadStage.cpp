@@ -48,7 +48,7 @@
 #include "HeartHalf.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CScene(pGraphicDev)
+	: Engine::CScene(pGraphicDev), m_bStartScene(false)
 {
 }
 
@@ -74,21 +74,12 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 	
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
-	//	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
-
-	BoundingBox boundingBox;
-	boundingBox._min = D3DXVECTOR3(-10.0f, -5.0f, -10.0f);
-	boundingBox._max = D3DXVECTOR3(10.0f, 5.0f, 10.0f);
-
-	pParticleScatter = new CParticleScatter(&boundingBox, 15);
-	pParticleScatter->Ready_Particle(m_pGraphicDev);
-
 	return S_OK;
 }
 
 Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 {	
-	pParticleScatter->Update_Particle(fTimeDelta);
+	//pParticleScatter->Update_Particle(fTimeDelta);
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
@@ -169,7 +160,7 @@ void CLoadStage::LateUpdate_Scene()
 void CLoadStage::Render_Scene()
 {
 	// DEBUG
-	pParticleScatter->Render();
+	//pParticleScatter->Render_GameObject();
 }
 
 HRESULT CLoadStage::Load_Level_Data()
@@ -726,7 +717,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 
 	//바닥 추가
 	wstrTag = wstrProto + wstrTheme + L"FloorCubeTexture";
-	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev);
+	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev, m_bStartScene);
 	m_pFloor->Set_Cube_Texture_Tag(wstrTag.c_str());
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Floor", pGameObject), E_FAIL);
@@ -735,7 +726,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	//벽 추가
 	// 여기는 벽의 큐브 텍스처의 태그를 만들어서 넘겨주는 부분
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
-	pGameObject = m_pLeftWall = CWall::Create(m_pGraphicDev);
+	pGameObject = m_pLeftWall = CWall::Create(m_pGraphicDev, m_bStartScene);
 	m_pLeftWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_LEFT);
 
 	// 여기는 벽면 텍스처의 태그를 만들어서 넘겨주는 부분
@@ -746,7 +737,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 
 	//반복
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
-	pGameObject = m_pRightWall = CWall::Create(m_pGraphicDev);
+	pGameObject = m_pRightWall = CWall::Create(m_pGraphicDev, m_bStartScene);
 	m_pRightWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_RIGHT);
 
 	wstrTag = wstrProto + wstrTheme + L"Wall";
@@ -755,7 +746,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
-	pGameObject = m_pTopWall = CWall::Create(m_pGraphicDev);
+	pGameObject = m_pTopWall = CWall::Create(m_pGraphicDev, m_bStartScene);
 	m_pTopWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_TOP);
 
 	wstrTag = wstrProto + wstrTheme + L"Wall";
@@ -764,7 +755,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
-	pGameObject = m_pBottomWall = CWall::Create(m_pGraphicDev);
+	pGameObject = m_pBottomWall = CWall::Create(m_pGraphicDev, m_bStartScene);
 	m_pBottomWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_BOTTOM);
 
 	wstrTag = wstrProto + wstrTheme + L"Wall";
@@ -845,9 +836,10 @@ HRESULT CLoadStage::Door_Collision()
 	}
 }
 
-CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType)
+CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene)
 {
 	CLoadStage *	pInstance = new CLoadStage(pGraphicDev);
+	pInstance->m_bStartScene = bStratScene;
 	CPlayer::GetInstance()->Set_Bool_StartScene(true);
 
 	if (FAILED(pInstance->Ready_Scene(iType)))
@@ -863,6 +855,6 @@ CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType)
 
 void CLoadStage::Free()
 {
-	Safe_Release(pParticleScatter);
+	//Safe_Release(pParticleScatter);
 	__super::Free();
 }
