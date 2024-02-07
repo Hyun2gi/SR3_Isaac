@@ -24,6 +24,7 @@
 #include "Squirt.h"
 #include "Leaper.h"
 #include "Charger.h"
+#include "Dople.h"
 
 //보스
 #include "Monstro.h"
@@ -438,6 +439,22 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 	m_mapLayer.insert({ pLayerTag, pLayer });
 }
 
+HRESULT CLoadStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
+{
+
+	// 아이템 관련
+
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
+	NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+	Engine::CGameObject* pGameObject = nullptr;
+
+	m_mapLayer.insert({ pLayerTag, pLayer });
+
+
+	return S_OK;
+}
+
 HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 {
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
@@ -668,6 +685,307 @@ void CLoadStage::Check_All_Dead()
 
 	if(0 == iCount)
 		dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Set_Open();
+}
+
+void CLoadStage::Item_Collision()
+{
+	// 충돌처리하는 함수
+	CGameObject* pObj = m_mapLayer.at(L"GameItem")->Collision_GameObject(CPlayer::GetInstance());
+
+	if (pObj)
+	{
+		//충돌됨
+		dynamic_cast<CItem*>(pObj)->Run_Item_Effect();
+	}
+}
+
+void CLoadStage::Moster_Collision()
+{
+	{
+		// Monster <-> Bullet 충돌
+		if (m_mapLayer.at(L"GameMst") != nullptr)
+		{
+			list<CGameObject*>* pBulletList = CPlayer::GetInstance()->Get_Player_BullletList();
+
+			for (list<CGameObject*>::iterator iter = pBulletList->begin();
+				iter != pBulletList->end();)
+			{
+				CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(*iter);
+
+				if (pMonster)
+				{
+					// 일반 총알일때 이펙트 보여주려고 해당부분 처리
+					if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
+					{
+						// 일반 총알 충돌처리
+						dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
+					}
+
+					// Dople 이 아닐 때만
+					if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
+					{
+						dynamic_cast<CMonster*>(pMonster)->Hit();
+						break;
+					}
+					else
+						++iter;
+				}
+				else
+					++iter;
+			}
+		}
+
+		// Dople <-> Spike 충돌
+		if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr)
+		{
+			CGameObject* pDople = m_mapLayer.at(L"GameMst")->Collision_GameObject(Get_GameObject(L"MapObj", L"Spike"));
+			if (pDople)
+			{
+				if (DOPLE == dynamic_cast<CMonster*>(pDople)->Get_MstType())
+					dynamic_cast<CDople*>(pDople)->Hit();
+			}
+		}
+
+}
+
+void CLoadStage::MapObj_Collision()
+{
+	// MapObj <-> PlayerBullet 충돌
+	if (m_mapLayer.at(L"MapObj") != nullptr)
+	{
+		list<CGameObject*>* pBulletList = CPlayer::GetInstance()->Get_Player_BullletList();
+
+		for (list<CGameObject*>::iterator iter = pBulletList->begin();
+			iter != pBulletList->end();)
+		{
+			CGameObject* pMapObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(*iter);
+
+			if (pMapObj)
+			{
+				// 일반 총알일때 이펙트 보여주려고 해당부분 처리
+				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
+				{
+					// 일반 총알 충돌처리
+					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
+				}
+
+				if (POOP == dynamic_cast<CMapObj*>(pMapObj)->Get_Type())
+				{
+					dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
+					break;
+				}
+				else if (0 == dynamic_cast<CMapObj*>(pMapObj)->Get_ObjID())
+				{
+					dynamic_cast<CFire*>(pMapObj)->Set_Hit();
+					break;
+				}
+				else
+				{
+					break;
+				}
+			}
+			else
+				++iter;
+		}
+	}
+
+	// SlotMC <-> Player 의 충돌
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC") != nullptr)
+	{
+		CGameObject* pMachine = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
+
+		if (pMachine)
+		{
+			if (1 == dynamic_cast<CMapObj*>(pMachine)->Get_ObjID())
+			{
+				if (0 < CPlayer::GetInstance()->Get_Coin())
+				{
+					CPlayer::GetInstance()->Set_Coin(-1);
+					//dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Drop_False(); // 
+					dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Game();
+				}
+			}
+		}
+	}
+
+	// Shop Npc 는 Epic 과 충돌
+
+	// 야바위 충돌
+	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
+	{
+		if (dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc() != nullptr)
+		{
+			if (!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc()->Get_NPC_Game())
+			{
+				CGameObject* pShellObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
+
+				if (pShellObj)
+				{
+					if (2 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Npc <-> Player 충돌
+					{
+						if (0 < CPlayer::GetInstance()->Get_Coin())
+						{
+							CPlayer::GetInstance()->Set_Coin(-1);
+							dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
+						}
+					}
+					else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Shell <-> Player 충돌
+					{
+						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward())
+						{
+							Engine::CGameObject* pGameObject = nullptr;
+
+							ITEM_TYPE eType = dynamic_cast<CShell*>(pShellObj)->Get_ItemType();
+							wstring wstrObjTag = dynamic_cast<CShell*>(pShellObj)->Get_DropItemTag();
+
+							for (int i = 0; i < 3; ++i)
+							{
+								pGameObject = dynamic_cast<CShell*>(pShellObj)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), i);
+								m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
+							}
+							dynamic_cast<CShell*>(pShellObj)->Setting_Reward_False();
+						}
+						else if (dynamic_cast<CShell*>(pShellObj)->Get_Lose())
+						{
+							Engine::CGameObject* pFly = nullptr;
+
+							_vec3 vPos;
+							dynamic_cast<CShell*>(pShellObj)->Get_TransformCom()->Get_Info(INFO_POS, &vPos);
+							for (int i = 0; i < 2; ++i)
+							{
+								pFly = CFly::Create(m_pGraphicDev, i * 2);
+								dynamic_cast<CFly*>(pFly)->Get_Transform()->Set_Pos(vPos);
+								pFly->Set_MyLayer(L"GameMst");
+								m_mapLayer.at(L"GameMst")->Add_GameObject(L"Fly", pFly);
+							}
+							dynamic_cast<CShell*>(pShellObj)->Set_Lose_False();
+						}
+					}
+				}
+			}
+		}
+	}
+
+}
+
+void CLoadStage::Drop_ITem()
+{
+	// 똥
+	if (Get_GameObject(L"MapObj", L"Poop") != nullptr)
+	{
+		if (dynamic_cast<CPoop*>(Get_GameObject(L"MapObj", L"Poop"))->Get_Dead() &&
+			!dynamic_cast<CPoop*>(Get_GameObject(L"MapObj", L"Poop"))->Get_Drop())
+		{
+			Engine::CGameObject* pGameObject = nullptr;
+
+			ITEM_TYPE eType = dynamic_cast<CPoop*>(Get_GameObject(L"MapObj", L"Poop"))->Get_ItemType();
+			wstring wstrObjTag = dynamic_cast<CPoop*>(Get_GameObject(L"MapObj", L"Poop"))->Get_DropItemTag();
+
+			pGameObject = dynamic_cast<CPoop*>(Get_GameObject(L"MapObj", L"Poop"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"), 0);
+			m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
+
+			dynamic_cast<CPoop*>(Get_GameObject(L"MapObj", L"Poop"))->Set_Drop();
+		}
+	}
+
+	// 모닥불
+	if (Get_GameObject(L"MapObj", L"Fire") != nullptr)
+	{
+		if (dynamic_cast<CMapObj*>(Get_GameObject(L"MapObj", L"Fire"))->Get_Dead() &&
+			!dynamic_cast<CMapObj*>(Get_GameObject(L"MapObj", L"Fire"))->Get_Drop())
+		{
+			Engine::CGameObject* pGameObject = nullptr;
+
+			ITEM_TYPE eType = dynamic_cast<CFire*>(Get_GameObject(L"MapObj", L"Fire"))->Get_ItemType();
+			wstring wstrObjTag = dynamic_cast<CFire*>(Get_GameObject(L"MapObj", L"Fire"))->Get_DropItemTag();
+
+			pGameObject = dynamic_cast<CFire*>(Get_GameObject(L"MapObj", L"Fire"))->Create_Item(eType, 2, m_mapLayer.at(L"GameItem"), 0);
+			m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
+
+			dynamic_cast<CFire*>(Get_GameObject(L"MapObj", L"Fire"))->Set_Drop();
+		}
+	}
+
+	// 슬롯머신
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC") != nullptr)
+	{
+		if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Machine") != nullptr)//Get_GameObject(L"MapObj", L"Machine") != nullptr) // Get_Reward
+		{
+			//Get_GameObject(L"MapObj", L"SlotMC"))->Get_Reward() && // 문제 발생(메모리 못 읽어옴)
+			//!dynamic_cast<CMapObj*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Drop()
+			if (dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Reward() &&
+				!dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Drop()) // !dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Game()
+			{
+				CGameObject* pSlotMC = nullptr;
+				CGameObject* pDropItem = nullptr;
+				pSlotMC = m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"); //Get_GameObject(L"MapObj", L"SlotMC");
+
+				ITEM_TYPE eType = dynamic_cast<CSlotMC*>(pSlotMC)->Get_ItemType();
+				wstring wstrObjTag = dynamic_cast<CSlotMC*>(pSlotMC)->Get_DropItemTag();
+
+				if (HEART == eType)
+				{
+					pDropItem = dynamic_cast<CMapObj*>(pSlotMC)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), 1);
+					m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pDropItem);
+					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop();
+					dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Set_Reward();
+				}
+				else if (COIN == eType)
+				{
+					for (int i = 0; i < 3; ++i)
+					{
+						pDropItem = dynamic_cast<CMapObj*>(pSlotMC)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), i);
+						m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pDropItem);
+					}
+					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop();
+					dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Reward();
+				}
+			}
+		}
+	}
+}
+
+void CLoadStage::Insert_Child()
+{
+	// Normal Fly 추가
+	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"AttackFly") != nullptr &&
+		m_mapLayer.at(L"GameMst")->Get_GameObject(L"NormalFly") == nullptr)
+	{
+		dynamic_cast<CAttackFly*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"AttackFly"))
+			->Set_NormalFly_ToStage(m_mapLayer.at(L"GameMst"));
+	}
+
+	// Fire (Campfire) 추가
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Campfire") != nullptr &&
+		m_mapLayer.at(L"MapObj")->Get_GameObject(L"Fire") == nullptr)
+	{
+		dynamic_cast<CCampFire*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"Campfire"))
+			->Set_Fire_ToStage(m_mapLayer.at(L"MapObj"));
+	}
+
+	// SlotMC
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC") != nullptr &&
+		m_mapLayer.at(L"MapObj")->Get_GameObject(L"Machine") == nullptr)
+	{
+		dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))
+			->Set_Machine_ToStage(m_mapLayer.at(L"MapObj"));
+	}
+
+	// Shop
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shop") != nullptr)
+	{
+		dynamic_cast<CShop*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shop"))->Set_Item_ToStage(m_mapLayer.at(L"GameItem"));
+	}
+
+	// Shell Game (Npc) 추가
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame") != nullptr &&
+		m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellNpc") == nullptr &&
+		m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shell") == nullptr)
+	{
+		dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))
+			->Set_ShellObj_ToStage(m_mapLayer.at(L"MapObj"));
+	}
+
 }
 
 HRESULT CLoadStage::Door_Collision()
