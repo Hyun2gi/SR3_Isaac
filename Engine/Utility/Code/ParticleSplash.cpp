@@ -3,9 +3,8 @@
 
 #include "Export_Utility.h"
 
-CParticleSplash::CParticleSplash(_vec3* vOrigin, int numParticles, _float fSize)
+CParticleSplash::CParticleSplash(int numParticles, _float fSize)
 {
-	m_vOrigin = *vOrigin;
 	m_fSize = fSize;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
@@ -52,7 +51,7 @@ bool CParticleSplash::Ready_Particle(IDirect3DDevice9* pDevice)
 void CParticleSplash::Reset_Partice(Attribute* attribute)
 {
 	attribute->_bIsAlive = true;
-	attribute->_vPosition = m_vOrigin;
+	attribute->_vPosition = { m_matWorld._41, m_matWorld._42, m_matWorld._43 };
 
 	_vec3 vMin;
 	_vec3 vMax;
@@ -218,14 +217,15 @@ void CParticleSplash::Create_Texture(const _tchar* pTexturePath, _int iMaxFrame)
 	m_pTexture = CTexture::Create(m_pGraphicDev, TEX_NORMAL, pTexturePath, iMaxFrame);
 }
 
-CParticleSplash* CParticleSplash::Create(IDirect3DDevice9* pDevice, _vec3 vPos, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
+CParticleSplash* CParticleSplash::Create(IDirect3DDevice9* pDevice, _matrix matWorld, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
 {
-	CParticleSplash* pInstance = new CParticleSplash(&vPos, iCount, fSize);
+	CParticleSplash* pInstance = new CParticleSplash(iCount, fSize);
+	pInstance->Set_World_Matrix(matWorld);
 
 	if (FAILED(pInstance->Ready_Particle(pDevice)))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("CParticleSplash Create Failed");
+		MSG_BOX("ParticleSplash Create Failed");
 		return nullptr;
 	}
 

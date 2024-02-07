@@ -3,9 +3,8 @@
 
 #include "Export_Utility.h"
 
-CParticleExplosion::CParticleExplosion(_vec3* vOrigin, int numParticles, _float fSize)
+CParticleExplosion::CParticleExplosion(int numParticles, _float fSize)
 {
-	m_vOrigin = *vOrigin;
 	m_fSize = fSize;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
@@ -60,7 +59,7 @@ bool CParticleExplosion::Ready_Particle(IDirect3DDevice9* pDevice)
 void CParticleExplosion::Reset_Partice(Attribute* attribute)
 {
 	attribute->_bIsAlive = true;
-	attribute->_vPosition = m_vOrigin;
+	attribute->_vPosition = { m_matWorld._41, m_matWorld._42, m_matWorld._43 };
 
 	GetRandomVector(
 		&attribute->_vVelocity,
@@ -108,12 +107,16 @@ void CParticleExplosion::Update_Particle(_float fTimeDelat)
 		}
 	}
 
+	
+	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matWorld);
+
 	__super::Update_Particle(fTimeDelat);
 }
 
-CParticleExplosion* CParticleExplosion::Create(IDirect3DDevice9* pDevice, _vec3 vPos, _float fSize, _int iCount)
+CParticleExplosion* CParticleExplosion::Create(IDirect3DDevice9* pDevice, _matrix matWorld, _float fSize, _int iCount)
 {
-	CParticleExplosion* pInstance = new CParticleExplosion(&vPos, iCount, fSize);
+	CParticleExplosion* pInstance = new CParticleExplosion(iCount, fSize);
+	pInstance->Set_World_Matrix(matWorld);
 
 	if (FAILED(pInstance->Ready_Particle(pDevice)))
 	{
