@@ -16,6 +16,9 @@ public:
 	void			Set_Shaking_Ready() { m_bShaking_Ready = !m_bShaking_Ready; }
 
 	_bool			Get_Reward() { return m_bReward; }
+	_bool			Get_Lose() { return m_bLose; }
+	void			Set_Lose() { m_bLose = true; }
+	void			Set_Lose_False() { m_bLose = false; }
 	void			Setting_Reward() { m_bReward = true;}
 	void			Setting_Reward_False() { m_bReward = false; }
 
@@ -38,6 +41,7 @@ private:
 	_bool				m_bMoveDown;
 	_bool				m_bShaking_Ready;
 	_bool				m_bReward;
+	_bool				m_bLose;
 
 public:
 	static CShell*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

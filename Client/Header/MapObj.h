@@ -27,7 +27,8 @@ enum MAPOBJID { MOBJID_FIRE, MOBJID_SLOTMC_MC, MOBJID_SHELL_NPC, MOBJID_SHELL, M
 public:
 	_bool			Get_Dead() { return m_bDead; }
 	_bool			Get_Drop() { return m_bItemDrop; }
-	void			Set_Drop() { m_bItemDrop = true; }
+	void			Set_Drop() { m_bItemDrop = true; } // true
+	void			Set_Drop_False() { m_bItemDrop = false; }
 	void			Set_Hit() { m_bHit = true; }
 	OBJECT_TYPE		Get_Type() { return m_eObjType; }
 	MAPOBJID		Get_ObjID() { return m_eObjID; }

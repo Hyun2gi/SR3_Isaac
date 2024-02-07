@@ -68,11 +68,6 @@ _int CShellGame::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	if (Engine::Get_DIKeyState(DIK_K) & 0x80) // 테스트용 (추후 제거)
-	{
-		m_bGame = true;
-	}
-
 	if (dynamic_cast<CShellNpc*>(m_pShellNpc)->Get_NPC_Game())
 	{
 		m_bGame = true;
@@ -307,18 +302,34 @@ void CShellGame::Setting_RewardShell()
 	switch (iRewardShell)
 	{
 	case 0:
+	{
 		m_vecShell.front()->Setting_Reward();
+		vector<CShell*>::iterator iter = m_vecShell.begin();
+		iter++;
+		(*iter)->Set_Lose(); // 2번 Shell Lose 설정
+		iter++;
+		(*iter)->Set_Lose(); // 3번 Shell Lose 설정
 		break;
+	}
 	case 1:
 	{
+		m_vecShell.front()->Set_Lose(); // 1번 Shell Lose 설정
 		vector<CShell*>::iterator iter = m_vecShell.begin();
 		iter++;
 		(*iter)->Setting_Reward();
+		//iter++;
+		//(*iter)->Set_Lose(); // 3번 Shell Lose 설정
 		break;
 	}
 	case 2:
+	{
+		vector<CShell*>::iterator iter = m_vecShell.begin();
+		(*iter)->Set_Lose(); // 1번 Shell Lose 설정
+		iter++;
+		(*iter)->Set_Lose(); // 2번 Shell Lose 설정
 		m_vecShell.back()->Setting_Reward();
 		break;
+	}
 	default:
 		break;
 	}

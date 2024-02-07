@@ -24,12 +24,14 @@ CPacer::~CPacer()
 HRESULT CPacer::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
+	m_pTransformCom->Set_Pos(_float(rand() % 20), 1.f, _float(rand() % 20));
 
 	m_iHp = 3;
 
-	m_fCallLimit = m_iRandNum % 4 + 2;
+	m_fCallLimit = m_iRandNum % 5 + 2;
 	m_fSpeed = 4.f;
+
+	m_iPicNum = 10.f;
 
 	m_eMstType = PACER;
 
@@ -40,12 +42,10 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 {
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
-	m_fFrame += 10.f * m_fSlowDelta;
+	m_fFrame += m_iPicNum * m_fSlowDelta;
 
-	if (10.f < m_fFrame)
+	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
-
-	Face_Camera();
 
 	if (m_bHit)
 	{
@@ -61,12 +61,16 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	CGameObject::Update_GameObject(m_fSlowDelta);
+	Face_Camera();
 
 	if (Check_Time(m_fSlowDelta))
-		Change_Dir(m_fSlowDelta);
+		Change_Dir();
 
-	Move(m_fSlowDelta);
+	Move(m_fSlowDelta); // 기본적으로 계속 걸음
+
+	CGameObject::Update_GameObject(m_fSlowDelta);
+
+	Fix_Y();
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -130,19 +134,36 @@ void CPacer::Face_Camera()
 	m_pTransformCom->m_vAngle.y = vAngle.y;
 }
 
-void CPacer::Change_Dir(const _float& fTimeDelta)
+void CPacer::Change_Dir()
 {
-	m_iRandNum = rand() % 180;
+	m_iRandNum = rand() % 180; // (m_iIndex + 1)
 	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(_float(m_iRandNum)));
+
+	m_pTransformCom->Get_Info(INFO_POS, &m_vMoveLook); // 회전한 Look 벡터를 멤버 변수에 할당
+	// 값이 분명 다양하게 들어가는데 m_vMoveLook 벡터는 거기서 거기인걸까? 왜 왔다갔다 할까
 }
 
 void CPacer::Move(const _float& fTimeDelta)
 {
-	_vec3		vDir;
+	_vec3 vPos, vDir;
 	m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
 
-	D3DXVec3Normalize(&vDir, &vDir);
-	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+	// 멤버 변수 Look 벡터를 사용
+	D3DXVec3Normalize(&m_vMoveLook, &m_vMoveLook);
+
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x &&
+		vPos.z < VTXCNTZ - m_pTransformCom->m_vScale.z &&
+		vPos.x > m_pTransformCom->m_vScale.x &&
+		vPos.z > m_pTransformCom->m_vScale.z)
+	{
+		m_pTransformCom->Move_Pos(&m_vMoveLook, m_fSpeed, fTimeDelta);
+	}
+	else
+	{
+		m_pTransformCom->Move_Pos(&-m_vMoveLook, m_fSpeed, fTimeDelta);
+	}
 }
 
 CPacer* CPacer::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID)

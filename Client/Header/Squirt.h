@@ -28,12 +28,15 @@ private:
 
 private:
 	_bool				m_bSliding;
+	_bool				m_bBounceWall;
+	_int				m_iRandNum;
 	_int				m_iPicNum;
 	_float				m_fFrameSpeed = 1.f;
 	_float				m_fAccel;
 
 	_vec3				m_vTargetPos;
 	_vec3				m_vDir;
+	_vec3				m_vBounceDir;
 
 	SQUIRTSTATE			m_ePreState;
 	SQUIRTSTATE			m_eCurState;

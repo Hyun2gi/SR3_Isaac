@@ -24,8 +24,11 @@ HRESULT CSlotCard::Ready_GameObject()
 
 	m_fCallLimit = 0.7f;
 
+	m_iReward = 0;
+
 	m_bStart = false;
 	m_bRandom = false;
+	m_bReward = false;
 
 	m_ePreState = CARD_END;
 
@@ -70,7 +73,6 @@ _int CSlotCard::Update_GameObject(const _float& fTimeDelta)
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"SlotMC", L"Proto_SlotCardTexture"));
 
 			Check_Result();
-			// 랜덤값을 호출하여 값 재고 
 		}
 	}
 	//m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
@@ -178,18 +180,28 @@ void CSlotCard::Check_Result()
 	case 4:
 	case 5:
 		m_fFrame = rand() % 5 + m_iIndex;
+		m_iReward = 0;
+		m_bReward = false;
 		break;
 	case 6: // 코인
 	case 7:
 		m_fFrame = 3.f;
+		m_iReward = 1;
+		m_bReward = true;
+		m_eCurState = CARD_IDLE;
 		break;
 	case 8: // 하트
 	case 9:
 		m_fFrame = 6.f;
+		m_iReward = 2;
+		m_bReward = true;
+		m_eCurState = CARD_IDLE;
 		break;
 	default:
 		break;
 	}
+
+	//m_bReward = true;
 }
 
 CSlotCard* CSlotCard::Create(LPDIRECT3DDEVICE9 pGraphicDev)

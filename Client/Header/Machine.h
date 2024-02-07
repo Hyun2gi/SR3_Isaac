@@ -31,7 +31,7 @@ private:
 private:
 	_bool				m_bGame;
 	_bool				m_bBroken;
-	
+
 	MCSTATE				m_ePreState;
 	MCSTATE				m_eCurState;
 

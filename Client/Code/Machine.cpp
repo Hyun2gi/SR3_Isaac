@@ -119,7 +119,7 @@ void CMachine::Motion_Change()
 		{
 		case CMachine::MC_IDLE:
 			m_iPicNum = 3;
-			m_fFrameSpeed = 2.f;
+			m_fFrameSpeed = 1.5f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"SlotMC", L"Proto_SlotMCTexture"));
 			break;
 

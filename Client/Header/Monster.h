@@ -25,6 +25,7 @@ public:
 	void			Hit() { m_bHit = true; }
 	_bool			Get_IsBoss() { return m_bBoss; }
 	MONSTER_TYPE	Get_MstType() { return m_eMstType; }
+	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -41,6 +42,8 @@ protected:
 	bool			Check_Time(const _float& fTimeDelta, float fLimit);
 	void			Check_Map_Range();
 	void			Hit_PushBack(const _float& fTimeDelta);
+	void			Fix_Y();
+	void			Change_Scale();
 
 protected:
 	Engine::CRcTex* m_pBufferCom;
@@ -51,6 +54,7 @@ protected:
 
 	_bool					m_bBoss;
 
+	_bool					m_bScaleReduce;
 	_bool					m_bHit;
 	_bool					m_bDead;
 	_int					m_iHp;
@@ -64,6 +68,7 @@ protected:
 	_float					m_fSlowDelta;
 
 	_vec3					m_vOriginScale;
+	_vec3					m_vMoveLook;
 
 	MONSTER_TYPE			m_eMstType;
 

@@ -18,6 +18,10 @@ private:
 
 public:
 	void				Set_Machine_ToStage(CLayer* pLayer);
+	_bool				Get_Game() { return m_bGame; }
+	void				Set_Game() { m_bGame = true; }
+	_bool				Get_Reward() { return m_bReward; }
+	void				Set_Reward() { m_bReward = false; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -27,14 +31,17 @@ public:
 
 private:
 	virtual HRESULT		Add_Component()						override;
+	virtual void		Set_Item_Value()					override;
 
 	void				Create_Machine();
 	void				Create_Card();
+	_bool				Check_Reward();
 
 private:
 	// º¯¼ö
 	_bool				m_bCreate;
 	_bool				m_bGame;
+	_bool				m_bReward;
 
 	CMachine*			m_pMachine;
 	vector<CSlotCard*>	m_pCardList;

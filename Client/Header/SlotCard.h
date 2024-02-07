@@ -12,6 +12,9 @@ class CSlotCard : public CMapObj
 	enum CARDSTATE { CARD_IDLE, CARD_RANDOM, CARD_END };
 
 public:
+	_int			Get_RewardItem() { return m_iReward; }
+	_bool			Get_Reward() { return m_bReward; }
+	void			Set_Reward() { m_bReward = true; }
 	void			Set_Random() { m_bRandom = true; }
 	void			Set_Index(int iIndex) { m_iIndex = iIndex; }
 
@@ -29,11 +32,12 @@ private:
 	void				Setting_FirstCard();
 	void				Check_Result();
 
-
 private:
 	_bool				m_bRandom;
 	_bool				m_bStart;
+	_bool				m_bReward;
 	_int				m_iIndex;
+	_int				m_iReward;
 
 	CARDSTATE			m_ePreState;
 	CARDSTATE			m_eCurState;

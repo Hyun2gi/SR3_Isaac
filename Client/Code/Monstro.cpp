@@ -96,8 +96,8 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 			}
 			else
 			{
-				m_bBullet = true;
-				m_eCurState = MONSTRO_ATTACK;
+				//m_bBullet = true;
+				m_eCurState = MONSTRO_WAIT;
 			}
 			Check_TargetPos();
 		}
@@ -114,18 +114,30 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 	{
 		MoveTo_Player(m_fSlowDelta);
 	}
+	else if (MONSTRO_WAIT == m_eCurState)
+	{
+		m_fCallLimit = 1.f; // MONSTRO_WAIT
+
+		if (Check_Time(m_fSlowDelta))
+		{
+			m_eCurState = MONSTRO_ATTACK;
+			m_bBullet = true;
+		}
+	}
 	else if (MONSTRO_ATTACK == m_eCurState)
 	{
 		if (m_bBullet)
 		{
 			AttackTo_Player();
 			m_bBullet = false;
+
 		}
 
 		if (Check_Time(m_fSlowDelta, 2.5f))
 		{
 			m_eCurState = MONSTRO_IDLE; // 이 부분 수정 필요할지도
 			m_bBullet = false;
+			m_fCallLimit = 5.f;
 		}
 	}
 
@@ -252,6 +264,13 @@ void CMonstro::Motion_Change()
 			m_fFrameSpeed = 0.1f;
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Monstro", L"Proto_MonstroDownTexture"));
 			break;
+
+		case CMonstro::MONSTRO_WAIT:
+			m_iPicNum = 1;
+			m_fFrame = 1.4f;
+			m_fFrameSpeed = 1.f;
+			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Monstro", L"Proto_MonstroTexture"));
+			break;
 		}
 		m_ePreState = m_eCurState;
 	}
@@ -334,7 +353,7 @@ void CMonstro::AttackTo_Player()
 
 	vRandPos = m_vTargetPos;
 
-	for (int i = 0; i < 20; ++i)
+	for (int i = 0; i < 20; ++i) // 총알 생성
 	{
 		DWORD dwSeed = (i << 16) | (time(NULL) % 1000);
 		srand(dwSeed);

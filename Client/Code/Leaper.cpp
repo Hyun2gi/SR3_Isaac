@@ -55,8 +55,6 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
-	Face_Camera();
-
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -71,7 +69,7 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	CGameObject::Update_GameObject(m_fSlowDelta);
+	Face_Camera();
 
 	if (Check_Time(m_fSlowDelta, 5.f))
 	{
@@ -98,6 +96,8 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 		}
 		m_eCurState = LEAPER_IDLE;
 	}
+
+	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -209,6 +209,8 @@ void CLeaper::Change_Dir(const _float& fTimeDelta)
 {
 	m_iRandNum = rand() % 180;
 	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(_float(m_iRandNum)));
+
+	m_pTransformCom->Get_Info(INFO_POS, &m_vMoveLook);
 }
 
 void CLeaper::Check_TargetPos()
@@ -216,13 +218,13 @@ void CLeaper::Check_TargetPos()
 	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
-
 }
 
 void CLeaper::MoveTo_Random(const _float& fTimeDelta)
 {
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
 	float fY = vPos.y + (m_fPower * m_fAccelTime) - (9.f * m_fAccelTime * m_fAccelTime * 0.5f);
 	m_fAccelTime += 0.02f;
 
@@ -238,7 +240,22 @@ void CLeaper::MoveTo_Random(const _float& fTimeDelta)
 	m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
 
 	D3DXVec3Normalize(&vDir, &vDir);
-	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+
+	if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x - 5.f &&
+		vPos.z < VTXCNTZ - m_pTransformCom->m_vScale.z  - 5.f &&
+		vPos.x > m_pTransformCom->m_vScale.x + 5.f &&
+		vPos.z > m_pTransformCom->m_vScale.z + 5.f)
+	{
+		
+		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+	}
+	else
+	{
+
+		m_pTransformCom->Move_Pos(&-vDir, m_fSpeed, fTimeDelta);
+	}
+
+
 }
 
 void CLeaper::JumpTo_Player(const _float& fTimeDelta)
@@ -252,12 +269,12 @@ void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 		{
 			m_eCurState = LEAPER_DOWN;
 			vPos = m_vTargetPos;
-			vPos.y = 50.f;
+			vPos.y = 30.f;
 		}
 		else
 		{
 			//vPos.y += 1.f;
-			vPos.y += m_fSpeed * fTimeDelta;
+			vPos.y += m_fSpeed * fTimeDelta * 5.f;
 		}
 	}
 	else if (LEAPER_DOWN == m_eCurState)
@@ -265,7 +282,7 @@ void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 		if (vPos.y > 1.f)
 		{
 			//vPos.y -= 1.f;
-			vPos.y -= m_fSpeed * fTimeDelta;
+			vPos.y -= m_fSpeed * fTimeDelta * 5.f;
 		}
 		else
 		{

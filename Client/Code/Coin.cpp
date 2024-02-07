@@ -265,7 +265,7 @@ CCoin* CCoin::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _v
 	_vec3 templook = playerPos - pos;
 	D3DXMatrixRotationY(&mat, fAngle);
 	D3DXVec3TransformCoord(&templook, &templook, &mat);
-	pInstance->Set_LookDir(templook);
+	pInstance->Set_LookDir(-templook);
 	pInstance->Set_Item_SpawnSpot(spawnspot);
 
 	if (FAILED(pInstance->Ready_GameObject()))

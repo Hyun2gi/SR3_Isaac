@@ -44,8 +44,6 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
-	Face_Camera();
-
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -59,6 +57,8 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 			m_bDead = true;
 		}
 	}
+
+	Face_Camera();
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
