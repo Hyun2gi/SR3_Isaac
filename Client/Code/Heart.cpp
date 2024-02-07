@@ -240,15 +240,21 @@ CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, 
     float fAngle = (float)(rand() % 60 - 30);
     _matrix mat;
 
-    _vec3 playerpos;
-    CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
-    _vec3		playerPos;
-    playerInfo->Get_Info(INFO_POS, &playerPos);
+    if (spawnspot == 1)
+    {
+        _vec3 playerpos;
+        CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+        _vec3		playerPos;
+        playerInfo->Get_Info(INFO_POS, &playerPos);
 
-    _vec3 templook = playerPos - pos;
-    D3DXMatrixRotationY(&mat, fAngle);
-    D3DXVec3TransformCoord(&templook, &templook, &mat);
-    pInstance->Set_LookDir(-templook);
+        _vec3 templook = playerPos - pos;
+        D3DXMatrixRotationY(&mat, fAngle);
+        D3DXVec3TransformCoord(&templook, &templook, &mat);
+        D3DXVec3Normalize(&templook, &templook);
+        templook *= 1.2;
+        pInstance->Set_LookDir(-templook);
+    }
+
     pInstance->Set_Item_SpawnSpot(spawnspot);
 
     if (FAILED(pInstance->Ready_GameObject()))

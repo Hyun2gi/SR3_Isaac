@@ -867,7 +867,7 @@ void CPlayer::Specific_Motion(const _float& fTimeDelta)
 	{
 		m_fDelayTime += fTimeDelta;
 
-		if (m_fDelayTime > 0.1)
+		if (m_fDelayTime > 0.2)
 		{
 			m_eCurState = P_IDLE;
 			m_fDelayTime = 0; // 딜레이 시간 초기화

@@ -72,7 +72,6 @@ private:
 	virtual void Free();
 	void		Key_Input(const _float& fTimeDelta);
 	void		Chase_Character(const _float& fTimeDelta);
-	void		Whole_Land_Show();
 	void		Mouse_Fix();
 	void		Mouse_Move();
 
