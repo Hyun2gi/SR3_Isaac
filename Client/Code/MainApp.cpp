@@ -3,6 +3,7 @@
 #include "Logo.h"
 #include "Stage.h"
 #include "Player.h"
+#include "StageLoadMgr.h"
 
 CMainApp::CMainApp() : m_pDeviceClass(nullptr)
 {
@@ -115,4 +116,5 @@ void CMainApp::Free()
 	Engine::Release_System();
 
 	CPlayer::GetInstance()->DestroyInstance();
+	CStageLoadMgr::GetInstance()->DestroyInstance();
 }

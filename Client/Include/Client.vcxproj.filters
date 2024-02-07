@@ -202,6 +202,9 @@
     <Filter Include="02. GameObject\09. MapObject\04. Shop\02. Font">
       <UniqueIdentifier>{65ab906c-b664-46bf-8507-94df6929da74}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\04. StageLoadMgr">
+      <UniqueIdentifier>{70df5998-cf5f-49ec-a1c6-cd27e9a50fed}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -396,6 +399,9 @@
     <ClInclude Include="..\Header\TestStage.h">
       <Filter>01. Scene\TestStage</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\StageLoadMgr.h">
+      <Filter>01. Scene\04. StageLoadMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -580,6 +586,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\TestStage.cpp">
       <Filter>01. Scene\TestStage</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\StageLoadMgr.cpp">
+      <Filter>01. Scene\04. StageLoadMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

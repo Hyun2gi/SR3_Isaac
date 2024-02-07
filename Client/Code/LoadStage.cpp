@@ -7,14 +7,16 @@
 #include "Player.h"
 #include "PlayerBullet.h"
 
-//»Ø∞Ê
+#include "StageLoadMgr.h"
+
+//ÌôòÍ≤Ω
 #include "Terrain.h"
 #include "DynamicCamera.h"
 #include "Floor.h"
 #include "Wall.h"
 #include "SkyBox.h"
 
-//∏ÛΩ∫≈Õ
+//Î™¨Ïä§ÌÑ∞
 #include "Fly.h"
 #include "AttackFly.h"
 #include "Dip.h"
@@ -23,12 +25,12 @@
 #include "Leaper.h"
 #include "Charger.h"
 
-//∫∏Ω∫
+//Î≥¥Ïä§
 #include "Monstro.h"
 #include "Mom.h"
 #include "MomParts.h"
 
-//ø¿∫Í¡ß∆Æ
+//Ïò§Î∏åÏ†ùÌä∏
 #include "Poop.h"
 #include "CampFire.h"
 #include "Spike.h"
@@ -37,7 +39,7 @@
 #include "ShellGame.h"
 #include "Door.h"
 
-//æ∆¿Ã≈€
+//ÏïÑÏù¥ÌÖú
 #include "Coin.h"
 #include "Pill.h"
 #include "BrimStone.h"
@@ -63,11 +65,12 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	m_bIsCreated = false;
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
+	FAILED_CHECK_RETURN(CStageLoadMgr::GetInstance()->Ready_StageLoadMgr(), E_FAIL);
 	
-	FAILED_CHECK_RETURN(Load_Level_Data(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_Stage_Data(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_Connected_Stage_Theme(), E_FAIL);
-	FAILED_CHECK_RETURN(Load_Stage_Design_Data(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_Level_Data(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_Stage_Data(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_Connected_Stage_Theme(), E_FAIL);
+	//FAILED_CHECK_RETURN(Load_Stage_Design_Data(), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_RoomObject(L"RoomObject"), E_FAIL);
@@ -135,7 +138,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		return 0;
 	}
 
-	//≈∏¿” µ®≈∏ Ω∫ƒ…¿œ ¡∂¿˝ øπΩ√ _ ªÁøÎ
+	//ÌÉÄÏûÑ Îç∏ÌÉÄ Ïä§ÏºÄÏùº Ï°∞Ï†à ÏòàÏãú _ ÏÇ¨Ïö©
 	if (Engine::Key_Down(DIK_P))
 	{
 		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f);
@@ -150,11 +153,12 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 void CLoadStage::LateUpdate_Scene()
 {
-	__super::LateUpdate_Scene();
 	CPlayer::GetInstance()->LateUpdate_GameObject();
+	Check_All_Dead();
+	__super::LateUpdate_Scene();
 
-	if (m_bIsCreated)
-		Door_Collision();
+	//if (m_bIsCreated)
+	//	Door_Collision();
 }
 
 void CLoadStage::Render_Scene()
@@ -163,167 +167,6 @@ void CLoadStage::Render_Scene()
 	//pParticleScatter->Render_GameObject();
 }
 
-HRESULT CLoadStage::Load_Level_Data()
-{
-	string strFilePath = "../../Dat/MapLevel.dat";
-
-	ifstream fin(strFilePath);
-
-	string strGetLine = "";
-	//ƒ⁄µÂ∏¶ «— ¡Ÿ ¿–æÓø¬¥Ÿ. (Ω∫≈◊¿Ã¡ˆø° ¥Î«— ¡§∫∏¥¬ «—¡Ÿ∑Œ ¿˙¿Â«œ∞‘ ∏∏µÈæÓµ◊±‚ ∂ßπÆø° ∞°¥…)
-
-	while (getline(fin, strGetLine))
-	{
-		vector<string> vecStr;
-		int iIndex = 0;
-
-		while (true) {
-			// , ¿ßƒ° √£±‚
-			int pos = strGetLine.find_first_of(',', iIndex);
-
-			// ,∏¶ √£¡ˆ ∏¯«œ∏È ¡æ∑·
-			if (pos == string::npos) 
-				break;
-
-			// ∫–∏Æµ» πÆ¿⁄ø≠ √‚∑¬
-			vecStr.push_back(strGetLine.substr(iIndex, pos - iIndex));
-			iIndex = pos + 1;
-			vecStr.push_back(strGetLine.substr(iIndex));
-		}
-
-		m_mapLevel.emplace(pair<int, string>(stoi(vecStr[0]), vecStr[1]));
-
-		vecStr.clear();
-	}
-
-	fin.close();
-
-
-	return S_OK;
-}
-
-HRESULT CLoadStage::Load_Stage_Data()
-{
-	//.dat ∆ƒ¿œ¿ª ∫“∑¡ø√ ∞Ê∑Œ∏¶ º≥¡§«ÿ¡ÿ¥Ÿ.
-	string strFilePath = "../../Dat/" + m_mapLevel.at(m_iCurStageKey) + ".dat";
-
-	ifstream fin(strFilePath);
-
-	string strGetLine = "";
-
-	while (getline(fin, strGetLine))
-	{
-		int iIndex = 0;
-
-		int iCount = 0;
-
-		while (true) {
-			// , ¿ßƒ° √£±‚
-			int pos = strGetLine.find_first_of(',', iIndex);
-
-			if (3 < iCount)
-			{
-				m_vecStageInfo.push_back(strGetLine.substr(iIndex, pos - iIndex));
-
-				// ,∏¶ √£¡ˆ ∏¯«œ∏È ¡æ∑·
-				if (pos == string::npos)
-				{
-					break;
-				}
-			}
-			else
-			{
-				// ∫–∏Æµ» πÆ¿⁄ø≠ √‚∑¬
-				m_vecConnectRoom.push_back(stoi(strGetLine.substr(iIndex, pos - iIndex)));
-			}
-			
-			iIndex = pos + 1;
-
-			iCount++;
-		}
-	}
-
-	fin.close();
-
-	return S_OK;
-}
-
-HRESULT CLoadStage::Load_Stage_Design_Data()
-{
-	string strFilePath = "../../Dat/" +
-		m_mapLevel[m_iCurStageKey] + "_Design.dat";
-
-	ifstream fin(strFilePath);
-
-	string strGetLine = "";
-	
-	int iMapKey = 0;
-
-	while (getline(fin, strGetLine))
-	{
-		vector<string> vecStr;
-		int iIndex = 0;
-
-		while (true) {
-			// , ¿ßƒ° √£±‚
-			int pos = strGetLine.find_first_of(',', iIndex);
-
-			// ,∏¶ √£¡ˆ ∏¯«œ∏È ¡æ∑·
-			if (pos == string::npos) {
-				vecStr.push_back(strGetLine.substr(iIndex));
-				break;
-			}
-
-			// ∫–∏Æµ» πÆ¿⁄ø≠ √‚∑¬
-			vecStr.push_back(strGetLine.substr(iIndex, pos - iIndex));
-			iIndex = pos + 1;
-		}
-
-		LoadObj tTemp = { stoi(vecStr[0]), stoi(vecStr[1]), stof(vecStr[2]), stof(vecStr[3]), stof(vecStr[4]) };
-
-		m_mapLoadObj.insert({ iMapKey, tTemp });
-		//int iType, int iIndex, float x, float y, float z
-		vecStr.clear();
-
-		++iMapKey;
-	}
-
-	fin.close();
-
-	return S_OK;
-
-}
-
-HRESULT CLoadStage::Load_Connected_Stage_Theme()
-{
-	int iIndex = 0;
-
-	for (auto& iter : m_vecConnectRoom)
-	{
-		if (iter != 0)
-		{
-			string strFilePath = "../../Dat/Stage_" +
-				to_string(iter) + ".dat";
-
-			ifstream fin(strFilePath);
-
-			string strLine = "";
-			getline(fin, strLine);
-			fin.close();
-
-			//m_mapDoorTheme.emplace({})
-			int pos = strLine.find_last_of(",") + 1;
-
-			string strStageTheme = strLine.substr(pos);
-
-			m_mapDoorTheme.insert({ iIndex, strStageTheme });
-		}
-
-		++iIndex;
-	}
-
-	return S_OK;
-}
 
 HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 {
@@ -334,7 +177,9 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
-	for (auto& iter : m_mapLoadObj)
+	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_mapLoadObj;
+
+	for (auto& iter : mapLoadObj)
 	{
 		switch (iter.second.iType)
 		{
@@ -398,7 +243,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				break;
 			}
 
-			//TODO: º• √ﬂ∞°«ÿæﬂ«‘
+			//TODO: ÏÉµ Ï∂îÍ∞ÄÌï¥ÏïºÌï®
 			}
 			break;
 		}
@@ -602,60 +447,78 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 
 	_vec3 vTempPos;
 
-	for (auto& iter : m_mapDoorTheme)
-	{
-		pGameObject = CDoor::Create(m_pGraphicDev);
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		pGameObject->Set_MyLayer(pLayerTag);
+	auto vecDoorTheme = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_vecConnectRoom;
 
-		switch (iter.first)
+	int i = 0;
+	for (auto& iter : vecDoorTheme)
+	{
+		if (1 > iter) continue;
+
+		switch (i)
 		{
 		case WALL_LEFT:
-			
-			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iter.second);
+			pGameObject = CDoor::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pGameObject, E_FAIL);
+			pGameObject->Set_MyLayer(pLayerTag);
+
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(CStageLoadMgr::GetInstance()->Get_Door_TextureName(iter));
 
 			vTempPos = m_pLeftWall->Get_Transform()->m_vInfo[INFO_POS];
 
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pLeftWall->Get_Transform()->m_vAngle;
-			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(m_vecConnectRoom[WALL_LEFT]);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(iter);
 			dynamic_cast<CDoor*>(pGameObject)->Set_DoorPos(0);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_RIGHT:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iter.second);
+			pGameObject = CDoor::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pGameObject, E_FAIL);
+			pGameObject->Set_MyLayer(pLayerTag);
+
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(CStageLoadMgr::GetInstance()->Get_Door_TextureName(iter));
 
 			vTempPos = m_pRightWall->Get_Transform()->m_vInfo[INFO_POS];
 
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x - DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pRightWall->Get_Transform()->m_vAngle;
-			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(m_vecConnectRoom[WALL_RIGHT]);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(iter);
 			dynamic_cast<CDoor*>(pGameObject)->Set_DoorPos(1);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_TOP:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iter.second);
+			pGameObject = CDoor::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pGameObject, E_FAIL);
+			pGameObject->Set_MyLayer(pLayerTag);
+
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(CStageLoadMgr::GetInstance()->Get_Door_TextureName(iter));
 
 			vTempPos = m_pTopWall->Get_Transform()->m_vInfo[INFO_POS];
 
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x, DOOR_Y_INTERVAL, vTempPos.z - DOOR_X_INTERVAL);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pTopWall->Get_Transform()->m_vAngle;
-			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(m_vecConnectRoom[WALL_TOP]);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(iter);
 			dynamic_cast<CDoor*>(pGameObject)->Set_DoorPos(2);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_BOTTOM:
-			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(iter.second);
+			pGameObject = CDoor::Create(m_pGraphicDev);
+			NULL_CHECK_RETURN(pGameObject, E_FAIL);
+			pGameObject->Set_MyLayer(pLayerTag);
+
+			dynamic_cast<CDoor*>(pGameObject)->Set_Theme(CStageLoadMgr::GetInstance()->Get_Door_TextureName(iter));
 
 			vTempPos = m_pBottomWall->Get_Transform()->m_vInfo[INFO_POS];
 
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x, DOOR_Y_INTERVAL, vTempPos.z + DOOR_X_INTERVAL);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pBottomWall->Get_Transform()->m_vAngle;
-			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(m_vecConnectRoom[WALL_BOTTOM]);
+			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(iter);
 			dynamic_cast<CDoor*>(pGameObject)->Set_DoorPos(3);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		}
+
+		++i;
 	}
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
@@ -717,9 +580,11 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	wstring wstrProto = L"Proto_";
 	wstring wstrTag, wstrTheme;
 
-	wstrTheme.assign(m_vecStageInfo[0].begin(), m_vecStageInfo[0].end());
+	string strType = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_strType;
 
-	//πŸ¥⁄ √ﬂ∞°
+	wstrTheme.assign(strType.begin(), strType.end());
+
+	//Î∞îÎã• Ï∂îÍ∞Ä
 	wstrTag = wstrProto + wstrTheme + L"FloorCubeTexture";
 	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev, m_bStartScene);
 	m_pFloor->Set_Cube_Texture_Tag(wstrTag.c_str());
@@ -727,19 +592,19 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Floor", pGameObject), E_FAIL);
 
 
-	//∫Æ √ﬂ∞°
-	// ø©±‚¥¬ ∫Æ¿« ≈•∫Í ≈ÿΩ∫√≥¿« ≈¬±◊∏¶ ∏∏µÈæÓº≠ ≥—∞‹¡÷¥¬ ∫Œ∫–
+	//Î≤Ω Ï∂îÍ∞Ä
+	// Ïó¨Í∏∞Îäî Î≤ΩÏùò ÌÅêÎ∏å ÌÖçÏä§Ï≤òÏùò ÌÉúÍ∑∏Î•º ÎßåÎì§Ïñ¥ÏÑú ÎÑòÍ≤®Ï£ºÎäî Î∂ÄÎ∂Ñ
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
 	pGameObject = m_pLeftWall = CWall::Create(m_pGraphicDev, m_bStartScene);
 	m_pLeftWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_LEFT);
 
-	// ø©±‚¥¬ ∫Æ∏È ≈ÿΩ∫√≥¿« ≈¬±◊∏¶ ∏∏µÈæÓº≠ ≥—∞‹¡÷¥¬ ∫Œ∫–
+	// Ïó¨Í∏∞Îäî Î≤ΩÎ©¥ ÌÖçÏä§Ï≤òÏùò ÌÉúÍ∑∏Î•º ÎßåÎì§Ïñ¥ÏÑú ÎÑòÍ≤®Ï£ºÎäî Î∂ÄÎ∂Ñ
 	wstrTag = wstrProto + wstrTheme + L"Wall";
 	m_pLeftWall->Set_Texture_Tag(wstrTag.c_str(), WALL_LEFT);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
-	//π›∫π
+	//Î∞òÎ≥µ
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
 	pGameObject = m_pRightWall = CWall::Create(m_pGraphicDev, m_bStartScene);
 	m_pRightWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_RIGHT);
@@ -786,25 +651,6 @@ HRESULT CLoadStage::Ready_Layer_UI(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLoadStage::Ready_LightInfo()
-{
-	D3DLIGHT9			tLightInfo;
-	ZeroMemory(&tLightInfo, sizeof(D3DLIGHT9));
-
-	tLightInfo.Type = D3DLIGHT_POINT;
-
-	tLightInfo.Diffuse   = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Specular  = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tLightInfo.Ambient	 = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-
-	tLightInfo.Direction = _vec3(1.f, -1.f, 1.f);
-	tLightInfo.Range = 2.f;
-
-	FAILED_CHECK_RETURN(Engine::Ready_Light(m_pGraphicDev, &tLightInfo, 0), E_FAIL);
-
-	return S_OK;
-}
-
 bool CLoadStage::Check_Cube_Arrived()
 {
 	return m_pLeftWall->Get_Arrived() && m_pRightWall->Get_Arrived()
@@ -813,15 +659,26 @@ bool CLoadStage::Check_Cube_Arrived()
 	
 }
 
+void CLoadStage::Check_All_Dead()
+{
+	int iCount = 0;
+
+	for (auto& iter : m_vecMonsterCount)
+		iCount += iter;
+
+	if(0 == iCount)
+		dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Set_Open();
+}
+
 HRESULT CLoadStage::Door_Collision()
 {
 	if (m_mapLayer.at(L"GameDoor"))
 	{
-		if (dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Get_Open()) // πÆ¿Ã ø≠∑»¿ª ∞ÊøÏø°∏∏
+		if (dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Get_Open()) // Î¨∏Ïù¥ Ïó¥Î†∏ÏùÑ Í≤ΩÏö∞ÏóêÎßå
 		{
 			CGameObject* pObj = m_mapLayer.at(L"GameDoor")->Collision_GameObject(CPlayer::GetInstance());
 
-			if (pObj) // √Êµπµ» πÆ ¡∏¿Á
+			if (pObj) // Ï∂©ÎèåÎêú Î¨∏ Ï°¥Ïû¨
 			{
 				//_vec3 playerpos;
 				//dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &playerpos);
@@ -857,7 +714,7 @@ HRESULT CLoadStage::Door_Collision()
 				CPlayer::GetInstance()->Set_KeyBlock(true);
 				CPlayer::GetInstance()->Set_StartPos(startpos);
 
-				// Ω∫≈◊¿Ã¡ˆ ∫Ø∞Ê
+				// Ïä§ÌÖåÏù¥ÏßÄ Î≥ÄÍ≤Ω
 				Engine::CScene* pScene = nullptr;
 
 				pScene = CLoadStage::Create(m_pGraphicDev, dynamic_cast<CDoor*>(pObj)->Get_Stage_Num_Key());
@@ -889,6 +746,5 @@ CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool b
 
 void CLoadStage::Free()
 {
-	//Safe_Release(pParticleScatter);
 	__super::Free();
 }
