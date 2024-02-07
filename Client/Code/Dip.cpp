@@ -49,10 +49,7 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_iPicNum < m_fFrame)
 	{
-		if (m_bDead)
-			return 1;
-		else
-			m_fFrame = 0.f;
+		m_fFrame = 0.f;
 	}
 
 	if (m_bHit)
@@ -65,31 +62,28 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 
 		if (0 >= m_iHp)
 		{
+			m_bDead = true;
 			_vec3 vPos;
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
-			//Engine::Create_Explosion(m_pGraphicDev, vPos);
-			m_bDead = true;
+			Engine::Create_Explosion(m_pGraphicDev,*(m_pTransformCom->Get_WorldMatrix()));
 		}
 	}
 
-	if (!m_bDead)
+	Face_Camera();
+
+	if (Check_Time(m_fSlowDelta))
 	{
-		Face_Camera();
-
-		if (Check_Time(m_fSlowDelta))
-		{
-			Change_Dir();
-			m_bSliding = true;
-		}
-
-		if (m_bSliding)
-		{
-			m_eCurState = DIP_SLIDE;
-			Sliding(m_fSlowDelta);
-		}
-		else
-			m_eCurState = DIP_IDLE;
+		Change_Dir();
+		m_bSliding = true;
 	}
+
+	if (m_bSliding)
+	{
+		m_eCurState = DIP_SLIDE;
+		Sliding(m_fSlowDelta);
+	}
+	else
+		m_eCurState = DIP_IDLE;
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
@@ -97,13 +91,19 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+
+	if (m_bDead)
+		return 1;
+
+	
 
 	return 0;
 }
 
 void CDip::LateUpdate_GameObject()
 {
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+
 	Motion_Change();
 
 	__super::LateUpdate_GameObject();
@@ -167,13 +167,13 @@ void CDip::Motion_Change()
 		case CDip::DIP_IDLE:
 			m_iPicNum = 3;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Dip", L"Proto_DipTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_DipTexture"));
 			break;
 
 		case CDip::DIP_SLIDE:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 2.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Dip", L"Proto_DipSlideTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_DipSlideTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;
