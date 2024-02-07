@@ -32,6 +32,7 @@ HRESULT CSquirt::Ready_GameObject()
 
 	m_bSliding = false;
 	m_bBounceWall = false;
+	m_bEpicTime = false;
 	m_fAccel = 8.f;
 
 	m_ePreState = SQU_END;
