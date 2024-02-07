@@ -26,6 +26,9 @@ public:
 
 	string			Get_Stage_Texture_Key() { return m_strStageKey; }
 
+	int				Get_DoorPos() { return m_iDoorPos; }
+	void			Set_DoorPos(int door) { m_iDoorPos = door; }
+
 public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
@@ -47,6 +50,8 @@ private:
 	DOORSTATE			m_eCurState;
 
 	_int				m_iStageNumKey;
+
+	_int				m_iDoorPos;
 
 public:
 	static CDoor*		Create(LPDIRECT3DDEVICE9 pGraphicDev);

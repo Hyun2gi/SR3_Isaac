@@ -67,6 +67,7 @@ public:
 	void				Set_Shoot_End_Epic(); 
 
 	void				Set_ChaseInit(bool _init) { m_bChaseInit = _init; }
+	void				Set_FirstPerson(bool first) { m_bFirstPerson = first; m_bCollisionWall = true; m_bChaseInit = false; }
 
 private:
 	virtual void Free();

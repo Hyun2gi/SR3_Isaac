@@ -26,7 +26,7 @@ private:
 	// BACKWALK : µÞÅë¼öº¸¸é¼­ ½ô
 	// SHOOTWALK : ½î´Â ÀÚ¼¼ (¸Ó¸®ÅëÀÌ ÀÛ¾ÆÁü)
 	// GOOD : µûºÀ
-	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_BACKIDLE, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_SHOOTIDLE,  P_THUMBS_UP, P_GET_BAD_ITEM, P_ATTACKED, P_END  };
+	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_BACKIDLE, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_SHOOTIDLE,  P_THUMBS_UP, P_GET_BAD_ITEM, P_ATTACKED, P_CRY_LIE, P_END  };
 	
 	enum BULLETID
 	{ P_BULLET_IDLE, P_BULLET_BRIMSTONE, P_BULLET_EPIC, P_BULLET_END };
@@ -82,6 +82,8 @@ public:
 			m_fHp = m_fMaxHp;
 		}
 	}
+
+	void		Set_LieAnim();
 
 	void		Set_To_MaxHp() { m_fHp = m_fMaxHp; }
 	void		Set_Coin(int _coin) { m_iCoin += _coin; }
