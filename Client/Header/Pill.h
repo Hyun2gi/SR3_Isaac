@@ -37,6 +37,7 @@ private:
 
 private:
 	// 랜덤값으로 한 이미지 지정하면 계속 유지
+	bool				m_bBadItem;
 	_int				m_iPicNum;
 	_int				m_iUpTimer;
 
