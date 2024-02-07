@@ -45,6 +45,11 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 {
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
+	if(m_bEpicTime)
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.2f);
+	else
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+
 	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
@@ -73,7 +78,17 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 	if (m_bHitColor)
 		Change_Color(fTimeDelta);
 
-	Face_Camera();
+	// Epic
+	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
+		m_bEpicTime = true;
+
+	if(m_bEpicTime)
+		Epic_Time();
+	else
+	{
+		m_vOriginAngle = m_pTransformCom->m_vAngle;
+		Face_Camera();
+	}
 
 	if (Check_Time(m_fSlowDelta))
 	{
@@ -98,8 +113,6 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bDead)
 		return 1;
-
-	
 
 	return 0;
 }
@@ -223,6 +236,20 @@ void CDip::Sliding(const _float& fTimeDelta)
 	}
 }
 
+void CDip::Epic_Time()
+{
+	//CPlayer::GetInstance()->Get_EpicLieTiming(); // ¿¡ÇÈ ÄÑÁü
+	//CPlayer::GetInstance()->Get_EpicTargetRun(); // ´À·ÁÁü
+	
+	m_pTransformCom->m_vAngle = { 0.f, 0.f, 90.f };
+
+	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
+	{
+		m_pTransformCom->m_vAngle = m_vOriginAngle;
+		m_bEpicTime = false;
+	}
+}
+
 void CDip::Face_Camera()
 {
 	CTransform* PlayerTransform =
@@ -230,7 +257,6 @@ void CDip::Face_Camera()
 
 	_vec3 vAngle = m_pCalculCom->Compute_Vill_Angle(m_pTransformCom, PlayerTransform);
 	m_pTransformCom->m_vAngle.y = vAngle.y;
-
 }
 
 CDip* CDip::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID)

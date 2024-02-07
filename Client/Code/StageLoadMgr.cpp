@@ -17,7 +17,9 @@ CStageLoadMgr::~CStageLoadMgr()
 
 HRESULT CStageLoadMgr::Ready_StageLoadMgr()
 {
-	FAILED_CHECK_RETURN(Load_Data(), E_FAIL);
+	if(!isFirstLoad)
+		FAILED_CHECK_RETURN(Load_Data(), E_FAIL);
+
 	return S_OK;
 }
 
@@ -28,6 +30,7 @@ string CStageLoadMgr::Get_Door_TextureName(_int iNum)
 
 HRESULT CStageLoadMgr::Load_Data()
 {
+	isFirstLoad = true;
 	string strFilePath = "../../Dat/MapLevel.dat";
 	ifstream fin(strFilePath);
 

@@ -57,11 +57,11 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 	}
 	else
 	{
-		/*if (Check_Fly_Dead())
+		if (Check_Fly_Dead())
 		{
 			m_CenterFly->Set_Dead();
 			m_bDead = true;
-		}*/
+		}
 	}
 
 	if (m_CenterFly != nullptr)
@@ -75,8 +75,8 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	/*if (m_bDead)
-		return 1;*/
+	//if (m_bDead)
+		//return 1;
 
 	return 0;
 }
@@ -115,15 +115,15 @@ HRESULT CAttackFly::Add_Component()
 
 #pragma region Texture
 
-	//// IDLE
-	//pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_AttackFlyTexture"));
-	//NULL_CHECK_RETURN(pComponent, E_FAIL);
-	//m_mapComponent[ID_STATIC].insert({ L"Proto_AttackFlyTexture", pComponent });
+	// IDLE
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_AttackFlyTexture")); //Engine::Clone_Proto(L"Proto_AttackFlyTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_AttackFlyTexture", pComponent });
 
-	//// DEAD
-	//pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FlyDeadTexture"));
-	//NULL_CHECK_RETURN(pComponent, E_FAIL);
-	//m_mapComponent[ID_STATIC].insert({ L"Proto_FlyDeadTexture", pComponent });
+	// DEAD
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FlyDeadTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_FlyDeadTexture", pComponent });
 
 #pragma endregion Texture
 
@@ -150,7 +150,7 @@ void CAttackFly::Create_AttackFly()
 	for (int i = 1; i < 13; ++i)
 	{
 		CNormalFly* pNormalFly = CNormalFly::Create(m_pGraphicDev, i, m_vecMyLayer[0]);
-		//pNormalFly->Set_MyLayer(m_vecMyLayer[0]); // Create πŸ≤‹ « ø‰ æ¯¿ª µÌ«‘
+		//pNormalFly->Set_MyLayer(m_vecMyLayer[0]); // Create Î∞îÍøÄ ÌïÑÏöî ÏóÜÏùÑ ÎìØÌï®
 		pNormalFly->Set_TargetTransform(m_CenterFly->Get_Transform());
 		m_NormalFlyList.push_back(pNormalFly);
 	}
@@ -160,7 +160,7 @@ _bool CAttackFly::Check_Fly_Dead()
 {
 	for (auto& iter : m_NormalFlyList)
 	{
-		if (!(iter->Get_Dead())) // «œ≥™∂Ûµµ ªÏæ∆¿÷¿∏∏È false
+		if (!(iter->Get_Dead())) // ÌïòÎÇòÎùºÎèÑ ÏÇ¥ÏïÑÏûàÏúºÎ©¥ false
 			return false;
 	}
 	return true;

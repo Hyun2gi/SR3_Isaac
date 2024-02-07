@@ -48,6 +48,8 @@ private:
 	HRESULT			Ready_Layer_GameLogic(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_RoomObject(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_GameObject(const _tchar* pLayerTag);
+	HRESULT			Ready_Layer_GameMonster(const _tchar* pLayerTag);
+	HRESULT			Ready_Layer_GameItem(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_Door(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
 
@@ -55,7 +57,18 @@ private:
 
 	bool			Check_Cube_Arrived();
 
+	void			Copy_Stage();
+
+	bool			Check_Monster_Dead();
 	void			Check_All_Dead();
+  
+	void			Item_Collision();
+	void			Moster_Collision();
+	void			MapObj_Collision();
+
+	void			Drop_ITem();
+
+	void			Insert_Child();
 
 public:
 	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene = false);
@@ -66,7 +79,7 @@ private:
 private:
 	CLoading* m_pLoading;
 
-	//¹Ù´Ú°ú º®¸éÀ» °¡Áö°íÀÖ°Ô ÇÑ´Ù.
+	//ë°”ë‹¥ê³¼ ë²½ë©´ì„ ê°€ì§€ê³ ìˆê²Œ í•œë‹¤.
 	CFloor* m_pFloor;
 	CWall* m_pLeftWall;
 	CWall* m_pRightWall;
@@ -78,7 +91,7 @@ private:
 	bool m_bIsCreated;
 	bool m_bStartScene;
 
-	// ¸Ê¿¡ ¹èÄ¡ÇÑ ¸ó½ºÅÍÀÇ °³¼ö¸¦ Ä«¿îÆ®ÇØÁÖ´Â º¤ÅÍ
+	// ë§µì— ë°°ì¹˜í•œ ëª¬ìŠ¤í„°ì˜ ê°œìˆ˜ë¥¼ ì¹´ìš´íŠ¸í•´ì£¼ëŠ” ë²¡í„°
 	vector<int> m_vecMonsterCount;
 };
 

@@ -32,6 +32,7 @@ HRESULT CSquirt::Ready_GameObject()
 
 	m_bSliding = false;
 	m_bBounceWall = false;
+	m_bEpicTime = false;
 	m_fAccel = 8.f;
 
 	m_ePreState = SQU_END;
@@ -44,6 +45,11 @@ HRESULT CSquirt::Ready_GameObject()
 _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 {
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	if (m_bEpicTime)
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.2f);
+	else
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
 
 	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
@@ -73,7 +79,17 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	if (m_bHitColor)
 		Change_Color(fTimeDelta);
 
-	Face_Camera();
+	// Epic
+	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
+		m_bEpicTime = true;
+
+	if (m_bEpicTime)
+		Epic_Time();
+	else
+	{
+		m_vOriginAngle = m_pTransformCom->m_vAngle;
+		Face_Camera();
+	}
 
 	if (Check_Time(m_fSlowDelta) && !m_bSliding)
 	{
@@ -236,6 +252,17 @@ void CSquirt::Check_TargetPos()
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
 
 	m_vDir = m_vTargetPos - m_pTransformCom->m_vInfo[INFO_POS];
+}
+
+void CSquirt::Epic_Time()
+{
+	m_pTransformCom->m_vAngle = { 0.f, 0.f, 90.f };
+
+	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
+	{
+		m_pTransformCom->m_vAngle = m_vOriginAngle;
+		m_bEpicTime = false;
+	}
 }
 
 CSquirt* CSquirt::Create(LPDIRECT3DDEVICE9 pGraphicDev)
