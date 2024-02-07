@@ -63,10 +63,12 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_bShoot = false;
 
 		m_iTempTimer = 0;
+		m_pCamera = nullptr;
+		m_vStartPos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 	}
 	else
 	{
-		dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_ChaseInit(true);
+		//dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_ChaseInit(true);
 	}
 	
 
@@ -80,12 +82,18 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		Engine::CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
 		NULL_CHECK(pTerrainBufferCom);
 
-		_vec3 vPos;
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		_float	fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&vPos, pTerrainBufferCom->Get_VtxPos());
+		_float	fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&m_vStartPos, pTerrainBufferCom->Get_VtxPos());
 
-		m_pTransformCom->Set_Pos(VTXCNTX / 2, fHeight + 1, VTXCNTZ / 2);
+		//m_pTransformCom->Set_Pos(VTXCNTX / 2, fHeight + 1, VTXCNTZ / 2);
+		m_pTransformCom->Set_Pos(m_vStartPos.x, fHeight + 1, m_vStartPos.z);
 		m_bStartScene = false;
+
+		if (m_pCamera != nullptr)
+		{
+			dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_FirstPerson(true);
+		}
+
+		m_bKeyBlock = false;
 	}
 
 	if(!m_bKeyBlock)
@@ -161,7 +169,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 			if (1 == iResult)
 			{
 				//Safe_Delete<CGameObject*>(*iter);
-				Safe_Release<CGameObject*>(*iter);
+				Engine::Safe_Release<CGameObject*>(*iter);
 				iter = m_PlayerBulletList.erase(iter);
 			}
 			else
@@ -273,6 +281,10 @@ HRESULT CPlayer::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_GET_BAD_ITEM", pComponent });
 
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_LIE_CRY"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_LIE_CRY", pComponent });
+
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_IDLE"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_IDLE", pComponent });
@@ -304,16 +316,15 @@ HRESULT CPlayer::Add_Component()
 //	return pInstance;
 //}
 
+void CPlayer::Set_LieAnim()
+{
+}
+
 void CPlayer::Set_Player_Pos(_vec3 pos)
 {
 	m_pTransformCom->Set_Pos(pos); 
 }
 
-void CPlayer::Set_StartPosition(_vec3 _position)
-{
-	m_bStartScene = true;
-	m_pTransformCom->Set_Pos(_position);
-}
 
 void CPlayer::Set_MouseRotation(float xRad, float yRad)
 {
@@ -841,6 +852,12 @@ void CPlayer::Motion_Change()
 			m_fSpriteSpeed = 1.f;
 			m_bKeyBlock = true; //key 막기
 			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_ATTACKED"));
+			break;
+		case P_CRY_LIE:
+			m_fPicNum = 1;
+			m_fSpriteSpeed = 1.f;
+			m_bKeyBlock = true; //key 막기
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_LIE_CRY"));
 			break;
 		}
 
