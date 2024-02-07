@@ -48,6 +48,7 @@ private:
 	HRESULT			Ready_Layer_GameLogic(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_RoomObject(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_GameObject(const _tchar* pLayerTag);
+	HRESULT			Ready_Layer_GameMonster(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_Door(const _tchar* pLayerTag);
 	HRESULT			Ready_Layer_UI(const _tchar* pLayerTag);
 
@@ -55,8 +56,10 @@ private:
 
 	bool			Check_Cube_Arrived();
 
-	void			Check_All_Dead();
+	void			Copy_Stage();
 
+	void			Check_All_Dead();
+	
 public:
 	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene = false);
 

@@ -17,6 +17,10 @@ public:
 
 	CGameObject* Collision_GameObject(CGameObject* pSrc);
 
+	multimap<const _tchar*, CGameObject*>& Get_ObjectMap() { return m_mapObject; }
+	 
+	int Get_MapObjSize() { return m_mapObject.size(); }
+
 public:
 	HRESULT		Add_GameObject(const _tchar* pObjTag, CGameObject* pGameObject);
 
