@@ -13,6 +13,7 @@ private:
 
 public:
 	virtual HRESULT		Ready_Buffer();
+	virtual HRESULT		Ready_VBuffer();
 	virtual void		Render_Buffer();
 
 	void	Set_Color(D3DXCOLOR _color) { m_dwColor = _color; }
