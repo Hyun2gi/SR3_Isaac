@@ -88,7 +88,8 @@ _int CLayer::Update_Layer(const _float & fTimeDelta)
 		{
 			//Safe_Delete<CGameObject*>(*iter);
 			//CDeleteMap(iter);
-			Safe_Delete<CGameObject*>(iter->second);
+			iter->second->Release();
+			//Safe_Delete<CGameObject*>(iter->second);
 			m_mapObject.erase(iter++);
 		}
 		else

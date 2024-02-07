@@ -27,6 +27,14 @@ HRESULT CEpic::Ready_GameObject()
     m_iUpTimer = 0;
     m_pTransformCom->m_vScale = { 0.7,0.7,0.7 };
 
+    m_fTop = 1.3f;
+    m_fFloor = 0.7f;
+    m_fBig = 0.7;
+    m_fSmall = 0.5;
+
+    m_iSubTimer = 0;
+    m_iSubSizeTimer = 0;
+
     return S_OK;
 }
 
@@ -35,6 +43,50 @@ _int CEpic::Update_GameObject(const _float& fTimeDelta)
     CGameObject::Update_GameObject(fTimeDelta);
 
     m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+    if (m_bDead == false)
+    {
+        _vec3 goalpos, curpos, movevec;
+        _vec3 goalsize, cursize, sizevec;
+        m_pTransformCom->Get_Info(INFO_POS, &curpos);
+        cursize = m_pTransformCom->m_vScale;
+        if (m_iSubTimer % 2 == 0)
+        {
+            // À§ÂÊ
+            goalpos = curpos - _vec3(0, curpos.y, 0) + _vec3(0, m_fTop, 0);
+        }
+        else
+        {
+            // ¹ØÂÊ
+            goalpos = curpos - _vec3(0, curpos.y, 0) + _vec3(0, m_fFloor, 0);
+        }
+
+        if (m_iSubSizeTimer % 2 == 0)
+        {
+            goalsize = _vec3(1, 1, 1) * m_fBig;
+        }
+        else
+        {
+            goalsize = _vec3(1, 1, 1) * m_fSmall;
+        }
+
+        if (abs(goalpos.y - curpos.y) < 0.2f)
+        {
+            m_iSubTimer++;
+        }
+
+        if (abs(goalsize.x - cursize.x) < 0.09f)
+        {
+            m_iSubSizeTimer++;
+        }
+
+        D3DXVec3Lerp(&movevec, &curpos, &goalpos, fTimeDelta*1.3f);
+        m_pTransformCom->Set_Pos(movevec);
+
+
+        D3DXVec3Lerp(&sizevec, &cursize, &goalsize, fTimeDelta * 0.7);
+        m_pTransformCom->m_vScale = sizevec;
+    }
 
     if (m_bDead == true)
     {
@@ -196,18 +248,20 @@ CEpic* CEpic::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _v
         float speed = rand() % 4 + 2;
         speed *= 0.1;
         pInstance->Set_MoveSpeed(speed);
+
+        float fAngle = (float)(rand() % 100 - 50);
+        _matrix mat;
+        _vec3 templook = look;
+        D3DXMatrixRotationY(&mat, fAngle);
+        D3DXVec3TransformCoord(&templook, &templook, &mat);
+        pInstance->Set_LookDir(templook);
     }
     else
     {
         pInstance->Set_SpawnPos(pos);
     }
 
-    float fAngle = (float)(rand() % 100 - 50);
-    _matrix mat;
-    _vec3 templook = look;
-    D3DXMatrixRotationY(&mat, fAngle);
-    D3DXVec3TransformCoord(&templook, &templook, &mat);
-    pInstance->Set_LookDir(templook);
+    
 
     if (FAILED(pInstance->Ready_GameObject()))
     {

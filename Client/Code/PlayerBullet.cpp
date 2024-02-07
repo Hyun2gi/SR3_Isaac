@@ -51,16 +51,10 @@ _int CPlayerBullet::Update_GameObject(const _float& fTimeDelta)
 
    
     // 충돌하지 않고 시간이 다되면 바로 DEAD 처리
-    if (Check_Time(fTimeDelta) && m_eCurState == IDLEBULLET_IDLE)
+    if (Check_Time(fTimeDelta) && !m_bCollision)
     {
         // 시간 다 되면 삭제
         m_bDead = true;
-    }
-
-    // 시간다돼서
-    if (m_bDead == true)
-    {
-        return 1;
     }
 
     if (m_eCurState == IDLEBULLET_EFFECT)
@@ -82,6 +76,12 @@ _int CPlayerBullet::Update_GameObject(const _float& fTimeDelta)
         m_pTransformCom->Move_Pos(&m_vBulletDir, m_fBulletSpeed, fTimeDelta);
     }
     
+    // 시간다돼서
+    if (m_bDead == true)
+    {
+        return 1;
+    }
+
 
     Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -189,14 +189,14 @@ void CPlayerBullet::Motion_Change()
         {
         case IDLEBULLET_IDLE:
             m_iPicNum = 1;
-            m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTear"));
+            m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_PlayerTear"));
             break;
         case IDLEBULLET_EFFECT:
             m_iPicNum = 10;
             m_fSpriteSpeed = 3.f;
             m_fAccTimeDelta = 0;
             m_fFrame = 0;
-            m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTear_Effect"));
+            m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_PlayerTear_Effect"));
             break;
         }
 

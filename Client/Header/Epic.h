@@ -29,6 +29,15 @@ private:
 	_float					m_fPicNum;
 	int						m_iUpTimer;
 
+	// 두둥실을 위한 값
+	float					m_fTop;
+	float					m_fFloor;
+	int						m_iSubTimer;
+	int						m_iSubSizeTimer;
+	float					m_fBig;
+	float					m_fSmall;
+
+
 public:
 	static CEpic* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look);
 

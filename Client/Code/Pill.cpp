@@ -49,6 +49,7 @@ HRESULT CPill::Ready_GameObject()
 		break;
 	}
 	m_iUpTimer = 0;
+	m_bBadItem = false;
 
 	return S_OK;
 }
@@ -73,10 +74,21 @@ _int CPill::Update_GameObject(const _float& fTimeDelta)
 		m_bDead = true;
 	}
 
-	if (m_bDead == true && m_iUpTimer > 135)
+	if (m_bBadItem)
 	{
-		// 磷澜 贸府
-		return 1;
+		if (m_bDead == true && m_iUpTimer > 80)
+		{
+			// 磷澜 贸府
+			return 1;
+		}
+	}
+	else
+	{
+		if (m_bDead == true && m_iUpTimer > 135)
+		{
+			// 磷澜 贸府
+			return 1;
+		}
 	}
 
 	Item_Spawn_Action();
@@ -126,10 +138,12 @@ void CPill::Run_Item_Effect()
 				break;
 			case 1:
 				CPlayer::GetInstance()->Set_Hp(-1);
+				m_bBadItem = true;
 				CPlayer::GetInstance()->Set_Item_Get_Anim_Bad();
 				break;
 			case 2:
 				// 公利 惑怕
+				m_bBadItem = true;
 				CPlayer::GetInstance()->Set_Item_Get_Anim_Bad();
 				break;
 			case 3:
@@ -138,6 +152,7 @@ void CPill::Run_Item_Effect()
 				break;
 			case 4:
 				CPlayer::GetInstance()->Set_MoveSpeed(-2);
+				m_bBadItem = true;
 				CPlayer::GetInstance()->Set_Item_Get_Anim_Bad();
 				break;
 			}
