@@ -25,6 +25,7 @@ HRESULT CSadOnion::Ready_GameObject()
 	m_fFrame = 0;
 	m_iCoin = 2;
 	m_iUpTimer = 0;
+	m_iCoin = 15;
 
 	m_pTransformCom->m_vScale = { 0.4,0.4,0.4 };
 
@@ -86,13 +87,16 @@ void CSadOnion::Render_GameObject()
 
 void CSadOnion::Run_Item_Effect()
 {
-	if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT)
+	if (m_eCurItemPlace == SP_SHOP)
 	{
-		CPlayer::GetInstance()->Set_AttackSpeed(-6);
-		CPlayer::GetInstance()->Set_Item_Get_Anim();
-		m_bDead = true;
+		if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
+		{
+			CPlayer::GetInstance()->Set_Coin(-m_iCoin);
+			CPlayer::GetInstance()->Set_AttackSpeed(-6);
+			CPlayer::GetInstance()->Set_Item_Get_Anim();
+			m_bDead = true;
+		}	
 	}
-	
 }
 
 void CSadOnion::Item_Spawn_Action()

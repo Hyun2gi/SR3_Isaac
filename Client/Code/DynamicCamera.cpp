@@ -90,7 +90,6 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 	{
 		Mouse_Move();
 		Chase_Character(fTimeDelta);
-		Whole_Land_Show();
 		//마우스 움직임
 
 		if (m_eCurState != C_EPIC)
@@ -304,13 +303,6 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 	}
 }
 
-void CDynamicCamera::Whole_Land_Show()
-{
-	if (m_eCurState == C_WHOLELAND)
-	{
-		m_vEye = _vec3(0, 50.f, 0);
-	}
-}
 
 void CDynamicCamera::Mouse_Fix()
 {
@@ -365,6 +357,7 @@ void CDynamicCamera::Mouse_Move()
 		D3DXQuaternionRotationMatrix(&qRot, &matRotY);
 		D3DXVec3Cross(&vCross, &m_vUp, &vLook);
 
+		// 회전 막기
 		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f) < 30)
 		{
 			m_fAngleY -= (dwMouseMoveY / 10.f);
@@ -405,19 +398,6 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 				float FLOAT_MIN = 0;
 
 				srand((unsigned)time(NULL));
-
-				// -1~1 사이의 난수 생성
-
-				/*float randx = (float)(rand()) / ((float)(RAND_MAX / (FLOAT_MAX - FLOAT_MIN)));
-				float randy = (float)(rand()) / ((float)(RAND_MAX / (FLOAT_MAX - FLOAT_MIN)));
-				float randz = (float)(rand()) / ((float)(RAND_MAX / (FLOAT_MAX - FLOAT_MIN)));
-
-				float randx = (float)(rand() % 2 - 1);
-				float randy = (float)(rand() % 2 - 1);
-				float randz = (float)(rand() % 2 - 1);
-				_vec3 randompos = _vec3(randx, randy, randz);
-
-				D3DXVec3Normalize(&randompos, &randompos);*/
 
 				_vec3 templook;
 				templook = _vec3(m_vAt.x, 0, m_vAt.z) - _vec3(m_vStartAtPosition.x, 0, m_vStartAtPosition.x);
