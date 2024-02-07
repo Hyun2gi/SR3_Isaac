@@ -24,7 +24,8 @@ CNormalFly::~CNormalFly()
 HRESULT CNormalFly::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	//m_pTransformCom->Set_Pos(10.f, 10.f, 10.f);
+	m_pTransformCom->Set_Pos(0.f, 5.f, 0.f);
+	m_pTransformCom->m_vScale = { 0.6f, 0.6f, 0.6f };
 
 	m_iHp = 5;
 

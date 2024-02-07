@@ -25,6 +25,7 @@ HRESULT CFly::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->Set_Pos(_float(rand() % 20), 5.f, _float(rand() % 20));
+	m_pTransformCom->m_vScale = { 0.6f, 0.6f, 0.6f };
 
 	m_iHp = 3;
 

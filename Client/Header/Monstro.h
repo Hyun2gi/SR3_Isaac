@@ -10,7 +10,7 @@ private:
 	explicit CMonstro(const CMonstro& rhs);
 	virtual ~CMonstro();
 
-	enum MONSTROSTATE{MONSTRO_IDLE, MONSTRO_ATTACK, MONSTRO_WAIT, MONSTRO_MOVE, MONSTRO_UP, MONSTRO_DOWN, MONSTRO_END};
+	enum MONSTROSTATE{MONSTRO_IDLE, MONSTRO_ATTACK, MONSTRO_WAIT, MONSTRO_MOVE, MONSTRO_UP, MONSTRO_DOWN, MONSTRO_DEAD, MONSTRO_END};
 
 public:
 	BOSS_TYPE		Get_BossType() { return m_eBossType; }
@@ -33,6 +33,7 @@ private:
 	void			Check_TargetPos();
 
 private:
+	_bool			m_bDeadWait;
 	_bool			m_bJump;
 	_bool			m_bBullet;
 	_int			m_iPicNum;
