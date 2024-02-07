@@ -139,6 +139,9 @@ void CRenderer::Render_Particles(LPDIRECT3DDEVICE9& pGraphicDev)
 	{
 		_float size = dynamic_cast<CParticleSystem*>(iter)->Get_Size();
 
+		_matrix mat = dynamic_cast<CParticleSystem*>(iter)->Get_World_Matrix();
+		pGraphicDev->SetTransform(D3DTS_WORLD, &mat);
+
 		pGraphicDev->SetRenderState(D3DRS_POINTSIZE, Engine::CAbstractFactory::FtoDw(size));
 
 		iter->Render_GameObject();

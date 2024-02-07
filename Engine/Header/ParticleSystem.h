@@ -102,6 +102,9 @@ public:
 		out->z = GetRandomFloat(min->z, max->z);
 	}
 
+	_matrix Get_World_Matrix() { return m_matWorld; }
+	void Set_World_Matrix(_matrix& matWorld) { m_matWorld = matWorld; }
+
 protected:
 	virtual void Remove_Dead_Particles();
 
@@ -129,6 +132,8 @@ protected:
 	_float						m_fVelocitySpeed;
 
 	bool						m_bIsDead;
+
+	_matrix						m_matWorld;
 
 private:
 	virtual void	Free();

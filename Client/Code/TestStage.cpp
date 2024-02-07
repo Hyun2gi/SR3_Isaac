@@ -97,8 +97,8 @@ HRESULT CTestStage::Ready_Scene()
 	Engine::Create_Scatter(m_pGraphicDev, _vec3(-10.0f, -5.0f, -10.0f), _vec3(10.0f, 5.0f, 10.0f));
 	//Engine::Create_Explosion(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
 	//Engine::Create_Splash(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
-	Engine::Create_Splash_Left(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
-	Engine::Create_Splash_Right(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
+	//Engine::Create_Splash_Left(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
+	//Engine::Create_Splash_Right(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
 	//Engine::Create_Burst(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
 
 	return S_OK;
@@ -137,6 +137,17 @@ Engine::_int CTestStage::Update_Scene(const _float& fTimeDelta)
 	// 텍스처 색 변경 함수 사용 예시. (복붙X 확인 후 필요한대로 응용해서 사용할 것)
 	if (GetAsyncKeyState(VK_UP))
 	{
+		CTransform* pTest = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
+
+		_matrix* mat = pTest->Get_WorldMatrix();
+
+		//함수 사용 예
+		Engine::Create_Explosion(m_pGraphicDev, *mat);
+		Engine::Create_Splash(m_pGraphicDev, *mat);
+		Engine::Create_Splash_Left(m_pGraphicDev, *mat);
+		Engine::Create_Splash_Right(m_pGraphicDev, *mat);
+		Engine::Create_Burst(m_pGraphicDev, *mat);
+
 		temp += D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.0f);
 		if (CPlayer::GetInstance()->Get_Component_Player_TexBuffer())
 		{

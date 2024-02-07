@@ -67,7 +67,7 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 		{
 			_vec3 vPos;
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
-			Engine::Create_Explosion(m_pGraphicDev, vPos);
+			//Engine::Create_Explosion(m_pGraphicDev, vPos);
 			m_bDead = true;
 		}
 	}

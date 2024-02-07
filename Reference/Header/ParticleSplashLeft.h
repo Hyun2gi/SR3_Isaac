@@ -8,7 +8,7 @@ class CTexture;
 class ENGINE_DLL CParticleSplashLeft : public CParticleSystem
 {
 public:
-	explicit CParticleSplashLeft(_vec3* vOrigin, int numParticles, _float fSize);
+	explicit CParticleSplashLeft(int numParticles, _float fSize);
 	virtual ~CParticleSplashLeft();
 
 public:
@@ -19,7 +19,7 @@ public:
 
 	void	Create_Texture(const _tchar* pTexturePath, _int iMaxFrame);
 
-	static CParticleSplashLeft* Create(IDirect3DDevice9* pDevice, _vec3 vPos,
+	static CParticleSplashLeft* Create(IDirect3DDevice9* pDevice, _matrix matWorld,
 		const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/BloodExpLeft/BloodExp_%d.png", _int iMaxFrame = 2,
 		_float fSize = 0.25f, _int iCount = 10);
 

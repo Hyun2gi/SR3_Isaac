@@ -69,29 +69,29 @@ inline void Create_Scatter(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vMin, _vec3 vMax
 	CParticleMgr::GetInstance()->Create_Scatter(pGraphicDev, vMin, vMax, fSize, iCount);
 }
 
-inline void Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fSize, _int iCount)
+inline void Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount)
 {
-	CParticleMgr::GetInstance()->Create_Explosion(pGraphicDev, vPos, fSize, iCount);
+	CParticleMgr::GetInstance()->Create_Explosion(pGraphicDev, matWorld, fSize, iCount);
 }
 
-inline void Create_Splash(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, const _tchar* pTexturePath, _int iMaxFrame, _float fSize, _int iCount)
+inline void Create_Splash(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, const _tchar* pTexturePath, _int iMaxFrame, _float fSize, _int iCount)
 {
-	CParticleMgr::GetInstance()->Create_Splash(pGraphicDev, vPos, pTexturePath, iMaxFrame, fSize, iCount);
+	CParticleMgr::GetInstance()->Create_Splash(pGraphicDev, matWorld, pTexturePath, iMaxFrame, fSize, iCount);
 }
 
-inline void Create_Splash_Left(LPDIRECT3DDEVICE9 pDevice, _vec3 vPos, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
+inline void Create_Splash_Left(LPDIRECT3DDEVICE9 pDevice, _matrix matWorld, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
 {
-	CParticleMgr::GetInstance()->Create_Splash_Left(pDevice, vPos, pTextruePath, iMaxFrame, fSize, iCount);
+	CParticleMgr::GetInstance()->Create_Splash_Left(pDevice, matWorld, pTextruePath, iMaxFrame, fSize, iCount);
 }
 
-inline void Create_Splash_Right(LPDIRECT3DDEVICE9 pDevice, _vec3 vPos, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
+inline void Create_Splash_Right(LPDIRECT3DDEVICE9 pDevice, _matrix matWorld, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
 {
-	CParticleMgr::GetInstance()->Create_Splash_Right(pDevice, vPos, pTextruePath, iMaxFrame, fSize, iCount);
+	CParticleMgr::GetInstance()->Create_Splash_Right(pDevice, matWorld, pTextruePath, iMaxFrame, fSize, iCount);
 }
 
-inline void Create_Burst(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vPos, _float fSize, _int iCount)
+inline void Create_Burst(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount)
 {
-	CParticleMgr::GetInstance()->Create_Burst(pGraphicDev, vPos, fSize, iCount);
+	CParticleMgr::GetInstance()->Create_Burst(pGraphicDev, matWorld, fSize, iCount);
 }
 
 inline void Update_Particles(_float fDeltaTime)
