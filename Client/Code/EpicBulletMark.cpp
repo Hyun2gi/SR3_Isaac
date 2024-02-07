@@ -90,13 +90,13 @@ void CEpicBulletMark::Motion_Change()
         switch (m_eCurState)
         {
         case EPIC_MARK_TARGET:
-            m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
+            m_pTransformCom->m_vScale = { 1.f, 1.7f, 1.f };
             m_iPicNum = 1;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicTarget"));
             break;
         case EPIC_MARK_TRACE:
-            m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
+            m_pTransformCom->m_vScale = { 1.3f, 1.3f, 1.3f };
             m_iPicNum = 8;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicSpace"));
