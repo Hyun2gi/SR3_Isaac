@@ -153,8 +153,9 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 void CLoadStage::LateUpdate_Scene()
 {
-	__super::LateUpdate_Scene();
 	CPlayer::GetInstance()->LateUpdate_GameObject();
+	Check_All_Dead();
+	__super::LateUpdate_Scene();
 
 	//if (m_bIsCreated)
 	//	Door_Collision();
@@ -652,6 +653,17 @@ bool CLoadStage::Check_Cube_Arrived()
 		&& m_pTopWall->Get_Arrived() && m_pBottomWall->Get_Arrived()
 		&& m_pFloor->Get_Arrived();
 	
+}
+
+void CLoadStage::Check_All_Dead()
+{
+	int iCount = 0;
+
+	for (auto& iter : m_vecMonsterCount)
+		iCount += iter;
+
+	if(0 == iCount)
+		dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Set_Open();
 }
 
 HRESULT CLoadStage::Door_Collision()

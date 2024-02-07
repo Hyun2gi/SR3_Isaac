@@ -55,6 +55,8 @@ private:
 
 	bool			Check_Cube_Arrived();
 
+	void			Check_All_Dead();
+
 public:
 	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene = false);
 
