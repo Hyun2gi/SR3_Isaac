@@ -368,6 +368,12 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 			}
 			case DOPLE:
 			{
+				pGameObject = CDople::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dople", pGameObject), E_FAIL);
+
+				m_vecMonsterCount[DOPLE]++;
 
 				break;
 			}
