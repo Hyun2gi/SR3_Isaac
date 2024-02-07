@@ -97,8 +97,10 @@ void CRenderer::Render_Alpha_Sorting(LPDIRECT3DDEVICE9& pGraphicDev)
 
 	pGraphicDev->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
 
-	m_RenderGroup[RENDER_ALPHA_SORTING].sort([](CGameObject* pDst, CGameObject* pSrc)->bool
+	int i = 0;
+	m_RenderGroup[RENDER_ALPHA_SORTING].sort([&](CGameObject* pDst, CGameObject* pSrc)->bool
 		{
+			i++;
 			return pDst->Get_ViewZ() > pSrc->Get_ViewZ();
 		});
 
