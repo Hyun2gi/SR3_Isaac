@@ -42,10 +42,12 @@ protected:
 
 	bool			Check_Time(const _float& fTimeDelta);
 	bool			Check_Time(const _float& fTimeDelta, float fLimit);
+	bool			Check_Color_Time(const _float& fTimeDelta);
 	void			Check_Map_Range();
 	void			Hit_PushBack(const _float& fTimeDelta);
 	void			Fix_Y();
 	void			Change_Scale();
+	void			Change_Color(const _float& fTimeDelta);
 
 protected:
 	Engine::CRcTex* m_pBufferCom;
@@ -59,6 +61,7 @@ protected:
 	_bool					m_bScaleReduce;
 	_bool					m_bHit;
 	_bool					m_bDead;
+	_bool					m_bHitColor;
 	_int					m_iHp;
 
 	_float					m_fSpeed;
@@ -67,6 +70,7 @@ protected:
 	_float					m_fCallLimit;
 	_float					m_fAccTimeDelta;
 	_float					m_fSecAccTimeDelta;
+	_float					m_fColorTimeDelta;
 	_float					m_fSlowDelta;
 
 	_vec3					m_vOriginScale;

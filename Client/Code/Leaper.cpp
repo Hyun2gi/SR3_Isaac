@@ -66,8 +66,14 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 		if (0 >= m_iHp)
 		{
 			m_bDead = true;
+			_vec3 vPos;
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
 		}
 	}
+
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
 
 	Face_Camera();
 
@@ -100,6 +106,9 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+	if (m_bDead)
+		return 1;
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -176,19 +185,19 @@ void CLeaper::Motion_Change()
 		case CLeaper::LEAPER_IDLE:
 			m_iPicNum = 8;
 			m_fFrameSpeed = 0.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Leaper", L"Proto_LeaperTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_LeaperTexture"));
 			break;
 
 		case CLeaper::LEAPER_UP:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 0.1f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Leaper", L"Proto_LeaperUpTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_LeaperUpTexture"));
 			break;
 
 		case CLeaper::LEAPER_DOWN:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 0.1f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Leaper", L"Proto_LeaperDownTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_LeaperDownTexture"));
 			break;
 
 		}

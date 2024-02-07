@@ -55,8 +55,14 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 		if (0 >= m_iHp)
 		{
 			m_bDead = true;
+			_vec3 vPos;
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
 		}
 	}
+
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
 
 	Face_Camera();
 
@@ -70,6 +76,9 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 	m_pTransformCom->Chase_Target(&vTargetPos, m_fSpeed, m_fSlowDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+	if (m_bDead)
+		return 1;
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -141,13 +150,13 @@ void CCharger::Motion_Change()
 		case CCharger::CHARGER_IDLE:
 			m_iPicNum = 4;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Charger", L"Proto_ChargerTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_ChargerTexture"));
 			break;
 
 		case CCharger::CHARGER_ATTACK:
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Charger", L"Proto_ChargerAttackTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_ChargerAttackTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;

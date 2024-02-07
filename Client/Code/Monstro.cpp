@@ -26,7 +26,7 @@ HRESULT CMonstro::Ready_GameObject()
 	m_pTransformCom->Set_Pos(10.f, 3.2f, 10.f);
 	m_pTransformCom->m_vScale = { 5.f, 5.f, 5.f };
 
-	m_iHp = 5;
+	m_iHp = 20;
 
 	m_fCallLimit = 5.f;
 	m_fSpeed = 10.f;
@@ -53,6 +53,25 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
+
+	if (m_bHit)
+	{
+		m_iHp -= 1;
+
+		Hit_PushBack(m_fSlowDelta);
+
+		m_bHit = false;
+		m_bHitColor = true;
+
+		if (0 >= m_iHp)
+		{
+			m_bDead = true;
+			// 피 튀기는 파티클
+		}
+	}
+
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
 
 	// Bullet Update
 	if (!m_BulletList.empty())

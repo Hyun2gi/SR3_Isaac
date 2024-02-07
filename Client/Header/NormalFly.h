@@ -36,6 +36,7 @@ private:
 private:
 	Engine::CTransform* m_pTargetTransCom;
 
+	_bool				m_bDeadWait;
 	_int				m_iIndex;
 	_int				m_iPicNum;
 	_float				m_fFrameSpeed = 1.f;

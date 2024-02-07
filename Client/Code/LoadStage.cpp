@@ -9,14 +9,14 @@
 
 #include "StageLoadMgr.h"
 
-//È¯°æ
+//í™˜ê²½
 #include "Terrain.h"
 #include "DynamicCamera.h"
 #include "Floor.h"
 #include "Wall.h"
 #include "SkyBox.h"
 
-//¸ó½ºÅÍ
+//ëª¬ìŠ¤í„°
 #include "Fly.h"
 #include "AttackFly.h"
 #include "Dip.h"
@@ -25,12 +25,12 @@
 #include "Leaper.h"
 #include "Charger.h"
 
-//º¸½º
+//ë³´ìŠ¤
 #include "Monstro.h"
 #include "Mom.h"
 #include "MomParts.h"
 
-//¿ÀºêÁ§Æ®
+//ì˜¤ë¸Œì íŠ¸
 #include "Poop.h"
 #include "CampFire.h"
 #include "Spike.h"
@@ -39,7 +39,7 @@
 #include "ShellGame.h"
 #include "Door.h"
 
-//¾ÆÀÌÅÛ
+//ì•„ì´í…œ
 #include "Coin.h"
 #include "Pill.h"
 #include "BrimStone.h"
@@ -138,7 +138,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		return 0;
 	}
 
-	//Å¸ÀÓ µ¨Å¸ ½ºÄÉÀÏ Á¶Àı ¿¹½Ã _ »ç¿ë
+	//íƒ€ì„ ë¸íƒ€ ìŠ¤ì¼€ì¼ ì¡°ì ˆ ì˜ˆì‹œ _ ì‚¬ìš©
 	if (Engine::Key_Down(DIK_P))
 	{
 		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f);
@@ -243,7 +243,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				break;
 			}
 
-			//TODO: ¼¥ Ãß°¡ÇØ¾ßÇÔ
+			//TODO: ìƒµ ì¶”ê°€í•´ì•¼í•¨
 			}
 			break;
 		}
@@ -468,6 +468,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x + DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pLeftWall->Get_Transform()->m_vAngle;
 			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(iter);
+			dynamic_cast<CDoor*>(pGameObject)->Set_DoorPos(0);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_RIGHT:
@@ -482,6 +483,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x - DOOR_X_INTERVAL, DOOR_Y_INTERVAL, vTempPos.z);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pRightWall->Get_Transform()->m_vAngle;
 			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(iter);
+			dynamic_cast<CDoor*>(pGameObject)->Set_DoorPos(1);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_TOP:
@@ -496,6 +498,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x, DOOR_Y_INTERVAL, vTempPos.z - DOOR_X_INTERVAL);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pTopWall->Get_Transform()->m_vAngle;
 			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(iter);
+			dynamic_cast<CDoor*>(pGameObject)->Set_DoorPos(2);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		case WALL_BOTTOM:
@@ -510,6 +513,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->Set_Pos(vTempPos.x, DOOR_Y_INTERVAL, vTempPos.z + DOOR_X_INTERVAL);
 			dynamic_cast<CDoor*>(pGameObject)->Get_TransformCom()->m_vAngle = m_pBottomWall->Get_Transform()->m_vAngle;
 			dynamic_cast<CDoor*>(pGameObject)->Set_Stage_Num_Key(iter);
+			dynamic_cast<CDoor*>(pGameObject)->Set_DoorPos(3);
 			FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Door", pGameObject), E_FAIL);
 			break;
 		}
@@ -580,7 +584,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 
 	wstrTheme.assign(strType.begin(), strType.end());
 
-	//¹Ù´Ú Ãß°¡
+	//ë°”ë‹¥ ì¶”ê°€
 	wstrTag = wstrProto + wstrTheme + L"FloorCubeTexture";
 	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev, m_bStartScene);
 	m_pFloor->Set_Cube_Texture_Tag(wstrTag.c_str());
@@ -588,19 +592,19 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Floor", pGameObject), E_FAIL);
 
 
-	//º® Ãß°¡
-	// ¿©±â´Â º®ÀÇ Å¥ºê ÅØ½ºÃ³ÀÇ ÅÂ±×¸¦ ¸¸µé¾î¼­ ³Ñ°ÜÁÖ´Â ºÎºĞ
+	//ë²½ ì¶”ê°€
+	// ì—¬ê¸°ëŠ” ë²½ì˜ íë¸Œ í…ìŠ¤ì²˜ì˜ íƒœê·¸ë¥¼ ë§Œë“¤ì–´ì„œ ë„˜ê²¨ì£¼ëŠ” ë¶€ë¶„
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
 	pGameObject = m_pLeftWall = CWall::Create(m_pGraphicDev, m_bStartScene);
 	m_pLeftWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_LEFT);
 
-	// ¿©±â´Â º®¸é ÅØ½ºÃ³ÀÇ ÅÂ±×¸¦ ¸¸µé¾î¼­ ³Ñ°ÜÁÖ´Â ºÎºĞ
+	// ì—¬ê¸°ëŠ” ë²½ë©´ í…ìŠ¤ì²˜ì˜ íƒœê·¸ë¥¼ ë§Œë“¤ì–´ì„œ ë„˜ê²¨ì£¼ëŠ” ë¶€ë¶„
 	wstrTag = wstrProto + wstrTheme + L"Wall";
 	m_pLeftWall->Set_Texture_Tag(wstrTag.c_str(), WALL_LEFT);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
-	//¹İº¹
+	//ë°˜ë³µ
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
 	pGameObject = m_pRightWall = CWall::Create(m_pGraphicDev, m_bStartScene);
 	m_pRightWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_RIGHT);
@@ -670,17 +674,47 @@ HRESULT CLoadStage::Door_Collision()
 {
 	if (m_mapLayer.at(L"GameDoor"))
 	{
-		if (dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Get_Open()) // ¹®ÀÌ ¿­·ÈÀ» °æ¿ì¿¡¸¸
+		if (dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Get_Open()) // ë¬¸ì´ ì—´ë ¸ì„ ê²½ìš°ì—ë§Œ
 		{
 			CGameObject* pObj = m_mapLayer.at(L"GameDoor")->Collision_GameObject(CPlayer::GetInstance());
 
-			if (pObj) // Ãæµ¹µÈ ¹® Á¸Àç
+			if (pObj) // ì¶©ëŒëœ ë¬¸ ì¡´ì¬
 			{
 				//_vec3 playerpos;
 				//dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &playerpos);
 				//CPlayer::GetInstance()->Set_StartPosition(playerpos);
 
-				// ½ºÅ×ÀÌÁö º¯°æ
+				_vec3 startpos, fullpos;
+				int doornum = dynamic_cast<CDoor*>(pObj)->Get_DoorPos();
+				/*dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &startpos);*/
+				
+				
+				if (doornum == 0)
+				{
+					//left
+					startpos = _vec3(38.5, 0, 20);
+				}
+				else if (doornum == 1)
+				{
+					//right
+					startpos = _vec3(3.5, 0, 20);
+				}
+				else if (doornum == 2)
+				{
+					//top
+					startpos = _vec3(20, 0, 3.5);
+				}
+				else if (doornum == 3)
+				{
+					//bottom
+					startpos = _vec3(20, 0, 38.5);
+				}
+				
+
+				CPlayer::GetInstance()->Set_KeyBlock(true);
+				CPlayer::GetInstance()->Set_StartPos(startpos);
+
+				// ìŠ¤í…Œì´ì§€ ë³€ê²½
 				Engine::CScene* pScene = nullptr;
 
 				pScene = CLoadStage::Create(m_pGraphicDev, dynamic_cast<CDoor*>(pObj)->Get_Stage_Num_Key());
