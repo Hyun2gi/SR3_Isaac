@@ -29,6 +29,7 @@ private:
 private:
 	_bool				m_bSliding;
 	_bool				m_bBounceWall;
+	_bool				m_bEpicTime;
 	_int				m_iRandNum;
 	_int				m_iPicNum;
 	_float				m_fFrameSpeed = 1.f;

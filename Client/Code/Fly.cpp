@@ -32,6 +32,7 @@ HRESULT CFly::Ready_GameObject()
 	m_fSpeed = 2.f;
 
 	m_ePreState = FLY_END;
+	m_bEpicTime = false;
 	
 	m_eMstType = FLY;
 
@@ -41,6 +42,11 @@ HRESULT CFly::Ready_GameObject()
 _int CFly::Update_GameObject(const _float& fTimeDelta)
 {
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	if (m_bEpicTime)
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.2f);
+	else
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
 
 	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
@@ -69,6 +75,18 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bHitColor)
 		Change_Color(fTimeDelta);
+
+	// Epic
+	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
+		m_bEpicTime = true;
+
+	if (m_bEpicTime)
+		Epic_Time();
+	else
+	{
+		m_vOriginScale = m_pTransformCom->m_vAngle;
+		Face_Camera();
+	}
 
 	if (!m_bDead)
 	{
@@ -199,6 +217,17 @@ void CFly::Move(const _float& fTimeDelta)
 	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);*/
 
 	m_eCurState = FLY_IDLE;
+}
+
+void CFly::Epic_Time()
+{
+	m_pTransformCom->m_vAngle = { 0.f, 0.f, 90.f };
+
+	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
+	{
+		m_pTransformCom->m_vAngle = m_vOriginAngle;
+		m_bEpicTime = false;
+	}
 }
 
 void CFly::Face_Camera()

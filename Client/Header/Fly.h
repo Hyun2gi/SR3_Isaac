@@ -25,11 +25,15 @@ private:
 
 	void				Change_Dir(const _float& fTimeDelta);
 	void				Move(const _float& fTimeDelta);
+	void				Epic_Time();
 
 private:
+	_bool					m_bEpicTime;
 	_int					m_iRandNum;
 	_int					m_iPicNum;
 	_float					m_fFrameSpeed = 1.f;
+
+	_vec3				m_vOriginAngle;
 
 	FLYSTATE			m_ePreState;
 	FLYSTATE			m_eCurState;

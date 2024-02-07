@@ -743,7 +743,6 @@ void CLoadStage::Moster_Collision()
 				dynamic_cast<CDople*>(pDople)->Hit();
 		}
 	}
-
 }
 
 void CLoadStage::MapObj_Collision()
