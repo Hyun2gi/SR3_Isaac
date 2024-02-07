@@ -29,9 +29,6 @@ HRESULT CFloor::Ready_GameObject()
 
 Engine::_int CFloor::Update_GameObject(const _float& fTimeDelta)
 {
-
-	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
-
 	for (auto& iter : m_vecCubes)
 		iter->Update_GameObject(fTimeDelta);
 
@@ -42,6 +39,8 @@ Engine::_int CFloor::Update_GameObject(const _float& fTimeDelta)
 
 void CFloor::LateUpdate_GameObject()
 {
+	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+
 	for (auto& iter : m_vecCubes)
 		iter->LateUpdate_GameObject();
 
