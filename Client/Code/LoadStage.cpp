@@ -84,6 +84,24 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 {	
 	//pParticleScatter->Update_Particle(fTimeDelta);
+
+	if (m_bIsCreated)
+	{
+		// 자식 클래스 Layer에 Insert
+		Insert_Child();
+
+		// 충돌처리 함수
+		Item_Collision();
+		Door_Collision();
+		Moster_Collision();
+		MapObj_Collision();
+
+		// 아이템 드랍
+		Drop_ITem();
+	}
+
+
+
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
@@ -93,6 +111,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		m_bIsCreated = true;
 		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
+		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
 	}
 
@@ -158,11 +177,14 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 void CLoadStage::LateUpdate_Scene()
 {
 	CPlayer::GetInstance()->LateUpdate_GameObject();
-	//Check_All_Dead();
 	__super::LateUpdate_Scene();
 
 	if (m_bIsCreated)
+	{
+		Copy_Stage();
+		Check_All_Dead();
 		Door_Collision();
+	}
 }
 
 void CLoadStage::Render_Scene()
@@ -346,6 +368,12 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 			}
 			case DOPLE:
 			{
+				pGameObject = CDople::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dople", pGameObject), E_FAIL);
+
+				m_vecMonsterCount[DOPLE]++;
 
 				break;
 			}
@@ -656,7 +684,6 @@ void CLoadStage::Copy_Stage()
 {
 	auto& map = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_mapLoadObj;
 
-
 	int iStageMonsterCount = 0;
 	for (auto& iter : m_vecMonsterCount) iStageMonsterCount += iter;
 
@@ -673,6 +700,19 @@ void CLoadStage::Copy_Stage()
 	
 }
 
+bool CLoadStage::Check_Monster_Dead()
+{
+	multimap<const _tchar*, CGameObject*> map = m_mapLayer.at(L"GameMst")->Get_ObjectMap();
+
+	for (auto& iter : map)
+	{
+		if (!dynamic_cast<CMonster*>(iter.second)->Get_Dead())
+			return false;
+	}
+	
+	return true;
+}
+
 void CLoadStage::Check_All_Dead()
 {
 	int iCount = 0;
@@ -680,7 +720,7 @@ void CLoadStage::Check_All_Dead()
 	for (auto& iter : m_vecMonsterCount)
 		iCount += iter;
 
-	if(0 >= iCount)
+	if(Check_Monster_Dead())
 		dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Set_Open();
 }
 

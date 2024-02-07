@@ -43,5 +43,6 @@ private:
 
 private:
 	map<int, StageInfo> m_mapStageInfo;
+	bool		isFirstLoad = false;
 };
 
