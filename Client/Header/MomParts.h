@@ -17,7 +17,7 @@ private:
 public:
 	BOSS_TYPE		Get_BossType() { return m_eBossType; }
 	void			Set_Mom(CMom* pMom) { m_pMom = pMom; }
-	void			Set_TargetTransform(Engine::CTransform* pTransformCom) { m_pTargetTransCom = pTransformCom; }
+	_bool			Get_DoorState();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;

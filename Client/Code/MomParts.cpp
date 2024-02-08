@@ -21,6 +21,14 @@ CMomParts::~CMomParts()
 {
 }
 
+_bool CMomParts::Get_DoorState()
+{
+	if (m_eCurState == MOM_EYE || m_eCurState == MOM_HAND || m_eCurState == MOM_SKIN)
+		return false;
+	else
+		return true;
+}
+
 HRESULT CMomParts::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
