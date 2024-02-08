@@ -49,7 +49,7 @@ Engine::_int CStageTool::Update_Scene(const _float& fTimeDelta)
 
 	dynamic_cast<CTransform*>(Get_Component(ID_DYNAMIC, L"GameLogic", L"MouseObjectImg", L"Proto_Transform"))->Set_Pos(vecTemp);
 
-	if (Engine::Key_Down(DIK_BACK))
+	if (Engine::Key_Down(DIK_Z))
 	{
 		Engine::CScene* pScene = nullptr;
 
