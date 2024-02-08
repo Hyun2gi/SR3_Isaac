@@ -90,7 +90,7 @@ void CEpicBulletMark::Motion_Change()
         switch (m_eCurState)
         {
         case EPIC_MARK_TARGET:
-            m_pTransformCom->m_vScale = { 1.f, 1.7f, 1.f };
+            m_pTransformCom->m_vScale = { 1.f, 1.8f, 1.f };
             m_iPicNum = 1;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicTarget"));
@@ -119,6 +119,7 @@ CEpicBulletMark* CEpicBulletMark::Create(LPDIRECT3DDEVICE9 pGraphicDev, const _t
         return nullptr;
     }
 
+    pos = _vec3(pos.x, 0.1, pos.z);
     pInstance->Set_Pos(pos);
 
     return pInstance;
@@ -149,7 +150,7 @@ HRESULT CEpicBulletMark::Add_Component()
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
-    m_pTransformCom->m_vAngle = _vec3(95, 0, 0);
+    m_pTransformCom->m_vAngle = { D3DXToRadian(95),0,0 };
 
     return S_OK;
 }

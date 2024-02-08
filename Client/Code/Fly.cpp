@@ -222,7 +222,7 @@ void CFly::Move(const _float& fTimeDelta)
 
 void CFly::Epic_Time()
 {
-	m_pTransformCom->m_vAngle = { 0.f, 0.f, 90.f };
+	m_pTransformCom->m_vAngle = { 0.f, 0.f, D3DXToRadian(95)};
 
 	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
 	{
