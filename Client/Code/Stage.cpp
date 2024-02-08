@@ -304,11 +304,11 @@ HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
 	//}
 
-	// Attack Fly
-	pGameObject = CAttackFly::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
+	//// Attack Fly
+	//pGameObject = CAttackFly::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
 
 	//// Dip
 	//for (int i = 0; i < 15; ++i)
@@ -481,11 +481,11 @@ HRESULT CStage::Ready_Layer_MapObj(const _tchar* pLayerTag)
 	//pGameObject->Set_MyLayer(pLayerTag);
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Shop", pGameObject), E_FAIL);
 
-	//// Shell Game
-	//pGameObject = CShellGame::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
+	// Shell Game
+	pGameObject = CShellGame::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
@@ -725,6 +725,8 @@ void CStage::MapObj_Collision()
 					}
 					else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Shell <-> Player 충돌
 					{
+						dynamic_cast<CShell*>(pShellObj)->Set_StartUp(); // 선택한 Shell 위로 오픈
+
 						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward())
 						{
 							Engine::CGameObject* pGameObject = nullptr;
