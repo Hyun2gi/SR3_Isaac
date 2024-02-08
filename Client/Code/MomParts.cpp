@@ -5,13 +5,15 @@
 #include "Export_Utility.h"
 
 CMomParts::CMomParts(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex)
-	: CMonster(pGraphicDev)
+	: CMonster(pGraphicDev),
+	m_pMom(nullptr)
 {
 	m_iIndex = iIndex;
 }
 
 CMomParts::CMomParts(const CMomParts& rhs)
-	: CMonster(rhs)
+	: CMonster(rhs),
+	m_pMom(rhs.m_pMom)
 {
 }
 
@@ -56,8 +58,14 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bHit) // 피격 시 Mom 의 HP 를 깎아야 함
 	{
-
+		m_pMom->Hit();
+		m_bHit = false;
+		m_bHitColor = true;
+		// 추후 혈사포와의 충돌 처리 필요할 듯함
 	}
+
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
 
 	Set_RandNum();
 

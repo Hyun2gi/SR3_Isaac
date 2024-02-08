@@ -53,7 +53,7 @@ protected:
 protected:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	Engine::CTransform* m_pTargetTransCom;	// 플레이어 COM 객체
+	Engine::CTransform* m_pTargetTransCom;	// 플레이어 COM 객체 (Mom's Parts 의 경우 Mom)
 	Engine::CTexture* m_pTextureCom;
 	Engine::CCalculator* m_pCalculCom;
 

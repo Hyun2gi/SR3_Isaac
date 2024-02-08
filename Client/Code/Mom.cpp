@@ -70,6 +70,9 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
+
 	Face_Camera();
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
