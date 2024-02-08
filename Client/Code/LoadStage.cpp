@@ -12,6 +12,7 @@
 //환경
 #include "Terrain.h"
 #include "DynamicCamera.h"
+#include "DynamicCamera2.h"
 #include "Floor.h"
 #include "Wall.h"
 #include "SkyBox.h"
@@ -66,6 +67,8 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	m_bIsCreated = false;
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
+	Engine::Create_Scatter(m_pGraphicDev);
+	
 	FAILED_CHECK_RETURN(CStageLoadMgr::GetInstance()->Ready_StageLoadMgr(), E_FAIL);
 	
 	//FAILED_CHECK_RETURN(Load_Level_Data(), E_FAIL);
@@ -83,7 +86,7 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 
 Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 {	
-	//pParticleScatter->Update_Particle(fTimeDelta);
+	Engine::Update_Particles(fTimeDelta);
 
 	if (m_bIsCreated)
 	{
@@ -190,7 +193,6 @@ void CLoadStage::LateUpdate_Scene()
 void CLoadStage::Render_Scene()
 {
 	// DEBUG
-	//pParticleScatter->Render_GameObject();
 }
 
 
@@ -558,7 +560,7 @@ HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	
 	Engine::CGameObject*		pGameObject = nullptr;
 
-	pGameObject = CDynamicCamera::Create(m_pGraphicDev, 
+	pGameObject = CDynamicCamera::Create(m_pGraphicDev,
 		&_vec3(0.f, 10.f, -5.f),
 		&_vec3(0.f, 0.f, 1.f), 
 		&_vec3(0.f, 1.f, 0.f),
