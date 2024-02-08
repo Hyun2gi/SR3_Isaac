@@ -132,6 +132,9 @@ public:
 
 	void		Set_StartPos(_vec3 start) { m_vStartPos = start; m_bStartScene = true; }
 
+
+	_vec3		Get_BulletDir();
+
 public:
 	void		Bullet_Change_To_Brim();
 
@@ -208,6 +211,9 @@ private:
 
 	// 시작지점
 	_vec3				m_vStartPos;
+
+	// 총알이 나아가는 방향 조절
+	_vec3				m_vBulletDir;
 
 private:
 	list<CGameObject*>	m_PlayerBulletList;
