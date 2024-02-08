@@ -69,6 +69,8 @@ public:
 	void				Set_ChaseInit(bool _init) { m_bChaseInit = _init; }
 	void				Set_FirstPerson(bool first) { m_bFirstPerson = first; m_bCollisionWall = true; m_bChaseInit = false; }
 
+	_vec3				Get_EyePos() { return m_vEye; }
+
 private:
 	virtual void Free();
 	void		Key_Input(const _float& fTimeDelta);
