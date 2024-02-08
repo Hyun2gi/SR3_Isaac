@@ -205,6 +205,9 @@
     <Filter Include="01. Scene\04. StageLoadMgr">
       <UniqueIdentifier>{70df5998-cf5f-49ec-a1c6-cd27e9a50fed}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\11. CameraTest">
+      <UniqueIdentifier>{0acf6d86-6b03-476d-bd9e-683c7b033359}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -402,6 +405,9 @@
     <ClInclude Include="..\Header\StageLoadMgr.h">
       <Filter>01. Scene\04. StageLoadMgr</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\DynamicCamera2.h">
+      <Filter>02. GameObject\11. CameraTest</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -589,6 +595,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\StageLoadMgr.cpp">
       <Filter>01. Scene\04. StageLoadMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\DynamicCamera2.cpp">
+      <Filter>02. GameObject\11. CameraTest</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
