@@ -34,7 +34,7 @@ void CShellGame::Set_ShellObj_ToStage(CLayer* pLayer)
 HRESULT CShellGame::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(20.f, 1.f, 30.f);
+	m_pTransformCom->Set_Pos(20.f, 1.f, 20.f);
 
 	m_fSpeed = 0.1f;
 
