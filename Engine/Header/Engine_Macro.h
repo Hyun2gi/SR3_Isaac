@@ -3,8 +3,8 @@
 
 namespace Engine
 {
-#define	VTXCNTX		31
-#define VTXCNTZ		31
+#define	VTXCNTX		41
+#define VTXCNTZ		41
 #define VTXITV		1
 
 #ifndef			MSG_BOX
