@@ -40,7 +40,7 @@ HRESULT CMom::Ready_GameObject()
 	m_eState = MOM_IDLE;
 
 	m_bBoss = true;
-	m_eBossType = MONSTRO;
+	m_eBossType = MOM;
 
 	return S_OK;
 }

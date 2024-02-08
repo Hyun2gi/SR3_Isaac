@@ -451,41 +451,41 @@ HRESULT CStage::Ready_Layer_MapObj(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
-	// Poop
-	pGameObject = CPoop::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
+	//// Poop
+	//pGameObject = CPoop::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
 
-	// CampFire
-	pGameObject = CCampFire::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
+	//// CampFire
+	//pGameObject = CCampFire::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
 
-	// Spike
-	pGameObject = CSpike::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
+	//// Spike
+	//pGameObject = CSpike::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
 
-	// SlotMC
-	pGameObject = CSlotMC::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
+	//// SlotMC
+	//pGameObject = CSlotMC::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
 
-	// Shop
-	pGameObject = CShop::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Shop", pGameObject), E_FAIL);
+	//// Shop
+	//pGameObject = CShop::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Shop", pGameObject), E_FAIL);
 
-	// Shell Game
-	pGameObject = CShellGame::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
+	//// Shell Game
+	//pGameObject = CShellGame::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
@@ -593,12 +593,32 @@ void CStage::Moster_Collision()
 					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
 				}
 
-				// Dople 이 아닐 때만
-				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType() &&
-					!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState())
+				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType() && // Dople이 아닌 경우
+					dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState()) // Bullet이 Dead가 아닌 경우
 				{
-					dynamic_cast<CMonster*>(pMonster)->Hit();
-					break;
+					if (dynamic_cast<CMonster*>(pMonster)->Get_IsBoss()) // 보스인 경우
+					{
+						if (MOM_PARTS == dynamic_cast<CMomParts*>(pMonster)->Get_BossType())// Mom Parts인 경우 // Mom 인 경우 여기서 터짐
+						{
+							if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState()) // 문이 열린 경우
+							{
+								dynamic_cast<CMomParts*>(pMonster)->Hit();
+								break;
+							}
+							else // 문이 열리지 않은 경우 // 요게 안 되나?
+								++iter;
+						}
+						else // Monstro or Mom인 경우
+						{
+							dynamic_cast<CMonster*>(pMonster)->Hit();
+							break;
+						}
+					}
+					else // 일반 몬스터의 경우 전부 피격 처리 O
+					{
+						dynamic_cast<CMonster*>(pMonster)->Hit();
+						break;
+					}
 				}
 				else
 					++iter;

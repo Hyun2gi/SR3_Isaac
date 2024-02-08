@@ -42,7 +42,7 @@ HRESULT CMomParts::Ready_GameObject()
 	m_ePreState = MOM_END;
 
 	m_bBoss = true;
-	m_eBossType = MONSTRO;
+	m_eBossType = MOM_PARTS; // 
 
 	return S_OK;
 }

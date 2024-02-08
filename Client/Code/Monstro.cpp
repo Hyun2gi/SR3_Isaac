@@ -440,14 +440,16 @@ void CMonstro::Check_TargetPos()
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
 }
 
-void CMonstro::Check_CoolTime(const _float& fTimeDelta)
+_bool CMonstro::Check_CoolTime(const _float& fTimeDelta)
 {
 	m_fHitCoolTime += fTimeDelta;
 
 	if (m_fHitCoolTime >= 1.f)
 	{
-		m_fHitCoolTime = 0.f
+		m_fHitCoolTime = 0.f;
+		return true;
 	}
+	return false;
 }
 
 CMonster* CMonstro::Create(LPDIRECT3DDEVICE9 pGraphicDev)
