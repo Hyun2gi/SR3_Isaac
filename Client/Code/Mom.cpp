@@ -40,7 +40,7 @@ HRESULT CMom::Ready_GameObject()
 	m_eState = MOM_IDLE;
 
 	m_bBoss = true;
-	m_eBossType = MONSTRO;
+	m_eBossType = MOM;
 
 	return S_OK;
 }
@@ -53,6 +53,25 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
+
+	//if()
+
+	if (m_bHit)
+	{
+		m_iHp -= 1;
+
+		m_bHit = false;
+		m_bHitColor = true;
+
+		if (0 >= m_iHp)
+		{
+			// 아이작을 부르는 소리를 지르며 아예 사라짐
+			m_bDead = true;
+		}
+	}
+
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
 
 	Face_Camera();
 

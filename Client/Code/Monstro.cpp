@@ -7,12 +7,14 @@
 #include "MstBullet.h"
 
 CMonstro::CMonstro(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CMonster(pGraphicDev)
+	: CMonster(pGraphicDev),
+	m_fHitCoolTime(0.f)
 {
 }
 
 CMonstro::CMonstro(const CMonstro& rhs)
-	: CMonster(rhs)
+	: CMonster(rhs),
+	m_fHitCoolTime(rhs.m_fHitCoolTime)
 {
 }
 
@@ -436,6 +438,18 @@ void CMonstro::Check_TargetPos()
 	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
+}
+
+_bool CMonstro::Check_CoolTime(const _float& fTimeDelta)
+{
+	m_fHitCoolTime += fTimeDelta;
+
+	if (m_fHitCoolTime >= 1.f)
+	{
+		m_fHitCoolTime = 0.f;
+		return true;
+	}
+	return false;
 }
 
 CMonster* CMonstro::Create(LPDIRECT3DDEVICE9 pGraphicDev)

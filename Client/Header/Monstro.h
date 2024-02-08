@@ -13,9 +13,6 @@ private:
 	enum MONSTROSTATE{MONSTRO_IDLE, MONSTRO_ATTACK, MONSTRO_WAIT, MONSTRO_MOVE, MONSTRO_UP, MONSTRO_DOWN, MONSTRO_DEAD, MONSTRO_END};
 
 public:
-	BOSS_TYPE		Get_BossType() { return m_eBossType; }
-
-public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
 	virtual void	LateUpdate_GameObject()					 override;
@@ -24,13 +21,14 @@ public:
 private:
 	virtual HRESULT	Add_Component()							override;
 	virtual void	Motion_Change()							override;
-	virtual void	Face_Camera()						override;
+	virtual void	Face_Camera()							override;
 
 	void			MoveTo_Player(const _float& fTimeDelta);
 	void			JumpTo_Player(const _float& fTimeDelta);
 	void			AttackTo_Player();
 
 	void			Check_TargetPos();
+	_bool			Check_CoolTime(const _float& fTimeDelta);
 
 private:
 	_bool			m_bDeadWait;
@@ -40,6 +38,7 @@ private:
 	_float			m_fFrameSpeed = 1.f;
 	_float			m_fPower;
 	_float			m_fAccelTime;
+	_float			m_fHitCoolTime; // ÇÇ°Ý ÄðÅ¸ÀÓ(Ç÷»çÆ÷ ´ëÃ¥)
 
 	_vec3			m_vTargetPos;
 
@@ -47,8 +46,6 @@ private:
 	MONSTROSTATE	m_eCurState;
 
 	list<CGameObject*> m_BulletList;
-
-	BOSS_TYPE		m_eBossType;
 
 public:
 	static CMonster*	Create(LPDIRECT3DDEVICE9 pGraphicDev);

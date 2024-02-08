@@ -432,11 +432,11 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 					pGameObject->Set_MyLayer(pLayerTag);
 					dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
+					dynamic_cast<CMomParts*>(pGameObject)->Set_Mom(dynamic_cast<CMom*>(pLayer->Get_GameObject(L"Mom")));
 					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
 				}
 				break;
 			}
-	
 			}
 			break;
 		}
@@ -765,17 +765,40 @@ void CLoadStage::Moster_Collision()
 			if (pMonster)
 			{
 				// 일반 총알일때 이펙트 보여주려고 해당부분 처리
-				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
+				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0 &&
+					ATTACK_FLY != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
 				{
 					// 일반 총알 충돌처리
 					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
 				}
 
-				// Dople 이 아닐 때만
-				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
+				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType() &&	// Dople이 아닌 경우
+					dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() &&		// Bullet이 Dead가 아닌 경우
+					!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Monster가 Dead가 아닌 경우
 				{
-					dynamic_cast<CMonster*>(pMonster)->Hit();
-					break;
+					if (dynamic_cast<CMonster*>(pMonster)->Get_IsBoss()) // 보스인 경우
+					{
+						if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType())// Mom Parts인 경우 // Mom 인 경우 여기서 터짐
+						{
+							if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState()) // 문이 열린 경우
+							{
+								dynamic_cast<CMomParts*>(pMonster)->Hit();
+								break;
+							}
+							else // 문이 열리지 않은 경우
+								++iter;
+						}
+						else // Monstro or Mom인 경우
+						{
+							dynamic_cast<CMonster*>(pMonster)->Hit();
+							break;
+						}
+					}
+					else // 일반 몬스터의 경우 전부 피격 처리 O
+					{
+						dynamic_cast<CMonster*>(pMonster)->Hit();
+						break;
+					}
 				}
 				else
 					++iter;
@@ -880,6 +903,8 @@ void CLoadStage::MapObj_Collision()
 					}
 					else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Shell <-> Player 충돌
 					{
+						dynamic_cast<CShell*>(pShellObj)->Set_StartUp(); // 선택한 Shell 위로 오픈
+
 						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward())
 						{
 							Engine::CGameObject* pGameObject = nullptr;
@@ -914,7 +939,6 @@ void CLoadStage::MapObj_Collision()
 			}
 		}
 	}
-
 }
 
 void CLoadStage::Drop_ITem()

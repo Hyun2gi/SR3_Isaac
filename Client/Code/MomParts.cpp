@@ -5,18 +5,28 @@
 #include "Export_Utility.h"
 
 CMomParts::CMomParts(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex)
-	: CMonster(pGraphicDev)
+	: CMonster(pGraphicDev),
+	m_pMom(nullptr)
 {
 	m_iIndex = iIndex;
 }
 
 CMomParts::CMomParts(const CMomParts& rhs)
-	: CMonster(rhs)
+	: CMonster(rhs),
+	m_pMom(rhs.m_pMom)
 {
 }
 
 CMomParts::~CMomParts()
 {
+}
+
+_bool CMomParts::Get_DoorState()
+{
+	if (m_eCurState == MOM_EYE || m_eCurState == MOM_HAND || m_eCurState == MOM_SKIN)
+		return false;
+	else
+		return true;
 }
 
 HRESULT CMomParts::Ready_GameObject()
@@ -32,7 +42,7 @@ HRESULT CMomParts::Ready_GameObject()
 	m_ePreState = MOM_END;
 
 	m_bBoss = true;
-	m_eBossType = MONSTRO;
+	m_eBossType = MOM_PARTS; // 
 
 	return S_OK;
 }
@@ -53,6 +63,17 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 		else
 			m_fFrame = 0.f;
 	}
+
+	if (m_bHit) // 피격 시 Mom 의 HP 를 깎아야 함
+	{
+		m_pMom->Set_Hp_Minus();
+		m_bHit = false;
+		m_bHitColor = true;
+		// 추후 혈사포와의 충돌 처리 필요할 듯함
+	}
+
+	if (m_bHitColor)
+		Change_Color(fTimeDelta);
 
 	Set_RandNum();
 
