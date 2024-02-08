@@ -16,8 +16,8 @@ END
 class CLoadStage : public Engine::CScene
 {
 private:
-	const float DOOR_X_INTERVAL = 1.f;
-	const float DOOR_Y_INTERVAL = 2.f;
+	const float DOOR_X_INTERVAL = 0.6f;
+	const float DOOR_Y_INTERVAL = 2.4f;
 
 	struct LoadObj
 	{
