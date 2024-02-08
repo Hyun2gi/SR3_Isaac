@@ -134,7 +134,16 @@ void CStageToolGui::Update_ImGuiTools()
     if (ImGui::Button("Load"))
     {
         m_pTargetScene->Clear_Placement_Object();
+        m_PlacementObjList.clear();
         Load_Stage_Design();
+    }
+
+    ImGui::SameLine();
+
+    if (ImGui::Button("Clear"))
+    {
+        m_pTargetScene->Clear_Placement_Object();
+        m_PlacementObjList.clear();
     }
 
     ImGui::End();
