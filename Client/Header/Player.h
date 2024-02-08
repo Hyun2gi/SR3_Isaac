@@ -143,6 +143,7 @@ private:
 	void			Height_OnTerrain();
 	_vec3			Picking_OnTerrain();
 	void			Motion_Change();
+	void			Bullet_Change(); //state 변경확인해서 상태변경
 	bool			Check_Time(const _float& fTimeDelta);
 	void			Specific_Motion(const _float& fTimeDelta);
 
@@ -171,6 +172,7 @@ private:
 	PLAYERID			m_eCurState;
 
 	// Bullet 상태 저장
+	BULLETID			m_ePreBulletState;
 	BULLETID			m_eCurBulletState;
 
 	//움직이는 속도
@@ -179,7 +181,7 @@ private:
 	//총알 속도(총알 설정위해서)
 	_float				m_fBulletSpeed;
 
-	// 총 딜레이 시간 설정
+	// 총 사격 딜레이 시간 설정
 	_float				m_fAttackSpeed;
 
 	// 총 쏘는 딜레이
