@@ -14,6 +14,7 @@ private:
 
 public:
 	BOSS_TYPE		Get_BossType() { return m_eBossType; }
+	void			Set_Hp_Minus() { m_iHp -= 1; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
