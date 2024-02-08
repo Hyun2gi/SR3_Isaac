@@ -35,7 +35,7 @@ Engine::_int CMapTool::Update_Scene(const _float& fTimeDelta)
 {	
 	m_pImGuiTools->Update_ImGuiTools();
 
-	if (GetAsyncKeyState(VK_BACK))
+	if (Engine::Key_Down(DIK_Z))
 	{
 		Engine::CScene* pScene = nullptr;
 
