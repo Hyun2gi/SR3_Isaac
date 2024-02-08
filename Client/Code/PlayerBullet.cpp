@@ -55,6 +55,7 @@ _int CPlayerBullet::Update_GameObject(const _float& fTimeDelta)
     {
         // 시간 다 되면 삭제
         m_bDead = true;
+        m_bDeadWait = true;
     }
 
     if (m_eCurState == IDLEBULLET_EFFECT)
@@ -66,7 +67,7 @@ _int CPlayerBullet::Update_GameObject(const _float& fTimeDelta)
         {
             m_fFrame = 0;
             // 없애기
-            m_bDead = true;
+            m_bDeadWait = true;
         }
     }
     else if (m_eCurState == IDLEBULLET_IDLE)
@@ -77,7 +78,7 @@ _int CPlayerBullet::Update_GameObject(const _float& fTimeDelta)
     }
     
     // 시간다돼서
-    if (m_bDead == true)
+    if (m_bDeadWait == true)
     {
         return 1;
     }

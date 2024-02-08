@@ -62,6 +62,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 
 		m_bShoot = false;
 
+		m_iColorTimer = 0;
 		m_iTempTimer = 0;
 		m_pCamera = nullptr;
 		m_vStartPos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
@@ -903,12 +904,28 @@ void CPlayer::Specific_Motion(const _float& fTimeDelta)
 	{
 		m_fDelayTime += fTimeDelta;
 
+		m_iColorTimer++;
+
+		if (m_iColorTimer % 3 == 2)
+		{
+
+		}
+		else
+		{
+
+		}
+		D3DXCOLOR temp = D3DXCOLOR(1.f, 0.0f, 0.0f, 1.f);
+		m_pBufferCom->Set_Color(temp);
+
 		if (m_fDelayTime > 0.2)
 		{
 			m_eCurState = P_IDLE;
 			m_fDelayTime = 0; // 딜레이 시간 초기화
 			m_fFrame = 0.f;
 			m_bKeyBlock = false; // key 입력 활성화
+
+			D3DXCOLOR temp = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+			m_pBufferCom->Set_Color(temp);
 		}
 	}
 
