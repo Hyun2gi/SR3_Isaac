@@ -357,7 +357,7 @@ void CDynamicCamera::Mouse_Move()
 		D3DXVec3Cross(&vCross, &m_vUp, &vLook);
 
 		// 회전 막기
-		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f) < 30)
+		if (m_fAngleY - (dwMouseMoveY / 10.f) > -20 && m_fAngleY - (dwMouseMoveY / 10.f) < 38)
 		{
 			m_fAngleY -= (dwMouseMoveY / 10.f);
 			D3DXQuaternionRotationAxis(&qRot, &vCross, -D3DXToRadian(dwMouseMoveY / 10.f));
@@ -861,7 +861,9 @@ void CDynamicCamera::Set_Shoot_End_Epic()
 		moveCamPos = playerPos + m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
 	}
 
-	OnMoveTargetCamera(1.f, 7.f, moveCamPos, false, 0);
+	//OnMoveTargetCamera(1.f, 7.f, moveCamPos, false, 0);
+	// 1인칭일때를 위해 원래 자리로 돌아가게끔
+	OnMoveTargetCamera(1.f, 7.f, m_vStartEyePosition, false, 0);
 }
 
 

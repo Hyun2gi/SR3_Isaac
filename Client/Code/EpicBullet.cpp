@@ -59,7 +59,7 @@ _int CEpicBullet::Update_GameObject(const _float& fTimeDelta)
 
         _vec3 targetpos = m_pCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);
         
-        m_pTransformCom->Set_Pos(_vec3(targetpos.x, targetpos.y+0.1, targetpos.z));
+        m_pTransformCom->Set_Pos(_vec3(targetpos.x, targetpos.y+1, targetpos.z));
         //m_pTransformCom->Rotation(ROT_X, 90);
     }
    
@@ -70,7 +70,7 @@ _int CEpicBullet::Update_GameObject(const _float& fTimeDelta)
         m_pTransformCom->Set_Pos(m_vShootPos);
 
         // ¶¥¿¡ ´êÀ¸¸é
-        if (m_vShootPos.y-(m_pTransformCom->m_vScale.y*0.5) <= 2)
+        if (m_vShootPos.y-(m_pTransformCom->m_vScale.y*0.5) <= 0 )
         {
             m_eCurState = EPIC_EFFECT;
             m_fFrame = 0;
@@ -150,21 +150,21 @@ void CEpicBullet::Motion_Change()
         switch (m_eCurState)
         {
         case EPIC_TARGET:
-            m_pTransformCom->m_vScale = { 1.f, 1.7f, 1.f };
-            m_pTransformCom->m_vAngle = { 90,0,0 };
+            m_pTransformCom->m_vScale = { 1.f, 1.8f, 1.f };
+            m_pTransformCom->m_vAngle = { D3DXToRadian(95),0,0 };
             m_iPicNum = 1;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicTarget"));
             break;
         case EPIC_BULLET:
-            m_pTransformCom->m_vScale = { 2.2f, 2.2f, 2.2f };
+            m_pTransformCom->m_vScale = { 2.5f, 2.5f, 2.5f };
             m_pTransformCom->m_vAngle = { 0,0,0 };
             m_iPicNum = 1;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicBullet"));
             break;
         case EPIC_EFFECT:
-            m_pTransformCom->m_vScale = { 2.2f, 2.2f, 2.2f };
+            m_pTransformCom->m_vScale = { 2.5f, 2.5f, 2.5f };
             m_iPicNum = 11;
             m_fSpriteSpeed = 1.5f;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BulletTexture_EpicEff"));

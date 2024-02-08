@@ -126,42 +126,6 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	//	//pGameObject
 	//}
 
-	if (Engine::Key_Down(DIK_1))
-	{
-		Engine::CScene* pScene = nullptr;
-
-		pScene = CLoadStage::Create(m_pGraphicDev, 1);
-		NULL_CHECK_RETURN(pScene, -1);
-
-		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
-
-		return 0;
-	}
-
-	if (Engine::Key_Down(DIK_2))
-	{
-		Engine::CScene* pScene = nullptr;
-
-		pScene = CLoadStage::Create(m_pGraphicDev, 2);
-		NULL_CHECK_RETURN(pScene, -1);
-
-		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
-
-		return 0;
-	}
-
-	if (Engine::Key_Down(DIK_3))
-	{
-		Engine::CScene* pScene = nullptr;
-
-		pScene = CLoadStage::Create(m_pGraphicDev, 3);
-		NULL_CHECK_RETURN(pScene, -1);
-
-		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
-
-		return 0;
-	}
-
 	//타임 델타 스케일 조절 예시 _ 사용
 	if (Engine::Key_Down(DIK_P))
 	{
