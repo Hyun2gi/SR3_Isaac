@@ -68,7 +68,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 	}
 	else
 	{
-		//dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_ChaseInit(true);
+		dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_ChaseInit(true);
 	}
 	
 
@@ -90,11 +90,14 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 		if (m_pCamera != nullptr)
 		{
-			dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_FirstPerson(true);
+			//dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_FirstPerson(true);
 		}
 
 		m_bKeyBlock = false;
 	}
+
+	
+
 
 	if(!m_bKeyBlock)
 	{
@@ -491,6 +494,22 @@ void CPlayer::Set_Attacked()
 	// 키막기
 	m_bKeyBlock = true;
 	m_fDelayTime = 0.f;
+}
+
+_vec3 CPlayer::Get_BulletDir()
+{
+	_vec3 camerapos, playerpos;
+	m_pTransformCom->Get_Info(INFO_POS, &playerpos);
+	camerapos = dynamic_cast<CDynamicCamera*>(m_pCamera)->Get_EyePos();
+
+	//총알 슛 높이 때문에 조절
+	playerpos += _vec3(0, 3, 0);
+
+	m_vBulletDir = playerpos - camerapos;
+
+	D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);
+
+	return m_vBulletDir;
 }
 
 void CPlayer::Bullet_Change_To_Brim()
