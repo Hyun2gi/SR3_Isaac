@@ -35,13 +35,10 @@ public:
 	{
 		m_fBulletSpeed = _speed;
 	}
-	void				Set_BulletDead()
-	{
-		m_bDead = true;
-	}
 	void				Set_BulletCollision()
 	{
 		m_bCollision = true;
+		m_bDead = true;
 	}
 	bool				Get_BulletState()
 	{
@@ -79,11 +76,13 @@ protected:
 private:
 	_vec3		m_vBulletDir;
 	bool		m_bDead = false;
+	bool		m_bDeadWait = false;
 	bool		m_bCollision = false;
 
 	float		m_fBulletSpeed;
 	_int		m_iPicNum;
 	float		m_fSpriteSpeed;
+
 
 	IDLEBULLETSTATE		m_eCurState;
 	IDLEBULLETSTATE		m_ePreState;
