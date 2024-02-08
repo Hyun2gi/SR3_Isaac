@@ -570,6 +570,10 @@ HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 		1000.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"DynamicCamera", pGameObject), E_FAIL);
+
+	// 플레이어에 카메라 설정
+	CPlayer::GetInstance()->Set_Camera(pGameObject);
+
 		
 	pGameObject = CSkyBox::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);

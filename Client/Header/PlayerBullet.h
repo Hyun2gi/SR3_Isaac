@@ -43,6 +43,17 @@ public:
 	{
 		m_bCollision = true;
 	}
+	bool				Get_BulletState()
+	{
+		if (m_eCurState == IDLEBULLET_IDLE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
 
 private:
 	virtual HRESULT			Add_Component();
