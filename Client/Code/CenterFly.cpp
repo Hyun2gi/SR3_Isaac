@@ -27,6 +27,7 @@ HRESULT CCenterFly::Ready_GameObject()
 	//m_pTransformCom->Set_Pos(0.f, 10.f, 30.f); // 추후 필요 X
 
 	m_fSpeed = 1.f;
+	m_bDead = true;
 
 	m_eMstType = ATTACK_FLY;
 
@@ -37,8 +38,8 @@ _int CCenterFly::Update_GameObject(const _float& fTimeDelta)
 {
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 	
-	if (m_bDead)
-		return 1;
+	/*if (m_bDead)
+		return 1;*/
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 

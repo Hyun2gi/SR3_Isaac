@@ -27,7 +27,7 @@ HRESULT CNormalFly::Ready_GameObject()
 	m_pTransformCom->Set_Pos(0.f, 5.f, 0.f);
 	m_pTransformCom->m_vScale = { 0.6f, 0.6f, 0.6f };
 
-	m_iHp = 5;
+	m_iHp = 3;
 
 	m_fSpeed = 1.f;
 
