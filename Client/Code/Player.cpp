@@ -29,7 +29,8 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 		m_pGraphicDev = pGraphicDev;
 
-		m_eCurBulletState = P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
+		m_ePreBulletState = P_BULLET_END;
+		m_eCurBulletState = P_BULLET_IDLE; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
 		m_ePreState = P_END;
 
 		// 딜레이 시간 초기화
@@ -100,16 +101,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	
 
 
-	if(!m_bKeyBlock)
-	{
-		m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
-	}
 	
-	// P_THUMBS_UP 일때는 처음 스프라이트로 돌아가면 안됨
-	if (m_fPicNum < m_fFrame && m_eCurState != P_THUMBS_UP)
-	{
-		m_fFrame = 0.f;	
-	}
 
 	// 특정 모션 처리
 	Specific_Motion(fTimeDelta);
@@ -126,6 +118,17 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 			m_eCurState = P_BACKWALK;
 			m_fFrame = 0;
 		}
+	}
+
+	if (!m_bKeyBlock)
+	{
+		m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
+	}
+
+	// P_THUMBS_UP 일때는 처음 스프라이트로 돌아가면 안됨
+	if (m_fPicNum < m_fFrame && m_eCurState != P_THUMBS_UP)
+	{
+		m_fFrame = 0.f;
 	}
 	
 	// 총알 update
@@ -195,6 +198,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 void CPlayer::LateUpdate_GameObject()
 {
 	Motion_Change();
+	Bullet_Change();
 
 	// 총알 late update
 	if (!m_PlayerBulletList.empty())
@@ -539,6 +543,14 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 	vScale = m_pTransformCom->m_vScale;
 
+
+	// BRIMSTONE은 왼쪽 클릭 제외하고 내뱉을때도 SHOOT이어서 LIST에 BULLET이 있으면 m_bShoot = true로함
+	if (m_eCurBulletState == P_BULLET_BRIMSTONE && !m_PlayerBulletList.empty())
+	{
+		m_bShoot = true;
+	}
+
+
 	// epictarget 쓰는 상태일때는 block됨
 	if (m_bEpicTargetRun == false)
 	{
@@ -654,6 +666,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 	}
 
+	
+
 	// 총알 발사
 	if (Engine::Get_DIMouseState(DIM_LB) & 0x80)
 	{
@@ -665,14 +679,18 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_eCurState = P_SHOOTIDLE;
 			}
 
-			// 슛은 눌렀지만 슛은 못하고 있을때
+			
 			if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTIDLE && m_iTempTimer > 30)
 			{
+				// 슛은 눌렀지만 슛은 못하고 있을때
+				// 가만히 서있을때
 				m_iTempTimer = 0;
 				m_eCurState = P_BACKIDLE;
 			}
 			else if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTWALK && m_iTempTimer > 30)
 			{
+				// 슛은 눌렀지만 슛은 못하고 있을때
+				// 움직일때
 				m_iTempTimer = 0;
 				m_eCurState = P_BACKWALK;
 			}
@@ -747,9 +765,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	}
 
 
-	if (m_eCurBulletState == P_BULLET_BRIMSTONE && !m_PlayerBulletList.empty())
+	if (m_eCurBulletState == P_BULLET_BRIMSTONE && !m_PlayerBulletList.empty() && m_eCurState!=P_SHOOTWALK)
 	{
-		m_eCurState = P_SHOOTWALK;
+		m_eCurState = P_SHOOTIDLE;
 	}
 
 
@@ -885,6 +903,26 @@ void CPlayer::Motion_Change()
 	}
 }
 
+void CPlayer::Bullet_Change()
+{
+	if (m_eCurBulletState != m_ePreBulletState)
+	{
+		switch (m_eCurBulletState)
+		{
+		case P_BULLET_IDLE:
+			m_fAttackSpeed = 20;
+			break;
+		case P_BULLET_BRIMSTONE:
+			m_fAttackSpeed = 100;
+			break;
+		case P_BULLET_EPIC:
+			m_fAttackSpeed = 80;
+			break;
+		}
+		m_ePreBulletState = m_eCurBulletState;
+	}
+}
+
 bool CPlayer::Check_Time(const _float& fTimeDelta)
 {
 	m_fAccTimeDelta += fTimeDelta;
@@ -906,16 +944,17 @@ void CPlayer::Specific_Motion(const _float& fTimeDelta)
 
 		m_iColorTimer++;
 
-		if (m_iColorTimer % 3 == 2)
+		if (m_iColorTimer % 5 == 2)
 		{
-
+			D3DXCOLOR temp = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+			m_pBufferCom->Set_Color(temp);
 		}
 		else
 		{
-
+			D3DXCOLOR temp = D3DXCOLOR(1.f, 0.0f, 0.0f, 1.f);
+			m_pBufferCom->Set_Color(temp);
 		}
-		D3DXCOLOR temp = D3DXCOLOR(1.f, 0.0f, 0.0f, 1.f);
-		m_pBufferCom->Set_Color(temp);
+		
 
 		if (m_fDelayTime > 0.2)
 		{
