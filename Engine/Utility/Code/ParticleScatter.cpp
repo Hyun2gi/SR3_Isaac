@@ -67,13 +67,13 @@ void CParticleScatter::Reset_Partice(Attribute* attribute)
 	attribute->_vPosition.y = m_tBoundingBox._max.y;
 
 	attribute->_vVelocity.x = GetRandomFloat(0.0f, 1.f) * -5.0f;
-	attribute->_vVelocity.y = GetRandomFloat(0.0f, 1.f) * -5.0f;
+	attribute->_vVelocity.y = GetRandomFloat(-0.5f, 0.5f) * -5.0f;
 	attribute->_vVelocity.z = GetRandomFloat(-0.5f, 0.7f) * -5.0f;
 
 	attribute->_color = D3DXCOLOR(
-		0.7f,
-		0.7f,
-		0.7f,
+		0.6f,
+		0.6f,
+		0.6f,
 		1.0f);
 
 	//attribute->_color = D3DXCOLOR(
