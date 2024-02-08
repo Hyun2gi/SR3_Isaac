@@ -594,7 +594,8 @@ void CStage::Moster_Collision()
 				}
 
 				// Dople ¿Ã æ∆¥“ ∂ß∏∏
-				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
+				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType() &&
+					!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState())
 				{
 					dynamic_cast<CMonster*>(pMonster)->Hit();
 					break;
