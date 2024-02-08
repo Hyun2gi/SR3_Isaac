@@ -554,6 +554,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	// epictarget 쓰는 상태일때는 block됨
 	if (m_bEpicTargetRun == false)
 	{
+		vDir = _vec3(vDir.x, 0, vDir.z);
 		if (Engine::Get_DIKeyState(DIK_W) & 0x80)
 		{
 			m_eCurState = P_BACKWALK;
@@ -576,6 +577,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
 		{
 			m_eCurState = P_IDLEWALK;
+			vDir = _vec3(vDir.x, 0, vDir.z);
 			D3DXVec3Normalize(&vDir, &vDir);
 
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -595,7 +597,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
 		{
 			m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
-
+			vDir = _vec3(vDir.x, 0, vDir.z);
 			m_eCurState = P_LEFTWALK;
 			D3DXVec3Normalize(&vDir, &vDir);
 
@@ -617,7 +619,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		else if (Engine::Get_DIKeyState(DIK_D) & 0x80)
 		{
 			m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
-
+			vDir = _vec3(vDir.x, 0, vDir.z);
 			m_eCurState = P_RIGHTWALK;
 			D3DXVec3Normalize(&vDir, &vDir);
 
