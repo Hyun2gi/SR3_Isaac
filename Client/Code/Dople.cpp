@@ -22,7 +22,7 @@ HRESULT CDople::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
-	m_pTransformCom->Set_Pos(20.f, 2.f, 25.f);
+	m_pTransformCom->Set_Pos(0.f, 1.5f, 0.f);
 
 	m_fCallLimit = 1.f;
 	m_fSpeed = 10.f;
@@ -223,10 +223,11 @@ void CDople::Follow_Player(const _float& fTimeDelta)
 	CComponent* pComponent = CPlayer::GetInstance()->Get_Component_Player_Transform();
 	m_pTargetTransCom = dynamic_cast<CTransform*>(pComponent);
 
-	_vec3 vPlayerPos, vPlayerDir, vPos, vDir;
+	_vec3 vPlayerPos, vPlayerDir, vPlayerRight, vPos, vDir;
 	m_pTargetTransCom->Get_Info(INFO_POS, &vPlayerPos);
 	m_pTargetTransCom->Get_Info(INFO_LOOK, &vPlayerDir);
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	m_pTargetTransCom->Get_Info(INFO_RIGHT, &vPlayerRight);
 
 	Change_State();
 
@@ -241,9 +242,15 @@ void CDople::Follow_Player(const _float& fTimeDelta)
 		//vDir = (vPlayerDir * -1.f); // Spike 충돌 테스트용
 		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
 	}
-	if (DP_LEFT == m_eCurState || DP_RIGHT == m_eCurState)
+	else if (DP_LEFT == m_eCurState)
 	{
-		m_pTransformCom->Set_Pos(vPlayerPos.x, vPlayerPos.y, vPos.z);
+		vDir = -vPlayerRight;
+		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+	}
+	else if (DP_RIGHT == m_eCurState)
+	{
+		vDir = vPlayerRight;
+		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
 	}
 }
 
