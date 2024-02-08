@@ -13,9 +13,6 @@ private:
 	enum MONSTROSTATE{MONSTRO_IDLE, MONSTRO_ATTACK, MONSTRO_WAIT, MONSTRO_MOVE, MONSTRO_UP, MONSTRO_DOWN, MONSTRO_DEAD, MONSTRO_END};
 
 public:
-	BOSS_TYPE		Get_BossType() { return m_eBossType; }
-
-public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
 	virtual void	LateUpdate_GameObject()					 override;

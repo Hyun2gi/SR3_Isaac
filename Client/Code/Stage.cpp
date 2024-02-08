@@ -598,7 +598,7 @@ void CStage::Moster_Collision()
 				{
 					if (dynamic_cast<CMonster*>(pMonster)->Get_IsBoss()) // 보스인 경우
 					{
-						if (MOM_PARTS == dynamic_cast<CMomParts*>(pMonster)->Get_BossType())// Mom Parts인 경우 // Mom 인 경우 여기서 터짐
+						if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType())// Mom Parts인 경우 // Mom 인 경우 여기서 터짐
 						{
 							if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState()) // 문이 열린 경우
 							{

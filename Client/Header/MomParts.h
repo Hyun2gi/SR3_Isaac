@@ -15,7 +15,6 @@ private:
 	enum PARTSSTATE { MOM_DOOR, MOM_EYE, MOM_SKIN, MOM_HAND, MOM_END };
 
 public:
-	BOSS_TYPE		Get_BossType() { return m_eBossType; }
 	void			Set_Mom(CMom* pMom) { m_pMom = pMom; }
 	_bool			Get_DoorState();
 
@@ -43,8 +42,6 @@ private:
 
 	PARTSSTATE			m_ePreState;
 	PARTSSTATE			m_eCurState;
-
-	BOSS_TYPE			m_eBossType;
 
 	CMom*				m_pMom;
 
