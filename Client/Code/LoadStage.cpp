@@ -730,8 +730,12 @@ void CLoadStage::Check_All_Dead()
 	for (auto& iter : m_vecMonsterCount)
 		iCount += iter;
 
-	if(Check_Monster_Dead())
-		dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Set_Open();
+	if (Check_Monster_Dead())
+	{
+		for (auto& iter : m_mapLayer.at(L"GameDoor")->Get_ObjectMap())
+			dynamic_cast<CDoor*>(iter.second)->Set_Open();
+
+	}
 }
 
 void CLoadStage::Item_Collision()
