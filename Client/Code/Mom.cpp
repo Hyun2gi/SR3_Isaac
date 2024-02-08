@@ -54,6 +54,22 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
+	//if()
+
+	if (m_bHit)
+	{
+		m_iHp -= 1;
+
+		m_bHit = false;
+		m_bHitColor = true;
+
+		if (0 >= m_iHp)
+		{
+			// 아이작을 부르는 소리를 지르며 아예 사라짐
+			m_bDead = true;
+		}
+	}
+
 	Face_Camera();
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
