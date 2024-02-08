@@ -191,7 +191,6 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 		_vec3		cameraDir;
 		_vec3		cameraPos;
 
-
 		playerInfo->Get_Info(INFO_POS, &playerPos);
 		playerInfo->Get_Info(INFO_LOOK, &playerDir);
 

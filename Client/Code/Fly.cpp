@@ -66,6 +66,7 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 		Hit_PushBack(m_fSlowDelta);
 
 		m_bHit = false;
+		m_bHitColor = true;
 
 		if (0 >= m_iHp)
 		{
@@ -75,7 +76,7 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	if (m_bHitColor)
-		Change_Color(fTimeDelta);
+		Change_Color(m_fSlowDelta);
 
 	// Epic
 	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())

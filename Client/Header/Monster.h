@@ -25,8 +25,10 @@ public:
 	_bool			Get_Dead() { return m_bDead; }
 	void			Set_Dead() { m_bDead = true; }
 	void			Hit() { m_bHit = true; }
+	void			Hit_False() { m_bHit = false; }
 	_bool			Get_IsBoss() { return m_bBoss; }
 	MONSTER_TYPE	Get_MstType() { return m_eMstType; }
+	BOSS_TYPE		Get_BossType() { return m_eBossType; }
 	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
 
 public:
@@ -52,7 +54,7 @@ protected:
 protected:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
-	Engine::CTransform* m_pTargetTransCom;	// 플레이어 COM 객체
+	Engine::CTransform* m_pTargetTransCom;	// 플레이어 COM 객체 (Mom's Parts 의 경우 Mom)
 	Engine::CTexture* m_pTextureCom;
 	Engine::CCalculator* m_pCalculCom;
 
@@ -77,6 +79,7 @@ protected:
 	_vec3					m_vMoveLook;
 
 	MONSTER_TYPE			m_eMstType;
+	BOSS_TYPE				m_eBossType;
 
 public:
 	static CMonster*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
