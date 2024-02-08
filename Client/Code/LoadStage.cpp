@@ -1075,6 +1075,9 @@ HRESULT CLoadStage::Door_Collision()
 				
 
 				CPlayer::GetInstance()->Set_KeyBlock(true);
+				
+				// 임시로 중간에 스폰
+				startpos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 				CPlayer::GetInstance()->Set_StartPos(startpos);
 
 				// 스테이지 변경
