@@ -304,11 +304,11 @@ HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
 	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
 	//}
 
-	//// Attack Fly
-	//pGameObject = CAttackFly::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
+	// Attack Fly
+	pGameObject = CAttackFly::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
 
 	//// Dip
 	//for (int i = 0; i < 15; ++i)
@@ -358,22 +358,22 @@ HRESULT CStage::Ready_Layer_Monster(const _tchar* pLayerTag)
 	//pGameObject->Set_MyLayer(pLayerTag);
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Monstro", pGameObject), E_FAIL);
 
-	// Mom
-	pGameObject = CMom::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Mom", pGameObject), E_FAIL);
+	//// Mom
+	//pGameObject = CMom::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Mom", pGameObject), E_FAIL);
 
-	// Mom's Parts
-	for (int i = 0; i < 4; ++i)
-	{
-		pGameObject = CMomParts::Create(m_pGraphicDev, i);
-		NULL_CHECK_RETURN(pGameObject, E_FAIL);
-		pGameObject->Set_MyLayer(pLayerTag);
-		dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
-		dynamic_cast<CMomParts*>(pGameObject)->Set_Mom(dynamic_cast<CMom*>(pLayer->Get_GameObject(L"Mom")));
-		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
-	}
+	//// Mom's Parts
+	//for (int i = 0; i < 4; ++i)
+	//{
+	//	pGameObject = CMomParts::Create(m_pGraphicDev, i);
+	//	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//	pGameObject->Set_MyLayer(pLayerTag);
+	//	dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
+	//	dynamic_cast<CMomParts*>(pGameObject)->Set_Mom(dynamic_cast<CMom*>(pLayer->Get_GameObject(L"Mom")));
+	//	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
+	//}
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
@@ -587,14 +587,16 @@ void CStage::Moster_Collision()
 			if (pMonster)
 			{
 				// 일반 총알일때 이펙트 보여주려고 해당부분 처리
-				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
+				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0 &&
+					ATTACK_FLY != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
 				{
 					// 일반 총알 충돌처리
 					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
 				}
 
-				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType() && // Dople이 아닌 경우
-					dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState()) // Bullet이 Dead가 아닌 경우
+				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType() &&	// Dople이 아닌 경우
+					dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() &&		// Bullet이 Dead가 아닌 경우
+					!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Monster가 Dead가 아닌 경우
 				{
 					if (dynamic_cast<CMonster*>(pMonster)->Get_IsBoss()) // 보스인 경우
 					{
@@ -605,7 +607,7 @@ void CStage::Moster_Collision()
 								dynamic_cast<CMomParts*>(pMonster)->Hit();
 								break;
 							}
-							else // 문이 열리지 않은 경우 // 요게 안 되나?
+							else // 문이 열리지 않은 경우
 								++iter;
 						}
 						else // Monstro or Mom인 경우
