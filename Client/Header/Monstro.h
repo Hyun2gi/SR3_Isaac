@@ -24,13 +24,14 @@ public:
 private:
 	virtual HRESULT	Add_Component()							override;
 	virtual void	Motion_Change()							override;
-	virtual void	Face_Camera()						override;
+	virtual void	Face_Camera()							override;
 
 	void			MoveTo_Player(const _float& fTimeDelta);
 	void			JumpTo_Player(const _float& fTimeDelta);
 	void			AttackTo_Player();
 
 	void			Check_TargetPos();
+	void			Check_CoolTime(const _float& fTimeDelta);
 
 private:
 	_bool			m_bDeadWait;
@@ -40,6 +41,7 @@ private:
 	_float			m_fFrameSpeed = 1.f;
 	_float			m_fPower;
 	_float			m_fAccelTime;
+	_float			m_fHitCoolTime; // 피격 쿨타임(혈사포 대책)
 
 	_vec3			m_vTargetPos;
 
