@@ -159,6 +159,7 @@
   <ItemGroup>
     <ClInclude Include="..\Header\AttackFly.h" />
     <ClInclude Include="..\Header\BackGround.h" />
+    <ClInclude Include="..\Header\BossHP.h" />
     <ClInclude Include="..\Header\BrimStone.h" />
     <ClInclude Include="..\Header\BrimStoneBullet.h" />
     <ClInclude Include="..\Header\CampFire.h" />
@@ -178,6 +179,8 @@
     <ClInclude Include="..\Header\EpicBulletMark.h" />
     <ClInclude Include="..\Header\Fire.h" />
     <ClInclude Include="..\Header\Obstacle.h" />
+    <ClInclude Include="..\Header\PlayerHeart.h" />
+    <ClInclude Include="..\Header\PlayerHP.h" />
     <ClInclude Include="..\Header\Shell.h" />
     <ClInclude Include="..\Header\ShellGame.h" />
     <ClInclude Include="..\Header\ShellNpc.h" />
@@ -227,6 +230,7 @@
   <ItemGroup>
     <ClCompile Include="..\Code\AttackFly.cpp" />
     <ClCompile Include="..\Code\BackGround.cpp" />
+    <ClCompile Include="..\Code\BossHP.cpp" />
     <ClCompile Include="..\Code\BrimStone.cpp" />
     <ClCompile Include="..\Code\BrimStoneBullet.cpp" />
     <ClCompile Include="..\Code\CampFire.cpp" />
@@ -245,7 +249,6 @@
     <ClCompile Include="..\Code\EpicBullet.cpp" />
     <ClCompile Include="..\Code\EpicBulletMark.cpp" />
     <ClCompile Include="..\Code\Fire.cpp" />
-    <ClCompile Include="..\Code\Obstacle.cpp" />
     <ClCompile Include="..\Code\Shell.cpp" />
     <ClCompile Include="..\Code\ShellGame.cpp" />
     <ClCompile Include="..\Code\ShellNpc.cpp" />
