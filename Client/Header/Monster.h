@@ -28,6 +28,7 @@ public:
 	void			Hit_False() { m_bHit = false; }
 	_bool			Get_IsBoss() { return m_bBoss; }
 	MONSTER_TYPE	Get_MstType() { return m_eMstType; }
+	BOSS_TYPE		Get_BossType() { return m_eBossType; }
 	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
 
 public:
@@ -78,6 +79,7 @@ protected:
 	_vec3					m_vMoveLook;
 
 	MONSTER_TYPE			m_eMstType;
+	BOSS_TYPE				m_eBossType;
 
 public:
 	static CMonster*		Create(LPDIRECT3DDEVICE9	pGraphicDev);

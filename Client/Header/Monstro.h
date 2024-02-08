@@ -31,7 +31,7 @@ private:
 	void			AttackTo_Player();
 
 	void			Check_TargetPos();
-	void			Check_CoolTime(const _float& fTimeDelta);
+	_bool			Check_CoolTime(const _float& fTimeDelta);
 
 private:
 	_bool			m_bDeadWait;
@@ -49,8 +49,6 @@ private:
 	MONSTROSTATE	m_eCurState;
 
 	list<CGameObject*> m_BulletList;
-
-	BOSS_TYPE		m_eBossType;
 
 public:
 	static CMonster*	Create(LPDIRECT3DDEVICE9 pGraphicDev);
