@@ -28,7 +28,7 @@ HRESULT CBrimStoneBullet::Ready_GameObject()
     // 지속시간
     m_fCallLimit = 1;
     m_bRotate = false;
-
+    m_iParticleTimer = 0;
     m_pTransformCom->m_vScale = { 0.6f,0.6f,0.6f };
 
     return S_OK;
@@ -38,6 +38,25 @@ _int CBrimStoneBullet::Update_GameObject(const _float& fTimeDelta)
 {
     CGameObject::Update_GameObject(fTimeDelta);
     m_pCalculatorCom->Compute_Vill_Matrix(m_pTransformCom);
+
+    m_iParticleTimer++;
+
+    if (m_iBulletIndex == 4)
+    {
+        if (m_iParticleTimer == 1)
+        {
+            D3DXMATRIX _world;
+            _world = *(m_pTransformCom->Get_WorldMatrix());
+            _vec3 move;
+            m_pTransformCom->Get_Info(INFO_LOOK, &move);
+            // _world._41 += move.x * 2;
+            _world._42 = 0.2;
+            //_world._43 += move.z * 2;
+            Engine::Create_Splash_Left(m_pGraphicDev, _world);
+            Engine::Create_Splash_Right(m_pGraphicDev, _world);
+        }  
+    }
+
 
     //플레이어 첫 시작 위치 받아와서 거기서부터 시작
     _vec3   playerPos;
@@ -111,6 +130,7 @@ CBrimStoneBullet* CBrimStoneBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const 
     pInstance->Set_MyLayer(pLayerTag);
     pInstance->Set_BulletIndex(bulletIndex);
     pInstance->Set_BulletLie(lie);
+
     if (FAILED(pInstance->Ready_GameObject()))
     {
         Safe_Release(pInstance);
@@ -118,6 +138,8 @@ CBrimStoneBullet* CBrimStoneBullet::Create(LPDIRECT3DDEVICE9 pGraphicDev, const 
         return nullptr;
     }
     return pInstance;
+
+
 }
 
 HRESULT CBrimStoneBullet::Set_HeadTexture(bool _head, int _index)
