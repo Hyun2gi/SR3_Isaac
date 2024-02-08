@@ -209,6 +209,9 @@ private:
 	// 총쏠때 머리작아지는거 시간 격차두기용
 	int					m_iTempTimer;
 
+	// 피격당했을때 깜빡임용
+	int					m_iColorTimer;
+
 	// 시작지점
 	_vec3				m_vStartPos;
 
