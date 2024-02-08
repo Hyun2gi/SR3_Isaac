@@ -35,13 +35,21 @@ public:
 	{
 		m_fBulletSpeed = _speed;
 	}
-	void				Set_BulletDead()
-	{
-		m_bDead = true;
-	}
 	void				Set_BulletCollision()
 	{
 		m_bCollision = true;
+		m_bDead = true;
+	}
+	bool				Get_BulletState()
+	{
+		if (m_eCurState == IDLEBULLET_IDLE)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 	bool				Get_BulletState()
 	{
