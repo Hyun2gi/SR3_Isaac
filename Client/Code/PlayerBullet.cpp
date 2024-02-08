@@ -144,17 +144,24 @@ HRESULT CPlayerBullet::Add_Component()
 
 
     //플레이어 첫 시작 위치 받아와서 거기서부터 시작
-    _vec3   playerPos;
+    _vec3   playerPos, playerDir;
     //dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"))->Get_Info(INFO_POS, &playerPos);
     //dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"))->Get_Info(INFO_LOOK, &m_vBulletDir);
 
     dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_POS, &playerPos);
-    dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_LOOK, &m_vBulletDir);
+    dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_LOOK, &playerDir);
 
    /* m_vBulletDir = _vec3(m_vBulletDir.x, m_vBulletDir.y/3, m_vBulletDir.z);
     D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);*/
     m_vBulletDir = CPlayer::GetInstance()->Get_BulletDir();
 
+    if (m_vBulletDir.y < 0)
+    {
+        m_vBulletDir = _vec3(playerDir.x, playerDir.y / 3, playerDir.z);
+    }
+
+
+    // playerPos = 눈물 위치
     playerPos += m_vBulletDir * 0.2;
     m_pTransformCom->Set_Pos(playerPos);
     
