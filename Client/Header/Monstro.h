@@ -5,6 +5,7 @@
 
 class CMonstro : public CMonster
 {
+	const _float CENTERY = 2.5f;
 private:
 	explicit CMonstro(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CMonstro(const CMonstro& rhs);

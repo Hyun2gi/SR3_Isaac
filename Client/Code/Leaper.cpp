@@ -7,9 +7,9 @@
 CLeaper::CLeaper(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
 	: CMonster(pGraphicDev)
 {
-	DWORD dwSeed = (iID << 16) | (time(NULL) % 1000);
+	int iSeed = iID * 3;
+	DWORD dwSeed = (iSeed << 16) | (time(NULL) % 1000);
 	srand(dwSeed);
-	m_iRandNum = rand() % 180;
 }
 
 CLeaper::CLeaper(const CLeaper& rhs)
@@ -29,7 +29,7 @@ HRESULT CLeaper::Ready_GameObject()
 
 	m_iHp = 3;
 
-	m_fCallLimit = 2;
+	m_fCallLimit = (rand() % 6) + 1;
 	m_fSpeed = 8.f;
 
 	m_bMove = false;
@@ -78,7 +78,7 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 
 	Face_Camera();
 
-	if (Check_Time(m_fSlowDelta, 5.f))
+	if (Check_Time(m_fSlowDelta))
 	{
 		m_eCurState = LEAPER_UP;
 		m_bJump = true;
@@ -91,7 +91,7 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 	}
 	else
 	{
-		if (Check_Time(m_fSlowDelta) && !m_bMove)
+		if (Check_Time(m_fSlowDelta, (rand() % 5) + 5) && !m_bMove)
 		{
 			Change_Dir(m_fSlowDelta);
 			m_bMove = true;
@@ -251,7 +251,7 @@ void CLeaper::MoveTo_Random(const _float& fTimeDelta)
 
 	D3DXVec3Normalize(&vDir, &vDir);
 
-	if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x - 5.f &&
+	/*if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x - 5.f &&
 		vPos.z < VTXCNTZ - m_pTransformCom->m_vScale.z  - 5.f &&
 		vPos.x > m_pTransformCom->m_vScale.x + 5.f &&
 		vPos.z > m_pTransformCom->m_vScale.z + 5.f)
@@ -263,8 +263,18 @@ void CLeaper::MoveTo_Random(const _float& fTimeDelta)
 	{
 
 		m_pTransformCom->Move_Pos(&-vDir, m_fSpeed, fTimeDelta);
+	}*/
+	//m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	if (vPos.x >= VTXCNTX - m_pTransformCom->m_vScale.x - INTERVAL ||
+		vPos.z >= VTXCNTZ - m_pTransformCom->m_vScale.z - INTERVAL ||
+		vPos.x <= m_pTransformCom->m_vScale.x + INTERVAL ||
+		vPos.z <= m_pTransformCom->m_vScale.z + INTERVAL)
+	{
+		vDir *= -1;
 	}
 
+	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
 
 }
 
