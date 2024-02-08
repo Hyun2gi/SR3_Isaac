@@ -766,7 +766,8 @@ void CLoadStage::Moster_Collision()
 			{
 				// 일반 총알일때 이펙트 보여주려고 해당부분 처리
 				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0 &&
-					ATTACK_FLY != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
+					ATTACK_FLY != dynamic_cast<CMonster*>(pMonster)->Get_MstType() && // 도플, 공격형 파리가 아닌 경우
+					DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
 				{
 					// 일반 총알 충돌처리
 					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
