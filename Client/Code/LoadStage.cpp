@@ -396,11 +396,11 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 					pGameObject->Set_MyLayer(pLayerTag);
 					dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
+					dynamic_cast<CMomParts*>(pGameObject)->Set_Mom(dynamic_cast<CMom*>(pLayer->Get_GameObject(L"Mom")));
 					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
 				}
 				break;
 			}
-	
 			}
 			break;
 		}
