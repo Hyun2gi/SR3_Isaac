@@ -35,10 +35,13 @@ public:
 	{
 		m_fBulletSpeed = _speed;
 	}
+	void				Set_BulletDead()
+	{
+		m_bDead = true;
+	}
 	void				Set_BulletCollision()
 	{
 		m_bCollision = true;
-		m_bDead = true;
 	}
 	bool				Get_BulletState()
 	{
