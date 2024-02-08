@@ -758,7 +758,7 @@ void CLoadStage::Moster_Collision()
 				}
 
 				// Dople 이 아닐 때만
-				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
+				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType() && !(dynamic_cast<CMonster*>(pMonster)->Get_Dead()))
 				{
 					dynamic_cast<CMonster*>(pMonster)->Hit();
 					break;
