@@ -29,8 +29,6 @@ HRESULT CCubeObject::Ready_GameObject()
 
 Engine::_int CCubeObject::Update_GameObject(const _float& fTimeDelta)
 {
-	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
-
 	if (m_fS > 0.88f)
 	{
 		m_fS = m_fS - (0.03f * fTimeDelta);
@@ -53,6 +51,8 @@ Engine::_int CCubeObject::Update_GameObject(const _float& fTimeDelta)
 
 void CCubeObject::LateUpdate_GameObject()
 {
+	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+
 	__super::LateUpdate_GameObject();
 }
 

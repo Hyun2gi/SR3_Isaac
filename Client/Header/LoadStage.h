@@ -6,6 +6,7 @@
 
 class CFloor;
 class CWall;
+class CObstacle;
 
 BEGIN(Engine)
 
