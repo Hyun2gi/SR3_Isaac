@@ -168,6 +168,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 
 			m_fTotalDistanceWithPlayer = D3DXVec3Length(&(m_vEye - m_vAt));
 			m_fFlexibleDistanceWithPlayer = m_fTotalDistanceWithPlayer;
+
 		}
 		else
 		{
@@ -209,6 +210,15 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
 				m_vEye = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
 
+				if (D3DXVec3Length(&(m_vEye - m_vAt)) < 5)
+				{
+					// 1인칭처럼 바꾸기 (총알 방향 조절을 위해 해당 변수 바꾸기)
+					m_bFirstPerson = true;
+				}
+				else
+				{
+					m_bFirstPerson = false;
+				}
 			}
 			else if(m_bCollisionWall == false)
 			{
