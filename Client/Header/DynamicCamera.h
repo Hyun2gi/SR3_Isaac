@@ -144,7 +144,8 @@ private:
 	// y로의 길이
 	float		m_fCameraHeight;
 
-	bool		m_bCollisionWall;
+	_bool		m_bCollisionWall;
+	_bool		m_bPreCollisionWall;
 
 	// (최대 고정된 거리)
 	float		m_fTotalDistanceWithPlayer;
