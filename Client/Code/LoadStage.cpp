@@ -40,6 +40,7 @@
 #include "Shop.h"
 #include "ShellGame.h"
 #include "Door.h"
+#include "Obstacle.h"
 
 //아이템
 #include "Coin.h"
@@ -184,8 +185,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CPoop::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
-					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
 
 				break;
@@ -195,8 +196,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CCampFire::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
-					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
 
 				break;
@@ -206,8 +207,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CSpike::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
-					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
 
 				break;
@@ -217,8 +218,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CShellGame::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
-					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
 
 				break;
@@ -228,14 +229,37 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CSlotMC::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
-					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
 
 				break;
 			}
 
-			//TODO: 샵 추가해야함
+			case SHOP:
+			{
+				pGameObject = CShop::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Shop", pGameObject), E_FAIL);
+
+				break;
+			}
+
+			case OBSTACLE:
+			{
+				pGameObject = CObstacle::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle", pGameObject), E_FAIL);
+
+				break;
+			}
+
 			}
 			break;
 		}
