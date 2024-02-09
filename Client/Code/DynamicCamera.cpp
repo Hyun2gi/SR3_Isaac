@@ -590,6 +590,7 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 				m_bFix = false;
 				m_vEye = m_vGoalPosition;
 				m_vCameraPosDir = m_vEye - m_vAt;
+				D3DXVec3Normalize(&m_vCameraPosDir, &m_vCameraPosDir);
 				CPlayer::GetInstance()->Set_KeyBlock(false);
 				return;
 			}
