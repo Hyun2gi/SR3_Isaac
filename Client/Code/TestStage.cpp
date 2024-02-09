@@ -72,7 +72,7 @@ HRESULT CTestStage::Ready_Scene()
 
 	//파티클 사용 예
 	// 맵에 흩뿌려지는 파티클 (딱히 추가할 일 없음)
-	Engine::Create_Scatter(m_pGraphicDev);
+	//Engine::Create_Scatter(m_pGraphicDev);
 	//Engine::Create_Explosion(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
 	//Engine::Create_Splash(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
 	//Engine::Create_Splash_Left(m_pGraphicDev, _vec3(0.0f, 0.0f, 5.0f));
@@ -162,7 +162,7 @@ void CTestStage::LateUpdate_Scene()
 
 void CTestStage::Render_Scene()
 {
-	m_pObstacle->Render_GameObject();
+	//m_pObstacle->Render_GameObject();
 	//pScatter->Render_GameObject();
 	//pExp->Render_GameObject();
 	//pSpl->Render_GameObject();
@@ -676,5 +676,6 @@ void CTestStage::Free()
 	//Safe_Release(pExp);
 	//Safe_Release(pSpl);
 	//Safe_Release(pBst);
+	Safe_Release(m_pObstacle);
 	__super::Free();
 }

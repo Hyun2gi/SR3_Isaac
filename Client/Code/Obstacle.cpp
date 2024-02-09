@@ -29,6 +29,8 @@ HRESULT CObstacle::Ready_GameObject()
 
 Engine::_int CObstacle::Update_GameObject(const _float& fTimeDelta)
 {
+	__super::Compute_ViewZ(&m_pTransformCom->m_vInfo[INFO_POS]);
+	
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	return 0;
@@ -36,6 +38,8 @@ Engine::_int CObstacle::Update_GameObject(const _float& fTimeDelta)
 
 void CObstacle::LateUpdate_GameObject()
 {
+	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+
 	__super::LateUpdate_GameObject();
 }
 
@@ -69,7 +73,7 @@ HRESULT CObstacle::Add_Component()
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
-	m_pTransformCom->m_vInfo[INFO_POS] = { 10, 00, 10 };
+	m_pTransformCom->m_vInfo[INFO_POS] = { 0, 1, 0 };
 
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ObstacleTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
