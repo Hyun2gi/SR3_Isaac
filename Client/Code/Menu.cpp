@@ -29,7 +29,7 @@ HRESULT CMenu::Ready_GameObject()
 	m_pTransformCom->Set_Pos(_vec3(m_fPosX, m_fPosY, 0.0f));
 
 	__super::Ready_GameObject();
-	Compute_ProjectionMatrix();
+	//Compute_ProjectionMatrix();
 
 	return S_OK;
 
@@ -52,17 +52,10 @@ void CMenu::LateUpdate_GameObject()
 void CMenu::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
-	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
-	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &m_matProj);
-
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	m_pTextureCom->Set_Texture((_int)m_fCurFrame);
 
 	m_pBufferCom->Render_Buffer();
-
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
 }
 
 HRESULT CMenu::Add_Component()

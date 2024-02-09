@@ -130,14 +130,6 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
 	}
 
-	//bool bIsIntersect = dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Get_Collision();
-
-	//if (bIsIntersect)
-	//{
-	//	int i = 0;
-	//	//pGameObject
-	//}
-
 	//타임 델타 스케일 조절 예시 _ 사용
 	if (Engine::Key_Down(DIK_P))
 	{
