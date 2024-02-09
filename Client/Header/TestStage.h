@@ -11,6 +11,7 @@ class CParticleBurst;
 
 END
 
+class CObstacle;
 
 class CTestStage : public Engine::CScene
 {
@@ -54,6 +55,8 @@ private:
 	CParticleBurst* pBst;
 
 	D3DXCOLOR temp = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+
+	CObstacle* m_pObstacle;
 
 private:
 	virtual void Free() override;

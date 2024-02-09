@@ -16,6 +16,8 @@
 #include "Charger.h"
 #include "Dople.h"
 
+#include "Obstacle.h"
+
 #include "Monstro.h"
 #include "Mom.h"
 #include "MomParts.h"
@@ -44,9 +46,6 @@
 #include "Heart.h"
 #include "HeartHalf.h"
 
-
-
-
 CTestStage::CTestStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
 {
@@ -67,28 +66,7 @@ HRESULT CTestStage::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
-
-	//BoundingBox boundingBox;
-	//boundingBox._min = D3DXVECTOR3(-10.0f, -5.0f, -10.0f);
-	//boundingBox._max = D3DXVECTOR3(10.0f, 5.0f, 10.0f);
-
-	//pScatter = new CParticleScatter(&boundingBox, 30);
-	//pScatter->Ready_Particle(m_pGraphicDev);
-
-	//_vec3 origin(0.0f, 0.0f, 5.0f);
-	//pExp = new CParticleExplosion(&origin, 10);
-	//pExp->Ready_Particle(m_pGraphicDev);
-
-	//_vec3 origin2(0.0f, 0.0f, 5.0f);
-	//pSpl = new CParticleSplash(&origin2, 10);
-	//pSpl->Ready_Particle(m_pGraphicDev);
-	//pSpl->Create_Texture(L"../Bin/Resource/Texture/Particle/BloodExp2/BloodExp_%d.png", 7);
-
-	//_vec3 origin3(0.0f, 0.0f, 5.0f);
-	//pBst = new CParticleBurst(&origin3, 3);
-	//pBst->Ready_Particle(m_pGraphicDev);
-	//pBst->Create_Texture();
-
+	m_pObstacle = CObstacle::Create(m_pGraphicDev);
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 
@@ -169,17 +147,22 @@ Engine::_int CTestStage::Update_Scene(const _float& fTimeDelta)
 	//pExp->Update_Particle(fTimeDelta);
 	//pSpl->Update_Particle(fTimeDelta);
 	//pBst->Update_Particle(fTimeDelta);
+
+	m_pObstacle->Update_GameObject(fTimeDelta);
+
 	return __super::Update_Scene(fTimeDelta);
 }
 
 void CTestStage::LateUpdate_Scene()
 {
+	m_pObstacle->LateUpdate_GameObject();
 	CPlayer::GetInstance()->LateUpdate_GameObject();
 	__super::LateUpdate_Scene();
 }
 
 void CTestStage::Render_Scene()
 {
+	m_pObstacle->Render_GameObject();
 	//pScatter->Render_GameObject();
 	//pExp->Render_GameObject();
 	//pSpl->Render_GameObject();
