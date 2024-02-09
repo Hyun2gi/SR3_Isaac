@@ -26,6 +26,8 @@ public:
 
 	HRESULT Set_Cute_Texture(const _tchar* pTextureTag);
 
+	void	Set_Pos(_vec3 vPos) { m_pTransformCom->Set_Pos(vPos); }
+
 private:
 	HRESULT			Add_Component();
 
