@@ -73,7 +73,7 @@ HRESULT CObstacle::Add_Component()
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
-	m_pTransformCom->m_vInfo[INFO_POS] = { 15, 0, 15 };
+	m_pTransformCom->m_vInfo[INFO_POS] = { 0, 1, 0 };
 
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ObstacleTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
