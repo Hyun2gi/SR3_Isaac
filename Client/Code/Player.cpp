@@ -406,13 +406,13 @@ bool CPlayer::Get_Camera_WallBlock()
 	}
 }
 
-bool CPlayer::Get_SafeCamer_Area()
+bool CPlayer::Get_SafeCamera_Area()
 {
 	_vec3	vPos, vScale;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 	vScale = m_pTransformCom->m_vScale;
 
-	if (vPos.x < VTXCNTX - 4 && vPos.z < VTXCNTX - 4
+	if (vPos.x < VTXCNTX -4 && vPos.z < VTXCNTX - 4
 		&& vPos.x > 4 && vPos.z > 4)
 	{
 		return true;
@@ -503,16 +503,32 @@ void CPlayer::Set_Attacked()
 
 _vec3 CPlayer::Get_BulletDir()
 {
-	_vec3 camerapos, playerpos;
-	m_pTransformCom->Get_Info(INFO_POS, &playerpos);
-	camerapos = dynamic_cast<CDynamicCamera*>(m_pCamera)->Get_EyePos();
+	_vec3 playerDir;
+	m_pTransformCom->Get_Info(INFO_LOOK, &playerDir);
+	if (dynamic_cast<CDynamicCamera*>(m_pCamera)->Get_FirstPerson())
+	{
+		// 1ÀÎÄª¶§
+		m_vBulletDir = _vec3(playerDir.x, playerDir.y / 3, playerDir.z);
+	}
+	else
+	{
+		_vec3 camerapos, playerpos;
+		m_pTransformCom->Get_Info(INFO_POS, &playerpos);
+		camerapos = dynamic_cast<CDynamicCamera*>(m_pCamera)->Get_EyePos();
 
-	//ÃÑ¾Ë ½¸ ³ôÀÌ ¶§¹®¿¡ Á¶Àý
-	playerpos += _vec3(0, 3, 0);
+		//ÃÑ¾Ë ½¸ ³ôÀÌ ¶§¹®¿¡ Á¶Àý
+		playerpos += _vec3(0, 2, 0);
 
-	m_vBulletDir = playerpos - camerapos;
+		m_vBulletDir = playerpos - camerapos;
 
-	D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);
+		D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);
+
+		if (m_vBulletDir.y < 0)
+		{
+			m_vBulletDir = _vec3(playerDir.x, playerDir.y / 3, playerDir.z);
+		}
+	}
+	
 
 	return m_vBulletDir;
 }
@@ -739,9 +755,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 				m_bEpicLieTiming = false;
 			}
-			
 		}
-		
 	}
 	else
 	{

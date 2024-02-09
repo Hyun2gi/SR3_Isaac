@@ -71,6 +71,8 @@ public:
 
 	_vec3				Get_EyePos() { return m_vEye; }
 
+	bool				Get_FirstPerson() { return m_bFirstPerson; }
+
 private:
 	virtual void Free();
 	void		Key_Input(const _float& fTimeDelta);
@@ -85,6 +87,8 @@ private:
 	void	ShakeByRotation(const _float& fTimeDelta);
 	// 움직이는 함수 실행
 	void	MoveToTarget(const _float& fTimeDelta);
+
+	bool	CheckCollisionWall(float distance);
 
 private:
 	_bool		m_bFix = false;
@@ -139,10 +143,13 @@ private:
 	float		m_fCameraDistance;
 	// y로의 길이
 	float		m_fCameraHeight;
-	float		m_fCameraShortDistance;
-	float		m_fCameraShortHeight;
 
-	bool		m_bCollisionWall;
+	_bool		m_bCollisionWall;
+	_bool		m_bPreCollisionWall;
+
+	// (최대 고정된 거리)
+	float		m_fTotalDistanceWithPlayer;
+	float		m_fFlexibleDistanceWithPlayer;
 
 	// target position
 	CTransform*			m_pTarget;

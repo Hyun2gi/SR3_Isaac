@@ -73,6 +73,7 @@ protected:
 	bool					m_bhead; //head 부분인지 아닌지
 	bool					m_bRotate;
 	bool					m_bLie;
+	_int					m_iParticleTimer;
 
 private:
 	_vec3		m_vBulletDir;

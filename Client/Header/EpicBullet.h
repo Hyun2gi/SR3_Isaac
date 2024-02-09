@@ -59,6 +59,18 @@ public:
 		}
 	}
 
+	bool				Get_BulletState()
+	{
+		if (m_eCurState == EPIC_BULLET)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	void					Set_Shoot(_vec3 shootpos);
 	void					Set_StartFall(bool start) { m_bStartFall = start; }
 
