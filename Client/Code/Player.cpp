@@ -406,13 +406,13 @@ bool CPlayer::Get_Camera_WallBlock()
 	}
 }
 
-bool CPlayer::Get_SafeCamer_Area()
+bool CPlayer::Get_SafeCamera_Area()
 {
 	_vec3	vPos, vScale;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 	vScale = m_pTransformCom->m_vScale;
 
-	if (vPos.x < VTXCNTX - 4 && vPos.z < VTXCNTX - 4
+	if (vPos.x < VTXCNTX -4 && vPos.z < VTXCNTX - 4
 		&& vPos.x > 4 && vPos.z > 4)
 	{
 		return true;
