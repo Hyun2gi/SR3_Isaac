@@ -155,12 +155,6 @@ HRESULT CPlayerBullet::Add_Component()
     D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);*/
     m_vBulletDir = CPlayer::GetInstance()->Get_BulletDir();
 
-    if (m_vBulletDir.y <= playerDir.y / 3)
-    {
-        m_vBulletDir = _vec3(playerDir.x, playerDir.y / 3, playerDir.z);
-    }
-
-    m_vBulletDir = _vec3(playerDir.x, playerDir.y / 3, playerDir.z);
     // playerPos = ´«¹° À§Ä¡
     playerPos += m_vBulletDir * 0.2;
     m_pTransformCom->Set_Pos(playerPos);

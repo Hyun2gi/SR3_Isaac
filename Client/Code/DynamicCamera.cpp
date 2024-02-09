@@ -80,8 +80,8 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 
 		//m_vAt = playerPos;
 	}
-	
-	
+
+
 	if (false == m_bFix)
 	{
 		Mouse_Move();
@@ -94,7 +94,7 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 			// EPIC 아닐때는 마우스 움직임 중간으로
 			Mouse_Fix();
 		}
-		
+
 	}
 
 	return iExit;
@@ -202,17 +202,16 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 
 			m_vEye = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
 			
-			m_fTotalDistanceWithPlayer = D3DXVec3Length(&(m_vEye - m_vAt));
 			m_bFirstPerson = false;
 		}
 		else
 		{
 			// 회전한만큼 길이와 방향이 벡터에 저장되어 있어서
 			// 플레이어에서 해당방향만큼 계산
-			_vec3 vPos = m_vAt + m_vCameraPosDir * m_fTotalDistanceWithPlayer;
+			_vec3 vPos = m_vAt + m_vCameraPosDir;
 
 			// 벽에 부딪혔을때
-			if ((vPos.x > VTXCNTX-3 || vPos.z > VTXCNTX- 3 || vPos.x < 3 || vPos.z < 3) && m_bCollisionWall == false)
+			if ((vPos.x > VTXCNTX - 3 || vPos.z > VTXCNTX - 3 || vPos.x < 3 || vPos.z < 3) && m_bCollisionWall == false)
 			{
 				// 밖으로 나갔을때
 				m_bCollisionWall = true;
@@ -227,8 +226,8 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 				D3DXVECTOR3 _movevec;
 				m_vCameraPosDir = -(playerDir);
 				m_vGoalPosition = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
-				
-				if ((m_vGoalPosition.x <= VTXCNTX-1 && m_vGoalPosition.z <= VTXCNTX-1 && m_vGoalPosition.x >= 1 && m_vGoalPosition.z >= 1))
+
+				if ((m_vGoalPosition.x <= VTXCNTX - 1 && m_vGoalPosition.z <= VTXCNTX - 1 && m_vGoalPosition.x >= 1 && m_vGoalPosition.z >= 1))
 				{
 					D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
 					m_vEye = _movevec;
@@ -277,14 +276,14 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 				m_vCameraPosDir = -(playerDir);
 				m_vGoalPosition = playerPos + _vec3(0, 2, 0);
 				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
-				m_vEye = _movevec;
+				m_vEye = m_vGoalPosition;
 				m_vAt = playerPos + playerDir * 4 + _vec3(0, 1, 0);
 				m_vCameraPosDir = m_vEye - m_vAt;
 			}
 			else if (m_bCollisionWall == false)
 			{
 				// 안정권
-				m_vEye = m_vAt + m_vCameraPosDir * m_fTotalDistanceWithPlayer;
+				m_vEye = m_vAt + m_vCameraPosDir;
 				m_bFirstPerson = false;
 			}
 
@@ -366,7 +365,6 @@ void CDynamicCamera::Mouse_Move()
 		}
 
 		D3DXVec3TransformCoord(&vLook, &vLook, &matTotalRot);
-		D3DXVec3Normalize(&vLook, &vLook);
 		m_vCameraPosDir = vLook;
 	}
 }
