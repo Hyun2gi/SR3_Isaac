@@ -503,11 +503,11 @@ void CPlayer::Set_Attacked()
 
 _vec3 CPlayer::Get_BulletDir()
 {
+	_vec3 playerDir;
+	m_pTransformCom->Get_Info(INFO_LOOK, &playerDir);
 	if (dynamic_cast<CDynamicCamera*>(m_pCamera)->Get_FirstPerson())
 	{
 		// 1ÀÎÄª¶§
-		_vec3 playerDir;
-		m_pTransformCom->Get_Info(INFO_LOOK, &playerDir);
 		m_vBulletDir = _vec3(playerDir.x, playerDir.y / 3, playerDir.z);
 	}
 	else
@@ -522,6 +522,11 @@ _vec3 CPlayer::Get_BulletDir()
 		m_vBulletDir = playerpos - camerapos;
 
 		D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);
+
+		if (m_vBulletDir.y < 0)
+		{
+			m_vBulletDir = _vec3(playerDir.x, playerDir.y / 3, playerDir.z);
+		}
 	}
 	
 

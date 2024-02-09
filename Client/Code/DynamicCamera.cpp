@@ -203,6 +203,8 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			m_vEye = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
 			
 			m_bFirstPerson = false;
+
+			m_fTotalDistanceWithPlayer = D3DXVec3Length(&(m_vEye - m_vAt));
 		}
 		else
 		{
@@ -283,7 +285,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			else if (m_bCollisionWall == false)
 			{
 				// æ»¡§±«
-				m_vEye = m_vAt + m_vCameraPosDir;
+				m_vEye = m_vAt + m_vCameraPosDir * m_fTotalDistanceWithPlayer;
 				m_bFirstPerson = false;
 			}
 
@@ -366,6 +368,7 @@ void CDynamicCamera::Mouse_Move()
 
 		D3DXVec3TransformCoord(&vLook, &vLook, &matTotalRot);
 		m_vCameraPosDir = vLook;
+		D3DXVec3Normalize(&m_vCameraPosDir, &m_vCameraPosDir);
 	}
 }
 
