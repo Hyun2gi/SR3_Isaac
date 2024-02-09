@@ -162,6 +162,7 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	//TODO: 텍스쳐 경로 수정 필요하다!
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SheolFloorCubeTexture", CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/Terrain/BossCube.dds")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SheolWallCubeTexture", CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/Wall/BossWallCube.dds")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ObstacleTexture", CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/Obstacle/Rock.dds")), E_FAIL);
 
 
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Transform", CTransform::Create(m_pGraphicDev)), E_FAIL);
@@ -224,9 +225,22 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_EpicSpace", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/EpicSpace_%d.png", 8)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BulletTexture_EpicTarget", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Effect/EpicTarget.png", 1)), E_FAIL);
 
+#pragma region UI Texture
+
+	// Menu
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MenuTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Intro/Menu.png")), E_FAIL);
+
+	// Boss HP
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BossHPTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Boss/BossHP.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BossHPBarTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Boss/BossHPBar.png")), E_FAIL);
+
+#pragma endregion UI Texture
+
+
+
 	m_bFinish = true;
 
-	lstrcpy(m_szLoading, L"Loading Complete");
+	//lstrcpy(m_szLoading, L"Loading Complete");
 
 	return 0;
 

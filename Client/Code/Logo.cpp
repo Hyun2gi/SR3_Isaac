@@ -51,17 +51,31 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 			return 0;
 		}
 		
-		if (GetAsyncKeyState('1'))
+		if (GetAsyncKeyState('3'))
 		{
 			Engine::CScene*		pScene = nullptr;
 
-			pScene = CLoadStage::Create(m_pGraphicDev, 4, true); // 
+			pScene = CLoadStage::Create(m_pGraphicDev, 3, true);
 			NULL_CHECK_RETURN(pScene, -1);
 
 			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
 
 			return 0;
 		}		
+
+
+		if (GetAsyncKeyState('1'))
+		{
+			Engine::CScene* pScene = nullptr;
+
+			pScene = CLoadStage::Create(m_pGraphicDev, 1, true);
+      
+			NULL_CHECK_RETURN(pScene, -1);
+
+			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			return 0;
+		}
 
 		if (GetAsyncKeyState(VK_BACK))
 		{
@@ -73,6 +87,12 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
 
 			return 0;
+		}
+
+		if (GetAsyncKeyState('3'))
+		{
+			// 일단 시스템 메뉴 UI 뜨도록
+
 		}
 	}
 
@@ -94,6 +114,9 @@ HRESULT CLogo::Ready_Prototype()
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_RcTex", CRcTex::Create(m_pGraphicDev)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_LogoTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Intro/intro_bg.png")), E_FAIL);
 	// ·Î°í ÅØ½ºÃÄ ¹Ù²åÀ½ _ º¸¹Î
+
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_TitleTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Intro/Title_%d.png", 2)), E_FAIL);
+
 	return S_OK;
 }
 

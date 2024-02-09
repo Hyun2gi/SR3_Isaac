@@ -45,6 +45,7 @@ protected:
 	_float			m_fSizeX, m_fSizeY;
 	_float			m_fPosX, m_fPosY;
 	_matrix			m_matView, m_matProj;
+	_matrix			m_matGameView, m_matGameProj;
 
 	//임의의 큰 값
 	_int m_iRenderIndex = 99;

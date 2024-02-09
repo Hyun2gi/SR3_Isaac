@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Base.h"
-#include "GameObject.h"
+#include "UI.h"
 
 BEGIN(Engine)
 
@@ -11,12 +11,12 @@ class CTransform;
 
 END
 
-class CBackGround :	public Engine::CGameObject
+class CPlayerHP : public Engine::CUI
 {
 private:
-	explicit CBackGround(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CBackGround(const CBackGround& rhs);
-	virtual ~CBackGround();
+	explicit CPlayerHP(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CPlayerHP(const CPlayerHP& rhs);
+	virtual ~CPlayerHP();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -27,15 +27,15 @@ public:
 private:
 	HRESULT			Add_Component();
 
-private:
-	Engine::CRcTex*		m_pBufferCom;
-	Engine::CTransform*	m_pTransformCom;
-	Engine::CTexture*	m_pTextureCom;
 
-	_float				m_fFrame = 0.f;
+private:
+	Engine::CRcTex* m_pBufferCom;
+	Engine::CTransform* m_pTransformCom;
+	Engine::CTexture* m_pTextureCom;
+
 
 public:
-	static CBackGround*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
+	static CPlayerHP* Create();
 
 private:
 	virtual void Free() override;

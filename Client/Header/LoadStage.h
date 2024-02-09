@@ -6,6 +6,7 @@
 
 class CFloor;
 class CWall;
+class CObstacle;
 
 BEGIN(Engine)
 
@@ -69,6 +70,7 @@ private:
 	void			Drop_ITem();
 
 	void			Insert_Child();
+	void			Setting_UI();
 
 public:
 	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene = false);

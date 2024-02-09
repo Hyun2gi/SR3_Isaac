@@ -40,6 +40,7 @@
 #include "Shop.h"
 #include "ShellGame.h"
 #include "Door.h"
+#include "Obstacle.h"
 
 //아이템
 #include "Coin.h"
@@ -50,6 +51,9 @@
 #include "Epic.h"
 #include "Heart.h"
 #include "HeartHalf.h"
+
+// UI 테스트
+#include "Menu.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev), m_bStartScene(false)
@@ -101,6 +105,9 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 		// 아이템 드랍
 		Drop_ITem();
+
+		// UI 생성
+		Setting_UI();
 	}
 
 
@@ -116,15 +123,12 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
+
+		// UI 테스트용 코드
+		CMenu* pMenu = CMenu::Create(m_pGraphicDev, 800.f, 600.f, 0.f, 0.f, 1, 1);
+		NULL_CHECK_RETURN(pMenu, E_FAIL);
+		FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
 	}
-
-	//bool bIsIntersect = dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Get_Collision();
-
-	//if (bIsIntersect)
-	//{
-	//	int i = 0;
-	//	//pGameObject
-	//}
 
 	//타임 델타 스케일 조절 예시 _ 사용
 	if (Engine::Key_Down(DIK_P))
@@ -184,8 +188,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CPoop::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
-					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
 
 				break;
@@ -195,8 +199,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CCampFire::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
-					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
 
 				break;
@@ -206,8 +210,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CSpike::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
-					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
 
 				break;
@@ -217,8 +221,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CShellGame::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
-					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
 
 				break;
@@ -228,14 +232,37 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CSlotMC::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS]
-					= { iter.second.iX, iter.second.iY, iter.second.iZ };
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
 
 				break;
 			}
 
-			//TODO: 샵 추가해야함
+			case SHOP:
+			{
+				pGameObject = CShop::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Shop", pGameObject), E_FAIL);
+
+				break;
+			}
+
+			case OBSTACLE:
+			{
+				pGameObject = CObstacle::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle", pGameObject), E_FAIL);
+
+				break;
+			}
+
 			}
 			break;
 		}
@@ -310,7 +337,7 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 			}
 			case SQUIRT:
 			{
-				pGameObject = CSquirt::Create(m_pGraphicDev);
+				pGameObject = CSquirt::Create(m_pGraphicDev, m_vecMonsterCount[SQUIRT]++);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
 				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
@@ -729,44 +756,107 @@ void CLoadStage::Moster_Collision()
 			if (pMonster)
 			{
 				// 일반 총알일때 이펙트 보여주려고 해당부분 처리
-				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0 &&
+				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0 && // 일반 Bullet
 					ATTACK_FLY != dynamic_cast<CMonster*>(pMonster)->Get_MstType() && // 도플, 공격형 파리가 아닌 경우
 					DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
 				{
 					// 일반 총알 충돌처리
 					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
-				}
 
-				if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType() &&	// Dople이 아닌 경우
-					dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() &&		// Bullet이 Dead가 아닌 경우
-					!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Monster가 Dead가 아닌 경우
-				{
-					if (dynamic_cast<CMonster*>(pMonster)->Get_IsBoss()) // 보스인 경우
+					if (dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() &&		// Bullet이 Dead가 아닌 경우
+						!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Monster가 Dead가 아닌 경우
 					{
-						if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType())// Mom Parts인 경우 // Mom 인 경우 여기서 터짐
+						if (dynamic_cast<CMonster*>(pMonster)->Get_IsBoss()) // 보스인 경우
 						{
-							if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState()) // 문이 열린 경우
+							if (MONSTRO == dynamic_cast<CMonster*>(pMonster)->Get_BossType())
 							{
-								dynamic_cast<CMomParts*>(pMonster)->Hit();
+								dynamic_cast<CMonstro*>(pMonster)->Hit();
 								break;
 							}
-							else // 문이 열리지 않은 경우
+							else
 								++iter;
 						}
-						else // Monstro or Mom인 경우
+						else // 일반 몬스터의 경우 전부 피격 처리 O
 						{
 							dynamic_cast<CMonster*>(pMonster)->Hit();
+
+							// Squirt 인 경우 Dip 두 마리 생성 
+							if (SQUIRT == dynamic_cast<CMonster*>(pMonster)->Get_MstType()) // Squirt인 경우
+							{
+								if (1 >= dynamic_cast<CMonster*>(pMonster)->Get_HP())
+								{
+									dynamic_cast<CSquirt*>(pMonster)->Create_Dip(m_mapLayer.at(L"GameMst"));
+								}
+							}
 							break;
 						}
 					}
-					else // 일반 몬스터의 경우 전부 피격 처리 O
-					{
-						dynamic_cast<CMonster*>(pMonster)->Hit();
-						break;
-					}
+					else
+						++iter;
+				}
+				//else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포 (엄마/엄마파츠만)
+				//{// dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() && 
+				//	if (dynamic_cast<CBrimStone*>(*iter)->Get_BulletState() &&
+				//		!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Player가 Dead가 아닌 경우
+				//	{
+				//		if (MOM == dynamic_cast<CMonster*>(pMonster)->Get_BossType())	// MOM인 경우
+				//		{
+				//			dynamic_cast<CMonster*>(pMonster)->Hit();
+				//			break;
+				//		}
+				//		else if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType()) // MOM Parts인 경우
+				//		{
+				//			if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState())			// Door 상태가 아닌 경우
+				//			{
+				//				dynamic_cast<CMonster*>(pMonster)->Hit();
+				//				break;
+				//			}
+				//			else
+				//				++iter;
+				//		}
+				//		else
+				//			++iter;
+				//	}
+				//	else
+				//		++iter;
+				//}
+				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 2) // 에픽페투스
+				{
+					//if()
 				}
 				else
 					++iter;
+
+				//if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType() &&	// Dople이 아닌 경우
+				//	dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() &&		// Bullet이 Dead가 아닌 경우
+				//	!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Monster가 Dead가 아닌 경우
+				//{
+				//	if (dynamic_cast<CMonster*>(pMonster)->Get_IsBoss()) // 보스인 경우
+				//	{
+				//		if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType())// Mom Parts인 경우 // Mom 인 경우 여기서 터짐
+				//		{
+				//			if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState()) // 문이 열린 경우
+				//			{
+				//				dynamic_cast<CMomParts*>(pMonster)->Hit();
+				//				break;
+				//			}
+				//			else // 문이 열리지 않은 경우
+				//				++iter;
+				//		}
+				//		else // Monstro or Mom인 경우
+				//		{
+				//			dynamic_cast<CMonster*>(pMonster)->Hit();
+				//			break;
+				//		}
+				//	}
+				//	else // 일반 몬스터의 경우 전부 피격 처리 O
+				//	{
+				//		dynamic_cast<CMonster*>(pMonster)->Hit();
+				//		break;
+				//	}
+				//}
+				//else
+				//	++iter;
 			}
 			else
 				++iter;
@@ -1023,6 +1113,23 @@ void CLoadStage::Insert_Child()
 		dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))
 			->Set_ShellObj_ToStage(m_mapLayer.at(L"MapObj"));
 	}
+
+}
+
+void CLoadStage::Setting_UI()
+{
+#pragma region Boss HP
+
+	// Boss HP Tool
+	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro") != nullptr &&
+		m_mapLayer.at(L"UI")->Get_GameObject(L"BossHPTool") == nullptr)
+	{
+		//dynamic_cast<CMonstro*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro"))->Print_UI(m_mapLayer.at(L"UI"));
+	}
+
+	// Boss HP Bar
+
+#pragma endregion Boss HP
 
 }
 

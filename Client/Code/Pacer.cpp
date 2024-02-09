@@ -7,9 +7,9 @@
 CPacer::CPacer(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
 	: CMonster(pGraphicDev)
 {
-	DWORD dwSeed = (iID << 16) | (time(NULL) % 1000);
+	int iSeed = iID * 5;
+	DWORD dwSeed = (iSeed << 16) | (time(NULL) % 1000);
 	srand(dwSeed);
-	m_iRandNum = rand() % 180;
 }
 
 CPacer::CPacer(const CPacer& rhs)
@@ -24,13 +24,13 @@ CPacer::~CPacer()
 HRESULT CPacer::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(0.f, 1.f, 0.f);
 	m_pTransformCom->m_vScale = { 0.8f, 0.8f, 0.8f };
+	m_pTransformCom->Set_Pos(0.f, HEIGHT_Y, 0.f);
 
 	m_iHp = 3;
 
-	m_fCallLimit = m_iRandNum % 5 + 2;
-	m_fSpeed = 4.f;
+	m_fCallLimit = (rand() % 7) + 5;
+	m_fSpeed = 1.f;
 
 	m_iPicNum = 10.f;
 	m_bEpicTime = false;
@@ -93,7 +93,7 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
-	Fix_Y();
+	Fix_Y(HEIGHT_Y);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -165,8 +165,7 @@ void CPacer::Change_Dir()
 	m_iRandNum = rand() % 180; // (m_iIndex + 1)
 	m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(_float(m_iRandNum)));
 
-	m_pTransformCom->Get_Info(INFO_POS, &m_vMoveLook); // 회전한 Look 벡터를 멤버 변수에 할당
-	// 값이 분명 다양하게 들어가는데 m_vMoveLook 벡터는 거기서 거기인걸까? 왜 왔다갔다 할까
+	m_pTransformCom->Get_Info(INFO_POS, &m_vMoveLook);
 }
 
 void CPacer::Move(const _float& fTimeDelta)
@@ -179,17 +178,15 @@ void CPacer::Move(const _float& fTimeDelta)
 
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x &&
-		vPos.z < VTXCNTZ - m_pTransformCom->m_vScale.z &&
-		vPos.x > m_pTransformCom->m_vScale.x &&
-		vPos.z > m_pTransformCom->m_vScale.z)
+	if (vPos.x >= VTXCNTX - m_pTransformCom->m_vScale.x - INTERVAL ||
+		vPos.z >= VTXCNTZ - m_pTransformCom->m_vScale.z - INTERVAL ||
+		vPos.x <= m_pTransformCom->m_vScale.x + INTERVAL ||
+		vPos.z <= m_pTransformCom->m_vScale.z + INTERVAL)
 	{
-		m_pTransformCom->Move_Pos(&m_vMoveLook, m_fSpeed, fTimeDelta);
+		m_vMoveLook *= -1;
 	}
-	else
-	{
-		m_pTransformCom->Move_Pos(&-m_vMoveLook, m_fSpeed, fTimeDelta);
-	}
+
+	m_pTransformCom->Move_Pos(&m_vMoveLook, m_fSpeed, fTimeDelta);
 }
 
 void CPacer::Epic_Time()

@@ -26,6 +26,10 @@ HRESULT CBackGround::Ready_GameObject()
 
 Engine::_int CBackGround::Update_GameObject(const _float& fTimeDelta)
 {
+	m_fFrame += 2 * fTimeDelta * 3.f;
+
+	if (2 < m_fFrame)
+		m_fFrame = 0.f;
 
 	Engine::Add_RenderGroup(RENDER_PRIORITY, this);
 
@@ -44,7 +48,7 @@ void CBackGround::Render_GameObject()
 	//m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
-	m_pTextureCom->Set_Texture(0);
+	m_pTextureCom->Set_Texture((_uint)m_fFrame);
 
 	m_pBufferCom->Render_Buffer();
 
@@ -59,9 +63,9 @@ HRESULT CBackGround::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_LogoTexture"));
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_TitleTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_LogoTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_TitleTexture", pComponent });
 
 	/*pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);

@@ -6,6 +6,9 @@
 
 #include "MstBullet.h"
 
+#include "BossHP.h"
+#include "BossHPTool.h"
+
 CMonstro::CMonstro(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
 	m_fHitCoolTime(0.f)
@@ -22,11 +25,20 @@ CMonstro::~CMonstro()
 {
 }
 
+void CMonstro::Print_UI(CLayer* pLayer)
+{
+	// 보스 HP UI 출력
+	//디바이스, x크기, y크기, x좌표, y좌표, x전체 크기, y전체 크기 (전체크기는 default 잡혀있음)
+	CBossHPTool* pBossHPTool = CBossHPTool::Create(m_pGraphicDev, 200.f, 50.f, 0.f, 0.f, 1, 1);
+	pLayer->Add_GameObject(L"BossHPTool", pBossHPTool);
+
+}
+
 HRESULT CMonstro::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(0.f, 3.5f, 0.f);
-	m_pTransformCom->m_vScale = { 5.f, 5.f, 5.f };
+	m_pTransformCom->Set_Pos(0.f, CENTERY, 0.f);
+	m_pTransformCom->m_vScale = { 4.f, 4.f, 4.f };
 
 	m_iHp = 30;
 
@@ -56,19 +68,18 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_iPicNum < m_fFrame)
 	{
-		if (m_bDeadWait && Check_Time(m_fSlowDelta))
-		{
-			m_bDead = true;
-		
-			// 피 튀는 파티클
-			_vec3 vPos;
-			m_pTransformCom->Get_Info(INFO_POS, &vPos);
-			Engine::Create_Splash(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()),
-				L"../Bin/Resource/Texture/Particle/BloodExp2/BloodExp_%d.png",
-				7, 1.f);
-		}
-		else
-			m_fFrame = 0.f;
+		m_fFrame = 0.f;
+	}
+
+	if (m_bDeadWait && Check_Time(m_fSlowDelta, 4.f))
+	{
+		m_bDead = true;
+
+		// 피 튀는 파티클
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
 	}
 
 	if (m_bHit)
@@ -83,7 +94,7 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 		if (0 >= m_iHp)
 		{
 			m_eCurState = MONSTRO_DEAD;
-			m_pTransformCom->m_vInfo->y = 3.f; // 임의 값
+			m_pTransformCom->m_vInfo->y = CENTERY;
 			m_bDeadWait = true;
 		}
 	}
@@ -348,10 +359,10 @@ void CMonstro::MoveTo_Player(const _float& fTimeDelta)
 	float fY = vPos.y + (m_fPower * m_fAccelTime) - (9.f * m_fAccelTime * m_fAccelTime * 0.5f);
 	m_fAccelTime += 0.02f;
 
-	if (fY < 3.5f)
+	if (fY < CENTERY)
 	{
 		m_fAccelTime = 0.f;
-		fY = 3.7f;
+		fY = CENTERY;
 		m_eCurState = MONSTRO_IDLE;
 	}
 
@@ -384,13 +395,13 @@ void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 	}
 	else if(MONSTRO_DOWN == m_eCurState)
 	{
-		if (vPos.y > 3.2f)
+		if (vPos.y > CENTERY)
 		{
 			vPos.y -= 0.9f;
 		}
 		else
 		{
-			vPos.y = 3.2f;
+			vPos.y = CENTERY;
 			m_bJump = false;
 			m_bBullet = true;
 			m_eCurState = MONSTRO_ATTACK; 
