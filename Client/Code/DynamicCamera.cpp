@@ -205,89 +205,116 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			m_bFirstPerson = false;
 
 			m_fTotalDistanceWithPlayer = D3DXVec3Length(&(m_vEye - m_vAt));
+			m_fFlexibleDistanceWithPlayer = m_fTotalDistanceWithPlayer;
 		}
 		else
 		{
 			// 회전한만큼 길이와 방향이 벡터에 저장되어 있어서
 			// 플레이어에서 해당방향만큼 계산
-			_vec3 vPos = m_vAt + m_vCameraPosDir;
+			_vec3 vPos = m_vAt + m_vCameraPosDir * m_fTotalDistanceWithPlayer;
 
 			// 벽에 부딪혔을때
-			if ((vPos.x > VTXCNTX - 3 || vPos.z > VTXCNTX - 3 || vPos.x < 3 || vPos.z < 3) && m_bCollisionWall == false)
+			if ((vPos.x > VTXCNTX - 3 || vPos.z > VTXCNTX - 3 || vPos.x < 3 || vPos.z < 3))
 			{
 				// 밖으로 나갔을때
 				m_bCollisionWall = true;
+				m_fFlexibleDistanceWithPlayer = m_fTotalDistanceWithPlayer;
+			}
+			else
+			{
+				m_bCollisionWall = false;
+				m_fFlexibleDistanceWithPlayer = m_fTotalDistanceWithPlayer;
 			}
 
 
-			// 벽에 부딪히고 safe_area에 있으면
-			if (m_bCollisionWall == true && CPlayer::GetInstance()->Get_SafeCamera_Area())
+			if (m_bCollisionWall == true)
 			{
-				// 플레이어가 안전지대에 들어옴
-				// 다시 멀어지게끔
-				D3DXVECTOR3 _movevec;
-				m_vCameraPosDir = -(playerDir);
-				m_vGoalPosition = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
-
-				if ((m_vGoalPosition.x <= VTXCNTX - 1 && m_vGoalPosition.z <= VTXCNTX - 1 && m_vGoalPosition.x >= 1 && m_vGoalPosition.z >= 1))
+				// 카메라와 벽 충돌발생
+				while (CheckCollisionWall(m_fFlexibleDistanceWithPlayer))
 				{
-					D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
-					m_vEye = _movevec;
-					m_vCameraPosDir = m_vEye - m_vAt;
-					//1인칭 시점 아님
-					m_bFirstPerson = false;
-
-					_vec3 distance = m_vEye - m_vGoalPosition;
-
-					// 내가 원하는 카메라 위치와 지금 위치가 차이가 별로 안나면
-					if (D3DXVec3Length(&distance) < 30)
-					{
-						m_bCollisionWall = false;
-						m_vEye = m_vGoalPosition;
-						m_fAngleY = 0;
-						m_vAt = playerPos + playerDir * 2;
-						m_vCameraPosDir = m_vEye - m_vAt;
-					}
+					m_fFlexibleDistanceWithPlayer-=0.001;
 				}
-			}
-			else if (m_bCollisionWall == true && !CPlayer::GetInstance()->Get_SafeCamera_Area() && m_bFirstPerson == false)
-			{
-				// 밖으로 나간 상태
-				// 카메라와 가까워지게
+				m_vGoalPosition = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
 				D3DXVECTOR3 _movevec;
-				m_vCameraPosDir = -(playerDir);
-				m_vGoalPosition = playerPos + _vec3(0, 3, 0);
-				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 5);
-				m_vEye = _movevec;
-				m_vAt = playerPos + playerDir * 2;
-				m_bFirstPerson = false;
-				_vec3 distance = m_vEye - m_vAt;
-
-				if (D3DXVec3Length(&distance) < 4)
-				{
-					m_bFirstPerson = true;
-					m_fAngleY = 0;
-					m_vEye = playerPos + _vec3(0, 2, 0);
-				}
-				m_vCameraPosDir = m_vEye - m_vAt;
-			}
-			else if (m_bCollisionWall == true && !CPlayer::GetInstance()->Get_SafeCamera_Area() && m_bFirstPerson == true)
-			{
-				// 1인칭 시점으로 전환
-				D3DXVECTOR3 _movevec;
-				m_vCameraPosDir = -(playerDir);
-				m_vGoalPosition = playerPos + _vec3(0, 2, 0);
 				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
-				m_vEye = m_vGoalPosition;
-				m_vAt = playerPos + playerDir * 4 + _vec3(0, 1, 0);
-				m_vCameraPosDir = m_vEye - m_vAt;
+				m_vEye = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;;
+				m_fAngleY = 0;
 			}
-			else if (m_bCollisionWall == false)
+			else if(m_bCollisionWall == false)
 			{
-				// 안정권
+				// 카메라와 벽 충돌x
 				m_vEye = m_vAt + m_vCameraPosDir * m_fTotalDistanceWithPlayer;
 				m_bFirstPerson = false;
 			}
+
+			// 벽에 부딪히고 safe_area에 있으면
+			//if (m_bCollisionWall == true && CPlayer::GetInstance()->Get_SafeCamera_Area())
+			//{
+			//	// 플레이어가 안전지대에 들어옴
+			//	// 다시 멀어지게끔
+			//	D3DXVECTOR3 _movevec;
+			//	m_vCameraPosDir = -(playerDir);
+			//	m_vGoalPosition = m_vAt + m_vCameraPosDir * m_fTotalDistanceWithPlayer;
+
+			//	if ((m_vGoalPosition.x <= VTXCNTX - 1 && m_vGoalPosition.z <= VTXCNTX - 1 && m_vGoalPosition.x >= 1 && m_vGoalPosition.z >= 1))
+			//	{
+			//		D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
+			//		m_vEye = _movevec;
+			//		//m_vCameraPosDir = m_vEye - m_vAt;
+			//		//1인칭 시점 아님
+			//		m_bFirstPerson = false;
+
+			//		_vec3 distance = m_vEye - m_vGoalPosition;
+
+			//		// 내가 원하는 카메라 위치와 지금 위치가 차이가 별로 안나면
+			//		if (D3DXVec3Length(&distance) < 30)
+			//		{
+			//			m_bCollisionWall = false;
+			//			m_vEye = m_vGoalPosition;
+			//			m_fAngleY = 0;
+			//			m_vAt = playerPos + playerDir * 2;
+			//			//m_vCameraPosDir = m_vEye - m_vAt;
+			//		}
+			//	}
+			//}
+			//else if (m_bCollisionWall == true && !CPlayer::GetInstance()->Get_SafeCamera_Area() && m_bFirstPerson == false)
+			//{
+			//	// 밖으로 나간 상태
+			//	// 카메라와 가까워지게
+			//	D3DXVECTOR3 _movevec;
+			//	m_vCameraPosDir = -(playerDir);
+			//	m_vGoalPosition = playerPos + _vec3(0, 3, 0);
+			//	D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 5);
+			//	m_vEye = _movevec;
+			//	m_vAt = playerPos + playerDir * 2;
+			//	m_bFirstPerson = false;
+			//	_vec3 distance = m_vEye - m_vAt;
+
+			//	if (D3DXVec3Length(&distance) < 4)
+			//	{
+			//		m_bFirstPerson = true;
+			//		m_fAngleY = 0;
+			//		m_vEye = playerPos + _vec3(0, 2, 0);
+			//	}
+			//	m_vCameraPosDir = m_vEye - m_vAt;
+			//}
+			//else if (m_bCollisionWall == true && !CPlayer::GetInstance()->Get_SafeCamera_Area() && m_bFirstPerson == true)
+			//{
+			//	// 1인칭 시점으로 전환
+			//	D3DXVECTOR3 _movevec;
+			//	m_vCameraPosDir = -(playerDir);
+			//	m_vGoalPosition = playerPos + _vec3(0, 2, 0);
+			//	D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
+			//	m_vEye = m_vGoalPosition;
+			//	m_vAt = playerPos + playerDir * 4 + _vec3(0, 1, 0);
+			//	m_vCameraPosDir = m_vEye - m_vAt;
+			//}
+			//else if (m_bCollisionWall == false)
+			//{
+			//	// 안정권
+			//	m_vEye = m_vAt + m_vCameraPosDir * m_fTotalDistanceWithPlayer;
+			//	m_bFirstPerson = false;
+			//}
 
 		}
 	}
@@ -596,6 +623,22 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 		}
 
 		m_fMoveTime -= fTimeDelta;
+	}
+}
+
+bool CDynamicCamera::CheckCollisionWall(float distance)
+{
+	_vec3 vPos = m_vAt + m_vCameraPosDir * distance;
+
+	// 벽에 부딪혔을때
+	if ((vPos.x > VTXCNTX - 3 || vPos.z > VTXCNTX - 3 || vPos.x < 3 || vPos.z < 3))
+	{
+		// 밖으로 나갔을때
+		return true;
+	}
+	else
+	{
+		return false;
 	}
 }
 

@@ -88,6 +88,8 @@ private:
 	// 움직이는 함수 실행
 	void	MoveToTarget(const _float& fTimeDelta);
 
+	bool	CheckCollisionWall(float distance);
+
 private:
 	_bool		m_bFix = false;
 	_bool		m_bCheck = false;
@@ -146,6 +148,7 @@ private:
 
 	// (최대 고정된 거리)
 	float		m_fTotalDistanceWithPlayer;
+	float		m_fFlexibleDistanceWithPlayer;
 
 	// target position
 	CTransform*			m_pTarget;
