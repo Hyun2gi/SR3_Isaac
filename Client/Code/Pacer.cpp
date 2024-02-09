@@ -7,9 +7,9 @@
 CPacer::CPacer(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
 	: CMonster(pGraphicDev)
 {
-	DWORD dwSeed = (iID << 16) | (time(NULL) % 1000);
+	int iSeed = iID * 5;
+	DWORD dwSeed = (iSeed << 16) | (time(NULL) % 1000);
 	srand(dwSeed);
-	m_iRandNum = rand() % 180;
 }
 
 CPacer::CPacer(const CPacer& rhs)
@@ -25,11 +25,11 @@ HRESULT CPacer::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->m_vScale = { 0.8f, 0.8f, 0.8f };
-	m_pTransformCom->Set_Pos(0.f, 0.f, 0.f);
+	m_pTransformCom->Set_Pos(0.f, 1.f, 0.f);
 
 	m_iHp = 3;
 
-	m_fCallLimit = (m_iRandNum % 12) + 3;
+	m_fCallLimit = (rand() % 7) + 5;
 	m_fSpeed = 1.f;
 
 	m_iPicNum = 10.f;

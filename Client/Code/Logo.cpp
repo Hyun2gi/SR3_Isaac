@@ -55,7 +55,7 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 		{
 			Engine::CScene*		pScene = nullptr;
 
-			pScene = CLoadStage::Create(m_pGraphicDev, 4, true);
+			pScene = CLoadStage::Create(m_pGraphicDev, 2, true); // 
 			NULL_CHECK_RETURN(pScene, -1);
 
 			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
@@ -93,7 +93,7 @@ HRESULT CLogo::Ready_Prototype()
 {
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_RcTex", CRcTex::Create(m_pGraphicDev)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_LogoTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Intro/intro_bg.png")), E_FAIL);
-	// ·Î°í ÅØ½ºÃÄ ¹Ù²åÀ½ _ º¸¹Î
+	// Â·ÃŽÂ°Ã­ Ã…Ã˜Â½ÂºÃƒÃ„ Â¹Ã™Â²Ã¥Ã€Â½ _ ÂºÂ¸Â¹ÃŽ
 	return S_OK;
 }
 

@@ -7,7 +7,7 @@
 CLeaper::CLeaper(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
 	: CMonster(pGraphicDev)
 {
-	int iSeed = iID * 3;
+	int iSeed = iID * 5;
 	DWORD dwSeed = (iSeed << 16) | (time(NULL) % 1000);
 	srand(dwSeed);
 }
@@ -29,7 +29,7 @@ HRESULT CLeaper::Ready_GameObject()
 
 	m_iHp = 3;
 
-	m_fCallLimit = (rand() % 6) + 1;
+	m_fCallLimit = (rand() % 6) + 3;
 	m_fSpeed = 8.f;
 
 	m_bMove = false;
