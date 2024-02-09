@@ -7,9 +7,9 @@
 CLeaper::CLeaper(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
 	: CMonster(pGraphicDev)
 {
-	DWORD dwSeed = (iID << 16) | (time(NULL) % 1000);
+	int iSeed = iID * 5;
+	DWORD dwSeed = (iSeed << 16) | (time(NULL) % 1000);
 	srand(dwSeed);
-	m_iRandNum = rand() % 180;
 }
 
 CLeaper::CLeaper(const CLeaper& rhs)
@@ -24,12 +24,12 @@ CLeaper::~CLeaper()
 HRESULT CLeaper::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(0.f, 1.f, 0.f);
+	m_pTransformCom->Set_Pos(0.f, HEIGHT_Y, 0.f);
 	m_pTransformCom->m_vScale = { 1.2f, 1.2f, 1.2f };
 
 	m_iHp = 3;
 
-	m_fCallLimit = 2;
+	m_fCallLimit = (rand() % 6) + 3;
 	m_fSpeed = 8.f;
 
 	m_bMove = false;
@@ -78,7 +78,7 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 
 	Face_Camera();
 
-	if (Check_Time(m_fSlowDelta, 5.f))
+	if (Check_Time(m_fSlowDelta))
 	{
 		m_eCurState = LEAPER_UP;
 		m_bJump = true;
@@ -91,7 +91,7 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 	}
 	else
 	{
-		if (Check_Time(m_fSlowDelta) && !m_bMove)
+		if (Check_Time(m_fSlowDelta, (rand() % 5) + 5) && !m_bMove)
 		{
 			Change_Dir(m_fSlowDelta);
 			m_bMove = true;
@@ -238,10 +238,10 @@ void CLeaper::MoveTo_Random(const _float& fTimeDelta)
 	float fY = vPos.y + (m_fPower * m_fAccelTime) - (9.f * m_fAccelTime * m_fAccelTime * 0.5f);
 	m_fAccelTime += 0.02f;
 
-	if (fY < 1.f)
+	if (fY < HEIGHT_Y)
 	{
 		m_fAccelTime = 0.f;
-		fY = 1.f;
+		fY = HEIGHT_Y;
 		m_bMove = false;
 	}
 	m_pTransformCom->Set_Pos(vPos.x, fY, vPos.z);
@@ -251,7 +251,7 @@ void CLeaper::MoveTo_Random(const _float& fTimeDelta)
 
 	D3DXVec3Normalize(&vDir, &vDir);
 
-	if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x - 5.f &&
+	/*if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x - 5.f &&
 		vPos.z < VTXCNTZ - m_pTransformCom->m_vScale.z  - 5.f &&
 		vPos.x > m_pTransformCom->m_vScale.x + 5.f &&
 		vPos.z > m_pTransformCom->m_vScale.z + 5.f)
@@ -263,9 +263,17 @@ void CLeaper::MoveTo_Random(const _float& fTimeDelta)
 	{
 
 		m_pTransformCom->Move_Pos(&-vDir, m_fSpeed, fTimeDelta);
+	}*/
+	//m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	if (vPos.x >= VTXCNTX - m_pTransformCom->m_vScale.x - INTERVAL ||
+		vPos.z >= VTXCNTZ - m_pTransformCom->m_vScale.z - INTERVAL ||
+		vPos.x <= m_pTransformCom->m_vScale.x + INTERVAL ||
+		vPos.z <= m_pTransformCom->m_vScale.z + INTERVAL)
+	{
+		vDir *= -1;
 	}
-
-
+	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
 }
 
 void CLeaper::JumpTo_Player(const _float& fTimeDelta)
@@ -289,14 +297,14 @@ void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 	}
 	else if (LEAPER_DOWN == m_eCurState)
 	{
-		if (vPos.y > 1.f)
+		if (vPos.y > HEIGHT_Y)
 		{
 			//vPos.y -= 1.f;
 			vPos.y -= m_fSpeed * fTimeDelta * 5.f;
 		}
 		else
 		{
-			vPos.y = 1.f;
+			vPos.y = HEIGHT_Y;
 			m_eCurState = LEAPER_IDLE;
 			m_bJump = false;
 		}

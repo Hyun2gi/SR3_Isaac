@@ -5,6 +5,8 @@
 
 class CLeaper : public CMonster
 {
+	const _float HEIGHT_Y = 0.4f;
+	const _float INTERVAL = 3.f;
 private:
 	explicit CLeaper(LPDIRECT3DDEVICE9 pGraphicDev, int iID);
 	explicit CLeaper(const CLeaper& rhs);

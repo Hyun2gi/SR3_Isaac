@@ -4,10 +4,13 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
-CSquirt::CSquirt(LPDIRECT3DDEVICE9 pGraphicDev)
+#include "Dip.h"
+
+CSquirt::CSquirt(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
 	: CMonster(pGraphicDev)
 {
-	DWORD dwSeed = time(NULL) % 1000;
+	int iSeed = iID * 5;
+	DWORD dwSeed = (iSeed << 16) | time(NULL) % 1000;
 	srand(dwSeed);
 }
 
@@ -23,13 +26,13 @@ CSquirt::~CSquirt()
 HRESULT CSquirt::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(0.f, 1.f, 0.f);
-	m_pTransformCom->m_vScale = { 1.5f, 1.5f, 1.5f };
+	m_pTransformCom->Set_Pos(0.f, HEIGHT_Y, 0.f);
+	m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
 
 	m_iHp = 6;
 
-	m_fCallLimit = 3;
-	m_fSpeed = 2.f;
+	m_fCallLimit = (rand() % 3) + 3;
+	m_fSpeed = 4.f;
 
 	m_bSliding = false;
 	m_bBounceWall = false;
@@ -57,9 +60,6 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
-	if (m_bDead)
-		return 1;
-
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -67,10 +67,13 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 		Hit_PushBack(m_fSlowDelta);
 
 		m_bHit = false;
+		m_bHitColor = true;
 
 		if (0 >= m_iHp)
 		{
 			m_bDead = true;
+			
+			// ÀÌÆåÆ® »ý¼º
 			_vec3 vPos;
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
 			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
@@ -108,7 +111,7 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
-	Fix_Y();
+	Fix_Y(HEIGHT_Y);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -212,30 +215,19 @@ void CSquirt::Sliding(const _float& fTimeDelta)
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	D3DXVec3Normalize(&m_vDir, &m_vDir);
+	D3DXVec3Normalize(&m_vMoveLook, &m_vMoveLook);
 
-	m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed * m_fAccel, fTimeDelta);
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x &&
-		vPos.z < VTXCNTZ - m_pTransformCom->m_vScale.z &&
-		vPos.x > m_pTransformCom->m_vScale.x &&
-		vPos.z > m_pTransformCom->m_vScale.z)
+	if (vPos.x >= VTXCNTX - m_pTransformCom->m_vScale.x - INTERVAL ||
+		vPos.z >= VTXCNTZ - m_pTransformCom->m_vScale.z - INTERVAL ||
+		vPos.x <= m_pTransformCom->m_vScale.x + INTERVAL ||
+		vPos.z <= m_pTransformCom->m_vScale.z + INTERVAL)
 	{
-		m_pTransformCom->Move_Pos(&m_vDir, m_fSpeed * m_fAccel, fTimeDelta);
-	}
-	else
-	{
-		m_bBounceWall = true;
-		m_vBounceDir = m_vMoveLook * -1.f;
-		/*m_vMoveLook *= -1.f;
-		m_pTransformCom->Move_Pos(&-m_vDir, m_fSpeed * m_fAccel, fTimeDelta);*/
+		m_vMoveLook *= -1;
 	}
 
-	if (m_bBounceWall)
-	{
-		m_vMoveLook *= -1.f;
-		m_pTransformCom->Move_Pos(&-m_vDir, m_fSpeed * m_fAccel, fTimeDelta);
-	}
+	m_pTransformCom->Move_Pos(&m_vMoveLook, m_fSpeed * m_fAccel, fTimeDelta);
 
 	m_fAccel -= 0.1;
 
@@ -252,7 +244,7 @@ void CSquirt::Check_TargetPos()
 
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
 
-	m_vDir = m_vTargetPos - m_pTransformCom->m_vInfo[INFO_POS];
+	m_vMoveLook = m_vTargetPos - m_pTransformCom->m_vInfo[INFO_POS];
 }
 
 void CSquirt::Epic_Time()
@@ -266,9 +258,23 @@ void CSquirt::Epic_Time()
 	}
 }
 
-CSquirt* CSquirt::Create(LPDIRECT3DDEVICE9 pGraphicDev)
+void CSquirt::Create_Dip(CLayer* pLayer)
 {
-	CSquirt* pInstance = new CSquirt(pGraphicDev);
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	for (int i = 0; i < 2; ++i)
+	{
+		CDip* pDip = CDip::Create(m_pGraphicDev, i);
+		dynamic_cast<CDip*>(pDip)->Get_Transform()->Set_Pos(vPos.x + (i*0.5f), vPos.y, vPos.z);
+		pDip->Set_MyLayer(m_vecMyLayer[0]);
+		pLayer->Add_GameObject(L"Fly", pDip);
+	}
+}
+
+CSquirt* CSquirt::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
+{
+	CSquirt* pInstance = new CSquirt(pGraphicDev, iID);
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{

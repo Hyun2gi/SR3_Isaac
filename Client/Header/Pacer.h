@@ -5,6 +5,8 @@
 
 class CPacer : public CMonster
 {
+	const _float HEIGHT_Y = 0.4f;
+	const _float INTERVAL = 2.f;
 private:
 	explicit CPacer(LPDIRECT3DDEVICE9 pGraphicDev, int iID);
 	explicit CPacer(const CPacer& rhs);
