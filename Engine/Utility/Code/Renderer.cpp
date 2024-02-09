@@ -26,6 +26,8 @@ void CRenderer::Add_RenderGroup(RENDERID eID, CGameObject * pGameObject)
 
 void CRenderer::Render_GameObject(LPDIRECT3DDEVICE9 & pGraphicDev)
 {
+	
+	
 	Render_Priority(pGraphicDev);
 	Render_NonAlpha(pGraphicDev);
 	Render_Alpha(pGraphicDev);
@@ -162,7 +164,19 @@ void CRenderer::Render_Particles(LPDIRECT3DDEVICE9& pGraphicDev)
 
 void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 {
+	_matrix matView, matProj;
+	_matrix matGameView, matGameProj;
+
+	pGraphicDev->GetTransform(D3DTS_VIEW, &matGameView);
+	pGraphicDev->GetTransform(D3DTS_PROJECTION, &matGameProj);
+	
+	D3DXMatrixIdentity(&matView);
+	D3DXMatrixOrthoLH(&matProj, 800, 600, 0.0f, 1.f);
+
 	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+
+	pGraphicDev->SetTransform(D3DTS_VIEW, &matView);
+	pGraphicDev->SetTransform(D3DTS_PROJECTION, &matProj);
 
 	m_RenderGroup[RENDER_UI].sort([](auto& iter, auto& iter2)
 		{ 
@@ -172,7 +186,10 @@ void CRenderer::Render_UI(LPDIRECT3DDEVICE9& pGraphicDev)
 	for (auto& iter : m_RenderGroup[RENDER_UI])
 		iter->Render_GameObject();
 
-	pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+	//pGraphicDev->SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
+
+	pGraphicDev->SetTransform(D3DTS_VIEW, &matGameView);
+	pGraphicDev->SetTransform(D3DTS_PROJECTION, &matGameProj);
 }
 
 void CRenderer::Free()

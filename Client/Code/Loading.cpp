@@ -240,7 +240,7 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 
 	m_bFinish = true;
 
-	lstrcpy(m_szLoading, L"Loading Complete");
+	//lstrcpy(m_szLoading, L"Loading Complete");
 
 	return 0;
 
