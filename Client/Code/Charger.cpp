@@ -64,16 +64,18 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 	if (m_bHitColor)
 		Change_Color(fTimeDelta);
 
-	Face_Camera();
-
-	CGameObject::Update_GameObject(m_fSlowDelta);
-
 	Check_Range();
 
 	_vec3 vTargetPos;
 	m_pTargetTransCom->Get_Info(INFO_POS, &vTargetPos);
 
 	m_pTransformCom->Chase_Target(&vTargetPos, m_fSpeed, m_fSlowDelta);
+
+	Face_Camera();
+
+	CGameObject::Update_GameObject(m_fSlowDelta);
+
+	
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -185,7 +187,7 @@ void CCharger::Check_Range()
 		(fabs(vTargetPos.x - vPos.x) * fabs(vTargetPos.x - vPos.x)) +
 		(fabs(vTargetPos.y - vPos.y) * fabs(vTargetPos.y - vPos.y));
 
-	if (40 < fDistance) // 범위에 속하지 않을 때
+	if (10 < fDistance) // 범위에 속하지 않을 때
 	{
 		m_eCurState = CHARGER_IDLE;
 		m_fSpeed = 2.f;
