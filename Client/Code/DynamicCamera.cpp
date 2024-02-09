@@ -58,7 +58,6 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_pTarget == nullptr)
 	{
-		//m_pTarget = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"));
 		m_pTarget = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 		CPlayer::GetInstance()->Set_Camera(this);
 	}
@@ -112,7 +111,6 @@ void CDynamicCamera::LateUpdate_GameObject()
 
 void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 {
-
 	if (Engine::Get_DIKeyState(DIK_O) & 0x80)
 	{
 		if (m_fCameraDistance == 5)

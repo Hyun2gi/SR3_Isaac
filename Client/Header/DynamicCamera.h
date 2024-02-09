@@ -71,6 +71,8 @@ public:
 
 	_vec3				Get_EyePos() { return m_vEye; }
 
+	bool				Get_FirstPerson() { return m_bFirstPerson; }
+
 private:
 	virtual void Free();
 	void		Key_Input(const _float& fTimeDelta);

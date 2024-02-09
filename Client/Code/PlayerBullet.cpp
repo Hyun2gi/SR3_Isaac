@@ -155,20 +155,17 @@ HRESULT CPlayerBullet::Add_Component()
     D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);*/
     m_vBulletDir = CPlayer::GetInstance()->Get_BulletDir();
 
-    if (m_vBulletDir.y < 0)
+    if (m_vBulletDir.y <= playerDir.y / 3)
     {
         m_vBulletDir = _vec3(playerDir.x, playerDir.y / 3, playerDir.z);
     }
 
-
+    m_vBulletDir = _vec3(playerDir.x, playerDir.y / 3, playerDir.z);
     // playerPos = 눈물 위치
     playerPos += m_vBulletDir * 0.2;
     m_pTransformCom->Set_Pos(playerPos);
     
-    // 플레이어가 보는 방향으로 bullet이 y축으로 회전해서 눈물이 정면으로 보이게 회전
-    _vec3   BulletLook;
-    m_pTransformCom->Get_Info(INFO_LOOK, &BulletLook);
-    //m_pTransformCom->Rotation(ROT_Y, acos(D3DXVec3Dot(&m_vBulletDir, &BulletLook)));
+   
     NULL_CHECK_RETURN(pComponent, E_FAIL);
     m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 

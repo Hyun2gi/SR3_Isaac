@@ -739,9 +739,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 				m_bEpicLieTiming = false;
 			}
-			
 		}
-		
 	}
 	else
 	{
