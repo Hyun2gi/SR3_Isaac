@@ -25,7 +25,7 @@ HRESULT CPacer::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->m_vScale = { 0.8f, 0.8f, 0.8f };
-	m_pTransformCom->Set_Pos(0.f, 1.f, 0.f);
+	m_pTransformCom->Set_Pos(0.f, HEIGHT_Y, 0.f);
 
 	m_iHp = 3;
 
@@ -93,7 +93,7 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
-	Fix_Y();
+	Fix_Y(HEIGHT_Y);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 

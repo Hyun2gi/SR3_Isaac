@@ -24,7 +24,7 @@ CLeaper::~CLeaper()
 HRESULT CLeaper::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(0.f, 1.f, 0.f);
+	m_pTransformCom->Set_Pos(0.f, HEIGHT_Y, 0.f);
 	m_pTransformCom->m_vScale = { 1.2f, 1.2f, 1.2f };
 
 	m_iHp = 3;
@@ -238,10 +238,10 @@ void CLeaper::MoveTo_Random(const _float& fTimeDelta)
 	float fY = vPos.y + (m_fPower * m_fAccelTime) - (9.f * m_fAccelTime * m_fAccelTime * 0.5f);
 	m_fAccelTime += 0.02f;
 
-	if (fY < 1.f)
+	if (fY < HEIGHT_Y)
 	{
 		m_fAccelTime = 0.f;
-		fY = 1.f;
+		fY = HEIGHT_Y;
 		m_bMove = false;
 	}
 	m_pTransformCom->Set_Pos(vPos.x, fY, vPos.z);
@@ -273,9 +273,7 @@ void CLeaper::MoveTo_Random(const _float& fTimeDelta)
 	{
 		vDir *= -1;
 	}
-
 	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
-
 }
 
 void CLeaper::JumpTo_Player(const _float& fTimeDelta)
@@ -299,14 +297,14 @@ void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 	}
 	else if (LEAPER_DOWN == m_eCurState)
 	{
-		if (vPos.y > 1.f)
+		if (vPos.y > HEIGHT_Y)
 		{
 			//vPos.y -= 1.f;
 			vPos.y -= m_fSpeed * fTimeDelta * 5.f;
 		}
 		else
 		{
-			vPos.y = 1.f;
+			vPos.y = HEIGHT_Y;
 			m_eCurState = LEAPER_IDLE;
 			m_bJump = false;
 		}
