@@ -9,8 +9,11 @@
 #include "InputDev.h"
 #include "ImGuiMgr.h"
 #include "SoundMgr.h"
+#include "CollisionMgr.h"
 
 BEGIN(Engine)
+
+class CTransform;
 
 // GraphicDev
 
@@ -57,9 +60,9 @@ inline bool		Key_Up(MOUSEKEYSTATE eMouse); HRESULT	Ready_InputDev(HINSTANCE hIns
 inline HRESULT	Ready_InputDev(HINSTANCE hInst, HWND hWnd);
 inline void		Update_InputDev(void);
 
-HRESULT Ready_ImGuiMgr(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev);
-void Update_ImGuiMgr();
-void Render_ImGuiMgr();
+inline HRESULT Ready_ImGuiMgr(HWND hWnd, LPDIRECT3DDEVICE9 pGraphicDev);
+inline void Update_ImGuiMgr();
+inline void Render_ImGuiMgr();
 
 inline void PlaySound(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume);
 inline void Ready_Sound();
@@ -67,6 +70,9 @@ inline void PlayBGM(TCHAR* pSoundKey, _float fVolume);
 inline void StopSound(CHANNEL_ID eID);
 inline void StopAll();
 inline void SetChannelVolume(CHANNEL_ID eID, _float fVolume);
+
+inline bool Check_Intersect(CTransform* pSrcTrans, CTransform* pDstTrans, _float fItv = 0.3f);
+inline void Check_Collision(CTransform* pSrcTrans, CTransform* pDstTrans, _float fItv = 0.3f);
 
 // Destroy
 inline void			Release_System();

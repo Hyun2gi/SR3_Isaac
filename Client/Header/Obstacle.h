@@ -24,6 +24,8 @@ public:
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
+	CTransform* Get_Transform() { return m_pTransformCom; }
+
 	HRESULT Set_Cute_Texture(const _tchar* pTextureTag);
 
 	void	Set_Pos(_vec3 vPos);

@@ -151,6 +151,16 @@ inline void SetChannelVolume(CHANNEL_ID eID, _float fVolume)
 	CSoundMgr::GetInstance()->SetChannelVolume(eID, fVolume);
 }
 
+inline bool Check_Intersect(CTransform* pSrcTrans, CTransform* pDstTrans, _float fItv)
+{
+	return CCollisionMgr::Check_Intersect(pSrcTrans, pDstTrans, fItv);
+}
+
+inline void Check_Collision(CTransform* pSrcTrans, CTransform* pDstTrans, _float fItv)
+{
+	CCollisionMgr::Check_Collision(pSrcTrans, pDstTrans, fItv);
+}
+
 // Destroy
 void			Release_System()
 {

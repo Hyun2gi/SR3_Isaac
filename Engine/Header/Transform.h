@@ -33,6 +33,21 @@ public:
 		m_vInfo[INFO_POS].z = fZ;
 	}
 
+	void				Set_Pos_X(_float fX)
+	{
+		m_vInfo[INFO_POS].x += fX;
+	}
+
+	void				Set_Pos_Y(_float fY)
+	{
+		m_vInfo[INFO_POS].y += fY;
+	}
+
+	void				Set_Pos_Z(_float fZ)
+	{
+		m_vInfo[INFO_POS].z += fZ;
+	}
+
 	void		Rotation(ROTATION eType, const _float& fAngle)
 	{
 		*(((_float*)&m_vAngle) + eType) += fAngle;
