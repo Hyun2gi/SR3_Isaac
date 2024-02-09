@@ -14,7 +14,8 @@ public:
 	~CCollisionMgr();
 
 public:
-	static bool Check_Intersect(CTransform* pSrcTrans, CTransform* pDstTrans);
+	static bool Check_Intersect(CTransform* pSrcTrans, CTransform* pDstTrans, _float fItv = 0.3f);
+	static void Check_Collision(CTransform* pSrcTrans, CTransform* pDstTrans, _float fItv = 0.3f);
 
 };
 

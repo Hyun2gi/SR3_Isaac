@@ -157,6 +157,11 @@ void CTestStage::LateUpdate_Scene()
 {
 	m_pObstacle->LateUpdate_GameObject();
 	CPlayer::GetInstance()->LateUpdate_GameObject();
+
+	CTransform* pPlayerTrans = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
+	CTransform* pObstacleTrans = m_pObstacle->Get_Transform();
+	Engine::Check_Collision(pPlayerTrans, pObstacleTrans);
+
 	__super::LateUpdate_Scene();
 }
 
