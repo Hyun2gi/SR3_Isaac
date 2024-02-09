@@ -51,6 +51,9 @@
 #include "Heart.h"
 #include "HeartHalf.h"
 
+// UI 테스트
+#include "Menu.h"
+
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev), m_bStartScene(false)
 {
@@ -101,6 +104,9 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 		// 아이템 드랍
 		Drop_ITem();
+
+		// UI 생성
+		Setting_UI();
 	}
 
 
@@ -116,6 +122,11 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
+
+		// UI 테스트용 코드
+		CMenu* pMenu = CMenu::Create(m_pGraphicDev, 800.f, 600.f, 0.f, 0.f, 1, 1);
+		NULL_CHECK_RETURN(pMenu, E_FAIL);
+		FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
 	}
 
 	//bool bIsIntersect = dynamic_cast<CDoor*>(m_mapLayer.at(L"GameDoor")->Get_GameObject(L"Door"))->Get_Collision();
@@ -1086,6 +1097,23 @@ void CLoadStage::Insert_Child()
 		dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))
 			->Set_ShellObj_ToStage(m_mapLayer.at(L"MapObj"));
 	}
+
+}
+
+void CLoadStage::Setting_UI()
+{
+#pragma region Boss HP
+
+	// Boss HP Tool
+	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro") != nullptr &&
+		m_mapLayer.at(L"UI")->Get_GameObject(L"BossHPTool") == nullptr)
+	{
+		//dynamic_cast<CMonstro*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro"))->Print_UI(m_mapLayer.at(L"UI"));
+	}
+
+	// Boss HP Bar
+
+#pragma endregion Boss HP
 
 }
 

@@ -3,6 +3,8 @@
 #include "Monster.h"
 #include "GameObject.h"
 
+#include "Layer.h"
+
 class CMonstro : public CMonster
 {
 	const _float CENTERY = 2.5f;
@@ -12,6 +14,8 @@ private:
 	virtual ~CMonstro();
 
 	enum MONSTROSTATE{MONSTRO_IDLE, MONSTRO_ATTACK, MONSTRO_WAIT, MONSTRO_MOVE, MONSTRO_UP, MONSTRO_DOWN, MONSTRO_DEAD, MONSTRO_END};
+public:
+	void			Print_UI(CLayer* pLayer);
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;

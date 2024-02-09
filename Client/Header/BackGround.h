@@ -32,6 +32,8 @@ private:
 	Engine::CTransform*	m_pTransformCom;
 	Engine::CTexture*	m_pTextureCom;
 
+	_float				m_fFrame = 0.f;
+
 public:
 	static CBackGround*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
 
