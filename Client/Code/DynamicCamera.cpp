@@ -71,14 +71,13 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_eCurState == C_EPIC)
 	{
+		// Epic 일때 위치 세팅
 		CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 		_vec3		playerPos;
 
 		playerInfo->Get_Info(INFO_POS, &playerPos);
 		m_vEye = _vec3(playerPos.x, 20, playerPos.z);
-
-		//m_vAt = playerPos;
 	}
 
 
@@ -108,21 +107,6 @@ void CDynamicCamera::LateUpdate_GameObject()
 
 void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 {
-	if (Engine::Get_DIKeyState(DIK_O) & 0x80)
-	{
-		if (m_fCameraDistance == 5)
-		{
-			m_bChaseInit = true;
-			m_fCameraDistance = 15;
-
-		}
-		else if (m_fCameraDistance == 15)
-		{
-			m_bChaseInit = true;
-			m_fCameraDistance = 5;
-		}
-	}
-
 	if (Engine::Get_DIKeyState(DIK_N) & 0x80)
 	{
 		if (m_bShake == false)
@@ -132,29 +116,6 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 			//OnShakeCameraRot(2, 2);
 		}
 	}
-
-	if (Engine::Get_DIKeyState(DIK_M) & 0x80)
-	{
-		if (m_bMove == false)
-		{
-			m_bMove = true;
-			CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
-
-			_vec3		playerPos;
-			_vec3		playerDir;
-			_vec3		targetpos;
-
-			playerInfo->Get_Info(INFO_POS, &playerPos);
-			playerInfo->Get_Info(INFO_LOOK, &playerDir);
-
-			D3DXVec3Normalize(&playerDir, &playerDir);
-			playerDir *= -3;
-			// 바라보는 대상은 플레이어
-			targetpos = playerPos + playerDir;
-			//OnMoveTargetCamera(3,7, targetpos, false);
-		}
-	}
-
 
 	if (Engine::Get_DIKeyState(DIK_TAB) & 0x80)
 	{
@@ -246,7 +207,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 				m_vEye = m_vAt + m_vCameraPosDir * m_fTotalDistanceWithPlayer;
 				m_bFirstPerson = false;
 			}
-
+#pragma region 안쓰는거
 			// 벽에 부딪히고 safe_area에 있으면
 			//if (m_bCollisionWall == true && CPlayer::GetInstance()->Get_SafeCamera_Area())
 			//{
@@ -315,7 +276,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			//	m_vEye = m_vAt + m_vCameraPosDir * m_fTotalDistanceWithPlayer;
 			//	m_bFirstPerson = false;
 			//}
-
+#pragma endregion
 		}
 	}
 }
@@ -337,7 +298,6 @@ void CDynamicCamera::Mouse_Move()
 
 	D3DXQUATERNION qRot;
 
-	//_long	dwMouseMove(0);
 	_long	dwMouseMoveX, dwMouseMoveY;
 
 	_vec3		playerPos;
@@ -362,11 +322,6 @@ void CDynamicCamera::Mouse_Move()
 		D3DXQuaternionRotationYawPitchRoll(&qRot, D3DXToRadian(dwMouseMoveX / 10.f), 0, 0);
 
 		D3DXMatrixRotationQuaternion(&matRotX, &qRot);
-
-		// 플레이어 - 마우스 X축 이동했을때 회전
-		//dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"))->Rotation(ROT_Y, D3DXToRadian(dwMouseMoveX / 10.f));
-		// 플레이어 - 마우스 Y축 이동했을때 회전
-		//dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Player", L"Proto_Transform"))->Rotation(ROT_Y, D3DXToRadian(dwMouseMoveX / 30.f));
 
 		// 마우스 Y축 이동 처리
 		_vec3		vCross;
@@ -409,7 +364,6 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 
 		if (m_fShakeTime > 0.0f)
 		{
-
 			if (m_vGoalPosition == m_vEye)
 			{
 				float FLOAT_MAX = 1;
@@ -497,9 +451,7 @@ void CDynamicCamera::ShakeByRotation(const _float& fTimeDelta)
 
 			if (m_iShakeNum % 2 == 1)
 			{
-
 				randy *= -1;
-
 			}
 			D3DXQUATERNION qRot;
 
@@ -613,7 +565,6 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 				m_eCurState = C_MOVE_TO_TARGET;
 				m_bFix = true;
 			}
-
 
 			// goalposition에 고정안하고 원래 position으로 돌아가는 경우
 			if (m_bFixedPos == true)
