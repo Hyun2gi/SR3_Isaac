@@ -11,12 +11,12 @@ class CTransform;
 
 END
 
-class CBossHP : public Engine::CUI
+class CBossHPTool : public Engine::CUI
 {
 private:
-	explicit CBossHP(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CBossHP(const CBossHP& rhs);
-	virtual ~CBossHP();
+	explicit CBossHPTool(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CBossHPTool(const CBossHPTool& rhs);
+	virtual ~CBossHPTool();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -42,7 +42,7 @@ private:
 	_int				m_iMaxFrameCount;
 
 public:
-	static CBossHP* Create(LPDIRECT3DDEVICE9	pGraphicDev,
+	static CBossHPTool* Create(LPDIRECT3DDEVICE9	pGraphicDev,
 		_float fSizeX, _float fSizeY,
 		_float fPosX, _float fPosY,
 		_int iAnimFrameCount, _int iMaxFrameCount,

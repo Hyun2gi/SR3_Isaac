@@ -6,6 +6,9 @@
 
 #include "MstBullet.h"
 
+#include "BossHP.h"
+#include "BossHPTool.h"
+
 CMonstro::CMonstro(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev),
 	m_fHitCoolTime(0.f)
@@ -20,6 +23,15 @@ CMonstro::CMonstro(const CMonstro& rhs)
 
 CMonstro::~CMonstro()
 {
+}
+
+void CMonstro::Print_UI(CLayer* pLayer)
+{
+	// 보스 HP UI 출력
+	//디바이스, x크기, y크기, x좌표, y좌표, x전체 크기, y전체 크기 (전체크기는 default 잡혀있음)
+	CBossHPTool* pBossHPTool = CBossHPTool::Create(m_pGraphicDev, 200.f, 50.f, 0.f, 0.f, 1, 1);
+	pLayer->Add_GameObject(L"BossHPTool", pBossHPTool);
+
 }
 
 HRESULT CMonstro::Ready_GameObject()

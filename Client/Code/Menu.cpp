@@ -1,23 +1,23 @@
 #include "stdafx.h"
-#include "BossHP.h"
+#include "Menu.h"
 
 #include "Export_Utility.h"
 
-CBossHP::CBossHP(LPDIRECT3DDEVICE9 pGraphicDev)
+CMenu::CMenu(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CUI(pGraphicDev)
 {
 }
 
-CBossHP::CBossHP(const CBossHP& rhs)
+CMenu::CMenu(const CMenu& rhs)
 	: Engine::CUI(rhs)
 {
 }
 
-CBossHP::~CBossHP()
+CMenu::~CMenu()
 {
 }
 
-HRESULT CBossHP::Ready_GameObject()
+HRESULT CMenu::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
@@ -32,21 +32,24 @@ HRESULT CBossHP::Ready_GameObject()
 	Compute_ProjectionMatrix();
 
 	return S_OK;
+
 }
 
-_int CBossHP::Update_GameObject(const _float& fTimeDelta)
+_int CMenu::Update_GameObject(const _float& fTimeDelta)
 {
-	// Boss의 HP를 받아와서 상태 변경
+	m_fCurFrame = 0.f;
+
+	CUI::Update_GameObject(fTimeDelta);
 
 	return 0;
 }
 
-void CBossHP::LateUpdate_GameObject()
+void CMenu::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 }
 
-void CBossHP::Render_GameObject()
+void CMenu::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
@@ -62,7 +65,7 @@ void CBossHP::Render_GameObject()
 
 }
 
-HRESULT CBossHP::Add_Component()
+HRESULT CMenu::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
@@ -70,10 +73,9 @@ HRESULT CBossHP::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	// Boss HP Bar
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BossHPBarTexture"));
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_MenuTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_BossHPBarTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_MenuTexture", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -82,9 +84,9 @@ HRESULT CBossHP::Add_Component()
 	return S_OK;
 }
 
-CBossHP* CBossHP::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
+CMenu* CMenu::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
 {
-	CBossHP* pInstance = new CBossHP(pGraphicDev);
+	CMenu* pInstance = new CMenu(pGraphicDev);
 
 	pInstance->Set_WindowSize(fWinCX, fWinCY);
 	pInstance->Set_Size(fSizeX, fSizeY);
@@ -95,14 +97,15 @@ CBossHP* CBossHP::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fS
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("BossHP Create Failed");
+		MSG_BOX("Menu Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
+
 }
 
-void CBossHP::Free()
+void CMenu::Free()
 {
 	__super::Free();
 }

@@ -41,5 +41,5 @@ void CPlayerHP::Render_GameObject()
 
 HRESULT CPlayerHP::Add_Component()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }

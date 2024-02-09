@@ -1,18 +1,20 @@
 #include "stdafx.h"
 #include "PlayerHeart.h"
 
+#include "Export_Utility.h"
+
 CPlayerHeart::~CPlayerHeart()
 {
 }
 
 HRESULT CPlayerHeart::Ready_GameObject()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }
 
 _int CPlayerHeart::Update_GameObject(const _float& fTimeDelta)
 {
-	return _int();
+	return 0;
 }
 
 void CPlayerHeart::LateUpdate_GameObject()
@@ -25,5 +27,5 @@ void CPlayerHeart::Render_GameObject()
 
 HRESULT CPlayerHeart::Add_Component()
 {
-	return E_NOTIMPL;
+	return S_OK;
 }

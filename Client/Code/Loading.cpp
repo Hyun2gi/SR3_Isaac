@@ -227,6 +227,9 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 
 #pragma region UI Texture
 
+	// Menu
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MenuTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Intro/Menu.png")), E_FAIL);
+
 	// Boss HP
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BossHPTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Boss/BossHP.png")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BossHPBarTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Boss/BossHPBar.png")), E_FAIL);
