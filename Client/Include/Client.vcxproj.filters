@@ -226,6 +226,9 @@
     <Filter Include="02. GameObject\12. UI\01. Player\00. Player HP\00. Player Heart">
       <UniqueIdentifier>{132292b4-be14-49b5-a22b-57a03402656f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. Room\03.Obstacle">
+      <UniqueIdentifier>{ddca5203-f170-4684-bae5-9a15b85d9c1e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -426,14 +429,8 @@
     <ClInclude Include="..\Header\DynamicCamera2.h">
       <Filter>02. GameObject\11. CameraTest</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\PlayerHP.h">
-      <Filter>02. GameObject\12. UI\01. Player\00. Player HP</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\PlayerHeart.h">
-      <Filter>02. GameObject\12. UI\01. Player\00. Player HP\00. Player Heart</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\BossHP.h">
-      <Filter>02. GameObject\12. UI\02. Monster</Filter>
+    <ClInclude Include="..\Header\Obstacle.h">
+      <Filter>02. GameObject\10. Room\03.Obstacle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -626,14 +623,8 @@
     <ClCompile Include="..\Code\DynamicCamera2.cpp">
       <Filter>02. GameObject\11. CameraTest</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\PlayerHP.cpp">
-      <Filter>02. GameObject\12. UI\01. Player\00. Player HP</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\PlayerHeart.cpp">
-      <Filter>02. GameObject\12. UI\01. Player\00. Player HP\00. Player Heart</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\BossHP.cpp">
-      <Filter>02. GameObject\12. UI\02. Monster</Filter>
+    <ClCompile Include="..\Code\Obstacle.cpp">
+      <Filter>02. GameObject\10. Room\03.Obstacle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

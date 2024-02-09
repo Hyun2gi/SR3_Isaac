@@ -53,6 +53,11 @@ HRESULT CObstacle::Set_Cute_Texture(const _tchar* pTextureTag)
 	return E_NOTIMPL;
 }
 
+void CObstacle::Set_Pos(_vec3 vPos)
+{
+	m_pTransformCom->Set_Pos(vPos);
+}
+
 HRESULT CObstacle::Add_Component()
 {
 	CComponent* pComponent = nullptr;

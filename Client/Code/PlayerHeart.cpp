@@ -1,3 +1,4 @@
+#include "stdafx.h"
 #include "PlayerHeart.h"
 
 CPlayerHeart::~CPlayerHeart()
