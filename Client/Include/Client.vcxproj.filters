@@ -208,6 +208,24 @@
     <Filter Include="02. GameObject\11. CameraTest">
       <UniqueIdentifier>{0acf6d86-6b03-476d-bd9e-683c7b033359}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\12. UI">
+      <UniqueIdentifier>{24bc9b26-4f1e-4d70-9582-e919fe248e4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\00. Menu">
+      <UniqueIdentifier>{eaad68dd-3b4a-4121-b325-36ebbe5e117c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\01. Player">
+      <UniqueIdentifier>{1476ad35-d746-4d10-8a94-acffdc2a2c7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\02. Monster">
+      <UniqueIdentifier>{2086ba81-2dac-4c2a-b01f-9bf24c327528}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\01. Player\00. Player HP">
+      <UniqueIdentifier>{9eab6200-34c6-4a3e-85d7-d430825967a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\01. Player\00. Player HP\00. Player Heart">
+      <UniqueIdentifier>{132292b4-be14-49b5-a22b-57a03402656f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -408,6 +426,15 @@
     <ClInclude Include="..\Header\DynamicCamera2.h">
       <Filter>02. GameObject\11. CameraTest</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\PlayerHP.h">
+      <Filter>02. GameObject\12. UI\01. Player\00. Player HP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\PlayerHeart.h">
+      <Filter>02. GameObject\12. UI\01. Player\00. Player HP\00. Player Heart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\BossHP.h">
+      <Filter>02. GameObject\12. UI\02. Monster</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -598,6 +625,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\DynamicCamera2.cpp">
       <Filter>02. GameObject\11. CameraTest</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PlayerHP.cpp">
+      <Filter>02. GameObject\12. UI\01. Player\00. Player HP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PlayerHeart.cpp">
+      <Filter>02. GameObject\12. UI\01. Player\00. Player HP\00. Player Heart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\BossHP.cpp">
+      <Filter>02. GameObject\12. UI\02. Monster</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
