@@ -51,17 +51,31 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 			return 0;
 		}
 		
-		if (GetAsyncKeyState('1'))
+		if (GetAsyncKeyState('3'))
 		{
 			Engine::CScene*		pScene = nullptr;
 
-			pScene = CLoadStage::Create(m_pGraphicDev, 5, true); // 
+			pScene = CLoadStage::Create(m_pGraphicDev, 3, true);
 			NULL_CHECK_RETURN(pScene, -1);
 
 			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
 
 			return 0;
 		}		
+
+
+		if (GetAsyncKeyState('1'))
+		{
+			Engine::CScene* pScene = nullptr;
+
+			pScene = CLoadStage::Create(m_pGraphicDev, 1, true);
+      
+			NULL_CHECK_RETURN(pScene, -1);
+
+			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			return 0;
+		}
 
 		if (GetAsyncKeyState(VK_BACK))
 		{
