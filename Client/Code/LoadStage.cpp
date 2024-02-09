@@ -126,42 +126,6 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	//	//pGameObject
 	//}
 
-	if (Engine::Key_Down(DIK_1))
-	{
-		Engine::CScene* pScene = nullptr;
-
-		pScene = CLoadStage::Create(m_pGraphicDev, 1);
-		NULL_CHECK_RETURN(pScene, -1);
-
-		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
-
-		return 0;
-	}
-
-	if (Engine::Key_Down(DIK_2))
-	{
-		Engine::CScene* pScene = nullptr;
-
-		pScene = CLoadStage::Create(m_pGraphicDev, 2);
-		NULL_CHECK_RETURN(pScene, -1);
-
-		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
-
-		return 0;
-	}
-
-	if (Engine::Key_Down(DIK_3))
-	{
-		Engine::CScene* pScene = nullptr;
-
-		pScene = CLoadStage::Create(m_pGraphicDev, 3);
-		NULL_CHECK_RETURN(pScene, -1);
-
-		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
-
-		return 0;
-	}
-
 	//타임 델타 스케일 조절 예시 _ 사용
 	if (Engine::Key_Down(DIK_P))
 	{
@@ -766,7 +730,8 @@ void CLoadStage::Moster_Collision()
 			{
 				// 일반 총알일때 이펙트 보여주려고 해당부분 처리
 				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0 &&
-					ATTACK_FLY != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
+					ATTACK_FLY != dynamic_cast<CMonster*>(pMonster)->Get_MstType() && // 도플, 공격형 파리가 아닌 경우
+					DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
 				{
 					// 일반 총알 충돌처리
 					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();

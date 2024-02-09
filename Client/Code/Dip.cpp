@@ -111,7 +111,6 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
-
 	if (m_bDead)
 		return 1;
 
