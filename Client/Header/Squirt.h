@@ -3,6 +3,8 @@
 #include "Monster.h"
 #include "GameObject.h"
 
+#include "Layer.h"
+
 class CSquirt : public CMonster
 {
 private:
@@ -11,6 +13,9 @@ private:
 	virtual ~CSquirt();
 
 	enum SQUIRTSTATE { SQU_IDLE, SQU_SLIDE, SQU_END };
+
+public:
+	void				Create_Dip(CLayer* pLayer);
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;

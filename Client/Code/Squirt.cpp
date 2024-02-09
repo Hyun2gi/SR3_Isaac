@@ -4,6 +4,8 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
+#include "Dip.h"
+
 CSquirt::CSquirt(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev)
 {
@@ -67,10 +69,13 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 		Hit_PushBack(m_fSlowDelta);
 
 		m_bHit = false;
+		m_bHitColor = true;
 
 		if (0 >= m_iHp)
 		{
 			m_bDead = true;
+			
+			// ÀÌÆåÆ® »ý¼º
 			_vec3 vPos;
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
 			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
@@ -263,6 +268,20 @@ void CSquirt::Epic_Time()
 	{
 		m_pTransformCom->m_vAngle = m_vOriginAngle;
 		m_bEpicTime = false;
+	}
+}
+
+void CSquirt::Create_Dip(CLayer* pLayer)
+{
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	for (int i = 0; i < 2; ++i)
+	{
+		CDip* pDip = CDip::Create(m_pGraphicDev, i);
+		dynamic_cast<CDip*>(pDip)->Get_Transform()->Set_Pos(vPos.x + (i*0.5f), vPos.y, vPos.z);
+		pDip->Set_MyLayer(m_vecMyLayer[0]);
+		pLayer->Add_GameObject(L"Fly", pDip);
 	}
 }
 
