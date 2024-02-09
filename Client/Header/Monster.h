@@ -24,6 +24,7 @@ protected:
 public:
 	_bool			Get_Dead() { return m_bDead; }
 	void			Set_Dead() { m_bDead = true; }
+	_int			Get_HP() { return m_iHp; }
 	void			Hit() { m_bHit = true; }
 	void			Hit_False() { m_bHit = false; }
 	_bool			Get_IsBoss() { return m_bBoss; }
@@ -47,7 +48,7 @@ protected:
 	bool			Check_Color_Time(const _float& fTimeDelta);
 	void			Check_Map_Range();
 	void			Hit_PushBack(const _float& fTimeDelta);
-	void			Fix_Y();
+	void			Fix_Y(_float fY);
 	void			Change_Scale();
 	void			Change_Color(const _float& fTimeDelta);
 

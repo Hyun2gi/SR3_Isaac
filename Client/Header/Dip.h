@@ -5,6 +5,7 @@
 
 class CDip : public CMonster
 {
+	const _float HEIGHT_Y = 1.f;
 private:
 	explicit CDip(LPDIRECT3DDEVICE9 pGraphicDev, int iID);
 	explicit CDip(const CDip& rhs);

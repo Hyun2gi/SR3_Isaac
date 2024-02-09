@@ -142,12 +142,12 @@ void CMonster::Hit_PushBack(const _float& fTimeDelta)
 	m_pTransformCom->Move_Pos(&vDir, 20.f, fTimeDelta);
 }
 
-void CMonster::Fix_Y()
+void CMonster::Fix_Y(_float fY)
 {
 	// y °ª °íÁ¤
 	_vec3 vNewPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vNewPos);
-	m_pTransformCom->Set_Pos(vNewPos.x, 1.f, vNewPos.z);
+	m_pTransformCom->Set_Pos(vNewPos.x, fY, vNewPos.z);
 }
 
 CMonster * CMonster::Create(LPDIRECT3DDEVICE9 pGraphicDev)

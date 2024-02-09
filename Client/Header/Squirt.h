@@ -7,8 +7,10 @@
 
 class CSquirt : public CMonster
 {
+	const _float HEIGHT_Y = 1.2f;
+	const _float INTERVAL = 1.f;
 private:
-	explicit CSquirt(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CSquirt(LPDIRECT3DDEVICE9 pGraphicDev, int iID);
 	explicit CSquirt(const CSquirt& rhs);
 	virtual ~CSquirt();
 
@@ -42,7 +44,7 @@ private:
 	_float				m_fAccel;
 
 	_vec3				m_vTargetPos;
-	_vec3				m_vDir;
+	_vec3				m_vDir; // 쓸 필요 없을 듯함
 	_vec3				m_vBounceDir;
 	_vec3				m_vOriginAngle;
 
@@ -50,7 +52,7 @@ private:
 	SQUIRTSTATE			m_eCurState;
 
 public:
-	static CSquirt* Create(LPDIRECT3DDEVICE9 pGraphicDev);
+	static CSquirt* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID);
 
 private:
 	virtual void	Free()									override;

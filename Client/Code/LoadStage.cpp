@@ -310,7 +310,7 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 			}
 			case SQUIRT:
 			{
-				pGameObject = CSquirt::Create(m_pGraphicDev);
+				pGameObject = CSquirt::Create(m_pGraphicDev, m_vecMonsterCount[SQUIRT]++);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
 				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
@@ -756,7 +756,7 @@ void CLoadStage::Moster_Collision()
 							// Squirt 인 경우 Dip 두 마리 생성 
 							if (SQUIRT == dynamic_cast<CMonster*>(pMonster)->Get_MstType()) // Squirt인 경우
 							{
-								if (dynamic_cast<CMonster*>(pMonster)->Get_Dead())
+								if (1 >= dynamic_cast<CMonster*>(pMonster)->Get_HP())
 								{
 									dynamic_cast<CSquirt*>(pMonster)->Create_Dip(m_mapLayer.at(L"GameMst"));
 								}
