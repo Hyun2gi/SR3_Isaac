@@ -107,7 +107,7 @@ public:
 	void		Set_Camera(CGameObject* _cam) { m_pCamera = _cam; }
 
 	bool		Get_Camera_WallBlock();
-	bool		Get_SafeCamer_Area(); // 카메라 벗어나지 않는 안전지대인지
+	bool		Get_SafeCamera_Area(); // 카메라 벗어나지 않는 안전지대인지
 	list<CGameObject*>* Get_Player_BullletList() { return &m_PlayerBulletList; }
 	void		Plus_EpicBulletMark(_vec3 pos); 
 	void		Clear_EpicBulletMark(); // 씬 이동때마다 바닥에 있는 에픽 흔적 지우기
