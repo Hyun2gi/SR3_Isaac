@@ -126,12 +126,13 @@ Engine::_int CTestStage::Update_Scene(const _float& fTimeDelta)
 
 		//함수 사용 예
 		Engine::Create_Explosion(m_pGraphicDev, *mat);
+		Engine::Create_Dust(m_pGraphicDev, *mat);
 		Engine::Create_Splash(m_pGraphicDev, *mat);
 		Engine::Create_Splash_Left(m_pGraphicDev, *mat);
 		Engine::Create_Splash_Right(m_pGraphicDev, *mat);
 		Engine::Create_Burst(m_pGraphicDev, *mat);
 
-		temp += D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.0f);
+		temp += D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.01f);
 		if (CPlayer::GetInstance()->Get_Component_Player_TexBuffer())
 		{
 			CPlayer::GetInstance()->Get_Component_Player_TexBuffer()->Set_Color(temp);
@@ -139,7 +140,7 @@ Engine::_int CTestStage::Update_Scene(const _float& fTimeDelta)
 	}
 	if (GetAsyncKeyState(VK_DOWN))
 	{
-		temp -= D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.0f);
+		temp -= D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.01f);
 		if (CPlayer::GetInstance()->Get_Component_Player_TexBuffer())
 		{
 			CPlayer::GetInstance()->Get_Component_Player_TexBuffer()->Set_Color(temp);

@@ -1170,6 +1170,10 @@ void CLoadStage::Setting_UI()
 
 }
 
+void CLoadStage::Play_Ending()
+{
+}
+
 HRESULT CLoadStage::Door_Collision()
 {
 	if (m_mapLayer.at(L"GameDoor"))

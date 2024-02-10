@@ -41,6 +41,7 @@ Engine::_int CMoveXObstacle::Update_GameObject(const _float& fTimeDelta)
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	Move(fTimeDelta);
+	Check_Wall_Collision();
 
 	return 0;
 }
@@ -122,7 +123,7 @@ void CMoveXObstacle::Check_Wall_Collision()
 	if (vPos.x - vScale.x * 2.f <= 0 && !m_bTurn)
 		m_bTurn = true;
 
-	if (vPos.x + vScale.x * 2.f >= VTXCNTZ && m_bTurn)
+	if (vPos.x + vScale.x * 2.f >= VTXCNTX && m_bTurn)
 		m_bTurn = false;
 }
 

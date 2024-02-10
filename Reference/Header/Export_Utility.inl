@@ -74,6 +74,11 @@ inline void Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _f
 	CParticleMgr::GetInstance()->Create_Explosion(pGraphicDev, matWorld, fSize, iCount);
 }
 
+inline void Create_Dust(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount)
+{
+	CParticleMgr::GetInstance()->Create_Dust(pGraphicDev, matWorld, fSize, iCount);
+}
+
 inline void Create_Splash(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, const _tchar* pTexturePath, _int iMaxFrame, _float fSize, _int iCount)
 {
 	CParticleMgr::GetInstance()->Create_Splash(pGraphicDev, matWorld, pTexturePath, iMaxFrame, fSize, iCount);

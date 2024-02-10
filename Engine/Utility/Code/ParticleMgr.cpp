@@ -27,6 +27,13 @@ void CParticleMgr::Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWo
 	m_pParticleList.emplace_back(pParticle);
 }
 
+void CParticleMgr::Create_Dust(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount)
+{
+	CParticleDust* pParticle = CParticleDust::Create(pGraphicDev, matWorld, fSize, iCount);
+	pParticle->Set_World_Matrix(matWorld);
+	m_pParticleList.emplace_back(pParticle);
+}
+
 void CParticleMgr::Create_Splash(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, const _tchar* pTexturePath, _int iMaxFrame, _float fSize, _int iCount)
 {
 	CParticleSplash* pParticle = CParticleSplash::Create(pGraphicDev, matWorld, pTexturePath, iMaxFrame, fSize, iCount);

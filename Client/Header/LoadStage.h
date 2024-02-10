@@ -72,6 +72,8 @@ private:
 	void			Insert_Child();
 	void			Setting_UI();
 
+	void			Play_Ending();
+
 public:
 	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene = false);
 
