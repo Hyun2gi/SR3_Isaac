@@ -41,6 +41,7 @@ Engine::_int CMoveZObstacle::Update_GameObject(const _float& fTimeDelta)
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	Move(fTimeDelta);
+	Check_Wall_Collision();
 
 	return 0;
 }
@@ -111,6 +112,20 @@ void CMoveZObstacle::Move(const _float& fTimeDelta)
 		if (m_pTransformCom->m_vInfo[INFO_POS].z >= fDownDst)
 			m_bTurn = false;
 	}
+}
+
+void CMoveZObstacle::Check_Wall_Collision()
+{
+	_vec3 vPos, vScale;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	m_pTransformCom->Get_Scale(&vScale);
+
+	if (vPos.z - vScale.z * 2.f <= 0 && !m_bTurn)
+		m_bTurn = true;
+
+	if (vPos.z + vScale.z * 2.f >= VTXCNTZ && m_bTurn)
+		m_bTurn = false;
+
 }
 
 CMoveZObstacle * CMoveZObstacle::Create(LPDIRECT3DDEVICE9 pGraphicDev)

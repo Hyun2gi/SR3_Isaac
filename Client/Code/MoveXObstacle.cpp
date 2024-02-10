@@ -113,6 +113,19 @@ void CMoveXObstacle::Move(const _float& fTimeDelta)
 	}
 }
 
+void CMoveXObstacle::Check_Wall_Collision()
+{
+	_vec3 vPos, vScale;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	m_pTransformCom->Get_Scale(&vScale);
+
+	if (vPos.x - vScale.x * 2.f <= 0 && !m_bTurn)
+		m_bTurn = true;
+
+	if (vPos.x + vScale.x * 2.f >= VTXCNTZ && m_bTurn)
+		m_bTurn = false;
+}
+
 CMoveXObstacle * CMoveXObstacle::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	CMoveXObstacle *	pInstance = new CMoveXObstacle(pGraphicDev);

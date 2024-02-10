@@ -39,6 +39,7 @@ private:
 	HRESULT			Add_Component();
 
 	void			Move(const _float& fTimeDelta);
+	void			Check_Wall_Collision();
 
 private:
 	Engine::CCubeTex* m_pBufferCom;
