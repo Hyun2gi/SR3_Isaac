@@ -85,7 +85,7 @@ void CMonster::Change_Color(const _float& fTimeDelta)
 
 		m_fColorTimeDelta = 0.f;
 
-		m_bHitColor = false;
+		//m_bHitColor = false;
 
 		return;
 	}

@@ -3,6 +3,8 @@
 #include "Base.h"
 #include "UI.h"
 
+#include "Monster.h"
+
 BEGIN(Engine)
 
 class CRcTex;
@@ -17,6 +19,9 @@ private:
 	explicit CBossHP(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CBossHP(const CBossHP& rhs);
 	virtual ~CBossHP();
+
+public:
+	void		Set_Target(CMonster* pMonster) { m_pMonster = pMonster; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -40,6 +45,10 @@ private:
 
 	_int				m_iAnimFrameCount;
 	_int				m_iMaxFrameCount;
+
+	_int				m_iTargetHP;
+
+	CMonster*			m_pMonster;
 
 public:
 	static CBossHP* Create(LPDIRECT3DDEVICE9	pGraphicDev,

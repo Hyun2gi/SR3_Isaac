@@ -21,7 +21,7 @@ CLogo::~CLogo()
 
 HRESULT CLogo::Ready_Scene()
 {
-	Engine::PlayBGM(L"Success.wav", 1.f);
+	Engine::PlayBGM(L"Title.ogg", 1.f);
 
 	FAILED_CHECK_RETURN(Ready_Prototype(), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);

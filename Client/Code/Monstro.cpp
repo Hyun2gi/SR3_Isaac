@@ -29,9 +29,13 @@ void CMonstro::Print_UI(CLayer* pLayer)
 {
 	// 보스 HP UI 출력
 	//디바이스, x크기, y크기, x좌표, y좌표, x전체 크기, y전체 크기 (전체크기는 default 잡혀있음)
-	CBossHPTool* pBossHPTool = CBossHPTool::Create(m_pGraphicDev, 200.f, 50.f, 0.f, 0.f, 1, 1);
+	CBossHPTool* pBossHPTool = CBossHPTool::Create(m_pGraphicDev, 400.f, 170.f, 0.f, 230.f, 1, 1);
 	pLayer->Add_GameObject(L"BossHPTool", pBossHPTool);
-
+	
+	// 보스 HP
+	CBossHP* pBossHP = CBossHP::Create(m_pGraphicDev, 400.f, 170.f, 0.f, 230.f, 1, 1);
+	pLayer->Add_GameObject(L"BossHP", pBossHP);
+	pBossHP->Set_Target(this);
 }
 
 HRESULT CMonstro::Ready_GameObject()
@@ -120,10 +124,6 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 				++iter;
 		}
 	}
-	
-	//Check_TargetPos();
-
-	//Face_Camera();
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
