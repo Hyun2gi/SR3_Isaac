@@ -55,6 +55,7 @@
 // UI
 #include "Menu.h"
 #include "PlayerCoin.h"
+#include "PlayerHP.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev), m_bStartScene(false)
@@ -1101,8 +1102,12 @@ void CLoadStage::Setting_UI()
 	//FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
 
 	// Player Coin UI
-	CPlayerCoin* pCoinUI = CPlayerCoin::Create(m_pGraphicDev, 28.f, 28.f, -350.f, 190.f, 1, 1);
+	CPlayerCoin* pCoinUI = CPlayerCoin::Create(m_pGraphicDev, 28.f, 28.f, -350.f, 180.f, 1, 1);
 	m_mapLayer.at(L"UI")->Add_GameObject(L"CoinUI", pCoinUI);
+
+	// Player HP
+	CPlayerHP* pPlayerHP = CPlayerHP::Create(m_pGraphicDev, 30.f, 30.f, -370.f, 170.f, 1, 1);
+	m_mapLayer.at(L"UI")->Add_GameObject(L"PlayerHP", pPlayerHP);
 
 	// Boss HP Tool
 	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro") != nullptr &&

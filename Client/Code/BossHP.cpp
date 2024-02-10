@@ -11,7 +11,7 @@ CBossHP::CBossHP(LPDIRECT3DDEVICE9 pGraphicDev)
 
 CBossHP::CBossHP(const CBossHP& rhs)
 	: Engine::CUI(rhs),
-	m_pMonster(nullptr)
+	m_pMonster(rhs.m_pMonster)
 {
 }
 

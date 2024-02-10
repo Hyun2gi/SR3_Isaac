@@ -238,6 +238,9 @@
     <Filter Include="02. GameObject\12. UI\01. Player\01. Player Coin">
       <UniqueIdentifier>{14dd8504-e403-4744-9e78-3118c183430e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\12. UI\01. Player\01. Player Coin\00. PLCoinFont">
+      <UniqueIdentifier>{08639cb5-003d-4c60-9b4f-783de9565650}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -453,6 +456,15 @@
     <ClInclude Include="..\Header\PlayerCoin.h">
       <Filter>02. GameObject\12. UI\01. Player\01. Player Coin</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\HeartUI.h">
+      <Filter>02. GameObject\12. UI\01. Player\00. Player HP\00. Player Heart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\PlayerHP.h">
+      <Filter>02. GameObject\12. UI\01. Player\00. Player HP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\PLCoinFont.h">
+      <Filter>02. GameObject\12. UI\01. Player\01. Player Coin\00. PLCoinFont</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -658,6 +670,15 @@
     </ClCompile>
     <ClCompile Include="..\Code\PlayerCoin.cpp">
       <Filter>02. GameObject\12. UI\01. Player\01. Player Coin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\HeartUI.cpp">
+      <Filter>02. GameObject\12. UI\01. Player\00. Player HP\00. Player Heart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PlayerHP.cpp">
+      <Filter>02. GameObject\12. UI\01. Player\00. Player HP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PLCoinFont.cpp">
+      <Filter>02. GameObject\12. UI\01. Player\01. Player Coin\00. PLCoinFont</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

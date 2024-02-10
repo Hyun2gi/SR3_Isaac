@@ -3,9 +3,6 @@
 #include "Base.h"
 #include "UI.h"
 
-#include "Player.h"
-#include "HeartUI.h"
-
 BEGIN(Engine)
 
 class CRcTex;
@@ -14,12 +11,11 @@ class CTransform;
 
 END
 
-class CPlayerHP : public Engine::CUI
+class CPLCoinFont : public Engine::CUI
 {
-private:
-	explicit CPlayerHP(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CPlayerHP(const CPlayerHP& rhs);
-	virtual ~CPlayerHP();
+	explicit CPLCoinFont(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CPLCoinFont(const CPLCoinFont& rhs);
+	virtual ~CPLCoinFont();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -29,20 +25,24 @@ public:
 
 private:
 	HRESULT			Add_Component();
-
-	void			Create_HeartUI();
-	void			Resetting_UI(_float fUIFrame1, _float fUIFrame2, _float fUIFrame3);
-	void			Update_UI();
+	void			Update_Scale();
 
 private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
-	vector<CHeartUI*>	m_vecHeartUI;
+	_float				m_fAnimSpeed = 1.f;
+	_float				m_fCurFrame = 0.f;
+
+	_int				m_iStartFrame;
+	_int				m_iEndFrame;
+
+	_int				m_iAnimFrameCount;
+	_int				m_iMaxFrameCount;
 
 public:
-	static CPlayerHP* Create(LPDIRECT3DDEVICE9	pGraphicDev,
+	static CPLCoinFont* Create(LPDIRECT3DDEVICE9	pGraphicDev,
 		_float fSizeX, _float fSizeY,
 		_float fPosX, _float fPosY,
 		_int iAnimFrameCount, _int iMaxFrameCount,
@@ -50,5 +50,6 @@ public:
 
 private:
 	virtual void Free() override;
+
 };
 
