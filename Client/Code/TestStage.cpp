@@ -134,17 +134,13 @@ Engine::_int CTestStage::Update_Scene(const _float& fTimeDelta)
 
 		temp += D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.01f);
 		if (CPlayer::GetInstance()->Get_Component_Player_TexBuffer())
-		{
 			CPlayer::GetInstance()->Get_Component_Player_TexBuffer()->Set_Color(temp);
-		}
 	}
 	if (GetAsyncKeyState(VK_DOWN))
 	{
 		temp -= D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.01f);
 		if (CPlayer::GetInstance()->Get_Component_Player_TexBuffer())
-		{
 			CPlayer::GetInstance()->Get_Component_Player_TexBuffer()->Set_Color(temp);
-		}
 	}
 
 

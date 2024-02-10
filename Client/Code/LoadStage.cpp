@@ -9,6 +9,8 @@
 
 #include "StageLoadMgr.h"
 
+#include "Ending.h"
+
 //환경
 #include "Terrain.h"
 #include "DynamicCamera.h"
@@ -58,7 +60,8 @@
 #include "Menu.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CScene(pGraphicDev), m_bStartScene(false)
+	: Engine::CScene(pGraphicDev), 
+	m_bStartScene(false), m_bEndingPlay(false)
 {
 }
 
@@ -130,14 +133,11 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	//타임 델타 스케일 조절 예시 _ 사용
 	if (Engine::Key_Down(DIK_P))
 	{
-		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f);
+		m_bEndingPlay = true;
+	}
 
-		Copy_Stage();
-	}
-	if (Engine::Key_Down(DIK_O))
-	{
-		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
-	}
+	if (m_bEndingPlay)
+		Play_Ending(fTimeDelta);
 
 	return iExit;
 }
@@ -1170,8 +1170,36 @@ void CLoadStage::Setting_UI()
 
 }
 
-void CLoadStage::Play_Ending()
+void CLoadStage::Play_Ending(const _float& fTimeDelta)
 {
+	m_fEndingTimer -= fTimeDelta;
+
+	if (0 < m_fEndingTimer)
+	{
+		CTransform* pTest = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
+
+		_matrix mat = *(pTest->Get_WorldMatrix());
+		mat._41 = mat._41 + (rand() % 10 - 5);
+		mat._42 = mat._42 + (rand() % 10 - 5);
+		mat._43 = mat._43 + (rand() % 10 - 5);
+
+		Engine::Create_Dust(m_pGraphicDev, mat);
+	}
+	else
+	{
+		Engine::CScene* pScene = nullptr;
+
+		pScene = CEnding::Create(m_pGraphicDev);
+
+		Engine::Set_Scene(pScene);
+
+		//NULL_CHECK_RETURN(pScene, -1);
+
+		//FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+		return;
+	}
+
 }
 
 HRESULT CLoadStage::Door_Collision()

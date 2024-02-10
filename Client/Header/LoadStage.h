@@ -72,7 +72,7 @@ private:
 	void			Insert_Child();
 	void			Setting_UI();
 
-	void			Play_Ending();
+	void			Play_Ending(const _float& fTimeDelta);
 
 public:
 	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene = false);
@@ -94,6 +94,10 @@ private:
 
 	bool m_bIsCreated;
 	bool m_bStartScene;
+
+	//엔딩 관련
+	_float m_fEndingTimer = 4.5f;
+	bool m_bEndingPlay;
 
 	// 맵에 배치한 몬스터의 개수를 카운트해주는 벡터
 	vector<int> m_vecMonsterCount;
