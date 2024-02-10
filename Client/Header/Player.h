@@ -137,6 +137,7 @@ public:
 
 	void		Set_StartPos(_vec3 start) { m_vStartPos = start; m_bStartScene = true; }
 
+	void		Set_StartCameraMouse();
 
 	_vec3		Get_BulletDir();
 

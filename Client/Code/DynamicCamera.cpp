@@ -40,8 +40,16 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_bMove = false;
 	m_bCollisionWall = false;
 	m_bPreCollisionWall = false;
+	m_bCollisionWall = false;
+	m_bFirstPerson = false;
+	m_bPreFirstPerson = false;
+	m_bChaseInit = true;
+	m_bMouseCameraStart = false;
 
+
+	m_fAngleX = 0;
 	m_fAngleY = 0;
+	m_fAngleZ = 0;
 
 	m_bEpic = false;
 	m_bEpicCall = false;
@@ -84,7 +92,11 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 
 	if (false == m_bFix)
 	{
-		Mouse_Move();
+		if (m_bMouseCameraStart)
+		{
+			Mouse_Move();
+		}
+			
 		Chase_Character(fTimeDelta);
 		//마우스 움직임
 
@@ -96,6 +108,8 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 		}
 
 	}
+	
+	
 
 	return iExit;
 }
@@ -177,6 +191,12 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			_vec3 vPos = m_vAt + m_vCameraPosDir * m_fTotalDistanceWithPlayer;
 
 			m_bPreCollisionWall = m_bCollisionWall;
+			m_bPreFirstPerson = m_bFirstPerson;
+
+			if (m_bPreFirstPerson != m_bFirstPerson)
+			{
+				m_fAngleY = 0;
+			}
 
 			// 벽에 부딪혔을때
 			if ((vPos.x > VTXCNTX - 3 || vPos.z > VTXCNTX - 3 || vPos.x < 3 || vPos.z < 3))
@@ -202,14 +222,24 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			{
 				if (CPlayer::GetInstance()->Get_SafeCamera_Area())
 				{
+					// 안전지대에 있을때는 그냥 카메라가 따라오게끔
 					// 카메라와 벽 충돌발생
+					int cnt = 0;
 					while (CheckCollisionWall(m_fFlexibleDistanceWithPlayer))
 					{
 						m_fFlexibleDistanceWithPlayer -= 0.01;
+						cnt++;
+
+						if (cnt > 5000)
+						{
+							break;
+						}
 					}
 					m_vGoalPosition = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
-					D3DXVECTOR3 _movevec;
-					D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
+
+					/*D3DXVECTOR3 _movevec;
+					D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);*/
+
 					m_vEye = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
 
 					if (D3DXVec3Length(&(m_vEye - m_vAt)) < 5)
@@ -617,6 +647,7 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 
 bool CDynamicCamera::CheckCollisionWall(float distance)
 {
+	D3DXVec3Normalize(&m_vCameraPosDir, &m_vCameraPosDir);
 	_vec3 vPos = m_vAt + m_vCameraPosDir * distance;
 
 	// 벽에 부딪혔을때

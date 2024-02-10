@@ -86,6 +86,9 @@ public:
 
 	bool				Get_FirstPerson() { return m_bFirstPerson; }
 
+	// 카메라 움직임 등 카메라 자체 움직임을 시작
+	void				Set_TotalCameraStart() { m_bMouseCameraStart = true; }
+
 private:
 	virtual void Free();
 	void		Key_Input(const _float& fTimeDelta);
@@ -108,6 +111,9 @@ private:
 	_bool		m_bFix = false;
 	_bool		m_bCheck = false;
 	_bool		m_bChaseInit = true;
+
+	// 카메라 자체 스타트인지 아닌지
+	_bool		m_bMouseCameraStart = false;
 
 	// 필요없을 경우 삭제하기
 	// 카메라 흔들림 주기 전에 position
@@ -137,8 +143,6 @@ private:
 	_bool		m_bMove;
 	_bool		m_bFirstPerson;
 	_bool		m_bPreFirstPerson;
-
-	_bool		m_bSetFirstPerson;
 
 
 	// 이동 후에 goalposition에서 fixed 할건지 아니면 시작 position으로 갈건지

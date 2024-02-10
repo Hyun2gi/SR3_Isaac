@@ -524,6 +524,11 @@ void CPlayer::Set_Attacked()
 	m_fDelayTime = 0.f;
 }
 
+void CPlayer::Set_StartCameraMouse()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_TotalCameraStart(); 
+}
+
 _vec3 CPlayer::Get_BulletDir()
 {
 	_vec3 playerDir;
