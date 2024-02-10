@@ -93,6 +93,8 @@ private:
 	bool m_bIsCreated;
 	bool m_bStartScene;
 
+	_bool	m_bMenu;
+
 	// 맵에 배치한 몬스터의 개수를 카운트해주는 벡터
 	vector<int> m_vecMonsterCount;
 };

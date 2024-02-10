@@ -21,6 +21,8 @@ HRESULT CMenu::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+	m_bRender = false;
+
 	m_iStartFrame = 0;
 
 	m_pTransformCom->m_vScale.x = m_fSizeX;
@@ -55,7 +57,8 @@ void CMenu::Render_GameObject()
 
 	m_pTextureCom->Set_Texture((_int)m_fCurFrame);
 
-	m_pBufferCom->Render_Buffer();
+	if(m_bRender)
+		m_pBufferCom->Render_Buffer();
 }
 
 HRESULT CMenu::Add_Component()

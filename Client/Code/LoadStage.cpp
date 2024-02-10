@@ -72,6 +72,7 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	m_iCurStageKey = iType;
 	m_vecMonsterCount.resize(MONSTER_TYPE_END);
 	m_bIsCreated = false;
+	m_bMenu = false;
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 	Engine::Create_Scatter(m_pGraphicDev);
@@ -139,6 +140,10 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	if (Engine::Key_Down(DIK_O))
 	{
 		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+	}
+	if (Engine::Key_Down(DIK_RETURN))
+	{
+		dynamic_cast<CMenu*>(m_mapLayer.at(L"UI")->Get_GameObject(L"Menu"))->Set_Render();
 	}
 
 	return iExit;
@@ -1098,10 +1103,9 @@ void CLoadStage::Insert_Child()
 
 void CLoadStage::Setting_UI()
 {
-	//// UI 테스트용 코드
-	//CMenu* pMenu = CMenu::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f, 1, 1);
-	//NULL_CHECK_RETURN(pMenu, E_FAIL);
-	//FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
+	// Menu
+	CMenu* pMenu = CMenu::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f, 1, 1);
+	m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu);
 
 	// Player Coin UI
 	CPlayerCoin* pCoinUI = CPlayerCoin::Create(m_pGraphicDev, 28.f, 28.f, -350.f, 180.f, 1, 1);
