@@ -124,10 +124,10 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
 
-		// UI 테스트용 코드
-		CMenu* pMenu = CMenu::Create(m_pGraphicDev, 800.f, 600.f, 0.f, 0.f, 1, 1);
-		NULL_CHECK_RETURN(pMenu, E_FAIL);
-		FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
+		//// UI 테스트용 코드
+		//CMenu* pMenu = CMenu::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f, 1, 1);
+		//NULL_CHECK_RETURN(pMenu, E_FAIL);
+		//FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
 	}
 
 	//타임 델타 스케일 조절 예시 _ 사용
@@ -794,69 +794,50 @@ void CLoadStage::Moster_Collision()
 					else
 						++iter;
 				}
-				//else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포 (엄마/엄마파츠만)
-				//{// dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() && 
-				//	if (dynamic_cast<CBrimStone*>(*iter)->Get_BulletState() &&
-				//		!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Player가 Dead가 아닌 경우
-				//	{
-				//		if (MOM == dynamic_cast<CMonster*>(pMonster)->Get_BossType())	// MOM인 경우
-				//		{
-				//			dynamic_cast<CMonster*>(pMonster)->Hit();
-				//			break;
-				//		}
-				//		else if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType()) // MOM Parts인 경우
-				//		{
-				//			if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState())			// Door 상태가 아닌 경우
-				//			{
-				//				dynamic_cast<CMonster*>(pMonster)->Hit();
-				//				break;
-				//			}
-				//			else
-				//				++iter;
-				//		}
-				//		else
-				//			++iter;
-				//	}
-				//	else
-				//		++iter;
-				//}
+				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포 (엄마/엄마파츠만)
+				{
+					if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType() || //MOM Parts이거나
+						MOM == dynamic_cast<CMonster*>(pMonster)->Get_BossType())		// MOM인 경우
+					{
+						dynamic_cast<CMonster*>(pMonster)->Hit();
+						break;
+					}
+					else
+						++iter;
+				}
 				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 2) // 에픽페투스
 				{
 					//if()
 				}
+
+				//else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포 (엄마/엄마파츠만)
+			//{// dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() && 
+			//   if (dynamic_cast<CBrimStone*>(*iter)->Get_BulletState() &&
+			//      !dynamic_cast<CMonster*>(pMonster)->Get_Dead())               // Player가 Dead가 아닌 경우
+			//   {
+			//      if (MOM == dynamic_cast<CMonster*>(pMonster)->Get_BossType())   // MOM인 경우
+			//      {
+			//         dynamic_cast<CMonster*>(pMonster)->Hit();
+			//         break;
+			//      }
+			//      else if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType()) // MOM Parts인 경우
+			//      {
+			//         if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState())         // Door 상태가 아닌 경우
+			//         {
+			//            dynamic_cast<CMonster*>(pMonster)->Hit();
+			//            break;
+			//         }
+			//         else
+			//            ++iter;
+			//      }
+			//      else
+			//         ++iter;
+			//   }
+			//   else
+			//      ++iter;
+			//}
 				else
 					++iter;
-
-				//if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType() &&	// Dople이 아닌 경우
-				//	dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() &&		// Bullet이 Dead가 아닌 경우
-				//	!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Monster가 Dead가 아닌 경우
-				//{
-				//	if (dynamic_cast<CMonster*>(pMonster)->Get_IsBoss()) // 보스인 경우
-				//	{
-				//		if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType())// Mom Parts인 경우 // Mom 인 경우 여기서 터짐
-				//		{
-				//			if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState()) // 문이 열린 경우
-				//			{
-				//				dynamic_cast<CMomParts*>(pMonster)->Hit();
-				//				break;
-				//			}
-				//			else // 문이 열리지 않은 경우
-				//				++iter;
-				//		}
-				//		else // Monstro or Mom인 경우
-				//		{
-				//			dynamic_cast<CMonster*>(pMonster)->Hit();
-				//			break;
-				//		}
-				//	}
-				//	else // 일반 몬스터의 경우 전부 피격 처리 O
-				//	{
-				//		dynamic_cast<CMonster*>(pMonster)->Hit();
-				//		break;
-				//	}
-				//}
-				//else
-				//	++iter;
 			}
 			else
 				++iter;
@@ -1124,7 +1105,7 @@ void CLoadStage::Setting_UI()
 	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro") != nullptr &&
 		m_mapLayer.at(L"UI")->Get_GameObject(L"BossHPTool") == nullptr)
 	{
-		//dynamic_cast<CMonstro*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro"))->Print_UI(m_mapLayer.at(L"UI"));
+		dynamic_cast<CMonstro*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro"))->Print_UI(m_mapLayer.at(L"UI"));
 	}
 
 	// Boss HP Bar

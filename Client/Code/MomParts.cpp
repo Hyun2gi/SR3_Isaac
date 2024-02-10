@@ -21,18 +21,10 @@ CMomParts::~CMomParts()
 {
 }
 
-_bool CMomParts::Get_DoorState()
-{
-	if (m_eCurState == MOM_EYE || m_eCurState == MOM_HAND || m_eCurState == MOM_SKIN)
-		return false;
-	else
-		return true;
-}
-
 HRESULT CMomParts::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->m_vScale = { 10.f, 20.f, 0.f };
+	m_pTransformCom->m_vScale = { 7.f, 12.f, 10.f };
 
 	m_iRandNum = 0;
 
@@ -66,10 +58,12 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bHit) // 피격 시 Mom 의 HP 를 깎아야 함
 	{
-		m_pMom->Set_Hp_Minus();
-		m_bHit = false;
-		m_bHitColor = true;
-		// 추후 혈사포와의 충돌 처리 필요할 듯함
+		if (m_eCurState == MOM_EYE || m_eCurState == MOM_HAND || m_eCurState == MOM_SKIN)
+		{
+			m_pMom->Set_Hp_Minus();
+			m_bHit = false;
+			m_bHitColor = true;
+		}
 	}
 
 	if (m_bHitColor)
@@ -219,19 +213,19 @@ void CMomParts::Setting_Value()
 	switch (m_iIndex)
 	{
 	case 0: // 상
-		m_pTransformCom->Set_Pos(20.f, 4.f, 30.f);
+		m_pTransformCom->Set_Pos(VTXCNTX * 0.5f, INTERVAL_Y, VTXCNTZ - INTERVAL);
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(0.f));
 		break;
 	case 1: // 우
-		m_pTransformCom->Set_Pos(40.f, 4.f, 15.f);
+		m_pTransformCom->Set_Pos(VTXCNTX - INTERVAL, INTERVAL_Y, VTXCNTZ * 0.5f);
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(90.f));
 		break;
 	case 2: // 하
-		m_pTransformCom->Set_Pos(20.f, 4.f, 0.f);
+		m_pTransformCom->Set_Pos(VTXCNTX * 0.5f, INTERVAL_Y, INTERVAL);
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(180.f));
 		break;
 	case 3: // 좌
-		m_pTransformCom->Set_Pos(0.f, 4.f, 15.f);
+		m_pTransformCom->Set_Pos(0.f + INTERVAL, INTERVAL_Y, VTXCNTZ * 0.5f);
 		m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(270.f));
 		break;
 	}

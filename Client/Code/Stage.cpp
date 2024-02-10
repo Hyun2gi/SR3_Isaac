@@ -602,13 +602,13 @@ void CStage::Moster_Collision()
 					{
 						if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType())// Mom Parts인 경우 // Mom 인 경우 여기서 터짐
 						{
-							if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState()) // 문이 열린 경우
-							{
-								dynamic_cast<CMomParts*>(pMonster)->Hit();
-								break;
-							}
-							else // 문이 열리지 않은 경우
-								++iter;
+							//if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState()) // 문이 열린 경우
+							//{
+							//	dynamic_cast<CMomParts*>(pMonster)->Hit();
+							//	break;
+							//}
+							//else // 문이 열리지 않은 경우
+							//	++iter;
 						}
 						else // Monstro or Mom인 경우
 						{

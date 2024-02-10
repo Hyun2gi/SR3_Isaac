@@ -4,12 +4,14 @@
 #include "Export_Utility.h"
 
 CBossHP::CBossHP(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CUI(pGraphicDev)
+	: Engine::CUI(pGraphicDev),
+	m_pMonster(nullptr)
 {
 }
 
 CBossHP::CBossHP(const CBossHP& rhs)
-	: Engine::CUI(rhs)
+	: Engine::CUI(rhs),
+	m_pMonster(nullptr)
 {
 }
 
@@ -38,6 +40,15 @@ _int CBossHP::Update_GameObject(const _float& fTimeDelta)
 {
 	// Boss의 HP를 받아와서 상태 변경
 
+	m_fCurFrame = 0.f;
+
+	m_iTargetHP = m_pMonster->Get_HP();
+
+	// 6. ~
+	m_pTransformCom->m_vScale.x = m_iTargetHP * 6.6f;
+
+	CUI::Update_GameObject(fTimeDelta);
+
 	return 0;
 }
 
@@ -49,16 +60,10 @@ void CBossHP::LateUpdate_GameObject()
 void CBossHP::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
-	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
-	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &m_matProj);
-
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	m_pTextureCom->Set_Texture((_int)m_fCurFrame);
 
 	m_pBufferCom->Render_Buffer();
-
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
 }
 
