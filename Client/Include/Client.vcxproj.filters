@@ -232,8 +232,11 @@
     <Filter Include="02. GameObject\12. UI\00. Menu">
       <UniqueIdentifier>{eaad68dd-3b4a-4121-b325-36ebbe5e117c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\10. Room\03. Obstacle">
+    <Filter Include="02. GameObject\10. Room\03.Obstacle">
       <UniqueIdentifier>{ddca5203-f170-4684-bae5-9a15b85d9c1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\01. Player\01. Player Coin">
+      <UniqueIdentifier>{14dd8504-e403-4744-9e78-3118c183430e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -445,7 +448,10 @@
       <Filter>02. GameObject\12. UI\00. Menu</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Obstacle.h">
-      <Filter>02. GameObject\10. Room\03. Obstacle</Filter>
+      <Filter>02. GameObject\10. Room\03.Obstacle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\PlayerCoin.h">
+      <Filter>02. GameObject\12. UI\01. Player\01. Player Coin</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -648,7 +654,10 @@
       <Filter>02. GameObject\12. UI\00. Menu</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Obstacle.cpp">
-      <Filter>02. GameObject\10. Room\03. Obstacle</Filter>
+      <Filter>02. GameObject\10. Room\03.Obstacle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PlayerCoin.cpp">
+      <Filter>02. GameObject\12. UI\01. Player\01. Player Coin</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

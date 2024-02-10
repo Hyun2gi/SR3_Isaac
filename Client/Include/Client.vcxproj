@@ -181,6 +181,7 @@
     <ClInclude Include="..\Header\Fire.h" />
     <ClInclude Include="..\Header\Menu.h" />
     <ClInclude Include="..\Header\Obstacle.h" />
+    <ClInclude Include="..\Header\PlayerCoin.h" />
     <ClInclude Include="..\Header\Shell.h" />
     <ClInclude Include="..\Header\ShellGame.h" />
     <ClInclude Include="..\Header\ShellNpc.h" />
@@ -252,6 +253,7 @@
     <ClCompile Include="..\Code\Fire.cpp" />
     <ClCompile Include="..\Code\Menu.cpp" />
     <ClCompile Include="..\Code\Obstacle.cpp" />
+    <ClCompile Include="..\Code\PlayerCoin.cpp" />
     <ClCompile Include="..\Code\Shell.cpp" />
     <ClCompile Include="..\Code\ShellGame.cpp" />
     <ClCompile Include="..\Code\ShellNpc.cpp" />
