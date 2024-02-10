@@ -118,6 +118,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 	if (Check_Cube_Arrived() && !m_bIsCreated)
 	{
+		CPlayer::GetInstance()->Set_StartCameraMouse();
 		m_bIsCreated = true;
 		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
