@@ -235,6 +235,18 @@
     <Filter Include="02. GameObject\10. Room\03. Obstacle">
       <UniqueIdentifier>{ddca5203-f170-4684-bae5-9a15b85d9c1e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\10. Room\03. Obstacle\Normal">
+      <UniqueIdentifier>{02caee19-b086-4828-a43d-79808cae1b6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Room\03. Obstacle\RandMove">
+      <UniqueIdentifier>{d28fce74-652b-4002-9d9a-625a03a840cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Room\03. Obstacle\MoveX">
+      <UniqueIdentifier>{a5426392-69c1-4ee8-9070-6e71bc1decae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Room\03. Obstacle\MoveZ">
+      <UniqueIdentifier>{e68260ad-1675-40af-af40-9966db50e785}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -445,7 +457,13 @@
       <Filter>02. GameObject\12. UI\00. Menu</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Obstacle.h">
-      <Filter>02. GameObject\10. Room\03. Obstacle</Filter>
+      <Filter>02. GameObject\10. Room\03. Obstacle\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\MoveXObstacle.h">
+      <Filter>02. GameObject\10. Room\03. Obstacle\MoveX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\MoveZObstacle.h">
+      <Filter>02. GameObject\10. Room\03. Obstacle\MoveZ</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -648,7 +666,13 @@
       <Filter>02. GameObject\12. UI\00. Menu</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Obstacle.cpp">
-      <Filter>02. GameObject\10. Room\03. Obstacle</Filter>
+      <Filter>02. GameObject\10. Room\03. Obstacle\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MoveXObstacle.cpp">
+      <Filter>02. GameObject\10. Room\03. Obstacle\MoveX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MoveZObstacle.cpp">
+      <Filter>02. GameObject\10. Room\03. Obstacle\MoveZ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

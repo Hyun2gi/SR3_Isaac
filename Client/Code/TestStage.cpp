@@ -17,6 +17,8 @@
 #include "Dople.h"
 
 #include "Obstacle.h"
+#include "MoveXObstacle.h"
+#include "MoveZObstacle.h"
 
 #include "Monstro.h"
 #include "Mom.h"
@@ -66,7 +68,10 @@ HRESULT CTestStage::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
-	m_pObstacle = CObstacle::Create(m_pGraphicDev);
+	m_pObstacle = CMoveZObstacle::Create(m_pGraphicDev);
+	m_pObstacle->Set_Distance_Up(10.f);
+	m_pObstacle->Set_Distance_Down(5.f);
+	m_pObstacle->Set_Speed(10.f);
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 

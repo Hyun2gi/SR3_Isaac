@@ -123,11 +123,6 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
-
-		// UI 테스트용 코드
-		CMenu* pMenu = CMenu::Create(m_pGraphicDev, 800.f, 600.f, 0.f, 0.f, 1, 1);
-		NULL_CHECK_RETURN(pMenu, E_FAIL);
-		FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
 	}
 
 	//타임 델타 스케일 조절 예시 _ 사용
@@ -173,7 +168,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
-	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_mapLoadObj;
+	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
 
 	for (auto& iter : mapLoadObj)
 	{
@@ -263,6 +258,30 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				break;
 			}
 
+			case OBSTACLE_X:
+			{
+				pGameObject = CObstacle::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle_X", pGameObject), E_FAIL);
+
+				break;
+			}
+
+			case OBSTACLE_Z:
+			{
+				pGameObject = CObstacle::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle_Z", pGameObject), E_FAIL);
+
+				break;
+			}
+
 			}
 			break;
 		}
@@ -280,7 +299,7 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
-	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_mapLoadObj;
+	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
 
 	for (auto& iter : mapLoadObj)
 	{
@@ -465,7 +484,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 
 	_vec3 vTempPos;
 
-	auto vecDoorTheme = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_vecConnectRoom;
+	auto vecDoorTheme = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_vecConnectRoom;
 
 	int i = 0;
 	for (auto& iter : vecDoorTheme)
@@ -602,7 +621,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	wstring wstrProto = L"Proto_";
 	wstring wstrTag, wstrTheme;
 
-	string strType = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_strType;
+	string strType = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_strType;
 
 	wstrTheme.assign(strType.begin(), strType.end());
 
@@ -683,7 +702,7 @@ bool CLoadStage::Check_Cube_Arrived()
 
 void CLoadStage::Copy_Stage()
 {
-	auto& map = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_mapLoadObj;
+	auto& map = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
 
 	int iStageMonsterCount = 0;
 	for (auto& iter : m_vecMonsterCount) iStageMonsterCount += iter;
@@ -1183,7 +1202,10 @@ HRESULT CLoadStage::Door_Collision()
 				// 스테이지 변경
 				Engine::CScene* pScene = nullptr;
 
-				pScene = CLoadStage::Create(m_pGraphicDev, dynamic_cast<CDoor*>(pObj)->Get_Stage_Num_Key());
+				int iStageKey = dynamic_cast<CDoor*>(pObj)->Get_Stage_Num_Key();
+				bool bUnClear = CStageLoadMgr::GetInstance()->Get_StageInfo(iStageKey).m_bUnClear;
+
+				pScene = CLoadStage::Create(m_pGraphicDev, iStageKey, bUnClear);
 				NULL_CHECK_RETURN(pScene, -1);
 
 				FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);

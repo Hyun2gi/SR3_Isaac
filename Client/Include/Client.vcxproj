@@ -180,6 +180,8 @@
     <ClInclude Include="..\Header\EpicBulletMark.h" />
     <ClInclude Include="..\Header\Fire.h" />
     <ClInclude Include="..\Header\Menu.h" />
+    <ClInclude Include="..\Header\MoveXObstacle.h" />
+    <ClInclude Include="..\Header\MoveZObstacle.h" />
     <ClInclude Include="..\Header\Obstacle.h" />
     <ClInclude Include="..\Header\Shell.h" />
     <ClInclude Include="..\Header\ShellGame.h" />
@@ -251,6 +253,8 @@
     <ClCompile Include="..\Code\EpicBulletMark.cpp" />
     <ClCompile Include="..\Code\Fire.cpp" />
     <ClCompile Include="..\Code\Menu.cpp" />
+    <ClCompile Include="..\Code\MoveXObstacle.cpp" />
+    <ClCompile Include="..\Code\MoveZObstacle.cpp" />
     <ClCompile Include="..\Code\Obstacle.cpp" />
     <ClCompile Include="..\Code\Shell.cpp" />
     <ClCompile Include="..\Code\ShellGame.cpp" />
