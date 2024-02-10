@@ -3,8 +3,6 @@
 #include "Base.h"
 #include "UI.h"
 
-#include "Monster.h"
-
 BEGIN(Engine)
 
 class CRcTex;
@@ -13,15 +11,14 @@ class CTransform;
 
 END
 
-class CBossHP : public Engine::CUI
+class CHeartUI : public Engine::CUI
 {
-private:
-	explicit CBossHP(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CBossHP(const CBossHP& rhs);
-	virtual ~CBossHP();
+	explicit CHeartUI(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CHeartUI(const CHeartUI& rhs);
+	virtual ~CHeartUI();
 
 public:
-	void		Set_Target(CMonster* pMonster) { m_pMonster = pMonster; }
+	void			Resetting_Texture(_float fFrame) { m_fCurFrame = fFrame; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -31,7 +28,6 @@ public:
 
 private:
 	HRESULT			Add_Component();
-	void			Update_Scale();
 
 private:
 	Engine::CRcTex* m_pBufferCom;
@@ -49,10 +45,8 @@ private:
 
 	_int				m_iTargetHP;
 
-	CMonster*			m_pMonster;
-
 public:
-	static CBossHP* Create(LPDIRECT3DDEVICE9	pGraphicDev,
+	static CHeartUI* Create(LPDIRECT3DDEVICE9	pGraphicDev,
 		_float fSizeX, _float fSizeY,
 		_float fPosX, _float fPosY,
 		_int iAnimFrameCount, _int iMaxFrameCount,

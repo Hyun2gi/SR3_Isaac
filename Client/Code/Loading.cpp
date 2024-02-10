@@ -234,6 +234,14 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BossHPTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Boss/BossHP.png")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BossHPBarTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Boss/BossHPBar.png")), E_FAIL);
 
+	// Player Coin
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerCoinTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Item/coin.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerCoinFontTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Font/Font_%d.png", 10)), E_FAIL);
+
+	// Player Heart
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerHeartTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Item/ui_hearts_%d.png", 3)), E_FAIL);
+
+
 #pragma endregion UI Texture
 
 

@@ -52,8 +52,11 @@
 #include "Heart.h"
 #include "HeartHalf.h"
 
-// UI 테스트
+// UI
 #include "Menu.h"
+#include "PlayerCoin.h"
+#include "PLCoinFont.h"
+#include "PlayerHP.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev), m_bStartScene(false)
@@ -105,9 +108,6 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 		// 아이템 드랍
 		Drop_ITem();
-
-		// UI 생성
-		Setting_UI();
 	}
 
 
@@ -124,11 +124,9 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
-
-		//// UI 테스트용 코드
-		//CMenu* pMenu = CMenu::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f, 1, 1);
-		//NULL_CHECK_RETURN(pMenu, E_FAIL);
-		//FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
+		
+		// UI 생성
+		Setting_UI();
 	}
 
 	//타임 델타 스케일 조절 예시 _ 사용
@@ -1100,7 +1098,26 @@ void CLoadStage::Insert_Child()
 
 void CLoadStage::Setting_UI()
 {
-#pragma region Boss HP
+	//// UI 테스트용 코드
+	//CMenu* pMenu = CMenu::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f, 1, 1);
+	//NULL_CHECK_RETURN(pMenu, E_FAIL);
+	//FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
+
+	// Player Coin UI
+	CPlayerCoin* pCoinUI = CPlayerCoin::Create(m_pGraphicDev, 28.f, 28.f, -350.f, 180.f, 1, 1);
+	m_mapLayer.at(L"UI")->Add_GameObject(L"CoinUI", pCoinUI);
+
+	// Player Coin Font UI
+	for (int i = 0; i < 2; ++i)
+	{
+		CPLCoinFont* pCoinFont = CPLCoinFont::Create(m_pGraphicDev, 60.f, 60.f, -310 + (i * 20.f), 180.f, 1, 1);
+		pCoinFont->Set_Index(i);
+		m_mapLayer.at(L"UI")->Add_GameObject(L"CoinFontUI", pCoinFont);
+	}
+
+	// Player HP
+	CPlayerHP* pPlayerHP = CPlayerHP::Create(m_pGraphicDev, 30.f, 30.f, -370.f, 170.f, 1, 1);
+	m_mapLayer.at(L"UI")->Add_GameObject(L"PlayerHP", pPlayerHP);
 
 	// Boss HP Tool
 	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro") != nullptr &&
@@ -1108,10 +1125,6 @@ void CLoadStage::Setting_UI()
 	{
 		dynamic_cast<CMonstro*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro"))->Print_UI(m_mapLayer.at(L"UI"));
 	}
-
-	// Boss HP Bar
-
-#pragma endregion Boss HP
 
 }
 
