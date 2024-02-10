@@ -42,11 +42,8 @@ _int CBossHP::Update_GameObject(const _float& fTimeDelta)
 
 	m_fCurFrame = 0.f;
 
-	m_iTargetHP = m_pMonster->Get_HP();
-
-	// 6. ~
-	m_pTransformCom->m_vScale.x = m_iTargetHP * 6.6f;
-
+	Update_Scale();
+	
 	CUI::Update_GameObject(fTimeDelta);
 
 	return 0;
@@ -63,7 +60,8 @@ void CBossHP::Render_GameObject()
 
 	m_pTextureCom->Set_Texture((_int)m_fCurFrame);
 
-	m_pBufferCom->Render_Buffer();
+	if(0 < m_iTargetHP)
+		m_pBufferCom->Render_Buffer();
 
 }
 
@@ -85,6 +83,19 @@ HRESULT CBossHP::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
 	return S_OK;
+}
+
+void CBossHP::Update_Scale()
+{
+	m_iTargetHP = m_pMonster->Get_HP();
+
+	_float fHpSize = 30 * 6.6f;
+	_float fItvX = fHpSize / 30;
+
+	m_pTransformCom->m_vScale.x = m_iTargetHP * 6.6f;
+
+	m_pTransformCom->m_vInfo[INFO_POS].x = -fItvX * (30 - m_iTargetHP) * 0.6f;
+
 }
 
 CBossHP* CBossHP::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)

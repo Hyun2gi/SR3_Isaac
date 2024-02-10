@@ -31,6 +31,7 @@ public:
 
 private:
 	HRESULT			Add_Component();
+	void			Update_Scale();
 
 private:
 	Engine::CRcTex* m_pBufferCom;
