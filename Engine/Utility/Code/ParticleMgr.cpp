@@ -20,6 +20,11 @@ void CParticleMgr::Create_Scatter(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vMin, _ve
 	m_pParticleList.emplace_back(pParticle);
 }
 
+void CParticleMgr::Kill_Scatter()
+{
+	dynamic_cast<CParticleScatter*>(m_pParticleList.front())->Kill_All();
+}
+
 void CParticleMgr::Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount)
 {
 	CParticleExplosion* pParticle = CParticleExplosion::Create(pGraphicDev, matWorld, fSize, iCount);

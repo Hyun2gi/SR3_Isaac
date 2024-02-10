@@ -37,7 +37,7 @@ Engine::_int CEnding::Update_Scene(const _float& fTimeDelta)
 {
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
-
+	Engine::Update_Particles(fTimeDelta);
 
 	return iExit;
 }

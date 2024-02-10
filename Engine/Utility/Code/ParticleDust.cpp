@@ -86,7 +86,7 @@ void CParticleDust::Reset_Partice(Attribute* attribute)
 	//	1.0f);
 
 	attribute->_fAge = 0.0f;
-	attribute->_fLifeTime = 10.0f; // lives for 2 seconds
+	attribute->_fLifeTime = 5.0f; // lives for 2 seconds
 }
 
 void CParticleDust::Update_Particle(_float fTimeDelat)

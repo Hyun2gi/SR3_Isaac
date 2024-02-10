@@ -99,6 +99,15 @@ void CParticleScatter::Update_Particle(_float fTimeDelat)
 	__super::Update_Particle(fTimeDelat);
 }
 
+void CParticleScatter::Kill_All()
+{
+	std::list<Attribute>::iterator i;
+	for (i = m_ParticlesList.begin(); i != m_ParticlesList.end(); i++)
+	{
+		i->_bIsAlive = false;
+	}
+}
+
 CParticleScatter* CParticleScatter::Create(IDirect3DDevice9* pDevice, _vec3 vMin, _vec3 vMax, _float fSize, _int iCount)
 {
 	BoundingBox boundingBox;

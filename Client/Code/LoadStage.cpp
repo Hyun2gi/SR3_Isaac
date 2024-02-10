@@ -1193,6 +1193,8 @@ void CLoadStage::Play_Ending(const _float& fTimeDelta)
 
 		Engine::Set_Scene(pScene);
 
+		Engine::Kill_Scatter();
+
 		//NULL_CHECK_RETURN(pScene, -1);
 
 		//FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
