@@ -45,15 +45,15 @@ _int CBrimStoneBullet::Update_GameObject(const _float& fTimeDelta)
     {
         if (m_iParticleTimer == 1)
         {
-            D3DXMATRIX _world;
-            _world = *(m_pTransformCom->Get_WorldMatrix());
-            _vec3 move;
-            m_pTransformCom->Get_Info(INFO_LOOK, &move);
-            // _world._41 += move.x * 2;
-            _world._42 = 0.2;
-            //_world._43 += move.z * 2;
-            Engine::Create_Splash_Left(m_pGraphicDev, _world);
-            Engine::Create_Splash_Right(m_pGraphicDev, _world);
+            //D3DXMATRIX _world;
+            //_world = *(m_pTransformCom->Get_WorldMatrix());
+            //_vec3 move;
+            //m_pTransformCom->Get_Info(INFO_LOOK, &move);
+            //// _world._41 += move.x * 2;
+            //_world._42 = 0.2;
+            ////_world._43 += move.z * 2;
+            //Engine::Create_Splash_Left(m_pGraphicDev, _world);
+            //Engine::Create_Splash_Right(m_pGraphicDev, _world);
         }  
     }
 
@@ -71,7 +71,7 @@ _int CBrimStoneBullet::Update_GameObject(const _float& fTimeDelta)
     m_vBulletDir = _vec3(playerDir.x, 0, playerDir.z);
     D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);
 
-    bulletPos = playerPos + ((m_iBulletIndex + 1) * m_pTransformCom->m_vScale.x) * m_vBulletDir;
+    bulletPos = playerPos + ((m_iBulletIndex + 1) * m_pTransformCom->m_vScale.x) * playerDir;
     m_pTransformCom->Set_Pos(bulletPos);
 
     if (m_bLie == false)

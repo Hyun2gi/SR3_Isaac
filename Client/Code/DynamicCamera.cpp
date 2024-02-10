@@ -738,6 +738,52 @@ void CDynamicCamera::OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveS
 	}
 }
 
+void CDynamicCamera::OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveSpeed, _vec3 target, _vec3 startpos, bool fixedPosition, int afterstate)
+{
+	CPlayer::GetInstance()->Set_KeyBlock(true);
+
+	m_vOriginAtPosition = m_vAt;
+	m_vAt = atPos;
+
+	m_eCurState = C_MOVE_TO_TARGET;
+
+	m_bFix = true; // 사용자 카메라 움직임 잠금 
+
+	m_fMoveTime = moveTime;
+	m_fMoveSpeed = moveSpeed;
+	m_vGoalPosition = target;
+
+	m_bFixedPos = fixedPosition;
+
+	if (m_bFixedPos == false)
+	{
+		// 다시 돌아가야할 경우 첫 시작점 저장
+		m_vStartEyePosition = m_vEye;
+	}
+
+	m_vEye = startpos;
+
+
+	switch (afterstate)
+	{
+	case 0:
+		m_eAfterState = C_PLAYERCHASE;
+		break;
+	case 1:
+		m_eAfterState = C_WHOLELAND;
+		break;
+	case 2:
+		m_eAfterState = C_SHAKING_POS;
+		break;
+	case 3:
+		m_eAfterState = C_SHAKING_ROT;
+		break;
+	case 4:
+		m_eAfterState = C_MOVE_TO_TARGET;
+		break;
+	}
+}
+
 void CDynamicCamera::OnMoveToPlayerFront()
 {
 	CPlayer::GetInstance()->Set_KeyBlock(true);
@@ -866,6 +912,40 @@ void CDynamicCamera::Set_Shoot_End_Epic()
 	//OnMoveTargetCamera(1.f, 7.f, moveCamPos, false, 0);
 	// 1인칭일때를 위해 원래 자리로 돌아가게끔
 	OnMoveTargetCamera(1.f, 7.f, m_vStartEyePosition, false, 0);
+}
+
+void CDynamicCamera::Cinemachine_00_Start()
+{
+	m_eAfterState = C_PLAYERCHASE;
+	m_bChaseInit = true;
+	m_eCurState = C_MOVE_TO_TARGET;
+	m_fAngleY = 0;
+
+	CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3		playerPos;
+	_vec3		playerDir;
+	_vec3		cameraDir;
+	_vec3		cameraPos;
+
+
+	playerInfo->Get_Info(INFO_POS, &playerPos);
+	playerInfo->Get_Info(INFO_LOOK, &playerDir);
+
+	D3DXVec3Normalize(&playerDir, &playerDir);
+
+
+	m_bFix = true;
+
+	CPlayer::GetInstance()->Set_KeyBlock(true);
+
+	_vec3	goalPos,startpos;
+
+	goalPos = playerPos - (playerDir)*4 +_vec3(0, 0, 0);
+
+	startpos = playerPos -(playerDir)*4 +_vec3(4, 1, 0);
+
+	OnMoveTargetCamera(m_vAt, 7.5f, 0.6f, goalPos, startpos, false, 0);
 }
 
 

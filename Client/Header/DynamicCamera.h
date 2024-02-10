@@ -57,6 +57,16 @@ public:
 	void	OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition, int afterstate);
 	void	OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveSpeed, _vec3 target, bool fixedPosition, int afterstate);
 
+	void	OnMoveTargetCamera(
+		_vec3 atPos, // m_vAt : at 지점 
+		float moveTime, 
+		float moveSpeed, 
+		_vec3 target, 
+		_vec3 startpos, // cinemachine 할 때 시작장소
+		bool fixedPosition,  
+		int afterstate
+	);
+
 	// 따봉할때
 	void	OnMoveToPlayerFront();
 	// 따봉 후
@@ -65,6 +75,9 @@ public:
 	// 에픽에투스 설정
 	void				Set_EpicBullet();
 	void				Set_Shoot_End_Epic(); 
+
+	// 시네머신용 카메라
+	void				Cinemachine_00_Start();
 
 	void				Set_ChaseInit(bool _init) { m_bChaseInit = _init; }
 	void				Set_FirstPerson(bool first) { m_bFirstPerson = first; m_bCollisionWall = true; m_bChaseInit = false; }
@@ -89,6 +102,7 @@ private:
 	void	MoveToTarget(const _float& fTimeDelta);
 
 	bool	CheckCollisionWall(float distance);
+
 
 private:
 	_bool		m_bFix = false;
@@ -122,6 +136,9 @@ private:
 	_bool		m_bShake;
 	_bool		m_bMove;
 	_bool		m_bFirstPerson;
+	_bool		m_bPreFirstPerson;
+
+	_bool		m_bSetFirstPerson;
 
 
 	// 이동 후에 goalposition에서 fixed 할건지 아니면 시작 position으로 갈건지
