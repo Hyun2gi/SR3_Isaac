@@ -111,7 +111,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		Moster_Collision();
 		MapObj_Collision();
 		Player_Collision_With_Monster();
-    Obstacle_Collsion();
+		Obstacle_Collsion();
 
 		// 아이템 드랍
 		Drop_ITem();
@@ -1030,7 +1030,7 @@ void CLoadStage::Obstacle_Collsion()
 
 	if (m_mapLayer.at(L"MapObj") != nullptr)
 	{
-		
+
 		auto& mapObj = m_mapLayer.at(L"MapObj")->Get_ObjectMap();
 
 		for (auto& iter : mapObj)
@@ -1042,13 +1042,8 @@ void CLoadStage::Obstacle_Collsion()
 		//m_mapLayer.at(L"MapObj")->Get_GameObject()
 
 	}
-
-
-	//CTransform* pObstacleTrans = m_pObstacle->Get_Transform();
+}
 	
-
-
-
 void CLoadStage::Player_Collision_With_Monster()
 {
 	// 충돌처리하는 함수
@@ -1074,7 +1069,6 @@ void CLoadStage::Player_Collision_With_Monster()
 	}
 
 }
-
 void CLoadStage::Drop_ITem()
 {
 	// 똥
