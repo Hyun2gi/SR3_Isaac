@@ -110,7 +110,8 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		Door_Collision();
 		Moster_Collision();
 		MapObj_Collision();
-		Obstacle_Collsion();
+		Player_Collision_With_Monster();
+    Obstacle_Collsion();
 
 		// 아이템 드랍
 		Drop_ITem();
@@ -1022,6 +1023,7 @@ void CLoadStage::MapObj_Collision()
 	}
 }
 
+
 void CLoadStage::Obstacle_Collsion()
 {
 	CTransform* pPlayerTrans = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
@@ -1045,6 +1047,31 @@ void CLoadStage::Obstacle_Collsion()
 	//CTransform* pObstacleTrans = m_pObstacle->Get_Transform();
 	
 
+
+
+void CLoadStage::Player_Collision_With_Monster()
+{
+	// 충돌처리하는 함수
+	CGameObject* pObj = m_mapLayer.at(L"GameMst")->Collision_GameObject(CPlayer::GetInstance());
+
+	if (pObj)
+	{
+		// 플레이어 피 감소
+		CPlayer::GetInstance()->Set_Attacked();
+	}
+
+	
+	// 모닥불 피 닳기
+	CGameObject* pObj_Fire = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
+
+	if (pObj_Fire)
+	{
+		if (0 == dynamic_cast<CMapObj*>(pObj_Fire)->Get_ObjID())
+		{
+			// 플레이어 피 감소
+			CPlayer::GetInstance()->Set_Attacked();
+		}
+	}
 
 }
 
