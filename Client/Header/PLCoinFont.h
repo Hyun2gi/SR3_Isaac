@@ -18,6 +18,9 @@ class CPLCoinFont : public Engine::CUI
 	virtual ~CPLCoinFont();
 
 public:
+	void			Set_Index(_int iIndex) { m_iIndex = iIndex; }
+
+public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
 	virtual void LateUpdate_GameObject()					 override;
@@ -25,7 +28,8 @@ public:
 
 private:
 	HRESULT			Add_Component();
-	void			Update_Scale();
+
+	void			Resetting_Texture();
 
 private:
 	Engine::CRcTex* m_pBufferCom;
@@ -40,6 +44,8 @@ private:
 
 	_int				m_iAnimFrameCount;
 	_int				m_iMaxFrameCount;
+
+	_int				m_iIndex;
 
 public:
 	static CPLCoinFont* Create(LPDIRECT3DDEVICE9	pGraphicDev,

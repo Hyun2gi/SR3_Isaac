@@ -55,6 +55,7 @@
 // UI
 #include "Menu.h"
 #include "PlayerCoin.h"
+#include "PLCoinFont.h"
 #include "PlayerHP.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -1104,6 +1105,14 @@ void CLoadStage::Setting_UI()
 	// Player Coin UI
 	CPlayerCoin* pCoinUI = CPlayerCoin::Create(m_pGraphicDev, 28.f, 28.f, -350.f, 180.f, 1, 1);
 	m_mapLayer.at(L"UI")->Add_GameObject(L"CoinUI", pCoinUI);
+
+	// Player Coin Font UI
+	for (int i = 0; i < 2; ++i)
+	{
+		CPLCoinFont* pCoinFont = CPLCoinFont::Create(m_pGraphicDev, 60.f, 60.f, -310 + (i * 20.f), 180.f, 1, 1);
+		pCoinFont->Set_Index(i);
+		m_mapLayer.at(L"UI")->Add_GameObject(L"CoinFontUI", pCoinFont);
+	}
 
 	// Player HP
 	CPlayerHP* pPlayerHP = CPlayerHP::Create(m_pGraphicDev, 30.f, 30.f, -370.f, 170.f, 1, 1);
