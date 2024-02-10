@@ -727,6 +727,7 @@ bool CLoadStage::Check_Cube_Arrived()
 void CLoadStage::Copy_Stage()
 {
 	auto& map = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
+	CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_bClear = true;
 
 	int iStageMonsterCount = 0;
 	for (auto& iter : m_vecMonsterCount) iStageMonsterCount += iter;
