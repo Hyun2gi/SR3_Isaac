@@ -125,9 +125,9 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
 
 		// UI 테스트용 코드
-		CMenu* pMenu = CMenu::Create(m_pGraphicDev, 800.f, 600.f, 0.f, 0.f, 1, 1);
+		/*CMenu* pMenu = CMenu::Create(m_pGraphicDev, 800.f, 600.f, 0.f, 0.f, 1, 1);
 		NULL_CHECK_RETURN(pMenu, E_FAIL);
-		FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
+		FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);*/
 	}
 
 	//타임 델타 스케일 조절 예시 _ 사용

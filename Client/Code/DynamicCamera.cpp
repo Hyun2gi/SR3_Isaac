@@ -200,25 +200,42 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 
 			if (m_bCollisionWall == true)
 			{
-				// 카메라와 벽 충돌발생
-				while (CheckCollisionWall(m_fFlexibleDistanceWithPlayer))
+				if (CPlayer::GetInstance()->Get_SafeCamera_Area())
 				{
-					m_fFlexibleDistanceWithPlayer-=0.001;
-				}
-				m_vGoalPosition = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
-				D3DXVECTOR3 _movevec;
-				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
-				m_vEye = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
+					// 카메라와 벽 충돌발생
+					while (CheckCollisionWall(m_fFlexibleDistanceWithPlayer))
+					{
+						m_fFlexibleDistanceWithPlayer -= 0.01;
+					}
+					m_vGoalPosition = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
+					D3DXVECTOR3 _movevec;
+					D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
+					m_vEye = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
 
-				if (D3DXVec3Length(&(m_vEye - m_vAt)) < 5)
-				{
-					// 1인칭처럼 바꾸기 (총알 방향 조절을 위해 해당 변수 바꾸기)
-					m_bFirstPerson = true;
+					if (D3DXVec3Length(&(m_vEye - m_vAt)) < 5)
+					{
+						// 1인칭처럼 바꾸기 (총알 방향 조절을 위해 해당 변수 바꾸기)
+						m_bFirstPerson = true;
+					}
+					else
+					{
+						m_bFirstPerson = false;
+					}
 				}
 				else
 				{
-					m_bFirstPerson = false;
+					m_bFirstPerson = true;
+					m_vGoalPosition = playerPos + _vec3(0, 2, 0);
+					// 1인칭 시점으로 전환
+					D3DXVECTOR3 _movevec;
+					//m_vCameraPosDir = -(playerDir);
+					m_vGoalPosition = playerPos + _vec3(0, 2, 0);
+					D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
+					m_vEye = m_vGoalPosition;
+					m_vAt = playerPos + playerDir * 4 + _vec3(0, 1, 0);
+					//m_vCameraPosDir = m_vEye - m_vAt;
 				}
+				
 			}
 			else if(m_bCollisionWall == false)
 			{
@@ -603,6 +620,7 @@ bool CDynamicCamera::CheckCollisionWall(float distance)
 	_vec3 vPos = m_vAt + m_vCameraPosDir * distance;
 
 	// 벽에 부딪혔을때
+	// if ((vPos.x > VTXCNTX - 3 || vPos.z > VTXCNTX - 3 || vPos.x < 3 || vPos.z < 3))
 	if ((vPos.x > VTXCNTX - 3 || vPos.z > VTXCNTX - 3 || vPos.x < 3 || vPos.z < 3))
 	{
 		// 밖으로 나갔을때
