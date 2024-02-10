@@ -110,6 +110,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		Door_Collision();
 		Moster_Collision();
 		MapObj_Collision();
+		Obstacle_Collsion();
 
 		// 아이템 드랍
 		Drop_ITem();
@@ -1025,10 +1026,24 @@ void CLoadStage::Obstacle_Collsion()
 {
 	CTransform* pPlayerTrans = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
 
+	if (m_mapLayer.at(L"MapObj") != nullptr)
+	{
+		
+		auto& mapObj = m_mapLayer.at(L"MapObj")->Get_ObjectMap();
+
+		for (auto& iter : mapObj)
+		{
+			CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+			Engine::Check_Collision(pPlayerTrans, pTrans);
+		}
+
+		//m_mapLayer.at(L"MapObj")->Get_GameObject()
+
+	}
 
 
 	//CTransform* pObstacleTrans = m_pObstacle->Get_Transform();
-	//Engine::Check_Collision(pPlayerTrans, pObstacleTrans);
+	
 
 
 }

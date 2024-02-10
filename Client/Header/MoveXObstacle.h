@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Base.h"
-#include "GameObject.h"
+#include "MapObj.h"
 
 BEGIN(Engine)
 
@@ -11,7 +11,7 @@ class CTexture;
 
 END
 
-class CMoveXObstacle :	public Engine::CGameObject
+class CMoveXObstacle :	public CMapObj
 {
 private:
 	explicit CMoveXObstacle(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -25,6 +25,7 @@ public:
 	virtual void Render_GameObject()						 override;
 
 	CTransform* Get_Transform() { return m_pTransformCom; }
+	OBJECT_TYPE		Get_Type() { return m_eObjType; }
 
 	HRESULT Set_Cute_Texture(const _tchar* pTextureTag);
 
@@ -45,6 +46,8 @@ private:
 	Engine::CCubeTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
+
+	OBJECT_TYPE				m_eObjType;
 
 	_float  m_fDistanceLeft, m_fDistanceRight;
 	_float	m_fSpeed;
