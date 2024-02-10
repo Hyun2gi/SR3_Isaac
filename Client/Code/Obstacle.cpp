@@ -4,12 +4,12 @@
 #include "Export_Utility.h"
 
 CObstacle::CObstacle(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CGameObject(pGraphicDev)
+	: CMapObj(pGraphicDev)
 {
 }
 
 CObstacle::CObstacle(const CObstacle& rhs)
-	: Engine::CGameObject(rhs)
+	: CMapObj(rhs)
 {
 
 }
@@ -23,6 +23,8 @@ HRESULT CObstacle::Ready_GameObject()
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
+
+	m_eObjType = OBSTACLE;
 
 	return S_OK;
 }

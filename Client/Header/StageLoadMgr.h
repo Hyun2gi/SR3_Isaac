@@ -12,7 +12,7 @@ struct LoadObj
 struct StageInfo
 {
 	int m_iKey;
-	bool m_bUnClear;
+	bool m_bClear;
 	vector<int> m_vecConnectRoom;
 	map<int, LoadObj> m_mapLoadObj;
 	string m_strTheme;

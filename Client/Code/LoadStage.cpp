@@ -111,6 +111,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		Moster_Collision();
 		MapObj_Collision();
 		Player_Collision_With_Monster();
+    Obstacle_Collsion();
 
 		// 아이템 드랍
 		Drop_ITem();
@@ -728,6 +729,7 @@ bool CLoadStage::Check_Cube_Arrived()
 void CLoadStage::Copy_Stage()
 {
 	auto& map = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
+	CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_bClear = true;
 
 	int iStageMonsterCount = 0;
 	for (auto& iter : m_vecMonsterCount) iStageMonsterCount += iter;
@@ -1021,6 +1023,32 @@ void CLoadStage::MapObj_Collision()
 	}
 }
 
+
+void CLoadStage::Obstacle_Collsion()
+{
+	CTransform* pPlayerTrans = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
+
+	if (m_mapLayer.at(L"MapObj") != nullptr)
+	{
+		
+		auto& mapObj = m_mapLayer.at(L"MapObj")->Get_ObjectMap();
+
+		for (auto& iter : mapObj)
+		{
+			CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+			Engine::Check_Collision(pPlayerTrans, pTrans);
+		}
+
+		//m_mapLayer.at(L"MapObj")->Get_GameObject()
+
+	}
+
+
+	//CTransform* pObstacleTrans = m_pObstacle->Get_Transform();
+	
+
+
+
 void CLoadStage::Player_Collision_With_Monster()
 {
 	// 충돌처리하는 함수
@@ -1044,6 +1072,7 @@ void CLoadStage::Player_Collision_With_Monster()
 			CPlayer::GetInstance()->Set_Attacked();
 		}
 	}
+
 }
 
 void CLoadStage::Drop_ITem()
@@ -1281,9 +1310,9 @@ HRESULT CLoadStage::Door_Collision()
 				Engine::CScene* pScene = nullptr;
 
 				int iStageKey = dynamic_cast<CDoor*>(pObj)->Get_Stage_Num_Key();
-				bool bUnClear = CStageLoadMgr::GetInstance()->Get_StageInfo(iStageKey).m_bUnClear;
+				bool bClear = CStageLoadMgr::GetInstance()->Get_StageInfo(iStageKey).m_bClear;
 
-				pScene = CLoadStage::Create(m_pGraphicDev, iStageKey, bUnClear);
+				pScene = CLoadStage::Create(m_pGraphicDev, iStageKey, bClear);
 				NULL_CHECK_RETURN(pScene, -1);
 
 				FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);

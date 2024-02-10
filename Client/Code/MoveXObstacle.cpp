@@ -4,14 +4,14 @@
 #include "Export_Utility.h"
 
 CMoveXObstacle::CMoveXObstacle(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CGameObject(pGraphicDev),
+	: CMapObj(pGraphicDev),
 	m_fDistanceLeft(0.f), m_fDistanceRight(0.f),
 	m_bTurn(false)
 {
 }
 
 CMoveXObstacle::CMoveXObstacle(const CMoveXObstacle& rhs)
-	: Engine::CGameObject(rhs)
+	: CMapObj(rhs)
 {
 
 }
@@ -30,6 +30,8 @@ HRESULT CMoveXObstacle::Ready_GameObject()
 	m_fSpeed = 3.f;
 
 	m_vPos = m_pTransformCom->m_vInfo[INFO_POS];
+
+	m_eObjType = OBSTACLE_X;
 
 	return S_OK;
 }
