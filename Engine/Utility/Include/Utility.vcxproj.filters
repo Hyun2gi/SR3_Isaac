@@ -91,6 +91,9 @@
     <Filter Include="09. Particle\ParticleSplashRight">
       <UniqueIdentifier>{9e770353-b616-4f56-b18c-75042e1772ff}</UniqueIdentifier>
     </Filter>
+    <Filter Include="09. Particle\ParticleDust">
+      <UniqueIdentifier>{633411d8-3b17-434c-87d3-7a16d32b3292}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Header\Management.h">
@@ -183,6 +186,9 @@
     <ClInclude Include="..\..\Header\ParticleSplashRight.h">
       <Filter>09. Particle\ParticleSplashRight</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Header\ParticleDust.h">
+      <Filter>09. Particle\ParticleDust</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\Management.cpp">
@@ -271,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ParticleSplashRight.cpp">
       <Filter>09. Particle\ParticleSplashRight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ParticleDust.cpp">
+      <Filter>09. Particle\ParticleDust</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

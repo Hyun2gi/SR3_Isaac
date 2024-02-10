@@ -20,7 +20,7 @@ public:
 	void	Create_Texture(const _tchar* pTexturePath, _int iMaxFrame);
 
 	static CParticleSplash* Create(IDirect3DDevice9* pDevice, _matrix matWorld,
-		const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/BloodExp2/BloodExp_%d.png", _int iMaxFrame = 7,
+		const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/BloodExp/BloodExp_%d.png", _int iMaxFrame = 7,
 		_float fSize = 0.25f, _int iCount = 10);
 
 private:

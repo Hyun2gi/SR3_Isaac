@@ -119,6 +119,7 @@ HRESULT CStageLoadMgr::Load_Data()
 		}
 
 		stageInfo.m_iKey = i.first;
+		stageInfo.m_bClear = false;
 		stageInfo.m_strTheme = vecStageInfo[1];
 		stageInfo.m_strType = vecStageInfo[0];
 		stageInfo.m_vecConnectRoom = vecConnectRoom;

@@ -162,7 +162,7 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	//TODO: 텍스쳐 경로 수정 필요하다!
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SheolFloorCubeTexture", CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/Terrain/BossCube.dds")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_SheolWallCubeTexture", CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/Wall/BossWallCube.dds")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ObstacleTexture", CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/Obstacle/Rock.dds")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ObstacleTexture", CTexture::Create(m_pGraphicDev, TEX_CUBE, L"../Bin/Resource/Texture/Obstacle/Obstacle.dds")), E_FAIL);
 
 
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Transform", CTransform::Create(m_pGraphicDev)), E_FAIL);

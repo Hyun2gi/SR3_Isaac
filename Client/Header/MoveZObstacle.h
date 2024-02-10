@@ -11,12 +11,12 @@ class CTexture;
 
 END
 
-class CObstacle :	public CMapObj
+class CMoveZObstacle :	public CMapObj
 {
 private:
-	explicit CObstacle(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CObstacle(const CObstacle& rhs);
-	virtual ~CObstacle();
+	explicit CMoveZObstacle(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CMoveZObstacle(const CMoveZObstacle& rhs);
+	virtual ~CMoveZObstacle();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -31,8 +31,16 @@ public:
 
 	void	Set_Pos(_vec3 vPos);
 
+	void	Set_Speed(_float fSpeed) { m_fSpeed = fSpeed; }
+
+	void	Set_Distance_Up(_float fLeft) { m_fDistanceUp = fLeft; }
+	void	Set_Distance_Down(_float fRight) { m_fDistanceDown = fRight; }
+
 private:
 	HRESULT			Add_Component();
+
+	void			Move(const _float& fTimeDelta);
+	void			Check_Wall_Collision();
 
 private:
 	Engine::CCubeTex* m_pBufferCom;
@@ -41,8 +49,13 @@ private:
 
 	OBJECT_TYPE				m_eObjType;
 
+	_float  m_fDistanceUp, m_fDistanceDown;
+	_float	m_fSpeed;
+	bool	m_bTurn;
+	_vec3	m_vPos;
+
 public:
-	static CObstacle*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
+	static CMoveZObstacle*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
 
 private:
 	virtual void Free() override;

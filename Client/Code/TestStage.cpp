@@ -17,6 +17,8 @@
 #include "Dople.h"
 
 #include "Obstacle.h"
+#include "MoveXObstacle.h"
+#include "MoveZObstacle.h"
 
 #include "Monstro.h"
 #include "Mom.h"
@@ -66,7 +68,10 @@ HRESULT CTestStage::Ready_Scene()
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_LightInfo(), E_FAIL);
 
-	m_pObstacle = CObstacle::Create(m_pGraphicDev);
+	m_pObstacle = CMoveZObstacle::Create(m_pGraphicDev);
+	m_pObstacle->Set_Distance_Up(10.f);
+	m_pObstacle->Set_Distance_Down(5.f);
+	m_pObstacle->Set_Speed(10.f);
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 
@@ -121,24 +126,21 @@ Engine::_int CTestStage::Update_Scene(const _float& fTimeDelta)
 
 		//함수 사용 예
 		Engine::Create_Explosion(m_pGraphicDev, *mat);
+		Engine::Create_Dust(m_pGraphicDev, *mat);
 		Engine::Create_Splash(m_pGraphicDev, *mat);
 		Engine::Create_Splash_Left(m_pGraphicDev, *mat);
 		Engine::Create_Splash_Right(m_pGraphicDev, *mat);
 		Engine::Create_Burst(m_pGraphicDev, *mat);
 
-		temp += D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.0f);
+		temp += D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.01f);
 		if (CPlayer::GetInstance()->Get_Component_Player_TexBuffer())
-		{
 			CPlayer::GetInstance()->Get_Component_Player_TexBuffer()->Set_Color(temp);
-		}
 	}
 	if (GetAsyncKeyState(VK_DOWN))
 	{
-		temp -= D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.0f);
+		temp -= D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.01f);
 		if (CPlayer::GetInstance()->Get_Component_Player_TexBuffer())
-		{
 			CPlayer::GetInstance()->Get_Component_Player_TexBuffer()->Set_Color(temp);
-		}
 	}
 
 

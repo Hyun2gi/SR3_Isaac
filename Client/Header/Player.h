@@ -83,8 +83,6 @@ public:
 		}
 	}
 
-	void		Set_LieAnim();
-
 	void		Set_To_MaxHp() { m_fHp = m_fMaxHp; }
 	void		Set_Coin(int _coin) { m_iCoin += _coin; }
 	void		Set_LayerTag(_tchar* pLayerTag) { m_pLayerTag = pLayerTag; }
@@ -152,10 +150,14 @@ private:
 	void			Bullet_Change(); //state 변경확인해서 상태변경
 	bool			Check_Time(const _float& fTimeDelta);
 	void			Specific_Motion(const _float& fTimeDelta);
+	void			Check_UnBeatable_Time(const _float& fTimeDelta);
 
 private:
 	// 씬이 시작할때 한가운데에 스폰하기 위해서 bool 값으로 씬이 시작하는지 확인
 	bool				m_bStartScene;
+
+	bool				m_bUnbeatable;
+	_float				m_fUnbeatableTime;
 
 	//bullet을 위한 layer 저장해놓는 변수
 	_tchar*				m_pLayerTag;

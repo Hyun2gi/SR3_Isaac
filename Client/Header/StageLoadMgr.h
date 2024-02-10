@@ -12,6 +12,7 @@ struct LoadObj
 struct StageInfo
 {
 	int m_iKey;
+	bool m_bClear;
 	vector<int> m_vecConnectRoom;
 	map<int, LoadObj> m_mapLoadObj;
 	string m_strTheme;
@@ -34,7 +35,8 @@ public:
 
 	string Get_Door_TextureName(_int iNum);
 
-	map<int, StageInfo>& Get_StageInfo() { return m_mapStageInfo; }
+	map<int, StageInfo>& Get_StageInfo_Map() { return m_mapStageInfo; }
+	StageInfo Get_StageInfo(_int iStageKey) { return m_mapStageInfo.at(iStageKey); }
 
 public:
 
