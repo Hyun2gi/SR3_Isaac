@@ -142,12 +142,12 @@ void CPill::Run_Item_Effect()
 				CPlayer::GetInstance()->Set_Item_Get_Anim_Bad();
 				break;
 			case 2:
-				// 무적 상태
-				m_bBadItem = true;
-				CPlayer::GetInstance()->Set_Item_Get_Anim_Bad();
+				// hp+1
+				CPlayer::GetInstance()->Set_Hp(1);
+				CPlayer::GetInstance()->Set_Item_Get_Anim();
 				break;
 			case 3:
-				CPlayer::GetInstance()->Set_MoveSpeed(4);
+				CPlayer::GetInstance()->Set_MoveSpeed(1);
 				CPlayer::GetInstance()->Set_Item_Get_Anim();
 				break;
 			case 4:

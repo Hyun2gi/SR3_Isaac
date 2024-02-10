@@ -72,9 +72,9 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 	Engine::Create_Scatter(m_pGraphicDev);
-	
+
 	FAILED_CHECK_RETURN(CStageLoadMgr::GetInstance()->Ready_StageLoadMgr(), E_FAIL);
-	
+
 	//FAILED_CHECK_RETURN(Load_Level_Data(), E_FAIL);
 	//FAILED_CHECK_RETURN(Load_Stage_Data(), E_FAIL);
 	//FAILED_CHECK_RETURN(Load_Connected_Stage_Theme(), E_FAIL);
@@ -83,13 +83,13 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_RoomObject(L"RoomObject"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
-	
+
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	return S_OK;
 }
 
 Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
-{	
+{
 	Engine::Update_Particles(fTimeDelta);
 
 	if (m_bIsCreated)
@@ -118,6 +118,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 	if (Check_Cube_Arrived() && !m_bIsCreated)
 	{
+		CPlayer::GetInstance()->Set_StartCameraMouse();
 		m_bIsCreated = true;
 		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
@@ -266,7 +267,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			}
 			break;
 		}
-		
+
 		}
 	}
 
@@ -343,7 +344,7 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
 				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
-				
+
 				++m_vecMonsterCount[SQUIRT];
 
 				break;
@@ -431,7 +432,7 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 			}
 			break;
 		}
-		
+
 		}
 	}
 
@@ -544,19 +545,19 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
+HRESULT CLoadStage::Ready_Layer_Environment(const _tchar* pLayerTag)
 {
-	Engine::CLayer*		pLayer = Engine::CLayer::Create();
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
-	
-	Engine::CGameObject*		pGameObject = nullptr;
+
+	Engine::CGameObject* pGameObject = nullptr;
 
 	pGameObject = CDynamicCamera::Create(m_pGraphicDev,
 		&_vec3(0.f, 10.f, -5.f),
-		&_vec3(0.f, 0.f, 1.f), 
+		&_vec3(0.f, 0.f, 1.f),
 		&_vec3(0.f, 1.f, 0.f),
 		D3DXToRadian(60.f),
-		(_float)WINCX / WINCY, 
+		(_float)WINCX / WINCY,
 		0.1f,
 		1000.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -565,7 +566,7 @@ HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	// 플레이어에 카메라 설정
 	CPlayer::GetInstance()->Set_Camera(pGameObject);
 
-		
+
 	pGameObject = CSkyBox::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pGameObject->Set_MyLayer(pLayerTag);
@@ -576,17 +577,17 @@ HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLoadStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
+HRESULT CLoadStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 {
-	Engine::CLayer*		pLayer = Engine::CLayer::Create();
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
-	Engine::CGameObject*		pGameObject = nullptr;
+	Engine::CGameObject* pGameObject = nullptr;
 
 	pGameObject = CTerrain::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
-	
+
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
@@ -659,12 +660,12 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLoadStage::Ready_Layer_UI(const _tchar * pLayerTag)
+HRESULT CLoadStage::Ready_Layer_UI(const _tchar* pLayerTag)
 {
-	Engine::CLayer*		pLayer = Engine::CLayer::Create();
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
-	Engine::CGameObject*		pGameObject = nullptr;
+	Engine::CGameObject* pGameObject = nullptr;
 
 
 
@@ -678,7 +679,7 @@ bool CLoadStage::Check_Cube_Arrived()
 	return m_pLeftWall->Get_Arrived() && m_pRightWall->Get_Arrived()
 		&& m_pTopWall->Get_Arrived() && m_pBottomWall->Get_Arrived()
 		&& m_pFloor->Get_Arrived();
-	
+
 }
 
 void CLoadStage::Copy_Stage()
@@ -698,7 +699,7 @@ void CLoadStage::Copy_Stage()
 				iter++;
 		}
 	}
-	
+
 }
 
 bool CLoadStage::Check_Monster_Dead()
@@ -710,7 +711,7 @@ bool CLoadStage::Check_Monster_Dead()
 		if (!dynamic_cast<CMonster*>(iter.second)->Get_Dead())
 			return false;
 	}
-	
+
 	return true;
 }
 
@@ -1131,8 +1132,8 @@ HRESULT CLoadStage::Door_Collision()
 				_vec3 startpos, fullpos;
 				int doornum = dynamic_cast<CDoor*>(pObj)->Get_DoorPos();
 				/*dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &startpos);*/
-				
-				
+
+
 				if (doornum == 0)
 				{
 					//left
@@ -1153,10 +1154,10 @@ HRESULT CLoadStage::Door_Collision()
 					//bottom
 					startpos = _vec3(20, 0, 38.5);
 				}
-				
+
 
 				CPlayer::GetInstance()->Set_KeyBlock(true);
-				
+
 				// 임시로 중간에 스폰
 				startpos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 				CPlayer::GetInstance()->Set_StartPos(startpos);
@@ -1174,9 +1175,9 @@ HRESULT CLoadStage::Door_Collision()
 	}
 }
 
-CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene)
+CLoadStage* CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene)
 {
-	CLoadStage *	pInstance = new CLoadStage(pGraphicDev);
+	CLoadStage* pInstance = new CLoadStage(pGraphicDev);
 	pInstance->m_bStartScene = bStratScene;
 	CPlayer::GetInstance()->Set_Bool_StartScene(true);
 
@@ -1187,7 +1188,7 @@ CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool b
 		MSG_BOX("Stage Create Failed");
 		return nullptr;
 	}
-	
+
 	return pInstance;
 }
 
