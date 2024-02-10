@@ -132,8 +132,8 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		
 		// UI 생성
 		Setting_UI();
-		NULL_CHECK_RETURN(pMenu, E_FAIL);
-		FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
+		//NULL_CHECK_RETURN(pMenu, E_FAIL);
+		//FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
 	}
 
 	//타임 델타 스케일 조절 예시 _ 사용
@@ -1175,6 +1175,32 @@ void CLoadStage::Setting_UI()
 #pragma endregion Boss HP
 
 }
+
+void CLoadStage::Play_Ending(const _float& fTimeDelta)
+{
+	m_fEndingTimer -= fTimeDelta;
+
+	if (0 < m_fEndingTimer)
+	{
+		CTransform* pTest = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
+
+		_matrix mat = *(pTest->Get_WorldMatrix());
+		mat._41 = mat._41 + (rand() % 10 - 5);
+		mat._42 = mat._42 + (rand() % 10 - 5);
+		mat._43 = mat._43 + (rand() % 10 - 5);
+
+		Engine::Create_Dust(m_pGraphicDev, mat);
+	}
+	else
+	{
+		Engine::Kill_Scatter();
+
+		Engine::CScene* pScene = nullptr;
+		pScene = CEnding::Create(m_pGraphicDev);
+		Engine::Set_Scene(pScene);
+
+		return;
+	}
 
 }
 
