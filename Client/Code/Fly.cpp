@@ -59,6 +59,8 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 			m_fFrame = 0.f;
 	}
 
+	Check_Outof_Map();
+
 	// Epic
 	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
 		m_bEpicTime = true;

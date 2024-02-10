@@ -44,6 +44,31 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
+	Check_Range();
+
+	_vec3 vTargetPos;
+	m_pTargetTransCom->Get_Info(INFO_POS, &vTargetPos);
+
+	m_pTransformCom->Chase_Target(&vTargetPos, m_fSpeed, m_fSlowDelta);
+
+	Face_Camera();
+
+	CGameObject::Update_GameObject(m_fSlowDelta);
+
+	Check_Outof_Map();
+
+	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+	if (m_bDead)
+		return 1;
+
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+
+	return 0;
+}
+
+void CCharger::LateUpdate_GameObject()
+{
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -62,33 +87,8 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	if (m_bHitColor)
-		Change_Color(fTimeDelta);
+		Change_Color(m_fSlowDelta);
 
-	Check_Range();
-
-	_vec3 vTargetPos;
-	m_pTargetTransCom->Get_Info(INFO_POS, &vTargetPos);
-
-	m_pTransformCom->Chase_Target(&vTargetPos, m_fSpeed, m_fSlowDelta);
-
-	Face_Camera();
-
-	CGameObject::Update_GameObject(m_fSlowDelta);
-
-	
-
-	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
-
-	if (m_bDead)
-		return 1;
-
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
-
-	return 0;
-}
-
-void CCharger::LateUpdate_GameObject()
-{
 	Motion_Change();
 
 	__super::LateUpdate_GameObject();

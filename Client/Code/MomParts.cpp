@@ -56,19 +56,6 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 			m_fFrame = 0.f;
 	}
 
-	if (m_bHit) // 피격 시 Mom 의 HP 를 깎아야 함
-	{
-		if (m_eCurState == MOM_EYE || m_eCurState == MOM_HAND || m_eCurState == MOM_SKIN)
-		{
-			m_pMom->Set_Hp_Minus();
-			m_bHit = false;
-			m_bHitColor = true;
-		}
-	}
-
-	if (m_bHitColor)
-		Change_Color(fTimeDelta);
-
 	Set_RandNum();
 
 	if (Check_Time(m_fSlowDelta))
@@ -91,6 +78,19 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 
 void CMomParts::LateUpdate_GameObject()
 {
+	if (m_bHit) // 피격 시 Mom 의 HP 를 깎아야 함
+	{
+		if (m_eCurState == MOM_EYE || m_eCurState == MOM_HAND || m_eCurState == MOM_SKIN)
+		{
+			m_pMom->Set_Hp_Minus();
+			m_bHit = false;
+			m_bHitColor = true;
+		}
+	}
+
+	if (m_bHitColor)
+		Change_Color(m_fSlowDelta);
+
 	Motion_Change();
 
 	__super::LateUpdate_GameObject();

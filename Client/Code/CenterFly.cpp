@@ -49,6 +49,10 @@ _int CCenterFly::Update_GameObject(const _float& fTimeDelta)
 	m_pTargetTransCom->Get_Info(INFO_POS, &vPlayerPos);
 	m_pTransformCom->Chase_Target(&vPlayerPos, 3.f, m_fSlowDelta);
 
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	m_pTransformCom->Set_Pos(vPos.x, 2.f, vPos.z);
+
 	return 0;
 }
 
