@@ -1110,7 +1110,7 @@ void CPlayer::Check_UnBeatable_Time(const _float& fTimeDelta)
 	{
 		m_fUnbeatableTime += fTimeDelta;
 
-		if (m_fUnbeatableTime > 3)
+		if (m_fUnbeatableTime >= 2)
 		{
 			m_bUnbeatable = false;
 			m_fUnbeatableTime = 0;
