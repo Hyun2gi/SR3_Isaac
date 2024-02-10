@@ -1255,9 +1255,9 @@ HRESULT CLoadStage::Door_Collision()
 				Engine::CScene* pScene = nullptr;
 
 				int iStageKey = dynamic_cast<CDoor*>(pObj)->Get_Stage_Num_Key();
-				bool bUnClear = CStageLoadMgr::GetInstance()->Get_StageInfo(iStageKey).m_bUnClear;
+				bool bClear = CStageLoadMgr::GetInstance()->Get_StageInfo(iStageKey).m_bClear;
 
-				pScene = CLoadStage::Create(m_pGraphicDev, iStageKey, bUnClear);
+				pScene = CLoadStage::Create(m_pGraphicDev, iStageKey, bClear);
 				NULL_CHECK_RETURN(pScene, -1);
 
 				FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
