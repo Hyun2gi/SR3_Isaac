@@ -69,9 +69,19 @@ inline void Create_Scatter(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vMin, _vec3 vMax
 	CParticleMgr::GetInstance()->Create_Scatter(pGraphicDev, vMin, vMax, fSize, iCount);
 }
 
+inline void Kill_Scatter()
+{
+	CParticleMgr::GetInstance()->Kill_Scatter();
+}
+
 inline void Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount)
 {
 	CParticleMgr::GetInstance()->Create_Explosion(pGraphicDev, matWorld, fSize, iCount);
+}
+
+inline void Create_Dust(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount)
+{
+	CParticleMgr::GetInstance()->Create_Dust(pGraphicDev, matWorld, fSize, iCount);
 }
 
 inline void Create_Splash(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, const _tchar* pTexturePath, _int iMaxFrame, _float fSize, _int iCount)

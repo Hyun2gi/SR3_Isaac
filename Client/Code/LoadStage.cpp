@@ -9,6 +9,8 @@
 
 #include "StageLoadMgr.h"
 
+#include "Ending.h"
+
 //환경
 #include "Terrain.h"
 #include "DynamicCamera.h"
@@ -41,6 +43,8 @@
 #include "ShellGame.h"
 #include "Door.h"
 #include "Obstacle.h"
+#include "MoveXObstacle.h"
+#include "MoveZObstacle.h"
 
 //아이템
 #include "Coin.h"
@@ -59,7 +63,8 @@
 #include "PlayerHP.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CScene(pGraphicDev), m_bStartScene(false)
+	: Engine::CScene(pGraphicDev), 
+	m_bStartScene(false), m_bEndingPlay(false)
 {
 }
 
@@ -127,19 +132,18 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		
 		// UI 생성
 		Setting_UI();
+		NULL_CHECK_RETURN(pMenu, E_FAIL);
+		FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
 	}
 
 	//타임 델타 스케일 조절 예시 _ 사용
 	if (Engine::Key_Down(DIK_P))
 	{
-		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.1f);
+		m_bEndingPlay = true;
+	}
 
-		Copy_Stage();
-	}
-	if (Engine::Key_Down(DIK_O))
-	{
-		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
-	}
+	if (m_bEndingPlay)
+		Play_Ending(fTimeDelta);
 
 	return iExit;
 }
@@ -172,7 +176,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
-	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_mapLoadObj;
+	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
 
 	for (auto& iter : mapLoadObj)
 	{
@@ -262,6 +266,46 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				break;
 			}
 
+			case OBSTACLE_X:
+			{
+				pGameObject = CMoveXObstacle::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+
+				int randNum1 = rand() % 10 + 5;
+				int randNum2 = rand() % 10 + 5;
+				int randNumSpeed = rand() % 30 + 10;
+
+				dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Left(randNum1);
+				dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Right(randNum2);
+				dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Speed(randNumSpeed);
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle_X", pGameObject), E_FAIL);
+
+				break;
+			}
+
+			case OBSTACLE_Z:
+			{
+				pGameObject = CMoveZObstacle::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+
+				int randNum1 = rand() % 10 + 5;
+				int randNum2 = rand() % 10 + 5;
+				int randNumSpeed = rand() % 30 + 10;
+
+				dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Up(randNum1);
+				dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Down(randNum2);
+				dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Speed(randNumSpeed);
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle_Z", pGameObject), E_FAIL);
+
+				break;
+			}
+
 			}
 			break;
 		}
@@ -279,7 +323,7 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
-	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_mapLoadObj;
+	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
 
 	for (auto& iter : mapLoadObj)
 	{
@@ -464,7 +508,7 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 
 	_vec3 vTempPos;
 
-	auto vecDoorTheme = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_vecConnectRoom;
+	auto vecDoorTheme = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_vecConnectRoom;
 
 	int i = 0;
 	for (auto& iter : vecDoorTheme)
@@ -601,7 +645,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	wstring wstrProto = L"Proto_";
 	wstring wstrTag, wstrTheme;
 
-	string strType = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_strType;
+	string strType = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_strType;
 
 	wstrTheme.assign(strType.begin(), strType.end());
 
@@ -682,7 +726,7 @@ bool CLoadStage::Check_Cube_Arrived()
 
 void CLoadStage::Copy_Stage()
 {
-	auto& map = CStageLoadMgr::GetInstance()->Get_StageInfo().at(m_iCurStageKey).m_mapLoadObj;
+	auto& map = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
 
 	int iStageMonsterCount = 0;
 	for (auto& iter : m_vecMonsterCount) iStageMonsterCount += iter;
@@ -1126,6 +1170,12 @@ void CLoadStage::Setting_UI()
 		dynamic_cast<CMonstro*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro"))->Print_UI(m_mapLayer.at(L"UI"));
 	}
 
+	// Boss HP Bar
+
+#pragma endregion Boss HP
+
+}
+
 }
 
 HRESULT CLoadStage::Door_Collision()
@@ -1178,7 +1228,10 @@ HRESULT CLoadStage::Door_Collision()
 				// 스테이지 변경
 				Engine::CScene* pScene = nullptr;
 
-				pScene = CLoadStage::Create(m_pGraphicDev, dynamic_cast<CDoor*>(pObj)->Get_Stage_Num_Key());
+				int iStageKey = dynamic_cast<CDoor*>(pObj)->Get_Stage_Num_Key();
+				bool bUnClear = CStageLoadMgr::GetInstance()->Get_StageInfo(iStageKey).m_bUnClear;
+
+				pScene = CLoadStage::Create(m_pGraphicDev, iStageKey, bUnClear);
 				NULL_CHECK_RETURN(pScene, -1);
 
 				FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
