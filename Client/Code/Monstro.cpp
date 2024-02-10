@@ -86,26 +86,6 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
 	}
 
-	if (m_bHit)
-	{
-		m_iHp -= 1;
-
-		//Hit_PushBack(m_fSlowDelta);
-
-		m_bHit = false;
-		m_bHitColor = true;
-
-		if (0 >= m_iHp)
-		{
-			m_eCurState = MONSTRO_DEAD;
-			m_pTransformCom->m_vInfo->y = CENTERY;
-			m_bDeadWait = true;
-		}
-	}
-
-	if (m_bHitColor)
-		Change_Color(fTimeDelta);
-
 	// Bullet Update
 	if (!m_BulletList.empty())
 	{
@@ -207,6 +187,24 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 
 void CMonstro::LateUpdate_GameObject()
 {
+	if (m_bHit)
+	{
+		m_iHp -= 1;
+
+		m_bHit = false;
+		m_bHitColor = true;
+
+		if (0 >= m_iHp)
+		{
+			m_eCurState = MONSTRO_DEAD;
+			m_pTransformCom->m_vInfo->y = CENTERY;
+			m_bDeadWait = true;
+		}
+	}
+
+	if (m_bHitColor)
+		Change_Color(m_fSlowDelta);
+
 	Motion_Change();
 
 	// Bullet LateUpdate

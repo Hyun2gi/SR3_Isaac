@@ -39,7 +39,7 @@ HRESULT CNormalFly::Ready_GameObject()
 	m_iPicNum = 0;
 	m_bDeadWait = false;
 
-	m_eMstType = ATTACK_FLY;
+	m_eMstType = MONSTER_TYPE_END;
 
 	return S_OK;
 }
@@ -58,6 +58,21 @@ _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 			m_fFrame = 0.f;
 	}
 
+	if(!m_bDeadWait)
+		Revolve_Center();
+
+	CGameObject::Update_GameObject(m_fSlowDelta);
+
+	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+	//m_pCalculCom->Compute_Vill_Matrix_X(m_pTransformCom);
+
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+
+	return 0;
+}
+
+void CNormalFly::LateUpdate_GameObject()
+{
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -74,23 +89,8 @@ _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	if (m_bHitColor)
-		Change_Color(fTimeDelta);
+		Change_Color(m_fSlowDelta);
 
-	if(!m_bDeadWait)
-		Revolve_Center();
-
-	CGameObject::Update_GameObject(m_fSlowDelta);
-
-	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
-	//m_pCalculCom->Compute_Vill_Matrix_X(m_pTransformCom);
-
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
-
-	return 0;
-}
-
-void CNormalFly::LateUpdate_GameObject()
-{
 	Motion_Change();
 
 	__super::LateUpdate_GameObject();

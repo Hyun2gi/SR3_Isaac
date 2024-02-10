@@ -60,28 +60,7 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
-	if (m_bHit)
-	{
-		m_iHp -= 1;
-
-		Hit_PushBack(m_fSlowDelta);
-
-		m_bHit = false;
-		m_bHitColor = true;
-
-		if (0 >= m_iHp)
-		{
-			m_bDead = true;
-			
-			// 捞棋飘 积己
-			_vec3 vPos;
-			m_pTransformCom->Get_Info(INFO_POS, &vPos);
-			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
-		}
-	}
-
-	if (m_bHitColor)
-		Change_Color(fTimeDelta);
+	Check_Outof_Map();
 
 	// Epic
 	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
@@ -125,6 +104,29 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 
 void CSquirt::LateUpdate_GameObject()
 {
+	if (m_bHit)
+	{
+		m_iHp -= 1;
+
+		Hit_PushBack(m_fSlowDelta);
+
+		m_bHit = false;
+		m_bHitColor = true;
+
+		if (0 >= m_iHp)
+		{
+			m_bDead = true;
+
+			// 捞棋飘 积己
+			_vec3 vPos;
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		}
+	}
+
+	if (m_bHitColor)
+		Change_Color(m_fSlowDelta);
+
 	Motion_Change();
 
 	__super::LateUpdate_GameObject();

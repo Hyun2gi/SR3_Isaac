@@ -61,26 +61,11 @@ _int CDople::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
-	/*CComponent* pComponent = CPlayer::GetInstance()->Get_Component_Player_Transform();
-	m_pTargetTransCom = dynamic_cast<CTransform*>(pComponent);
-	_vec3 vPlayerPos;
-	m_pTargetTransCom->Get_Info(INFO_POS, &vPlayerPos);
-	m_pTransformCom->Set_Pos(vPlayerPos);*/
-
-	// Player 의 Look 벡터 방향에 따라 상태와 움직임을 바꾸는?
-
 	if (!m_bDead)
 	{
 		m_eCurState = DP_IDLE;
 		Follow_Player(fTimeDelta);
 	}
-
-	if (m_bHit)
-	{
-		m_bDead = true;
-	}
-
-	
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -91,6 +76,11 @@ _int CDople::Update_GameObject(const _float& fTimeDelta)
 
 void CDople::LateUpdate_GameObject()
 {
+	if (m_bHit)
+	{
+		m_bDead = true;
+	}
+
 	Motion_Change();
 
 	__super::LateUpdate_GameObject();

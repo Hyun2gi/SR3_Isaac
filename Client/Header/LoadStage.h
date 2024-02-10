@@ -97,6 +97,8 @@ private:
 	bool m_bIsCreated;
 	bool m_bStartScene;
 
+	_bool	m_bMenu;
+
 	//엔딩 관련
 	_float m_fEndingTimer = 4.5f;
 	bool m_bEndingPlay;

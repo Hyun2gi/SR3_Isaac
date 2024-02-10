@@ -85,7 +85,7 @@ void CMonster::Change_Color(const _float& fTimeDelta)
 
 		m_fColorTimeDelta = 0.f;
 
-		//m_bHitColor = false;
+		m_bHitColor = false;
 
 		return;
 	}
@@ -93,6 +93,19 @@ void CMonster::Change_Color(const _float& fTimeDelta)
 	{
 		D3DXCOLOR temp = D3DXCOLOR(1.f, 0.0f, 0.0f, 1.f);
 		m_pBufferCom->Set_Color(temp);
+	}
+}
+
+void CMonster::Check_Outof_Map()
+{
+	// 맵 밖에 생성된 경우 맵 안에 랜덤한 값으로 옮겨주기
+
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	if (0 > vPos.x || VTXCNTX < vPos.x || 0 > vPos.z || VTXCNTZ < vPos.z)
+	{
+		m_pTransformCom->Set_Pos((rand() % VTXCNTX - 10) + 5, vPos.y, (rand() % VTXCNTZ - 10) + 5);
 	}
 }
 

@@ -24,7 +24,7 @@ CFly::~CFly()
 HRESULT CFly::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(_float(rand() % 20), 5.f, _float(rand() % 20));
+	m_pTransformCom->Set_Pos(0.f, 1.f, 0.f);
 	m_pTransformCom->m_vScale = { 0.6f, 0.6f, 0.6f };
 
 	m_iHp = 3;
@@ -59,6 +59,41 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 			m_fFrame = 0.f;
 	}
 
+	Check_Outof_Map();
+
+	// Epic
+	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
+		m_bEpicTime = true;
+
+	if (m_bEpicTime)
+		Epic_Time();
+	else
+	{
+		m_vOriginScale = m_pTransformCom->m_vAngle;
+		Face_Camera();
+	}
+
+	CGameObject::Update_GameObject(m_fSlowDelta);
+
+	if (!m_bDead)
+	{
+		Face_Camera();
+
+		if (Check_Time(m_fSlowDelta))
+			Change_Dir(m_fSlowDelta);
+
+		Move(m_fSlowDelta);
+	}
+
+	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
+
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+
+	return 0;
+}
+
+void CFly::LateUpdate_GameObject()
+{
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -78,39 +113,6 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 	if (m_bHitColor)
 		Change_Color(m_fSlowDelta);
 
-	// Epic
-	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
-		m_bEpicTime = true;
-
-	if (m_bEpicTime)
-		Epic_Time();
-	else
-	{
-		m_vOriginScale = m_pTransformCom->m_vAngle;
-		Face_Camera();
-	}
-
-	if (!m_bDead)
-	{
-		Face_Camera();
-
-		if (Check_Time(m_fSlowDelta))
-			Change_Dir(m_fSlowDelta);
-
-		Move(m_fSlowDelta);
-	}
-
-	CGameObject::Update_GameObject(m_fSlowDelta);
-
-	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
-
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
-
-	return 0;
-}
-
-void CFly::LateUpdate_GameObject()
-{
 	Motion_Change();
 
 	__super::LateUpdate_GameObject();
@@ -199,24 +201,22 @@ void CFly::Move(const _float& fTimeDelta)
 {
 	_vec3 vPos, vDir;
 	m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
-	
 
 	// LOOK 벡터로 이동 X 임의의 벡터를 사용
 	D3DXVec3Normalize(&m_vMoveLook, &m_vMoveLook);
 
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x &&
-		vPos.z < VTXCNTZ - m_pTransformCom->m_vScale.z &&
-		vPos.x > m_pTransformCom->m_vScale.x &&
-		vPos.z > m_pTransformCom->m_vScale.z &&
-		vPos.y > 0.f + m_pTransformCom->m_vScale.y &&
-		vPos.y < 30.f)
+	if (vPos.x > VTXCNTX - m_pTransformCom->m_vScale.x ||
+		vPos.z > VTXCNTZ - m_pTransformCom->m_vScale.z ||
+		vPos.x < m_pTransformCom->m_vScale.x ||
+		vPos.z < m_pTransformCom->m_vScale.z ||
+		vPos.y <= 1.f || vPos.y >= 4.f)
 	{
-		m_pTransformCom->Move_Pos(&m_vMoveLook, m_fSpeed, fTimeDelta); // 값 조정 필요
+		m_vMoveLook *= -1.f;
 	}
-	/*D3DXVec3Normalize(&vDir, &vDir);
-	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);*/
+
+	m_pTransformCom->Move_Pos(&m_vMoveLook, m_fSpeed, fTimeDelta); // 값 조정 필요
 
 	m_eCurState = FLY_IDLE;
 }

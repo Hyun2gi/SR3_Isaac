@@ -51,6 +51,7 @@ protected:
 	void			Fix_Y(_float fY);
 	void			Change_Scale();
 	void			Change_Color(const _float& fTimeDelta);
+	void			Check_Outof_Map();
 
 protected:
 	Engine::CRcTex* m_pBufferCom;

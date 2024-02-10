@@ -17,6 +17,9 @@ private:
 	explicit CMenu(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CMenu(const CMenu& rhs);
 	virtual ~CMenu();
+	
+public:
+	void			Set_Render() { m_bRender = !m_bRender; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -31,6 +34,8 @@ private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
+
+	_bool				m_bRender;
 
 	_float				m_fAnimSpeed = 1.f;
 	_float				m_fCurFrame = 0.f;

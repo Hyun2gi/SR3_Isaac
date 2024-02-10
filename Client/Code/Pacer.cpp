@@ -54,25 +54,7 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
-	if (m_bHit)
-	{
-		m_iHp -= 1;
-
-		Hit_PushBack(m_fSlowDelta);
-
-		m_bHit = false;
-
-		if (0 >= m_iHp)
-		{
-			m_bDead = true;
-			_vec3 vPos;
-			m_pTransformCom->Get_Info(INFO_POS, &vPos);
-			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
-		}
-	}
-
-	if (m_bHitColor)
-		Change_Color(fTimeDelta);
+	Check_Outof_Map();
 
 	// Epic
 	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
@@ -107,6 +89,26 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 
 void CPacer::LateUpdate_GameObject()
 {
+	if (m_bHit)
+	{
+		m_iHp -= 1;
+
+		Hit_PushBack(m_fSlowDelta);
+
+		m_bHit = false;
+
+		if (0 >= m_iHp)
+		{
+			m_bDead = true;
+			_vec3 vPos;
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		}
+	}
+
+	if (m_bHitColor)
+		Change_Color(m_fSlowDelta);
+
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
