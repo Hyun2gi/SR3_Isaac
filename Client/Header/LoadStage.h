@@ -66,6 +66,7 @@ private:
 	void			Item_Collision();
 	void			Moster_Collision();
 	void			MapObj_Collision();
+	void			Obstacle_Collsion();
 
 	void			Drop_ITem();
 

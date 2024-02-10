@@ -1021,6 +1021,18 @@ void CLoadStage::MapObj_Collision()
 	}
 }
 
+void CLoadStage::Obstacle_Collsion()
+{
+	CTransform* pPlayerTrans = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
+
+
+
+	//CTransform* pObstacleTrans = m_pObstacle->Get_Transform();
+	//Engine::Check_Collision(pPlayerTrans, pObstacleTrans);
+
+
+}
+
 void CLoadStage::Drop_ITem()
 {
 	// 똥
