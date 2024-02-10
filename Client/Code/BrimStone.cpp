@@ -180,7 +180,7 @@ void CBrimStone::Item_Spawn_Action()
 CBrimStone* CBrimStone::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look)
 {
 	CBrimStone* pInstance = new CBrimStone(pGraphicDev);
-	srand((unsigned)time(NULL));
+	//srand((unsigned)time(NULL));
 
 	if (spawnspot == 1)
 	{

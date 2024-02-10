@@ -3,8 +3,6 @@
 #include "Base.h"
 #include "UI.h"
 
-#include "Monster.h"
-
 BEGIN(Engine)
 
 class CRcTex;
@@ -13,15 +11,14 @@ class CTransform;
 
 END
 
-class CBossHP : public Engine::CUI
+class CPLCoinFont : public Engine::CUI
 {
-private:
-	explicit CBossHP(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CBossHP(const CBossHP& rhs);
-	virtual ~CBossHP();
+	explicit CPLCoinFont(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CPLCoinFont(const CPLCoinFont& rhs);
+	virtual ~CPLCoinFont();
 
 public:
-	void		Set_Target(CMonster* pMonster) { m_pMonster = pMonster; }
+	void			Set_Index(_int iIndex) { m_iIndex = iIndex; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -31,7 +28,8 @@ public:
 
 private:
 	HRESULT			Add_Component();
-	void			Update_Scale();
+
+	void			Resetting_Texture();
 
 private:
 	Engine::CRcTex* m_pBufferCom;
@@ -47,12 +45,10 @@ private:
 	_int				m_iAnimFrameCount;
 	_int				m_iMaxFrameCount;
 
-	_int				m_iTargetHP;
-
-	CMonster*			m_pMonster;
+	_int				m_iIndex;
 
 public:
-	static CBossHP* Create(LPDIRECT3DDEVICE9	pGraphicDev,
+	static CPLCoinFont* Create(LPDIRECT3DDEVICE9	pGraphicDev,
 		_float fSizeX, _float fSizeY,
 		_float fPosX, _float fPosY,
 		_int iAnimFrameCount, _int iMaxFrameCount,
@@ -60,5 +56,6 @@ public:
 
 private:
 	virtual void Free() override;
+
 };
 

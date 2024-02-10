@@ -69,6 +69,12 @@ public:
 		memcpy(pInfo, &m_matWorld.m[eType][0], sizeof(_vec3));
 	}
 
+	void		Get_Scale(_vec3* pInfo)
+	{
+		memcpy(pInfo, &m_vScale[0], sizeof(_vec3));
+	}
+
+
 	void		Chase_Target(const _vec3* pTargetPos, const _float& fSpeed, const _float& fTimeDelta);
 	const _matrix*	Compute_LookAtTarget(const _vec3* pTargetPos);
 	void		Rotate_Set_Axis(_vec3* axis, const _float angle);

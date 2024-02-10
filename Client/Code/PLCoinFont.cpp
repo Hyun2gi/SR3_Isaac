@@ -1,29 +1,31 @@
 #include "stdafx.h"
-#include "BossHP.h"
+#include "PLCoinFont.h"
 
 #include "Export_Utility.h"
 
-CBossHP::CBossHP(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CUI(pGraphicDev),
-	m_pMonster(nullptr)
+#include "Player.h"
+
+CPLCoinFont::CPLCoinFont(LPDIRECT3DDEVICE9 pGraphicDev)
+	: Engine::CUI(pGraphicDev)
 {
 }
 
-CBossHP::CBossHP(const CBossHP& rhs)
-	: Engine::CUI(rhs),
-	m_pMonster(rhs.m_pMonster)
+CPLCoinFont::CPLCoinFont(const CPLCoinFont& rhs)
+	: Engine::CUI(rhs)
 {
 }
 
-CBossHP::~CBossHP()
+CPLCoinFont::~CPLCoinFont()
 {
 }
 
-HRESULT CBossHP::Ready_GameObject()
+HRESULT CPLCoinFont::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_iStartFrame = 0;
+
+	m_fCurFrame = 0.f;
 
 	m_pTransformCom->m_vScale.x = m_fSizeX;
 	m_pTransformCom->m_vScale.y = m_fSizeY;
@@ -36,35 +38,32 @@ HRESULT CBossHP::Ready_GameObject()
 	return S_OK;
 }
 
-_int CBossHP::Update_GameObject(const _float& fTimeDelta)
+_int CPLCoinFont::Update_GameObject(const _float& fTimeDelta)
 {
-	// Boss의 HP를 받아와서 상태 변경
 
-	m_fCurFrame = 0.f;
 
-	Update_Scale();
-	
 	CUI::Update_GameObject(fTimeDelta);
+
+	Resetting_Texture();
 
 	return 0;
 }
 
-void CBossHP::LateUpdate_GameObject()
+void CPLCoinFont::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 }
 
-void CBossHP::Render_GameObject()
+void CPLCoinFont::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
 	m_pTextureCom->Set_Texture((_int)m_fCurFrame);
 
-	if(0 < m_iTargetHP)
-		m_pBufferCom->Render_Buffer();
+	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CBossHP::Add_Component()
+HRESULT CPLCoinFont::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
@@ -73,9 +72,9 @@ HRESULT CBossHP::Add_Component()
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
 	// Boss HP Bar
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BossHPBarTexture"));
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerCoinFontTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_BossHPBarTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerCoinFontTexture", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -84,22 +83,24 @@ HRESULT CBossHP::Add_Component()
 	return S_OK;
 }
 
-void CBossHP::Update_Scale()
+void CPLCoinFont::Resetting_Texture()
 {
-	m_iTargetHP = m_pMonster->Get_HP();
+	int iCoin = CPlayer::GetInstance()->Get_Coin();
 
-	_float fHpSize = 30 * 6.6f;
-	_float fItvX = fHpSize / 30;
-
-	m_pTransformCom->m_vScale.x = m_iTargetHP * 6.6f;
-
-	m_pTransformCom->m_vInfo[INFO_POS].x = -fItvX * (30 - m_iTargetHP) * 0.6f;
-
+	if (0 == m_iIndex) // 십의 자리
+	{
+		iCoin /= 10;
+		m_fCurFrame = (_float)(iCoin % 10);
+	}
+	else if (1 == m_iIndex) // 일의 자리
+	{
+		m_fCurFrame = (_float)(iCoin % 10);
+	}
 }
 
-CBossHP* CBossHP::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
+CPLCoinFont* CPLCoinFont::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
 {
-	CBossHP* pInstance = new CBossHP(pGraphicDev);
+	CPLCoinFont* pInstance = new CPLCoinFont(pGraphicDev);
 
 	pInstance->Set_WindowSize(fWinCX, fWinCY);
 	pInstance->Set_Size(fSizeX, fSizeY);
@@ -110,14 +111,15 @@ CBossHP* CBossHP::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fS
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("BossHP Create Failed");
+		MSG_BOX("PLCoinFont Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
+
 }
 
-void CBossHP::Free()
+void CPLCoinFont::Free()
 {
 	__super::Free();
 }

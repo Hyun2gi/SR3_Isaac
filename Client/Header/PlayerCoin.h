@@ -3,7 +3,7 @@
 #include "Base.h"
 #include "UI.h"
 
-#include "Monster.h"
+#include "Player.h"
 
 BEGIN(Engine)
 
@@ -13,15 +13,12 @@ class CTransform;
 
 END
 
-class CBossHP : public Engine::CUI
+class CPlayerCoin : public Engine::CUI
 {
 private:
-	explicit CBossHP(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CBossHP(const CBossHP& rhs);
-	virtual ~CBossHP();
-
-public:
-	void		Set_Target(CMonster* pMonster) { m_pMonster = pMonster; }
+	explicit CPlayerCoin(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CPlayerCoin(const CPlayerCoin& rhs);
+	virtual ~CPlayerCoin();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -31,7 +28,6 @@ public:
 
 private:
 	HRESULT			Add_Component();
-	void			Update_Scale();
 
 private:
 	Engine::CRcTex* m_pBufferCom;
@@ -47,12 +43,12 @@ private:
 	_int				m_iAnimFrameCount;
 	_int				m_iMaxFrameCount;
 
-	_int				m_iTargetHP;
+	_int				m_iTargetCoin;
 
-	CMonster*			m_pMonster;
+	CPlayer*			m_pPlayer;
 
 public:
-	static CBossHP* Create(LPDIRECT3DDEVICE9	pGraphicDev,
+	static CPlayerCoin* Create(LPDIRECT3DDEVICE9	pGraphicDev,
 		_float fSizeX, _float fSizeY,
 		_float fPosX, _float fPosY,
 		_int iAnimFrameCount, _int iMaxFrameCount,
@@ -60,5 +56,6 @@ public:
 
 private:
 	virtual void Free() override;
+
 };
 

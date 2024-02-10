@@ -232,10 +232,28 @@
     <Filter Include="02. GameObject\12. UI\00. Menu">
       <UniqueIdentifier>{eaad68dd-3b4a-4121-b325-36ebbe5e117c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\10. Room\03. Obstacle">
+    <Filter Include="02. GameObject\10. Room\03.Obstacle">
       <UniqueIdentifier>{ddca5203-f170-4684-bae5-9a15b85d9c1e}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
+    <Filter Include="02. GameObject\12. UI\01. Player\01. Player Coin">
+      <UniqueIdentifier>{14dd8504-e403-4744-9e78-3118c183430e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\01. Player\01. Player Coin\00. PLCoinFont">
+      <UniqueIdentifier>{08639cb5-003d-4c60-9b4f-783de9565650}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Room\03. Obstacle\Normal">
+      <UniqueIdentifier>{02caee19-b086-4828-a43d-79808cae1b6d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Room\03. Obstacle\MoveX">
+      <UniqueIdentifier>{a5426392-69c1-4ee8-9070-6e71bc1decae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Room\03. Obstacle\MoveZ">
+      <UniqueIdentifier>{e68260ad-1675-40af-af40-9966db50e785}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01. Scene\05. Ending">
+      <UniqueIdentifier>{6c3b6688-1da0-49ed-ad97-143812994bea}</UniqueIdentifier>
+    </Filter>
+   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
