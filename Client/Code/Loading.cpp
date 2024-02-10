@@ -181,7 +181,7 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_ATTACKED", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_attacked.png", 1)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_GET_BAD_ITEM", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_get_bad_item.png", 1)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_LIE_CRY", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_lie_cry.png", 1)), E_FAIL);
-
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTexture_LIE_CRY_OPEN_EYE", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Isaac/isaac_lie_cry_open_eye.png", 1)), E_FAIL);
 
 	//눈물추가
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerTear", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Tear/Tear_%d.png", 13)), E_FAIL);
@@ -233,6 +233,14 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	// Boss HP
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BossHPTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Boss/BossHP.png")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BossHPBarTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Boss/BossHPBar.png")), E_FAIL);
+
+	// Player Coin
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerCoinTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Item/coin.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerCoinFontTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Font/Font_%d.png", 10)), E_FAIL);
+
+	// Player Heart
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerHeartTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Item/ui_hearts_%d.png", 3)), E_FAIL);
+
 
 #pragma endregion UI Texture
 

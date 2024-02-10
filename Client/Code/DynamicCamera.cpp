@@ -40,8 +40,16 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_bMove = false;
 	m_bCollisionWall = false;
 	m_bPreCollisionWall = false;
+	m_bCollisionWall = false;
+	m_bFirstPerson = false;
+	m_bPreFirstPerson = false;
+	m_bChaseInit = true;
+	m_bMouseCameraStart = false;
 
+
+	m_fAngleX = 0;
 	m_fAngleY = 0;
+	m_fAngleZ = 0;
 
 	m_bEpic = false;
 	m_bEpicCall = false;
@@ -84,7 +92,11 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 
 	if (false == m_bFix)
 	{
-		Mouse_Move();
+		if (m_bMouseCameraStart)
+		{
+			Mouse_Move();
+		}
+			
 		Chase_Character(fTimeDelta);
 		//마우스 움직임
 
@@ -96,6 +108,8 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 		}
 
 	}
+	
+	
 
 	return iExit;
 }
@@ -177,6 +191,12 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 			_vec3 vPos = m_vAt + m_vCameraPosDir * m_fTotalDistanceWithPlayer;
 
 			m_bPreCollisionWall = m_bCollisionWall;
+			m_bPreFirstPerson = m_bFirstPerson;
+
+			if (m_bPreFirstPerson != m_bFirstPerson)
+			{
+				m_fAngleY = 0;
+			}
 
 			// 벽에 부딪혔을때
 			if ((vPos.x > VTXCNTX - 3 || vPos.z > VTXCNTX - 3 || vPos.x < 3 || vPos.z < 3))
@@ -200,25 +220,52 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 
 			if (m_bCollisionWall == true)
 			{
-				// 카메라와 벽 충돌발생
-				while (CheckCollisionWall(m_fFlexibleDistanceWithPlayer))
+				if (CPlayer::GetInstance()->Get_SafeCamera_Area())
 				{
-					m_fFlexibleDistanceWithPlayer-=0.001;
-				}
-				m_vGoalPosition = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
-				D3DXVECTOR3 _movevec;
-				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
-				m_vEye = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
+					// 안전지대에 있을때는 그냥 카메라가 따라오게끔
+					// 카메라와 벽 충돌발생
+					int cnt = 0;
+					while (CheckCollisionWall(m_fFlexibleDistanceWithPlayer))
+					{
+						m_fFlexibleDistanceWithPlayer -= 0.01;
+						cnt++;
 
-				if (D3DXVec3Length(&(m_vEye - m_vAt)) < 5)
-				{
-					// 1인칭처럼 바꾸기 (총알 방향 조절을 위해 해당 변수 바꾸기)
-					m_bFirstPerson = true;
+						if (cnt > 5000)
+						{
+							break;
+						}
+					}
+					m_vGoalPosition = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
+
+					/*D3DXVECTOR3 _movevec;
+					D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);*/
+
+					m_vEye = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
+
+					if (D3DXVec3Length(&(m_vEye - m_vAt)) < 5)
+					{
+						// 1인칭처럼 바꾸기 (총알 방향 조절을 위해 해당 변수 바꾸기)
+						m_bFirstPerson = true;
+					}
+					else
+					{
+						m_bFirstPerson = false;
+					}
 				}
 				else
 				{
-					m_bFirstPerson = false;
+					m_bFirstPerson = true;
+					m_vGoalPosition = playerPos + _vec3(0, 2, 0);
+					// 1인칭 시점으로 전환
+					D3DXVECTOR3 _movevec;
+					//m_vCameraPosDir = -(playerDir);
+					m_vGoalPosition = playerPos + _vec3(0, 2, 0);
+					D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
+					m_vEye = m_vGoalPosition;
+					m_vAt = playerPos + playerDir * 4 + _vec3(0, 1, 0);
+					//m_vCameraPosDir = m_vEye - m_vAt;
 				}
+				
 			}
 			else if(m_bCollisionWall == false)
 			{
@@ -600,9 +647,11 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 
 bool CDynamicCamera::CheckCollisionWall(float distance)
 {
+	D3DXVec3Normalize(&m_vCameraPosDir, &m_vCameraPosDir);
 	_vec3 vPos = m_vAt + m_vCameraPosDir * distance;
 
 	// 벽에 부딪혔을때
+	// if ((vPos.x > VTXCNTX - 3 || vPos.z > VTXCNTX - 3 || vPos.x < 3 || vPos.z < 3))
 	if ((vPos.x > VTXCNTX - 3 || vPos.z > VTXCNTX - 3 || vPos.x < 3 || vPos.z < 3))
 	{
 		// 밖으로 나갔을때
@@ -717,6 +766,52 @@ void CDynamicCamera::OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveS
 		// 다시 돌아가야할 경우 첫 시작점 저장
 		m_vStartEyePosition = m_vEye;
 	}
+
+	switch (afterstate)
+	{
+	case 0:
+		m_eAfterState = C_PLAYERCHASE;
+		break;
+	case 1:
+		m_eAfterState = C_WHOLELAND;
+		break;
+	case 2:
+		m_eAfterState = C_SHAKING_POS;
+		break;
+	case 3:
+		m_eAfterState = C_SHAKING_ROT;
+		break;
+	case 4:
+		m_eAfterState = C_MOVE_TO_TARGET;
+		break;
+	}
+}
+
+void CDynamicCamera::OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveSpeed, _vec3 target, _vec3 startpos, bool fixedPosition, int afterstate)
+{
+	CPlayer::GetInstance()->Set_KeyBlock(true);
+
+	m_vOriginAtPosition = m_vAt;
+	m_vAt = atPos;
+
+	m_eCurState = C_MOVE_TO_TARGET;
+
+	m_bFix = true; // 사용자 카메라 움직임 잠금 
+
+	m_fMoveTime = moveTime;
+	m_fMoveSpeed = moveSpeed;
+	m_vGoalPosition = target;
+
+	m_bFixedPos = fixedPosition;
+
+	if (m_bFixedPos == false)
+	{
+		// 다시 돌아가야할 경우 첫 시작점 저장
+		m_vStartEyePosition = m_vEye;
+	}
+
+	m_vEye = startpos;
+
 
 	switch (afterstate)
 	{
@@ -866,6 +961,40 @@ void CDynamicCamera::Set_Shoot_End_Epic()
 	//OnMoveTargetCamera(1.f, 7.f, moveCamPos, false, 0);
 	// 1인칭일때를 위해 원래 자리로 돌아가게끔
 	OnMoveTargetCamera(1.f, 7.f, m_vStartEyePosition, false, 0);
+}
+
+void CDynamicCamera::Cinemachine_00_Start()
+{
+	m_eAfterState = C_PLAYERCHASE;
+	m_bChaseInit = true;
+	m_eCurState = C_MOVE_TO_TARGET;
+	m_fAngleY = 0;
+
+	CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3		playerPos;
+	_vec3		playerDir;
+	_vec3		cameraDir;
+	_vec3		cameraPos;
+
+
+	playerInfo->Get_Info(INFO_POS, &playerPos);
+	playerInfo->Get_Info(INFO_LOOK, &playerDir);
+
+	D3DXVec3Normalize(&playerDir, &playerDir);
+
+
+	m_bFix = true;
+
+	CPlayer::GetInstance()->Set_KeyBlock(true);
+
+	_vec3	goalPos,startpos;
+
+	goalPos = playerPos - (playerDir)*4 +_vec3(0, 0, 0);
+
+	startpos = playerPos -(playerDir)*4 +_vec3(4, 1, 0);
+
+	OnMoveTargetCamera(m_vAt, 7.5f, 0.6f, goalPos, startpos, false, 0);
 }
 
 

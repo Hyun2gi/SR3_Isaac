@@ -24,7 +24,6 @@ HRESULT CMom::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->m_vScale = { 10.f, 10.f, 10.f };
-	//m_pTransformCom->Set_Pos(_float(rand() % 10), 1.f, _float(rand() % 10));
 	m_pTransformCom->Set_Pos(10.f, 50.f, 10.f);
 
 	m_iHp = 645; // 조정 필요 할지도
@@ -54,8 +53,6 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
-	//if()
-
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -66,7 +63,7 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 		if (0 >= m_iHp)
 		{
 			// 아이작을 부르는 소리를 지르며 아예 사라짐
-			m_bDead = true;
+			//m_bDead = true;
 		}
 	}
 

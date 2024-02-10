@@ -4,12 +4,14 @@
 #include "Export_Utility.h"
 
 CBossHP::CBossHP(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CUI(pGraphicDev)
+	: Engine::CUI(pGraphicDev),
+	m_pMonster(nullptr)
 {
 }
 
 CBossHP::CBossHP(const CBossHP& rhs)
-	: Engine::CUI(rhs)
+	: Engine::CUI(rhs),
+	m_pMonster(rhs.m_pMonster)
 {
 }
 
@@ -38,6 +40,12 @@ _int CBossHP::Update_GameObject(const _float& fTimeDelta)
 {
 	// Boss의 HP를 받아와서 상태 변경
 
+	m_fCurFrame = 0.f;
+
+	Update_Scale();
+	
+	CUI::Update_GameObject(fTimeDelta);
+
 	return 0;
 }
 
@@ -49,17 +57,11 @@ void CBossHP::LateUpdate_GameObject()
 void CBossHP::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
-	m_pGraphicDev->SetTransform(D3DTS_VIEW, &m_matView);
-	m_pGraphicDev->SetTransform(D3DTS_PROJECTION, &m_matProj);
-
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	m_pTextureCom->Set_Texture((_int)m_fCurFrame);
 
-	m_pBufferCom->Render_Buffer();
-
-	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
-
+	if(0 < m_iTargetHP)
+		m_pBufferCom->Render_Buffer();
 }
 
 HRESULT CBossHP::Add_Component()
@@ -80,6 +82,19 @@ HRESULT CBossHP::Add_Component()
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
 	return S_OK;
+}
+
+void CBossHP::Update_Scale()
+{
+	m_iTargetHP = m_pMonster->Get_HP();
+
+	_float fHpSize = 30 * 6.6f;
+	_float fItvX = fHpSize / 30;
+
+	m_pTransformCom->m_vScale.x = m_iTargetHP * 6.6f;
+
+	m_pTransformCom->m_vInfo[INFO_POS].x = -fItvX * (30 - m_iTargetHP) * 0.6f;
+
 }
 
 CBossHP* CBossHP::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)

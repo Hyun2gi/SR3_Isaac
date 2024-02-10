@@ -26,6 +26,8 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 {
 	if (m_bInitialize == false)
 	{
+		m_bInitialize = true;
+
 		FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 		m_pGraphicDev = pGraphicDev;
 
@@ -58,8 +60,6 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 
 		m_bEpicTargetRun = false;
 		m_bEpicLieTiming = false;
-
-		m_bInitialize = true;
 
 		m_bShoot = false;
 
@@ -97,11 +97,6 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 		m_bKeyBlock = false;
 	}
-
-	
-
-
-	
 
 	// 특정 모션 처리
 	Specific_Motion(fTimeDelta);
@@ -293,6 +288,10 @@ HRESULT CPlayer::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_LIE_CRY", pComponent });
 
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_LIE_CRY_OPEN_EYE"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_LIE_CRY_OPEN_EYE", pComponent });
+
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_IDLE"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_IDLE", pComponent });
@@ -412,8 +411,24 @@ bool CPlayer::Get_SafeCamera_Area()
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 	vScale = m_pTransformCom->m_vScale;
 
-	if (vPos.x < VTXCNTX -4 && vPos.z < VTXCNTX - 4
-		&& vPos.x > 4 && vPos.z > 4)
+	if (vPos.x < VTXCNTX - 4 && vPos.z < VTXCNTX - 4
+		&& vPos.x > 4 && vPos.z > 4 )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool CPlayer::Get_Player_OutOfRange()
+{
+	_vec3	vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	
+	if (vPos.x >= VTXCNTX - 3 || vPos.z >= VTXCNTX - 3
+		|| vPos.x <= 3 || vPos.z <= 3)
 	{
 		return true;
 	}
@@ -493,12 +508,25 @@ int CPlayer::Get_PlayerBulletState()
 	}
 }
 
+void CPlayer::Set_Cry_Anim()
+{
+	m_eCurState = P_CRY_LIE;
+	m_bKeyBlock = true;
+	m_fDelayTime = 0.f;
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_00_Start();
+}
+
 void CPlayer::Set_Attacked()
 {
 	m_eCurState = P_ATTACKED;
 	// 키막기
 	m_bKeyBlock = true;
 	m_fDelayTime = 0.f;
+}
+
+void CPlayer::Set_StartCameraMouse()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_TotalCameraStart(); 
 }
 
 _vec3 CPlayer::Get_BulletDir()
@@ -565,7 +593,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	{
 		m_bShoot = true;
 	}
-
 
 	// epictarget 쓰는 상태일때는 block됨
 	if (m_bEpicTargetRun == false)
@@ -656,7 +683,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 		else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
 		{
-			Set_Attacked();
+			//Set_Attacked();
+			Set_Cry_Anim();
 		}
 		else
 		{
@@ -913,6 +941,12 @@ void CPlayer::Motion_Change()
 			m_bKeyBlock = true; //key 막기
 			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_LIE_CRY"));
 			break;
+		case P_CRY_OPEN_EYE:
+			m_fPicNum = 1;
+			m_fSpriteSpeed = 1.f;
+			m_bKeyBlock = true; //key 막기
+			m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_LIE_CRY_OPEN_EYE"));
+			break;
 		}
 
 		m_ePreState = m_eCurState;
@@ -954,6 +988,31 @@ bool CPlayer::Check_Time(const _float& fTimeDelta)
 
 void CPlayer::Specific_Motion(const _float& fTimeDelta)
 {
+	if (m_eCurState == P_CRY_LIE)
+	{
+		m_fDelayTime += fTimeDelta;
+
+		if (m_fDelayTime > 2)
+		{
+			m_eCurState = P_CRY_OPEN_EYE;
+			m_fDelayTime = 0; // 딜레이 시간 초기화
+		}
+	}
+
+	if (m_eCurState == P_CRY_OPEN_EYE)
+	{
+		m_fDelayTime += fTimeDelta;
+
+		if (m_fDelayTime > 1)
+		{
+			m_eCurState = P_IDLE;
+			m_fDelayTime = 0; // 딜레이 시간 초기화
+			m_fFrame = 0.f;
+			m_bKeyBlock = false; // key 입력 활성화
+			dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToOriginPos();
+		}
+	}
+
 	if (m_eCurState == P_ATTACKED)
 	{
 		m_fDelayTime += fTimeDelta;
@@ -1031,7 +1090,7 @@ void CPlayer::Free()
 		for (auto& iter = m_PlayerBulletList.begin();
 			iter != m_PlayerBulletList.end(); )
 		{
-			Safe_Release<CGameObject*>(*iter);
+			Engine::Safe_Release(*iter);
 			iter = m_PlayerBulletList.erase(iter);
 		}
 	}
@@ -1041,7 +1100,7 @@ void CPlayer::Free()
 		for (auto& iter = m_EpicMarkList.begin();
 			iter != m_EpicMarkList.end(); )
 		{
-			Safe_Release<CGameObject*>(*iter);
+			Engine::Safe_Release(*iter);
 			iter = m_EpicMarkList.erase(iter);
 		}
 	}

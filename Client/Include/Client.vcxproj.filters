@@ -232,8 +232,14 @@
     <Filter Include="02. GameObject\12. UI\00. Menu">
       <UniqueIdentifier>{eaad68dd-3b4a-4121-b325-36ebbe5e117c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\10. Room\03. Obstacle">
+    <Filter Include="02. GameObject\10. Room\03.Obstacle">
       <UniqueIdentifier>{ddca5203-f170-4684-bae5-9a15b85d9c1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\01. Player\01. Player Coin">
+      <UniqueIdentifier>{14dd8504-e403-4744-9e78-3118c183430e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\01. Player\01. Player Coin\00. PLCoinFont">
+      <UniqueIdentifier>{08639cb5-003d-4c60-9b4f-783de9565650}</UniqueIdentifier>
     </Filter>
     <Filter Include="02. GameObject\10. Room\03. Obstacle\Normal">
       <UniqueIdentifier>{02caee19-b086-4828-a43d-79808cae1b6d}</UniqueIdentifier>
@@ -247,7 +253,7 @@
     <Filter Include="01. Scene\05. Ending">
       <UniqueIdentifier>{6c3b6688-1da0-49ed-ad97-143812994bea}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
+   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
@@ -457,16 +463,7 @@
       <Filter>02. GameObject\12. UI\00. Menu</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\Obstacle.h">
-      <Filter>02. GameObject\10. Room\03. Obstacle\Normal</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\MoveXObstacle.h">
-      <Filter>02. GameObject\10. Room\03. Obstacle\MoveX</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\MoveZObstacle.h">
-      <Filter>02. GameObject\10. Room\03. Obstacle\MoveZ</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\Ending.h">
-      <Filter>01. Scene\05. Ending</Filter>
+      <Filter>02. GameObject\10. Room\03. Obstacle</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -669,16 +666,7 @@
       <Filter>02. GameObject\12. UI\00. Menu</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\Obstacle.cpp">
-      <Filter>02. GameObject\10. Room\03. Obstacle\Normal</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\MoveXObstacle.cpp">
-      <Filter>02. GameObject\10. Room\03. Obstacle\MoveX</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\MoveZObstacle.cpp">
-      <Filter>02. GameObject\10. Room\03. Obstacle\MoveZ</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\Ending.cpp">
-      <Filter>01. Scene\05. Ending</Filter>
+      <Filter>02. GameObject\10. Room\03. Obstacle</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

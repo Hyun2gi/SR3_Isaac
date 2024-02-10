@@ -1,27 +1,31 @@
 #include "stdafx.h"
-#include "BossHPTool.h"
+#include "PLCoinFont.h"
 
 #include "Export_Utility.h"
 
-CBossHPTool::CBossHPTool(LPDIRECT3DDEVICE9 pGraphicDev)
+#include "Player.h"
+
+CPLCoinFont::CPLCoinFont(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CUI(pGraphicDev)
 {
 }
 
-CBossHPTool::CBossHPTool(const CBossHPTool& rhs)
+CPLCoinFont::CPLCoinFont(const CPLCoinFont& rhs)
 	: Engine::CUI(rhs)
 {
 }
 
-CBossHPTool::~CBossHPTool()
+CPLCoinFont::~CPLCoinFont()
 {
 }
 
-HRESULT CBossHPTool::Ready_GameObject()
+HRESULT CPLCoinFont::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_iStartFrame = 0;
+
+	m_fCurFrame = 0.f;
 
 	m_pTransformCom->m_vScale.x = m_fSizeX;
 	m_pTransformCom->m_vScale.y = m_fSizeY;
@@ -34,21 +38,23 @@ HRESULT CBossHPTool::Ready_GameObject()
 	return S_OK;
 }
 
-_int CBossHPTool::Update_GameObject(const _float& fTimeDelta)
+_int CPLCoinFont::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fCurFrame = 0.f;
+
 
 	CUI::Update_GameObject(fTimeDelta);
+
+	Resetting_Texture();
 
 	return 0;
 }
 
-void CBossHPTool::LateUpdate_GameObject()
+void CPLCoinFont::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 }
 
-void CBossHPTool::Render_GameObject()
+void CPLCoinFont::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
@@ -57,7 +63,7 @@ void CBossHPTool::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CBossHPTool::Add_Component()
+HRESULT CPLCoinFont::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
@@ -65,22 +71,36 @@ HRESULT CBossHPTool::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	// Boss HP Tool
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BossHPTexture"));
+	// Boss HP Bar
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerCoinFontTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_BossHPTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerCoinFontTexture", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
 	return S_OK;
-
 }
 
-CBossHPTool* CBossHPTool::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
+void CPLCoinFont::Resetting_Texture()
 {
-	CBossHPTool* pInstance = new CBossHPTool(pGraphicDev);
+	int iCoin = CPlayer::GetInstance()->Get_Coin();
+
+	if (0 == m_iIndex) // 십의 자리
+	{
+		iCoin /= 10;
+		m_fCurFrame = (_float)(iCoin % 10);
+	}
+	else if (1 == m_iIndex) // 일의 자리
+	{
+		m_fCurFrame = (_float)(iCoin % 10);
+	}
+}
+
+CPLCoinFont* CPLCoinFont::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
+{
+	CPLCoinFont* pInstance = new CPLCoinFont(pGraphicDev);
 
 	pInstance->Set_WindowSize(fWinCX, fWinCY);
 	pInstance->Set_Size(fSizeX, fSizeY);
@@ -91,14 +111,15 @@ CBossHPTool* CBossHPTool::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("BossHPTool Create Failed");
+		MSG_BOX("PLCoinFont Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
+
 }
 
-void CBossHPTool::Free()
+void CPLCoinFont::Free()
 {
 	__super::Free();
 }

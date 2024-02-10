@@ -26,7 +26,7 @@ private:
 	// BACKWALK : 뒷통수보면서 쏨
 	// SHOOTWALK : 쏘는 자세 (머리통이 작아짐)
 	// GOOD : 따봉
-	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_BACKIDLE, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_SHOOTIDLE,  P_THUMBS_UP, P_GET_BAD_ITEM, P_ATTACKED, P_CRY_LIE, P_END  };
+	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_BACKIDLE, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_SHOOTIDLE,  P_THUMBS_UP, P_GET_BAD_ITEM, P_ATTACKED, P_CRY_LIE, P_CRY_OPEN_EYE, P_END  };
 	
 	enum BULLETID
 	{ P_BULLET_IDLE, P_BULLET_BRIMSTONE, P_BULLET_EPIC, P_BULLET_END };
@@ -108,6 +108,8 @@ public:
 
 	bool		Get_Camera_WallBlock();
 	bool		Get_SafeCamera_Area(); // 카메라 벗어나지 않는 안전지대인지
+	bool		Get_Player_OutOfRange(); // 멈춤 막기 위해 플레이어가 가장자리에 있을경우처리
+
 	list<CGameObject*>* Get_Player_BullletList() { return &m_PlayerBulletList; }
 	void		Plus_EpicBulletMark(_vec3 pos); 
 	void		Clear_EpicBulletMark(); // 씬 이동때마다 바닥에 있는 에픽 흔적 지우기
@@ -125,13 +127,17 @@ public:
 	bool		Get_EpicLieTiming() { return m_bEpicLieTiming; }
 	bool		Set_EpicLieTiming(bool timing) { m_bEpicLieTiming = timing; }
 
-	// 피격처리
+	// 우는 애니메이션
+	void		Set_Cry_Anim();
+
+	// 피격처리 애니메이션
 	void		Set_Attacked();
 	// 공격당함 모션 받아오기(혜원언니)
 	bool		Get_Attacked() { if (m_eCurState == P_ATTACKED) { return true; } else { return false; } }
 
 	void		Set_StartPos(_vec3 start) { m_vStartPos = start; m_bStartScene = true; }
 
+	void		Set_StartCameraMouse();
 
 	_vec3		Get_BulletDir();
 

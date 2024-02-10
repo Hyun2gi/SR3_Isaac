@@ -1,27 +1,27 @@
 #include "stdafx.h"
-#include "BossHPTool.h"
+#include "HeartUI.h"
 
 #include "Export_Utility.h"
 
-CBossHPTool::CBossHPTool(LPDIRECT3DDEVICE9 pGraphicDev)
+CHeartUI::CHeartUI(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CUI(pGraphicDev)
 {
 }
 
-CBossHPTool::CBossHPTool(const CBossHPTool& rhs)
+CHeartUI::CHeartUI(const CHeartUI& rhs)
 	: Engine::CUI(rhs)
 {
 }
 
-CBossHPTool::~CBossHPTool()
+CHeartUI::~CHeartUI()
 {
 }
 
-HRESULT CBossHPTool::Ready_GameObject()
+HRESULT CHeartUI::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
-	m_iStartFrame = 0;
+	m_iStartFrame = 2;
 
 	m_pTransformCom->m_vScale.x = m_fSizeX;
 	m_pTransformCom->m_vScale.y = m_fSizeY;
@@ -34,21 +34,21 @@ HRESULT CBossHPTool::Ready_GameObject()
 	return S_OK;
 }
 
-_int CBossHPTool::Update_GameObject(const _float& fTimeDelta)
+_int CHeartUI::Update_GameObject(const _float& fTimeDelta)
 {
-	m_fCurFrame = 0.f;
+	//m_fCurFrame = 0.f;
 
 	CUI::Update_GameObject(fTimeDelta);
 
 	return 0;
 }
 
-void CBossHPTool::LateUpdate_GameObject()
+void CHeartUI::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 }
 
-void CBossHPTool::Render_GameObject()
+void CHeartUI::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
@@ -57,7 +57,7 @@ void CBossHPTool::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CBossHPTool::Add_Component()
+HRESULT CHeartUI::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
@@ -65,22 +65,21 @@ HRESULT CBossHPTool::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-	// Boss HP Tool
-	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BossHPTexture"));
+	// Boss HP Bar
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerHeartTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_BossHPTexture", pComponent });
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerHeartTexture", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 
 	return S_OK;
-
 }
 
-CBossHPTool* CBossHPTool::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
+CHeartUI* CHeartUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
 {
-	CBossHPTool* pInstance = new CBossHPTool(pGraphicDev);
+	CHeartUI* pInstance = new CHeartUI(pGraphicDev);
 
 	pInstance->Set_WindowSize(fWinCX, fWinCY);
 	pInstance->Set_Size(fSizeX, fSizeY);
@@ -91,14 +90,14 @@ CBossHPTool* CBossHPTool::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("BossHPTool Create Failed");
+		MSG_BOX("BossHP Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
 }
 
-void CBossHPTool::Free()
+void CHeartUI::Free()
 {
 	__super::Free();
 }

@@ -56,8 +56,11 @@
 #include "Heart.h"
 #include "HeartHalf.h"
 
-// UI 테스트
+// UI
 #include "Menu.h"
+#include "PlayerCoin.h"
+#include "PLCoinFont.h"
+#include "PlayerHP.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev), 
@@ -77,9 +80,9 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 	Engine::Create_Scatter(m_pGraphicDev);
-	
+
 	FAILED_CHECK_RETURN(CStageLoadMgr::GetInstance()->Ready_StageLoadMgr(), E_FAIL);
-	
+
 	//FAILED_CHECK_RETURN(Load_Level_Data(), E_FAIL);
 	//FAILED_CHECK_RETURN(Load_Stage_Data(), E_FAIL);
 	//FAILED_CHECK_RETURN(Load_Connected_Stage_Theme(), E_FAIL);
@@ -88,13 +91,13 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_RoomObject(L"RoomObject"), E_FAIL);
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
-	
+
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
 	return S_OK;
 }
 
 Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
-{	
+{
 	Engine::Update_Particles(fTimeDelta);
 
 	if (m_bIsCreated)
@@ -110,9 +113,6 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 		// 아이템 드랍
 		Drop_ITem();
-
-		// UI 생성
-		Setting_UI();
 	}
 
 
@@ -123,11 +123,17 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 	if (Check_Cube_Arrived() && !m_bIsCreated)
 	{
+		CPlayer::GetInstance()->Set_StartCameraMouse();
 		m_bIsCreated = true;
 		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
+		
+		// UI 생성
+		Setting_UI();
+		NULL_CHECK_RETURN(pMenu, E_FAIL);
+		FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
 	}
 
 	//타임 델타 스케일 조절 예시 _ 사용
@@ -303,7 +309,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			}
 			break;
 		}
-		
+
 		}
 	}
 
@@ -380,7 +386,7 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
 				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
-				
+
 				++m_vecMonsterCount[SQUIRT];
 
 				break;
@@ -468,7 +474,7 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 			}
 			break;
 		}
-		
+
 		}
 	}
 
@@ -581,19 +587,19 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
+HRESULT CLoadStage::Ready_Layer_Environment(const _tchar* pLayerTag)
 {
-	Engine::CLayer*		pLayer = Engine::CLayer::Create();
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
-	
-	Engine::CGameObject*		pGameObject = nullptr;
+
+	Engine::CGameObject* pGameObject = nullptr;
 
 	pGameObject = CDynamicCamera::Create(m_pGraphicDev,
 		&_vec3(0.f, 10.f, -5.f),
-		&_vec3(0.f, 0.f, 1.f), 
+		&_vec3(0.f, 0.f, 1.f),
 		&_vec3(0.f, 1.f, 0.f),
 		D3DXToRadian(60.f),
-		(_float)WINCX / WINCY, 
+		(_float)WINCX / WINCY,
 		0.1f,
 		1000.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -602,7 +608,7 @@ HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	// 플레이어에 카메라 설정
 	CPlayer::GetInstance()->Set_Camera(pGameObject);
 
-		
+
 	pGameObject = CSkyBox::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	pGameObject->Set_MyLayer(pLayerTag);
@@ -613,17 +619,17 @@ HRESULT CLoadStage::Ready_Layer_Environment(const _tchar * pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLoadStage::Ready_Layer_GameLogic(const _tchar * pLayerTag)
+HRESULT CLoadStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 {
-	Engine::CLayer*		pLayer = Engine::CLayer::Create();
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
-	Engine::CGameObject*		pGameObject = nullptr;
+	Engine::CGameObject* pGameObject = nullptr;
 
 	pGameObject = CTerrain::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);
-	
+
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
@@ -696,12 +702,12 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	return S_OK;
 }
 
-HRESULT CLoadStage::Ready_Layer_UI(const _tchar * pLayerTag)
+HRESULT CLoadStage::Ready_Layer_UI(const _tchar* pLayerTag)
 {
-	Engine::CLayer*		pLayer = Engine::CLayer::Create();
+	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
-	Engine::CGameObject*		pGameObject = nullptr;
+	Engine::CGameObject* pGameObject = nullptr;
 
 
 
@@ -715,7 +721,7 @@ bool CLoadStage::Check_Cube_Arrived()
 	return m_pLeftWall->Get_Arrived() && m_pRightWall->Get_Arrived()
 		&& m_pTopWall->Get_Arrived() && m_pBottomWall->Get_Arrived()
 		&& m_pFloor->Get_Arrived();
-	
+
 }
 
 void CLoadStage::Copy_Stage()
@@ -735,7 +741,7 @@ void CLoadStage::Copy_Stage()
 				iter++;
 		}
 	}
-	
+
 }
 
 bool CLoadStage::Check_Monster_Dead()
@@ -747,7 +753,7 @@ bool CLoadStage::Check_Monster_Dead()
 		if (!dynamic_cast<CMonster*>(iter.second)->Get_Dead())
 			return false;
 	}
-	
+
 	return true;
 }
 
@@ -831,69 +837,50 @@ void CLoadStage::Moster_Collision()
 					else
 						++iter;
 				}
-				//else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포 (엄마/엄마파츠만)
-				//{// dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() && 
-				//	if (dynamic_cast<CBrimStone*>(*iter)->Get_BulletState() &&
-				//		!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Player가 Dead가 아닌 경우
-				//	{
-				//		if (MOM == dynamic_cast<CMonster*>(pMonster)->Get_BossType())	// MOM인 경우
-				//		{
-				//			dynamic_cast<CMonster*>(pMonster)->Hit();
-				//			break;
-				//		}
-				//		else if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType()) // MOM Parts인 경우
-				//		{
-				//			if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState())			// Door 상태가 아닌 경우
-				//			{
-				//				dynamic_cast<CMonster*>(pMonster)->Hit();
-				//				break;
-				//			}
-				//			else
-				//				++iter;
-				//		}
-				//		else
-				//			++iter;
-				//	}
-				//	else
-				//		++iter;
-				//}
+				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포 (엄마/엄마파츠만)
+				{
+					if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType() || //MOM Parts이거나
+						MOM == dynamic_cast<CMonster*>(pMonster)->Get_BossType())		// MOM인 경우
+					{
+						dynamic_cast<CMonster*>(pMonster)->Hit();
+						break;
+					}
+					else
+						++iter;
+				}
 				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 2) // 에픽페투스
 				{
 					//if()
 				}
+
+				//else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포 (엄마/엄마파츠만)
+			//{// dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() && 
+			//   if (dynamic_cast<CBrimStone*>(*iter)->Get_BulletState() &&
+			//      !dynamic_cast<CMonster*>(pMonster)->Get_Dead())               // Player가 Dead가 아닌 경우
+			//   {
+			//      if (MOM == dynamic_cast<CMonster*>(pMonster)->Get_BossType())   // MOM인 경우
+			//      {
+			//         dynamic_cast<CMonster*>(pMonster)->Hit();
+			//         break;
+			//      }
+			//      else if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType()) // MOM Parts인 경우
+			//      {
+			//         if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState())         // Door 상태가 아닌 경우
+			//         {
+			//            dynamic_cast<CMonster*>(pMonster)->Hit();
+			//            break;
+			//         }
+			//         else
+			//            ++iter;
+			//      }
+			//      else
+			//         ++iter;
+			//   }
+			//   else
+			//      ++iter;
+			//}
 				else
 					++iter;
-
-				//if (DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType() &&	// Dople이 아닌 경우
-				//	dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() &&		// Bullet이 Dead가 아닌 경우
-				//	!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Monster가 Dead가 아닌 경우
-				//{
-				//	if (dynamic_cast<CMonster*>(pMonster)->Get_IsBoss()) // 보스인 경우
-				//	{
-				//		if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType())// Mom Parts인 경우 // Mom 인 경우 여기서 터짐
-				//		{
-				//			if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState()) // 문이 열린 경우
-				//			{
-				//				dynamic_cast<CMomParts*>(pMonster)->Hit();
-				//				break;
-				//			}
-				//			else // 문이 열리지 않은 경우
-				//				++iter;
-				//		}
-				//		else // Monstro or Mom인 경우
-				//		{
-				//			dynamic_cast<CMonster*>(pMonster)->Hit();
-				//			break;
-				//		}
-				//	}
-				//	else // 일반 몬스터의 경우 전부 피격 처리 O
-				//	{
-				//		dynamic_cast<CMonster*>(pMonster)->Hit();
-				//		break;
-				//	}
-				//}
-				//else
-				//	++iter;
 			}
 			else
 				++iter;
@@ -1155,13 +1142,32 @@ void CLoadStage::Insert_Child()
 
 void CLoadStage::Setting_UI()
 {
-#pragma region Boss HP
+	//// UI 테스트용 코드
+	//CMenu* pMenu = CMenu::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f, 1, 1);
+	//NULL_CHECK_RETURN(pMenu, E_FAIL);
+	//FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
+
+	// Player Coin UI
+	CPlayerCoin* pCoinUI = CPlayerCoin::Create(m_pGraphicDev, 28.f, 28.f, -350.f, 180.f, 1, 1);
+	m_mapLayer.at(L"UI")->Add_GameObject(L"CoinUI", pCoinUI);
+
+	// Player Coin Font UI
+	for (int i = 0; i < 2; ++i)
+	{
+		CPLCoinFont* pCoinFont = CPLCoinFont::Create(m_pGraphicDev, 60.f, 60.f, -310 + (i * 20.f), 180.f, 1, 1);
+		pCoinFont->Set_Index(i);
+		m_mapLayer.at(L"UI")->Add_GameObject(L"CoinFontUI", pCoinFont);
+	}
+
+	// Player HP
+	CPlayerHP* pPlayerHP = CPlayerHP::Create(m_pGraphicDev, 30.f, 30.f, -370.f, 170.f, 1, 1);
+	m_mapLayer.at(L"UI")->Add_GameObject(L"PlayerHP", pPlayerHP);
 
 	// Boss HP Tool
 	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro") != nullptr &&
 		m_mapLayer.at(L"UI")->Get_GameObject(L"BossHPTool") == nullptr)
 	{
-		//dynamic_cast<CMonstro*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro"))->Print_UI(m_mapLayer.at(L"UI"));
+		dynamic_cast<CMonstro*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro"))->Print_UI(m_mapLayer.at(L"UI"));
 	}
 
 	// Boss HP Bar
@@ -1169,38 +1175,6 @@ void CLoadStage::Setting_UI()
 #pragma endregion Boss HP
 
 }
-
-void CLoadStage::Play_Ending(const _float& fTimeDelta)
-{
-	m_fEndingTimer -= fTimeDelta;
-
-	if (0 < m_fEndingTimer)
-	{
-		CTransform* pTest = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
-
-		_matrix mat = *(pTest->Get_WorldMatrix());
-		mat._41 = mat._41 + (rand() % 10 - 5);
-		mat._42 = mat._42 + (rand() % 10 - 5);
-		mat._43 = mat._43 + (rand() % 10 - 5);
-
-		Engine::Create_Dust(m_pGraphicDev, mat);
-	}
-	else
-	{
-		Engine::CScene* pScene = nullptr;
-
-		pScene = CEnding::Create(m_pGraphicDev);
-
-		Engine::Set_Scene(pScene);
-
-		Engine::Kill_Scatter();
-
-		//NULL_CHECK_RETURN(pScene, -1);
-
-		//FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
-
-		return;
-	}
 
 }
 
@@ -1221,8 +1195,8 @@ HRESULT CLoadStage::Door_Collision()
 				_vec3 startpos, fullpos;
 				int doornum = dynamic_cast<CDoor*>(pObj)->Get_DoorPos();
 				/*dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &startpos);*/
-				
-				
+
+
 				if (doornum == 0)
 				{
 					//left
@@ -1243,10 +1217,10 @@ HRESULT CLoadStage::Door_Collision()
 					//bottom
 					startpos = _vec3(20, 0, 38.5);
 				}
-				
+
 
 				CPlayer::GetInstance()->Set_KeyBlock(true);
-				
+
 				// 임시로 중간에 스폰
 				startpos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 				CPlayer::GetInstance()->Set_StartPos(startpos);
@@ -1267,9 +1241,9 @@ HRESULT CLoadStage::Door_Collision()
 	}
 }
 
-CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene)
+CLoadStage* CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene)
 {
-	CLoadStage *	pInstance = new CLoadStage(pGraphicDev);
+	CLoadStage* pInstance = new CLoadStage(pGraphicDev);
 	pInstance->m_bStartScene = bStratScene;
 	CPlayer::GetInstance()->Set_Bool_StartScene(true);
 
@@ -1280,7 +1254,7 @@ CLoadStage * CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool b
 		MSG_BOX("Stage Create Failed");
 		return nullptr;
 	}
-	
+
 	return pInstance;
 }
 
