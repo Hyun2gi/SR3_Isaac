@@ -41,6 +41,11 @@ _int CCenterFly::Update_GameObject(const _float& fTimeDelta)
 	/*if (m_bDead)
 		return 1;*/
 
+	if (!m_bTimeScale)
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+	else
+		m_fSlowDelta = 0.f;
+
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));

@@ -29,7 +29,7 @@ HRESULT CLeaper::Ready_GameObject()
 
 	m_iHp = 3;
 
-	m_fCallLimit = (rand() % 6) + 3;
+	m_fCallLimit = 0.1f;
 	m_fSpeed = 8.f;
 
 	m_bMove = false;
@@ -47,9 +47,20 @@ HRESULT CLeaper::Ready_GameObject()
 
 _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bCreate)
+	{
+		if (Check_Time(fTimeDelta))
+			Create_Start_Particle((rand() % 6) + 3);
+	}
+
 	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
+
+	if (!m_bTimeScale)
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+	else
+		m_fSlowDelta = 0.f;
 
 	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
@@ -114,12 +125,7 @@ void CLeaper::LateUpdate_GameObject()
 		m_bHit = false;
 
 		if (0 >= m_iHp)
-		{
 			m_bDead = true;
-			_vec3 vPos;
-			m_pTransformCom->Get_Info(INFO_POS, &vPos);
-			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
-		}
 	}
 
 	if (m_bHitColor)

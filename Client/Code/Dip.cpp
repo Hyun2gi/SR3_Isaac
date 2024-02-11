@@ -29,7 +29,7 @@ HRESULT CDip::Ready_GameObject()
 
 	m_iHp = 3;
 
-	m_fCallLimit = m_iRandNum % 5 + 2;
+	m_fCallLimit = 0.1f;
 	m_fSpeed = 10.f;
 
 	m_bSliding = false;
@@ -44,12 +44,22 @@ HRESULT CDip::Ready_GameObject()
 
 _int CDip::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bCreate)
+	{
+		if (Check_Time(fTimeDelta))
+			Create_Start_Particle(m_iRandNum % 5 + 2);
+	}
+
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
-	if(m_bEpicTime)
-		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.2f);
-	else
-		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+	if (!m_bTimeScale)
+	{
+		if (m_bEpicTime)
+			Engine::Set_TimeDeltaScale(L"Timer_Second", 0.2f);
+		else
+			Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+	}else
+		m_fSlowDelta = 0.f;
 
 	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
@@ -93,7 +103,13 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
 	if (m_bDead)
+	{
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+
 		return 1;
+	}
 
 	return 0;
 }
@@ -114,9 +130,6 @@ void CDip::LateUpdate_GameObject()
 		if (0 >= m_iHp)
 		{
 			m_bDead = true;
-			_vec3 vPos;
-			m_pTransformCom->Get_Info(INFO_POS, &vPos);
-			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
 		}
 	}
 

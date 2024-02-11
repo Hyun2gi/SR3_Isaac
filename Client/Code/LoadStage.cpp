@@ -149,10 +149,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
 		
-		// UI 생성
-		Setting_UI();
-		//NULL_CHECK_RETURN(pMenu, E_FAIL);
-		//FAILED_CHECK_RETURN(m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu), E_FAIL);
+		Setting_UI(); // UI 생성
 	}
 
 	//타임 델타 스케일 조절 예시 _ 사용
@@ -162,7 +159,12 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	}
 	if (Engine::Key_Down(DIK_RETURN))
 	{
-		dynamic_cast<CMenu*>(m_mapLayer.at(L"UI")->Get_GameObject(L"Menu"))->Set_Render();
+		dynamic_cast<CMenu*>(m_mapLayer.at(L"UI")->Get_GameObject(L"Menu"))->Set_Render(); // 메뉴 UI 비/활성화
+
+		for (auto& iter : m_mapLayer.at(L"GameMst")->Get_ObjectMap())
+		{
+			dynamic_cast<CMonster*>(iter.second)->Set_Time_Scale(); // 몬스터 행동 제어 여부 변경
+		}
 	}
 
 	if (m_bEndingPlay)
@@ -1195,7 +1197,6 @@ void CLoadStage::Insert_Child()
 		dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))
 			->Set_ShellObj_ToStage(m_mapLayer.at(L"MapObj"));
 	}
-
 }
 
 void CLoadStage::Setting_UI()
