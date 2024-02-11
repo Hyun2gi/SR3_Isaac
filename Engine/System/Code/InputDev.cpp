@@ -101,6 +101,21 @@ bool CInputDev::Key_Down(MOUSEKEYSTATE eMouse)
 	return false;
 }
 
+bool CInputDev::Key_Down2(MOUSEKEYSTATE eMouse)
+{
+	if (!m_tOldMouseState2.rgbButtons[eMouse] && (Get_DIMouseState(eMouse) & 0x80))
+	{
+		m_tOldMouseState2.rgbButtons[eMouse] = !m_tOldMouseState2.rgbButtons[eMouse];
+
+		return true;
+	}
+
+	m_pMouse->GetDeviceState(sizeof(m_tOldMouseState2), &m_tOldMouseState2);
+
+
+	return false;
+}
+
 bool CInputDev::Key_Up(_ubyte byKeyID)
 {
 	if (m_byOldKeyState[byKeyID] && !(Get_DIKeyState(byKeyID) & 0x80))

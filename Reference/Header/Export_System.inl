@@ -85,6 +85,10 @@ inline bool Key_Down(_ubyte byKeyID)
 {
 	return CInputDev::GetInstance()->Key_Down(byKeyID);
 }
+inline bool Key_Down2(MOUSEKEYSTATE eMouse)
+{
+	return CInputDev::GetInstance()->Key_Down2(eMouse);
+}
 inline bool Key_Down(MOUSEKEYSTATE eMouse)
 {
 	return CInputDev::GetInstance()->Key_Down(eMouse);

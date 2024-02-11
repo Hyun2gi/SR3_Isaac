@@ -28,7 +28,6 @@ HRESULT CTerrain::Ready_GameObject()
 
 Engine::_int CTerrain::Update_GameObject(const _float& fTimeDelta)
 {
-
 	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
 
 	CGameObject::Update_GameObject(fTimeDelta);
@@ -43,12 +42,13 @@ void CTerrain::LateUpdate_GameObject()
 
 void CTerrain::Render_GameObject()
 {	
+	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	
 	m_pTextureCom->Set_Texture(0);
-	//FAILED_CHECK_RETURN(SetUp_Material(), );
 
 	m_pBufferCom->Render_Buffer();
+	m_pGraphicDev->SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 }
 
 HRESULT CTerrain::Add_Component()
@@ -67,23 +67,6 @@ HRESULT CTerrain::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
 		
-	return S_OK;
-}
-
-HRESULT CTerrain::SetUp_Material()
-{
-	D3DMATERIAL9			tMtrl;
-	ZeroMemory(&tMtrl, sizeof(D3DMATERIAL9));
-
-	tMtrl.Diffuse  = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-	tMtrl.Ambient = D3DXCOLOR(0.2f, 0.2f, 0.2f, 1.f);
-	tMtrl.Specular  = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-
-	tMtrl.Emissive = D3DXCOLOR(0.f, 0.f, 0.f, 0.f);
-	tMtrl.Power = 0.f;
-
-	m_pGraphicDev->SetMaterial(&tMtrl);
-
 	return S_OK;
 }
 

@@ -209,9 +209,20 @@ void CStageTool::Key_Input(const _float& fTimeDelta)
 	if (Engine::Get_DIMouseMove(DIMS_X))
 		m_vPickingPos = Picking_OnTerrain();
 
+
 	if (Engine::Key_Down(DIM_RB))
 	{
-		//m_vPickingPos = Picking_OnTerrain();
+		//Picking_OnTerrain_Tile();
+
+		m_vPickingPos = Picking_OnTerrain();
+		Create_Placement_Object();
+		m_pStageTools->Push_Placement_Obj_List(m_iCurObjType, m_iCurObjIndex, m_vPickingPos.x, m_vPickingPos.y + SET_Y_POS, m_vPickingPos.z);
+	}
+	if (Engine::Key_Down2(DIM_MB))
+	{
+		//Picking_OnTerrain_Tile();
+
+		m_vPickingPos = Picking_OnTerrain_Tile();
 		Create_Placement_Object();
 		m_pStageTools->Push_Placement_Obj_List(m_iCurObjType, m_iCurObjIndex, m_vPickingPos.x, m_vPickingPos.y + SET_Y_POS, m_vPickingPos.z);
 	}
@@ -230,6 +241,29 @@ _vec3 CStageTool::Picking_OnTerrain()
 	NULL_CHECK_RETURN(pTerrainTransCom, _vec3());
 
 	return pCameraCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);
+}
+
+_vec3 CStageTool::Picking_OnTerrain_Tile()
+{
+	CTerrainTex* pTerrainBufferCom = dynamic_cast<CTerrainTex*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Terrain", L"Proto_TerrainTex"));
+	NULL_CHECK_RETURN(pTerrainBufferCom, _vec3());
+
+	CTransform* pTerrainTransCom = dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, L"GameLogic", L"Terrain", L"Proto_Transform"));
+	NULL_CHECK_RETURN(pTerrainTransCom, _vec3());
+
+	Engine::CCalculator* pCameraCalculatorCom = dynamic_cast<Engine::CCalculator*>(Engine::Get_Component(ID_STATIC, L"Environment", L"DynamicCamera", L"Proto_Calculator"));
+	NULL_CHECK_RETURN(pTerrainTransCom, _vec3());
+
+	_vec3 vValue = pCameraCalculatorCom->Picking_OnTerrain(g_hWnd, pTerrainBufferCom, pTerrainTransCom);
+
+	_int iX = vValue.x / VTXITV;
+	_int iZ = vValue.z / VTXITV;
+
+	_int iIndex = iZ * VTXCNTX + iX;
+
+	_vec3 vReturn = pTerrainBufferCom->Get_VtxPos()[iIndex];
+
+	return vReturn;
 }
 
 CStageTool* CStageTool::Create(LPDIRECT3DDEVICE9 pGraphicDev)
