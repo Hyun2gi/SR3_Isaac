@@ -22,15 +22,17 @@ protected:
 	virtual ~CMonster();
 
 public:
-	_bool			Get_Dead() { return m_bDead; }
-	void			Set_Dead() { m_bDead = true; }
-	_int			Get_HP() { return m_iHp; }
-	void			Hit() { m_bHit = true; }
-	void			Hit_False() { m_bHit = false; }
-	_bool			Get_IsBoss() { return m_bBoss; }
-	MONSTER_TYPE	Get_MstType() { return m_eMstType; }
-	BOSS_TYPE		Get_BossType() { return m_eBossType; }
+	_bool				Get_Dead() { return m_bDead; }
+	void				Set_Dead() { m_bDead = true; }
+	_int				Get_HP() { return m_iHp; }
+	void				Hit() { m_bHit = true; }
+	void				Hit_False() { m_bHit = false; }
+	_bool				Get_IsBoss() { return m_bBoss; }
+	MONSTER_TYPE		Get_MstType() { return m_eMstType; }
+	BOSS_TYPE			Get_BossType() { return m_eBossType; }
 	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
+	
+	void				Set_Time_Scale() { m_bTimeScale = !m_bTimeScale; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -66,6 +68,7 @@ protected:
 	_bool					m_bHit;
 	_bool					m_bDead;
 	_bool					m_bHitColor;
+	_bool					m_bTimeScale;
 	_int					m_iHp;
 
 	_float					m_fSpeed;

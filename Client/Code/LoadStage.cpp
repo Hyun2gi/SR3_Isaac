@@ -150,6 +150,11 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	if (Engine::Key_Down(DIK_RETURN))
 	{
 		dynamic_cast<CMenu*>(m_mapLayer.at(L"UI")->Get_GameObject(L"Menu"))->Set_Render();
+
+		for (auto& iter : m_mapLayer.at(L"GameMst")->Get_ObjectMap())
+		{
+			dynamic_cast<CMonster*>(iter.second)->Set_Time_Scale();
+		}
 	}
 
 	if (m_bEndingPlay)
@@ -1182,7 +1187,6 @@ void CLoadStage::Insert_Child()
 		dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))
 			->Set_ShellObj_ToStage(m_mapLayer.at(L"MapObj"));
 	}
-
 }
 
 void CLoadStage::Setting_UI()

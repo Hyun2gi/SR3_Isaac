@@ -8,7 +8,7 @@ CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev),
 	m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTargetTransCom(nullptr), m_pTextureCom(nullptr), m_pCalculCom(nullptr),
 	m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_fSecAccTimeDelta(0.f), m_fSlowDelta(0.f), m_fColorTimeDelta(0.f),
-	m_bDead(false), m_bHit(false), m_bBoss(false), m_eMstType(MONSTER_TYPE_END), m_bScaleReduce(true), m_bHitColor(false), m_eBossType(NONE_BOSS)
+	m_bDead(false), m_bHit(false), m_bBoss(false), m_eMstType(MONSTER_TYPE_END), m_bScaleReduce(true), m_bHitColor(false), m_eBossType(NONE_BOSS), m_bTimeScale(false)
 {
 	m_vOriginScale = { 1.f, 1.f, 1.f };
 }
@@ -18,7 +18,7 @@ CMonster::CMonster(const CMonster& rhs)
 	m_pBufferCom(rhs.m_pBufferCom), m_pTransformCom(rhs.m_pTransformCom), m_pTargetTransCom(rhs.m_pTargetTransCom),
 	m_pTextureCom(rhs.m_pTextureCom), m_pCalculCom(rhs.m_pCalculCom), m_fColorTimeDelta(rhs.m_fColorTimeDelta),
 	m_fCallLimit(rhs.m_fCallLimit), m_fAccTimeDelta(rhs.m_fAccTimeDelta), m_fSpeed(rhs.m_fSpeed), m_fSecAccTimeDelta(rhs.m_fSecAccTimeDelta), m_fSlowDelta(rhs.m_fSlowDelta),
-	m_bDead(rhs.m_bDead), m_bHit(rhs.m_bHit), m_bBoss(rhs.m_bBoss), m_eMstType(rhs.m_eMstType), m_bScaleReduce(rhs.m_bScaleReduce), m_bHitColor(rhs.m_bHitColor), m_eBossType(rhs.m_eBossType)
+	m_bDead(rhs.m_bDead), m_bHit(rhs.m_bHit), m_bBoss(rhs.m_bBoss), m_eMstType(rhs.m_eMstType), m_bScaleReduce(rhs.m_bScaleReduce), m_bHitColor(rhs.m_bHitColor), m_eBossType(rhs.m_eBossType), m_bTimeScale(rhs.m_bTimeScale)
 {
 }
 

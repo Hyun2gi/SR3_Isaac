@@ -39,7 +39,12 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 {
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
-	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed; // 1.5
+	if (!m_bTimeScale)
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+	else
+		m_fSlowDelta = 0.f;
+
+	m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;

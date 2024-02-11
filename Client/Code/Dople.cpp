@@ -38,6 +38,11 @@ _int CDople::Update_GameObject(const _float& fTimeDelta)
 {
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
+	if (!m_bTimeScale)
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+	else
+		m_fSlowDelta = 0.f;
+
 	if (DP_DEAD == m_eCurState)
 	{
 		if(1.f != m_fFrame)

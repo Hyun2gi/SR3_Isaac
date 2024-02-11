@@ -48,6 +48,11 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 {
 	_float fSecondDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
+	if (!m_bTimeScale)
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+	else
+		m_fSlowDelta = 0.f;
+
 	CGameObject::Update_GameObject(fSecondDelta);
 
 	if (!m_bCreate)

@@ -44,10 +44,15 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 {
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
-	if (m_bEpicTime)
-		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.2f);
+	if (!m_bTimeScale)
+	{
+		if (m_bEpicTime)
+			Engine::Set_TimeDeltaScale(L"Timer_Second", 0.2f);
+		else
+			Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+	}
 	else
-		Engine::Set_TimeDeltaScale(L"Timer_Second", 1.f);
+		m_fSlowDelta = 0.f;
 
 	m_fFrame += m_iPicNum * m_fSlowDelta;
 
