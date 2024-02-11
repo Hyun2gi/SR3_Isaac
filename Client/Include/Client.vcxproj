@@ -176,6 +176,7 @@
     <ClInclude Include="..\Header\DynamicCamera2.h" />
     <ClInclude Include="..\Header\Effect.h" />
     <ClInclude Include="..\Header\Ending.h" />
+    <ClInclude Include="..\Header\EndingBack.h" />
     <ClInclude Include="..\Header\Epic.h" />
     <ClInclude Include="..\Header\EpicBullet.h" />
     <ClInclude Include="..\Header\EpicBulletMark.h" />
@@ -254,6 +255,7 @@
     <ClCompile Include="..\Code\DynamicCamera2.cpp" />
     <ClCompile Include="..\Code\Effect.cpp" />
     <ClCompile Include="..\Code\Ending.cpp" />
+    <ClCompile Include="..\Code\EndingBack.cpp" />
     <ClCompile Include="..\Code\Epic.cpp" />
     <ClCompile Include="..\Code\EpicBullet.cpp" />
     <ClCompile Include="..\Code\EpicBulletMark.cpp" />
