@@ -63,6 +63,9 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 
 		m_bShoot = false;
 
+		m_bUnbeatable = false;
+		m_fUnbeatableTime = 0;
+
 		m_iColorTimer = 0;
 		m_iTempTimer = 0;
 		m_pCamera = nullptr;
@@ -100,6 +103,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	// 특정 모션 처리
 	Specific_Motion(fTimeDelta);
+	Check_UnBeatable_Time(fTimeDelta);
 		
 	if (m_bKeyBlock == false)
 	{
@@ -323,9 +327,6 @@ HRESULT CPlayer::Add_Component()
 //	return pInstance;
 //}
 
-void CPlayer::Set_LieAnim()
-{
-}
 
 void CPlayer::Set_Player_Pos(_vec3 pos)
 {
@@ -518,10 +519,14 @@ void CPlayer::Set_Cry_Anim()
 
 void CPlayer::Set_Attacked()
 {
-	m_eCurState = P_ATTACKED;
-	// 키막기
-	m_bKeyBlock = true;
-	m_fDelayTime = 0.f;
+	if (m_eCurState != P_ATTACKED && m_bUnbeatable == false)
+	{
+		m_bUnbeatable = true;
+		m_eCurState = P_ATTACKED;
+		// 키막기
+		m_bKeyBlock = true;
+		m_fDelayTime = 0.f;
+	}
 }
 
 void CPlayer::Set_StartCameraMouse()
@@ -1019,6 +1024,22 @@ void CPlayer::Specific_Motion(const _float& fTimeDelta)
 
 		m_iColorTimer++;
 
+		_vec3 vDir, vPos;
+		_vec3 vScale = m_pTransformCom->m_vScale;
+		m_pTransformCom->Get_Info(INFO_LOOK, &vDir);
+		vDir = _vec3(vDir.x, 0, vDir.z);
+		vDir *= -1;
+		D3DXVec3Normalize(&vDir, &vDir);
+
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		vPos += vDir * (m_fMoveSpeed)*fTimeDelta;
+
+		if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+			&& vPos.x > vScale.x && vPos.z > vScale.z)
+		{
+			m_pTransformCom->Move_Pos(&vDir, 3, fTimeDelta*3);
+		}
+
 		if (m_iColorTimer % 5 == 2)
 		{
 			D3DXCOLOR temp = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
@@ -1079,6 +1100,20 @@ void CPlayer::Specific_Motion(const _float& fTimeDelta)
 			m_fFrame = 0.f;
 			m_bKeyBlock = false; // key 입력 활성화
 			dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToOriginPos();
+		}
+	}
+}
+
+void CPlayer::Check_UnBeatable_Time(const _float& fTimeDelta)
+{
+	if (m_bUnbeatable)
+	{
+		m_fUnbeatableTime += fTimeDelta;
+
+		if (m_fUnbeatableTime >= 2)
+		{
+			m_bUnbeatable = false;
+			m_fUnbeatableTime = 0;
 		}
 	}
 }

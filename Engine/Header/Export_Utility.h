@@ -25,6 +25,7 @@
 
 #include "ParticleScatter.h"
 #include "ParticleExplosion.h"
+#include "ParticleDust.h"
 #include "ParticleSplash.h"
 #include "ParticleSplashLeft.h"
 #include "ParticleSplashRight.h"
@@ -60,8 +61,10 @@ inline HRESULT		Ready_Light(LPDIRECT3DDEVICE9 pGraphicDev,
 
 //ParticleMgr
 inline void	Create_Scatter(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vMin = _vec3(-10.0f, -10.0f, -10.0f), _vec3 vMax = _vec3(10.0f, 10.0f, 10.0f), _float fSize = 0.25f, _int iCount = 15);
+inline void	Kill_Scatter();
 inline void	Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize = 0.7f, _int iCount = 10);
-inline void	Create_Splash(LPDIRECT3DDEVICE9 pDevice, _matrix matWorld, const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/BloodExp2/BloodExp_%d.png", _int iMaxFrame = 7, _float fSize = 0.25f, _int iCount = 10);
+inline void	Create_Dust(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize = 1.f, _int iCount = 30);
+inline void	Create_Splash(LPDIRECT3DDEVICE9 pDevice, _matrix matWorld, const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/BloodExp/BloodExp_%d.png", _int iMaxFrame = 7, _float fSize = 0.25f, _int iCount = 10);
 inline void	Create_Splash_Left(LPDIRECT3DDEVICE9 pDevice, _matrix matWorld, const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/BloodExp_Left/BloodExp_%d.png", _int iMaxFrame = 2, _float fSize = 0.5f, _int iCount = 15);
 inline void	Create_Splash_Right(LPDIRECT3DDEVICE9 pDevice, _matrix matWorld, const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/BloodExp_Right/BloodExp_%d.png", _int iMaxFrame = 2, _float fSize = 0.5f, _int iCount = 15);
 inline void	Create_Burst(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize = 0.5f, _int iCount = 10);

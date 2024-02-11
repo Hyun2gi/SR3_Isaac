@@ -241,6 +241,18 @@
     <Filter Include="02. GameObject\12. UI\01. Player\01. Player Coin\00. PLCoinFont">
       <UniqueIdentifier>{08639cb5-003d-4c60-9b4f-783de9565650}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\05. Ending">
+      <UniqueIdentifier>{6c3b6688-1da0-49ed-ad97-143812994bea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Room\03.Obstacle\MoveX">
+      <UniqueIdentifier>{59553707-8836-46e5-993d-7110972a9c43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Room\03.Obstacle\MoveZ">
+      <UniqueIdentifier>{8b5c52e7-0208-4ccd-886a-ceac1e149246}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\10. Room\03.Obstacle\Normal">
+      <UniqueIdentifier>{d798ddf3-e650-496f-ab68-acb5c2634c60}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -450,20 +462,27 @@
     <ClInclude Include="..\Header\Menu.h">
       <Filter>02. GameObject\12. UI\00. Menu</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\Obstacle.h">
-      <Filter>02. GameObject\10. Room\03.Obstacle</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\PlayerCoin.h">
-      <Filter>02. GameObject\12. UI\01. Player\01. Player Coin</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\HeartUI.h">
-      <Filter>02. GameObject\12. UI\01. Player\00. Player HP\00. Player Heart</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\PlayerHP.h">
-      <Filter>02. GameObject\12. UI\01. Player\00. Player HP</Filter>
+      <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\PLCoinFont.h">
-      <Filter>02. GameObject\12. UI\01. Player\01. Player Coin\00. PLCoinFont</Filter>
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\MoveXObstacle.h">
+      <Filter>02. GameObject\10. Room\03.Obstacle\MoveX</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\MoveZObstacle.h">
+      <Filter>02. GameObject\10. Room\03.Obstacle\MoveZ</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Obstacle.h">
+      <Filter>02. GameObject\10. Room\03.Obstacle\Normal</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\HeartUI.h" />
+    <ClInclude Include="..\Header\Ending.h">
+      <Filter>01. Scene\05. Ending</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -665,20 +684,29 @@
     <ClCompile Include="..\Code\Menu.cpp">
       <Filter>02. GameObject\12. UI\00. Menu</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\Obstacle.cpp">
-      <Filter>02. GameObject\10. Room\03.Obstacle</Filter>
+    <ClCompile Include="..\Code\HeartUI.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PlayerCoin.cpp">
-      <Filter>02. GameObject\12. UI\01. Player\01. Player Coin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\HeartUI.cpp">
-      <Filter>02. GameObject\12. UI\01. Player\00. Player HP\00. Player Heart</Filter>
+      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PlayerHP.cpp">
-      <Filter>02. GameObject\12. UI\01. Player\00. Player HP</Filter>
+      <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\PLCoinFont.cpp">
-      <Filter>02. GameObject\12. UI\01. Player\01. Player Coin\00. PLCoinFont</Filter>
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MoveXObstacle.cpp">
+      <Filter>02. GameObject\10. Room\03.Obstacle\MoveX</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MoveZObstacle.cpp">
+      <Filter>02. GameObject\10. Room\03.Obstacle\MoveZ</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Obstacle.cpp">
+      <Filter>02. GameObject\10. Room\03.Obstacle\Normal</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Ending.cpp">
+      <Filter>01. Scene\05. Ending</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
