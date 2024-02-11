@@ -67,7 +67,7 @@ private:
 	void			Moster_Collision();
 	void			MapObj_Collision();
 
-  void			Player_Collision_With_Monster();
+	void			Player_Collision_With_Monster();
 
 	void			Obstacle_Collsion();
 
