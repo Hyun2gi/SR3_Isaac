@@ -57,6 +57,11 @@ void		Clear_RenderGroup()
 	CRenderer::GetInstance()->Clear_RenderGroup();
 }
 
+inline void Set_Ending()
+{
+	CRenderer::GetInstance()->Set_Ending();
+}
+
 HRESULT		Ready_Light(LPDIRECT3DDEVICE9 pGraphicDev,
 	const D3DLIGHT9* pLightInfo,
 	const _uint& iIndex)

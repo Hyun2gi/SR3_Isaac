@@ -1251,6 +1251,7 @@ void CLoadStage::Play_Ending(const _float& fTimeDelta)
 	else
 	{
 		Engine::Kill_Scatter();
+		Engine::Set_Ending();
 
 		Engine::CScene* pScene = nullptr;
 		pScene = CEnding::Create(m_pGraphicDev);

@@ -26,12 +26,22 @@ void CRenderer::Add_RenderGroup(RENDERID eID, CGameObject * pGameObject)
 
 void CRenderer::Render_GameObject(LPDIRECT3DDEVICE9 & pGraphicDev)
 {
-	Render_Priority(pGraphicDev);
-	Render_NonAlpha(pGraphicDev);
-	Render_Alpha(pGraphicDev);
-	Render_Alpha_Sorting(pGraphicDev);
-	Render_Particles(pGraphicDev);
-	Render_UI(pGraphicDev);
+
+	if (!m_bIsEnd)
+	{
+		Render_Priority(pGraphicDev);
+		Render_NonAlpha(pGraphicDev);
+		Render_Alpha(pGraphicDev);
+		Render_Alpha_Sorting(pGraphicDev);
+		Render_Particles(pGraphicDev);
+		Render_UI(pGraphicDev);
+	}
+	else
+	{
+		Render_UI(pGraphicDev);
+		Render_Particles(pGraphicDev);
+	}
+	
 
 	Clear_RenderGroup();
 }

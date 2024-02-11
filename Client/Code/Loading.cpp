@@ -241,6 +241,13 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	// Player Heart
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_PlayerHeartTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Item/ui_hearts_%d.png", 3)), E_FAIL);
 
+	//Ending
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_EndingBackTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Ending/Background.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_GameEndTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Ending/GameEnd/Ending_%d.png", 2)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_HWTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Ending/HW/HW_%d.png", 2)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BMTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Ending/BM/BM_%d.png", 2)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_HJTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Ending/HJ/HJ_%d.png", 2)), E_FAIL);
+
 
 #pragma endregion UI Texture
 
