@@ -1280,33 +1280,31 @@ HRESULT CLoadStage::Door_Collision()
 				/*dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &startpos);*/
 
 
-				//if (doornum == 0)
-				//{
-				//	//left
-				//	startpos = _vec3(38.5, 0, 20);
-				//}
-				//else if (doornum == 1)
-				//{
-				//	//right
-				//	startpos = _vec3(3.5, 0, 20);
-				//}
-				//else if (doornum == 2)
-				//{
-				//	//top
-				//	startpos = _vec3(20, 0, 3.5);
-				//}
-				//else if (doornum == 3)
-				//{
-				//	//bottom
-				//	startpos = _vec3(20, 0, 38.5);
-				//}
+				if (doornum == 0)
+				{
+					//left
+					startpos = _vec3(27.5, 0, 15.5);
+				}
+				else if (doornum == 1)
+				{
+					//right
+					startpos = _vec3(3.5, 0, 15.5);
+				}
+				else if (doornum == 2)
+				{
+					//top
+					startpos = _vec3(15.5, 0, 3.5);
+				}
+				else if (doornum == 3)
+				{
+					//bottom
+					startpos = _vec3(15.5, 0, 27.5);
+				}
 
 
 				CPlayer::GetInstance()->Set_KeyBlock(true);
 
-				// 중간에 스폰
-				startpos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
-				CPlayer::GetInstance()->Set_StartPos(startpos);
+				
 
 				// 스테이지 변경
 				Engine::CScene* pScene = nullptr;
@@ -1322,6 +1320,13 @@ HRESULT CLoadStage::Door_Collision()
 					CPlayer::GetInstance()->Set_IssacRender(false);
 					// false : 처음 방문하는방
 					CPlayer::GetInstance()->Set_Camera_Cinemachine_01();
+					// 중간에 스폰
+					startpos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
+					CPlayer::GetInstance()->Set_StartPos(startpos);
+				}
+				else
+				{
+					CPlayer::GetInstance()->Set_StartPos(startpos);
 				}
 
 				NULL_CHECK_RETURN(pScene, -1);

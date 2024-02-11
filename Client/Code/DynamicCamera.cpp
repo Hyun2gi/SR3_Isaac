@@ -208,6 +208,35 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 				m_bMouseCameraStart = true;
 			}
 
+			//*** 이미 방문한 방에 방문할 경우를 위해 처리***
+			// 방문한 경우 큐브연출x, 바로 들어갔던 방문 앞에서 스폰되도록(1인칭 되게끔)
+			// 벽에 부딪혔을때
+			if ((m_vEye.x > VTXCNTX - 3 || m_vEye.z > VTXCNTX - 3 || m_vEye.x < 3 || m_vEye.z < 3))
+			{
+				// 밖으로 나갔을때
+				m_bCollisionWall = true;
+				m_fFlexibleDistanceWithPlayer = m_fTotalDistanceWithPlayer;
+			}
+
+			if (m_bCollisionWall == true)
+			{
+				// 방 이동때 바로 튀어나오게끔
+				if (!CPlayer::GetInstance()->Get_SafeCamera_Area_For_ChangeStage())
+				{
+					m_bFirstPerson = true;
+					m_vGoalPosition = playerPos + _vec3(0, 2, 0);
+					// 1인칭 시점으로 전환
+					D3DXVECTOR3 _movevec;
+					//m_vCameraPosDir = -(playerDir);
+					m_vGoalPosition = playerPos + _vec3(0, 2, 0);
+					D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, fTimeDelta * 10);
+					m_vEye = m_vGoalPosition;
+					m_vAt = playerPos + playerDir * 4 + _vec3(0, 1, 0);
+					//m_vCameraPosDir = m_vEye - m_vAt;
+				}
+
+			}
+
 		}
 		else
 		{
