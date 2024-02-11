@@ -113,6 +113,7 @@ public:
 
 	bool		Get_Camera_WallBlock();
 	bool		Get_SafeCamera_Area(); // 카메라 벗어나지 않는 안전지대인지
+	bool		Get_SafeCamera_Area_For_ChangeStage(); // 다른방에 들어갈때 1인칭으로 두기위해서
 	bool		Get_Player_OutOfRange(); // 멈춤 막기 위해 플레이어가 가장자리에 있을경우처리
 
 	list<CGameObject*>* Get_Player_BullletList() { return &m_PlayerBulletList; }
