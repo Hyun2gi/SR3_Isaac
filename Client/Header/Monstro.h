@@ -33,18 +33,17 @@ private:
 	void			AttackTo_Player();
 
 	void			Check_TargetPos();
-	void			Bullet_Update();
-	void			Monstro_Default(); // 기본적 모든 움직임
+	_bool			Check_CoolTime(const _float& fTimeDelta);
 
 private:
 	_bool			m_bDeadWait;
 	_bool			m_bJump;
 	_bool			m_bBullet;
-
 	_int			m_iPicNum;
 	_float			m_fFrameSpeed = 1.f;
 	_float			m_fPower;
 	_float			m_fAccelTime;
+	_float			m_fHitCoolTime; // 피격 쿨타임(혈사포 대책)
 
 	_vec3			m_vTargetPos;
 
