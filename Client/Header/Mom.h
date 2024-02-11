@@ -5,7 +5,7 @@
 
 class CMom : public CMonster
 {
-	const _float LIMIT_Y = 6.6f;
+	const _float LIMIT_Y = 6.3f;
 private:
 	explicit CMom(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CMom(const CMom& rhs);
