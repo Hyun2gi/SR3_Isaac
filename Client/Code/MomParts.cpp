@@ -164,25 +164,25 @@ void CMomParts::Motion_Change()
 		case CMomParts::MOM_DOOR:
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"MomParts", L"Proto_MomDoorTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_MomDoorTexture"));
 			break;
 
 		case CMomParts::MOM_EYE:
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"MomParts", L"Proto_MomEyeTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_MomEyeTexture"));
 			break;
 
 		case CMomParts::MOM_SKIN:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"MomParts", L"Proto_MomSkinTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_MomSkinTexture"));
 			break;
 
 		case CMomParts::MOM_HAND:
 			m_iPicNum = 3;
 			m_fFrameSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"MomParts", L"Proto_MomHandTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_MomHandTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;
