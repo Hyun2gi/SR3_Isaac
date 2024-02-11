@@ -259,6 +259,18 @@
     <Filter Include="02. GameObject\12. UI\03. Ending\Back">
       <UniqueIdentifier>{dd997a75-f590-4590-a035-5fd634b4e012}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\12. UI\03. Ending\GameEnd">
+      <UniqueIdentifier>{9d904d0b-5bd8-48e1-bd80-620c1c0aa46e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\03. Ending\HW">
+      <UniqueIdentifier>{7c135e31-75c1-4f2d-8a2d-810c34c8e38c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\03. Ending\BM">
+      <UniqueIdentifier>{f0e62c2a-a74b-4731-a8c7-44a3373b0250}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\03. Ending\HJ">
+      <UniqueIdentifier>{070d201d-c7b6-456b-aeb3-ef2e66d49344}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -493,6 +505,18 @@
     <ClInclude Include="..\Header\EndingBack.h">
       <Filter>02. GameObject\12. UI\03. Ending\Back</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\GameEnd.h">
+      <Filter>02. GameObject\12. UI\03. Ending\GameEnd</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\EndingHW.h">
+      <Filter>02. GameObject\12. UI\03. Ending\HW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\EndingBM.h">
+      <Filter>02. GameObject\12. UI\03. Ending\BM</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\EndingHJ.h">
+      <Filter>02. GameObject\12. UI\03. Ending\HJ</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -719,6 +743,18 @@
     </ClCompile>
     <ClCompile Include="..\Code\EndingBack.cpp">
       <Filter>02. GameObject\12. UI\03. Ending\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\GameEnd.cpp">
+      <Filter>02. GameObject\12. UI\03. Ending\GameEnd</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EndingHW.cpp">
+      <Filter>02. GameObject\12. UI\03. Ending\HW</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EndingBM.cpp">
+      <Filter>02. GameObject\12. UI\03. Ending\BM</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EndingHJ.cpp">
+      <Filter>02. GameObject\12. UI\03. Ending\HJ</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

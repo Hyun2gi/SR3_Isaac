@@ -4,6 +4,11 @@
 
 #include "Loading.h"
 
+class CGameEnd;
+class CEndingHW;
+class CEndingBM;
+class CEndingHJ;
+
 class CEnding : public Engine::CScene
 {
 private:
@@ -25,6 +30,11 @@ private:
 
 public:
 	static CEnding*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
+
+	CGameEnd* pBack;
+	CEndingHW* pHW;
+	CEndingBM* pBM;
+	CEndingHJ* pHJ;
 
 private:
 	virtual void Free() override;
