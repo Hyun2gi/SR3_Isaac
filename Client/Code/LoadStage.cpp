@@ -1054,7 +1054,7 @@ void CLoadStage::Player_Collision_With_Monster()
 	// 충돌처리하는 함수
 	CGameObject* pObj = m_mapLayer.at(L"GameMst")->Collision_GameObject(CPlayer::GetInstance());
 
-	if (pObj)
+	if (pObj && !dynamic_cast<CMonster*>(pObj)->Get_Dead())
 	{
 		// 플레이어 피 감소
 		CPlayer::GetInstance()->Set_Attacked();

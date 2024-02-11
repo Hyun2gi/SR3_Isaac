@@ -373,6 +373,7 @@ void CPlayer::Set_EpicFall()
 	}
 }
 
+
 void CPlayer::Set_Item_Get_Anim()
 {
 	m_bKeyBlock = true;
@@ -603,6 +604,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	if (m_bEpicTargetRun == false)
 	{
 		vDir = _vec3(vDir.x, 0, vDir.z);
+
 		if (Engine::Get_DIKeyState(DIK_W) & 0x80)
 		{
 			m_eCurState = P_BACKWALK;
@@ -620,6 +622,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			if (m_bShoot)
 			{
 				m_eCurState = P_SHOOTWALK;
+				// 쏘면서 걸을때 방향 얻기
+				m_iShootWalkDir = 0;
 			}
 		}
 		else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
@@ -640,6 +644,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			if (m_bShoot)
 			{
 				m_eCurState = P_SHOOTWALK;
+				m_iShootWalkDir = 1;
 			}
 		}
 		else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
@@ -661,6 +666,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			if (m_bShoot)
 			{
 				m_eCurState = P_SHOOTWALK;
+				m_iShootWalkDir = 2;
 			}
 
 		}
@@ -683,6 +689,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			if (m_bShoot)
 			{
 				m_eCurState = P_SHOOTWALK;
+				m_iShootWalkDir = 3;
 			}
 
 		}
