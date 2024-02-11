@@ -99,6 +99,9 @@ public:
 	void		Set_BulletType(int _bullet);
 	void		Set_EpicFall();
 
+	// W(0) : 전진, S(1) : 후진, A(2) : 왼쪽, D(3) : 오른쪽
+	int			Get_ShootWalkDir() { return m_iShootWalkDir; }
+
 
 	void		Set_Item_Get_Anim();
 	void		Set_Item_Get_Anim_Bad();
@@ -227,6 +230,8 @@ private:
 
 	// 총알이 나아가는 방향 조절
 	_vec3				m_vBulletDir;
+
+	int					m_iShootWalkDir;
 
 private:
 	list<CGameObject*>	m_PlayerBulletList;
