@@ -8,7 +8,7 @@
 class CMomParts : public CMonster
 {
 	const _float INTERVAL = 1.f;
-	const _float INTERVAL_Y = 4.3f;
+	const _float INTERVAL_Y = 3.3f;
 private:
 	explicit CMomParts(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex);
 	explicit CMomParts(const CMomParts& rhs);

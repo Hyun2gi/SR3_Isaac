@@ -85,6 +85,14 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 		Move(m_fSlowDelta);
 	}
 
+	if (m_bDead)
+	{
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		return 1;
+	}
+
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
