@@ -129,7 +129,20 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 	if (Check_Cube_Arrived() && !m_bIsCreated)
 	{
-		CPlayer::GetInstance()->Set_StartCameraMouse();
+		// m_bStartScene : 한번 왔다간 방인지 아닌지 확인해주는 변수
+		if (!m_bStartScene)
+		{
+			// 한번 왔다간 방이 아닐경우처리
+			CPlayer::GetInstance()->Set_IssacRender(true);
+			// 올라간 시네머신이 진행 후 내려오는 시네머신 필요
+			CPlayer::GetInstance()->Set_Camera_Cinemachine_02();
+		}
+		else
+		{
+			// 한번 왔다간 방임
+			CPlayer::GetInstance()->Set_StartCameraMouse();
+		}
+
 		m_bIsCreated = true;
 		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
@@ -1267,31 +1280,31 @@ HRESULT CLoadStage::Door_Collision()
 				/*dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &startpos);*/
 
 
-				if (doornum == 0)
-				{
-					//left
-					startpos = _vec3(38.5, 0, 20);
-				}
-				else if (doornum == 1)
-				{
-					//right
-					startpos = _vec3(3.5, 0, 20);
-				}
-				else if (doornum == 2)
-				{
-					//top
-					startpos = _vec3(20, 0, 3.5);
-				}
-				else if (doornum == 3)
-				{
-					//bottom
-					startpos = _vec3(20, 0, 38.5);
-				}
+				//if (doornum == 0)
+				//{
+				//	//left
+				//	startpos = _vec3(38.5, 0, 20);
+				//}
+				//else if (doornum == 1)
+				//{
+				//	//right
+				//	startpos = _vec3(3.5, 0, 20);
+				//}
+				//else if (doornum == 2)
+				//{
+				//	//top
+				//	startpos = _vec3(20, 0, 3.5);
+				//}
+				//else if (doornum == 3)
+				//{
+				//	//bottom
+				//	startpos = _vec3(20, 0, 38.5);
+				//}
 
 
 				CPlayer::GetInstance()->Set_KeyBlock(true);
 
-				// 임시로 중간에 스폰
+				// 중간에 스폰
 				startpos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 				CPlayer::GetInstance()->Set_StartPos(startpos);
 
@@ -1301,7 +1314,16 @@ HRESULT CLoadStage::Door_Collision()
 				int iStageKey = dynamic_cast<CDoor*>(pObj)->Get_Stage_Num_Key();
 				bool bClear = CStageLoadMgr::GetInstance()->Get_StageInfo(iStageKey).m_bClear;
 
+				// bClear : false면 처음 방문하는방, true면 이미 깬 방
 				pScene = CLoadStage::Create(m_pGraphicDev, iStageKey, bClear);
+
+				if (!bClear)
+				{
+					CPlayer::GetInstance()->Set_IssacRender(false);
+					// false : 처음 방문하는방
+					CPlayer::GetInstance()->Set_Camera_Cinemachine_01();
+				}
+
 				NULL_CHECK_RETURN(pScene, -1);
 
 				FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);

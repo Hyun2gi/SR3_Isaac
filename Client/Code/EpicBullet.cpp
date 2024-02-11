@@ -72,6 +72,12 @@ _int CEpicBullet::Update_GameObject(const _float& fTimeDelta)
         // 땅에 닿으면
         if (m_vShootPos.y-(m_pTransformCom->m_vScale.y*0.5) <= 0 )
         {
+            // 펑 되는 이펙트
+            _vec3 vPos;
+            m_pTransformCom->Get_Info(INFO_POS, &vPos);
+            Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 1.2f, 10);
+
+
             m_eCurState = EPIC_EFFECT;
             m_fFrame = 0;
             // 터지는 순간 흔적남는걸로 변경

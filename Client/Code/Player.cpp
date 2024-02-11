@@ -70,6 +70,9 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_iTempTimer = 0;
 		m_pCamera = nullptr;
 		m_vStartPos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
+		m_bRender = true;
+
+		m_bStartAnim = true;
 	}
 	else
 	{
@@ -99,6 +102,12 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		}
 
 		m_bKeyBlock = false;
+	}
+
+	if (m_bStartAnim)
+	{
+		m_bStartAnim = false;
+		Set_Cry_Anim();
 	}
 
 	// 특정 모션 처리
@@ -188,8 +197,10 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+	if (m_bRender)
+	{
+		Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+	}
 
 	return 0;
 }
@@ -327,6 +338,16 @@ HRESULT CPlayer::Add_Component()
 //	return pInstance;
 //}
 
+
+void CPlayer::Set_Camera_Cinemachine_01()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_01_TotalLand(); 
+}
+
+void CPlayer::Set_Camera_Cinemachine_02()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_02_GoToIsaac();
+}
 
 void CPlayer::Set_Player_Pos(_vec3 pos)
 {

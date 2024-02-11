@@ -72,6 +72,7 @@ _int CBrimStoneBullet::Update_GameObject(const _float& fTimeDelta)
     D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);
 
     bulletPos = playerPos + ((m_iBulletIndex + 1) * m_pTransformCom->m_vScale.x) * playerDir;
+    bulletPos += _vec3(0, 0, 0);
     m_pTransformCom->Set_Pos(bulletPos);
 
     if (m_bLie == false)
