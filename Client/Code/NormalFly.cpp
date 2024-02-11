@@ -58,6 +58,13 @@ _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 			m_fFrame = 0.f;
 	}
 
+	if (m_bDead)
+	{
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+	}
+
 	if(!m_bDeadWait)
 		Revolve_Center();
 
