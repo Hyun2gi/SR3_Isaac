@@ -88,6 +88,18 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 			return 0;
 		}		
 		
+		if (GetAsyncKeyState('6'))
+		{
+			Engine::CScene* pScene = nullptr;
+
+			pScene = CLoadStage::Create(m_pGraphicDev, 6, true);
+			NULL_CHECK_RETURN(pScene, -1);
+
+			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			return 0;
+		}
+
 
 		if (GetAsyncKeyState(VK_BACK))
 		{

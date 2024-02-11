@@ -20,6 +20,7 @@ private:
 		C_SHAKING_ROT, // Rotatation 변화로 흔들림
 		C_MOVE_TO_TARGET,
 		C_EPIC,
+		C_CINEMACHINE_02,
 		C_END
 	};
 
@@ -76,8 +77,12 @@ public:
 	void				Set_EpicBullet();
 	void				Set_Shoot_End_Epic(); 
 
-	// 시네머신용 카메라
+	// 시네머신용 카메라 (우는 아이작)
 	void				Cinemachine_00_Start();
+	// 큐브연출 있을 때 전체 화면으로 보기
+	void				Cinemachine_01_TotalLand();
+	// 다시 플레이어로 돌아가는 연출
+	void				Cinemachine_02_GoToIsaac();
 
 	void				Set_ChaseInit(bool _init) { m_bChaseInit = _init; }
 	void				Set_FirstPerson(bool first) { m_bFirstPerson = first; m_bCollisionWall = true; m_bChaseInit = false; }

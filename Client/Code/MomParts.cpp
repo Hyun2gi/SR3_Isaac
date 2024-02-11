@@ -24,7 +24,7 @@ CMomParts::~CMomParts()
 HRESULT CMomParts::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->m_vScale = { 7.f, 12.f, 10.f };
+	m_pTransformCom->m_vScale = { 7.f, 12.f, 1.f };
 
 	m_iRandNum = 0;
 
@@ -34,7 +34,7 @@ HRESULT CMomParts::Ready_GameObject()
 	m_ePreState = MOM_END;
 
 	m_bBoss = true;
-	m_eBossType = MOM_PARTS; // 
+	m_eBossType = MOM_PARTS;
 
 	return S_OK;
 }
@@ -61,15 +61,11 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 	if (Check_Time(m_fSlowDelta))
 	{
 		m_fCallLimit = (_float)m_iRandNum;
-		// 랜덤하게 바꾸기
+
 		Change_State();
 	}
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
-
-	// 각 방향 문마다 랜덤한 쿨타임으로 상태 변화 -> 매번 달라야함
-	// Look 벡터가 애초에 이상해서 밑 함수 활용 결과도 이상한가 싶은
-	//m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -82,9 +78,9 @@ void CMomParts::LateUpdate_GameObject()
 	{
 		if (m_eCurState == MOM_EYE || m_eCurState == MOM_HAND || m_eCurState == MOM_SKIN)
 		{
-			m_pMom->Set_Hp_Minus();
 			m_bHit = false;
 			m_bHitColor = true;
+			m_pMom->Set_Hp_Minus();
 		}
 	}
 
@@ -164,25 +160,25 @@ void CMomParts::Motion_Change()
 		case CMomParts::MOM_DOOR:
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"MomParts", L"Proto_MomDoorTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_MomDoorTexture"));
 			break;
 
 		case CMomParts::MOM_EYE:
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"MomParts", L"Proto_MomEyeTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_MomEyeTexture"));
 			break;
 
 		case CMomParts::MOM_SKIN:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"MomParts", L"Proto_MomSkinTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_MomSkinTexture"));
 			break;
 
 		case CMomParts::MOM_HAND:
 			m_iPicNum = 3;
 			m_fFrameSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"MomParts", L"Proto_MomHandTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_MomHandTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;

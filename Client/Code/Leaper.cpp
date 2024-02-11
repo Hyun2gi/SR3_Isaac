@@ -91,7 +91,12 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
 	if (m_bDead)
+	{
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
 		return 1;
+	}
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 

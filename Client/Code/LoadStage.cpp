@@ -46,6 +46,9 @@
 #include "MoveXObstacle.h"
 #include "MoveZObstacle.h"
 
+// 총알
+#include "EpicBullet.h"
+
 //아이템
 #include "Coin.h"
 #include "Pill.h"
@@ -126,7 +129,20 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 	if (Check_Cube_Arrived() && !m_bIsCreated)
 	{
-		CPlayer::GetInstance()->Set_StartCameraMouse();
+		// m_bStartScene : 한번 왔다간 방인지 아닌지 확인해주는 변수
+		if (!m_bStartScene)
+		{
+			// 한번 왔다간 방이 아닐경우처리
+			CPlayer::GetInstance()->Set_IssacRender(true);
+			// 올라간 시네머신이 진행 후 내려오는 시네머신 필요
+			CPlayer::GetInstance()->Set_Camera_Cinemachine_02();
+		}
+		else
+		{
+			// 한번 왔다간 방임
+			CPlayer::GetInstance()->Set_StartCameraMouse();
+		}
+
 		m_bIsCreated = true;
 		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
@@ -858,35 +874,23 @@ void CLoadStage::Moster_Collision()
 				}
 				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 2) // 에픽페투스
 				{
-					//if()
+					if (dynamic_cast<CEpicBullet*>(*iter)->Get_CanAttacked()) // true일 때 공격
+					{
+						if (FLY == dynamic_cast<CMonster*>(pMonster)->Get_MstType() || // Epic과 충돌이 이루어지는 몬스터들
+							DIP == dynamic_cast<CMonster*>(pMonster)->Get_MstType() ||
+							SQUIRT == dynamic_cast<CMonster*>(pMonster)->Get_MstType() ||
+							PACER == dynamic_cast<CMonster*>(pMonster)->Get_MstType() ||
+							LEAPER == dynamic_cast<CMonster*>(pMonster)->Get_MstType())
+						{
+							dynamic_cast<CMonster*>(pMonster)->Set_Dead();
+							break;
+						}
+						else
+							++iter;
+					}
+					else
+						++iter;
 				}
-
-				//else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포 (엄마/엄마파츠만)
-			//{// dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() && 
-			//   if (dynamic_cast<CBrimStone*>(*iter)->Get_BulletState() &&
-			//      !dynamic_cast<CMonster*>(pMonster)->Get_Dead())               // Player가 Dead가 아닌 경우
-			//   {
-			//      if (MOM == dynamic_cast<CMonster*>(pMonster)->Get_BossType())   // MOM인 경우
-			//      {
-			//         dynamic_cast<CMonster*>(pMonster)->Hit();
-			//         break;
-			//      }
-			//      else if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType()) // MOM Parts인 경우
-			//      {
-			//         if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState())         // Door 상태가 아닌 경우
-			//         {
-			//            dynamic_cast<CMonster*>(pMonster)->Hit();
-			//            break;
-			//         }
-			//         else
-			//            ++iter;
-			//      }
-			//      else
-			//         ++iter;
-			//   }
-			//   else
-			//      ++iter;
-			//}
 				else
 					++iter;
 			}
@@ -1054,7 +1058,7 @@ void CLoadStage::Player_Collision_With_Monster()
 	// 충돌처리하는 함수
 	CGameObject* pObj = m_mapLayer.at(L"GameMst")->Collision_GameObject(CPlayer::GetInstance());
 
-	if (pObj)
+	if (pObj && !dynamic_cast<CMonster*>(pObj)->Get_Dead())
 	{
 		// 플레이어 피 감소
 		CPlayer::GetInstance()->Set_Attacked();
@@ -1277,31 +1281,31 @@ HRESULT CLoadStage::Door_Collision()
 				/*dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &startpos);*/
 
 
-				if (doornum == 0)
-				{
-					//left
-					startpos = _vec3(38.5, 0, 20);
-				}
-				else if (doornum == 1)
-				{
-					//right
-					startpos = _vec3(3.5, 0, 20);
-				}
-				else if (doornum == 2)
-				{
-					//top
-					startpos = _vec3(20, 0, 3.5);
-				}
-				else if (doornum == 3)
-				{
-					//bottom
-					startpos = _vec3(20, 0, 38.5);
-				}
+				//if (doornum == 0)
+				//{
+				//	//left
+				//	startpos = _vec3(38.5, 0, 20);
+				//}
+				//else if (doornum == 1)
+				//{
+				//	//right
+				//	startpos = _vec3(3.5, 0, 20);
+				//}
+				//else if (doornum == 2)
+				//{
+				//	//top
+				//	startpos = _vec3(20, 0, 3.5);
+				//}
+				//else if (doornum == 3)
+				//{
+				//	//bottom
+				//	startpos = _vec3(20, 0, 38.5);
+				//}
 
 
 				CPlayer::GetInstance()->Set_KeyBlock(true);
 
-				// 임시로 중간에 스폰
+				// 중간에 스폰
 				startpos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 				CPlayer::GetInstance()->Set_StartPos(startpos);
 
@@ -1311,7 +1315,16 @@ HRESULT CLoadStage::Door_Collision()
 				int iStageKey = dynamic_cast<CDoor*>(pObj)->Get_Stage_Num_Key();
 				bool bClear = CStageLoadMgr::GetInstance()->Get_StageInfo(iStageKey).m_bClear;
 
+				// bClear : false면 처음 방문하는방, true면 이미 깬 방
 				pScene = CLoadStage::Create(m_pGraphicDev, iStageKey, bClear);
+
+				if (!bClear)
+				{
+					CPlayer::GetInstance()->Set_IssacRender(false);
+					// false : 처음 방문하는방
+					CPlayer::GetInstance()->Set_Camera_Cinemachine_01();
+				}
+
 				NULL_CHECK_RETURN(pScene, -1);
 
 				FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);

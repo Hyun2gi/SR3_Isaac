@@ -32,7 +32,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_pGraphicDev = pGraphicDev;
 
 		m_ePreBulletState = P_BULLET_END;
-		m_eCurBulletState = P_BULLET_IDLE; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
+		m_eCurBulletState = P_BULLET_EPIC; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
 		m_ePreState = P_END;
 
 		// 딜레이 시간 초기화
@@ -70,6 +70,9 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_iTempTimer = 0;
 		m_pCamera = nullptr;
 		m_vStartPos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
+		m_bRender = true;
+
+		m_bStartAnim = true;
 	}
 	else
 	{
@@ -99,6 +102,12 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		}
 
 		m_bKeyBlock = false;
+	}
+
+	if (m_bStartAnim)
+	{
+		m_bStartAnim = false;
+		Set_Cry_Anim();
 	}
 
 	// 특정 모션 처리
@@ -188,8 +197,10 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+	if (m_bRender)
+	{
+		Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+	}
 
 	return 0;
 }
@@ -328,6 +339,16 @@ HRESULT CPlayer::Add_Component()
 //}
 
 
+void CPlayer::Set_Camera_Cinemachine_01()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_01_TotalLand(); 
+}
+
+void CPlayer::Set_Camera_Cinemachine_02()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_02_GoToIsaac();
+}
+
 void CPlayer::Set_Player_Pos(_vec3 pos)
 {
 	m_pTransformCom->Set_Pos(pos); 
@@ -372,6 +393,7 @@ void CPlayer::Set_EpicFall()
 		}
 	}
 }
+
 
 void CPlayer::Set_Item_Get_Anim()
 {
@@ -603,6 +625,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	if (m_bEpicTargetRun == false)
 	{
 		vDir = _vec3(vDir.x, 0, vDir.z);
+
 		if (Engine::Get_DIKeyState(DIK_W) & 0x80)
 		{
 			m_eCurState = P_BACKWALK;
@@ -620,6 +643,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			if (m_bShoot)
 			{
 				m_eCurState = P_SHOOTWALK;
+				// 쏘면서 걸을때 방향 얻기
+				m_iShootWalkDir = 0;
 			}
 		}
 		else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
@@ -640,6 +665,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			if (m_bShoot)
 			{
 				m_eCurState = P_SHOOTWALK;
+				m_iShootWalkDir = 1;
 			}
 		}
 		else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
@@ -661,6 +687,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			if (m_bShoot)
 			{
 				m_eCurState = P_SHOOTWALK;
+				m_iShootWalkDir = 2;
 			}
 
 		}
@@ -683,6 +710,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			if (m_bShoot)
 			{
 				m_eCurState = P_SHOOTWALK;
+				m_iShootWalkDir = 3;
 			}
 
 		}

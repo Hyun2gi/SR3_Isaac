@@ -182,9 +182,9 @@ void CMom::Attack(const _float& fTimeDelta)
 
 	if (MOM_ATTACK == m_eState)
 	{
-		if (vPos.y <= 9.f)
+		if (vPos.y <= LIMIT_Y)
 		{
-			vPos.y = 9.f;
+			vPos.y = LIMIT_Y;
 			m_eState = MOM_WAIT;
 		}
 		else

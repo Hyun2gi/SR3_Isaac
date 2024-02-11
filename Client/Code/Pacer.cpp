@@ -54,6 +54,14 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
+	if (m_bDead)
+	{
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		return 1;
+	}
+
 	Check_Outof_Map();
 
 	// Epic
@@ -79,9 +87,6 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
-	if (m_bDead)
-		return 1;
-
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
 	return 0;
@@ -100,9 +105,6 @@ void CPacer::LateUpdate_GameObject()
 		if (0 >= m_iHp)
 		{
 			m_bDead = true;
-			_vec3 vPos;
-			m_pTransformCom->Get_Info(INFO_POS, &vPos);
-			Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
 		}
 	}
 

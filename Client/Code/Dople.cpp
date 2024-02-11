@@ -160,37 +160,37 @@ void CDople::Motion_Change()
 		case CDople::DP_IDLE:
 			m_iPicNum = 1;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Dople", L"Proto_DopleTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_DopleTexture"));
 			break;
 
 		case CDople::DP_WALK:
 			m_iPicNum = 5;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Dople", L"Proto_DopleTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_DopleTexture"));
 			break;
 
 		case CDople::DP_BACK:
 			m_iPicNum = 5;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Dople", L"Proto_DopleBackTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_DopleBackTexture"));
 			break;
 
 		case CDople::DP_LEFT:
 			m_iPicNum = 8;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Dople", L"Proto_DopleLeftTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_DopleLeftTexture"));
 			break;
 
 		case CDople::DP_RIGHT:
 			m_iPicNum = 8;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Dople", L"Proto_DopleRightTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_DopleRightTexture"));
 			break;
 
 		case CDople::DP_DEAD:
 			m_iPicNum = 2;
 			m_fFrameSpeed = 0.7f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Dople", L"Proto_DopleDeadTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_DopleDeadTexture"));
 			break;
 
 		}
@@ -265,6 +265,28 @@ void CDople::Change_State()
 	case 4:
 		m_eCurState = DP_RIGHT;
 		break;
+	case 5:
+	{
+		//// W(0) : 전진, S(1) : 후진, A(2) : 왼쪽, D(3) : 오른쪽
+		int iDir = CPlayer::GetInstance()->Get_ShootWalkDir();
+
+		switch (iDir)
+		{
+		case 0:
+			m_eCurState = DP_WALK;
+			break;
+		case 1:
+			m_eCurState = DP_BACK;
+			break;
+		case 2:
+			m_eCurState = DP_LEFT;
+			break;
+		case 3:
+			m_eCurState = DP_RIGHT;
+			break;
+		}
+		break;
+	}
 	}
 }
 
