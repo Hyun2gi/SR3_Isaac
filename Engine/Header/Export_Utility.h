@@ -53,6 +53,7 @@ inline CComponent*		Clone_Proto(const _tchar* pProtoTag);
 inline void		Add_RenderGroup(RENDERID eID, CGameObject* pGameObject);
 inline void		Render_GameObject(LPDIRECT3DDEVICE9& pGraphicDev);
 inline void		Clear_RenderGroup();
+inline void		Set_Ending();
 
 // LightMgr
 inline HRESULT		Ready_Light(LPDIRECT3DDEVICE9 pGraphicDev,

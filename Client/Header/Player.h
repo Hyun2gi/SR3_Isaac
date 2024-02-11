@@ -65,6 +65,8 @@ public:
 		return m_pBufferCom;
 	}
 
+
+	void		Set_IssacRender(bool _render) { m_bRender = _render; }
 	// keyblock이 true면 key 움직임 막힘
 	void		Set_KeyBlock(_bool keyblock) { m_bKeyBlock = keyblock;}
 	void		Set_MoveSpeed(float _movespeed){ m_fMoveSpeed += _movespeed; }
@@ -83,6 +85,8 @@ public:
 		}
 	}
 
+	void		Set_Camera_Cinemachine_01(); 
+	void		Set_Camera_Cinemachine_02();
 	void		Set_To_MaxHp() { m_fHp = m_fMaxHp; }
 	void		Set_Coin(int _coin) { m_iCoin += _coin; }
 	void		Set_LayerTag(_tchar* pLayerTag) { m_pLayerTag = pLayerTag; }
@@ -109,6 +113,7 @@ public:
 
 	bool		Get_Camera_WallBlock();
 	bool		Get_SafeCamera_Area(); // 카메라 벗어나지 않는 안전지대인지
+	bool		Get_SafeCamera_Area_For_ChangeStage(); // 다른방에 들어갈때 1인칭으로 두기위해서
 	bool		Get_Player_OutOfRange(); // 멈춤 막기 위해 플레이어가 가장자리에 있을경우처리
 
 	list<CGameObject*>* Get_Player_BullletList() { return &m_PlayerBulletList; }
@@ -158,12 +163,13 @@ private:
 private:
 	// 씬이 시작할때 한가운데에 스폰하기 위해서 bool 값으로 씬이 시작하는지 확인
 	bool				m_bStartScene;
+	bool				m_bStartAnim;
 
 	bool				m_bUnbeatable;
 	_float				m_fUnbeatableTime;
 
 	//bullet을 위한 layer 저장해놓는 변수
-	_tchar*				m_pLayerTag;
+	_tchar*					m_pLayerTag;
 	Engine::CRcTex*			m_pBufferCom;
 	Engine::CTransform*		m_pTransformCom;
 	Engine::CTexture*		m_pTextureCom;
@@ -203,6 +209,7 @@ private:
 	_float				m_fHp;
 	_float				m_fMaxHp;
 
+	bool				m_bRender;
 
 	int					m_iCoin;
 

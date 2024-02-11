@@ -70,6 +70,9 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_iTempTimer = 0;
 		m_pCamera = nullptr;
 		m_vStartPos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
+		m_bRender = true;
+
+		m_bStartAnim = true;
 	}
 	else
 	{
@@ -89,8 +92,16 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 		_float	fHeight = m_pCalculatorCom->Compute_HeightOnTerrain(&m_vStartPos, pTerrainBufferCom->Get_VtxPos());
 
-		//m_pTransformCom->Set_Pos(VTXCNTX / 2, fHeight + 1, VTXCNTZ / 2);
-		m_pTransformCom->Set_Pos(m_vStartPos.x, fHeight + 1, m_vStartPos.z);
+		if (m_bStartAnim)
+		{
+			// 첫 애니메이션 시작은 중간에서
+			m_pTransformCom->Set_Pos(_vec3(VTXCNTX / 2, 0, VTXCNTZ / 2));
+		}
+		else
+		{
+			m_pTransformCom->Set_Pos(m_vStartPos.x, fHeight + 1, m_vStartPos.z);
+		}
+		
 		m_bStartScene = false;
 
 		if (m_pCamera != nullptr)
@@ -99,6 +110,12 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		}
 
 		m_bKeyBlock = false;
+	}
+
+	if (m_bStartAnim)
+	{
+		m_bStartAnim = false;
+		Set_Cry_Anim();
 	}
 
 	// 특정 모션 처리
@@ -188,8 +205,10 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+	if (m_bRender)
+	{
+		Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+	}
 
 	return 0;
 }
@@ -328,6 +347,16 @@ HRESULT CPlayer::Add_Component()
 //}
 
 
+void CPlayer::Set_Camera_Cinemachine_01()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_01_TotalLand(); 
+}
+
+void CPlayer::Set_Camera_Cinemachine_02()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_02_GoToIsaac();
+}
+
 void CPlayer::Set_Player_Pos(_vec3 pos)
 {
 	m_pTransformCom->Set_Pos(pos); 
@@ -415,6 +444,23 @@ bool CPlayer::Get_SafeCamera_Area()
 
 	if (vPos.x < VTXCNTX - 4 && vPos.z < VTXCNTX - 4
 		&& vPos.x > 4 && vPos.z > 4 )
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool CPlayer::Get_SafeCamera_Area_For_ChangeStage()
+{
+	_vec3	vPos, vScale;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	vScale = m_pTransformCom->m_vScale;
+
+	if (vPos.x < VTXCNTX - 6 && vPos.z < VTXCNTX - 6
+		&& vPos.x > 6 && vPos.z > 6)
 	{
 		return true;
 	}

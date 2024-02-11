@@ -24,9 +24,12 @@ public:
 	void		Render_Alpha_Sorting(LPDIRECT3DDEVICE9& pGraphicDev);
 	void		Render_Particles(LPDIRECT3DDEVICE9& pGraphicDev);
 	void		Render_UI(LPDIRECT3DDEVICE9& pGraphicDev);
+
+	void		Set_Ending() { m_bIsEnd = true; }
 	
 private:
 	list<CGameObject*>			m_RenderGroup[RENDER_END];
+	bool		m_bIsEnd = false;
 
 private:
 	virtual void		Free();

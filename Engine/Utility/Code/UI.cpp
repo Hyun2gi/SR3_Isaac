@@ -27,8 +27,6 @@ HRESULT Engine::CUI::Ready_GameObject()
 
 Engine::_int Engine::CUI::Update_GameObject(const _float& fTimeDelta)
 {
-	
-
 	return CGameObject::Update_GameObject(fTimeDelta);
 }
 
