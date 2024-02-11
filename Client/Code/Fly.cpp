@@ -29,7 +29,7 @@ HRESULT CFly::Ready_GameObject()
 
 	m_iHp = 3;
 
-	m_fCallLimit = m_iRandNum % 5 + 2;
+	m_fCallLimit = 0.1f;
 	m_fSpeed = 2.f;
 
 	m_ePreState = FLY_END;
@@ -42,6 +42,12 @@ HRESULT CFly::Ready_GameObject()
 
 _int CFly::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bCreate)
+	{
+		if (Check_Time(fTimeDelta))
+			Create_Start_Particle(m_iRandNum % 5 + 2);
+	}
+
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
 	if (!m_bTimeScale)

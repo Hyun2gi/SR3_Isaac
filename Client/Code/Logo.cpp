@@ -55,7 +55,7 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 		{
 			Engine::CScene* pScene = nullptr;
 
-			pScene = CLoadStage::Create(m_pGraphicDev, 2, true);
+			pScene = CLoadStage::Create(m_pGraphicDev, 4, false);
       
 			NULL_CHECK_RETURN(pScene, -1);
 

@@ -29,6 +29,7 @@ HRESULT CNormalFly::Ready_GameObject()
 
 	m_iHp = 3;
 
+	m_fCallLimit = 0.1f;
 	m_fSpeed = 1.f;
 
 	m_fDistance = 4.f;
@@ -46,6 +47,12 @@ HRESULT CNormalFly::Ready_GameObject()
 
 _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bCreate)
+	{
+		if (Check_Time(fTimeDelta))
+			Create_Start_Particle(0);
+	}
+
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
 	if(!m_bTimeScale)

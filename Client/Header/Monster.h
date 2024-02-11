@@ -48,12 +48,13 @@ protected:
 	bool			Check_Time(const _float& fTimeDelta);
 	bool			Check_Time(const _float& fTimeDelta, float fLimit);
 	bool			Check_Color_Time(const _float& fTimeDelta);
-	void			Check_Map_Range();
+
 	void			Hit_PushBack(const _float& fTimeDelta);
 	void			Fix_Y(_float fY);
 	void			Change_Scale();
 	void			Change_Color(const _float& fTimeDelta);
 	void			Check_Outof_Map();
+	void			Create_Start_Particle(_float fCallLimit);
 
 protected:
 	Engine::CRcTex* m_pBufferCom;
@@ -64,6 +65,7 @@ protected:
 
 	_bool					m_bBoss;
 
+	_bool					m_bCreate;
 	_bool					m_bScaleReduce;
 	_bool					m_bHit;
 	_bool					m_bDead;

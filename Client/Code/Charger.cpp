@@ -25,7 +25,7 @@ HRESULT CCharger::Ready_GameObject()
 
 	m_iHp = 3;
 
-	m_fCallLimit = 0.f;
+	m_fCallLimit = 0.1f;
 	m_fSpeed = 2.f;
 
 	m_ePreState = CHARGER_END;
@@ -37,6 +37,12 @@ HRESULT CCharger::Ready_GameObject()
 
 _int CCharger::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bCreate)
+	{
+		if (Check_Time(fTimeDelta))
+			Create_Start_Particle(0.f);
+	}
+
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
 	if (!m_bTimeScale)
@@ -65,7 +71,12 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
 	if (m_bDead)
+	{
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
 		return 1;
+	}
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -83,12 +94,7 @@ void CCharger::LateUpdate_GameObject()
 		m_bHit = false;
 
 		if (0 >= m_iHp)
-		{
 			m_bDead = true;
-			_vec3 vPos;
-			m_pTransformCom->Get_Info(INFO_POS, &vPos);
-			Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
-		}
 	}
 
 	if (m_bHitColor)

@@ -8,7 +8,7 @@ CMonster::CMonster(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev),
 	m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTargetTransCom(nullptr), m_pTextureCom(nullptr), m_pCalculCom(nullptr),
 	m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_fSecAccTimeDelta(0.f), m_fSlowDelta(0.f), m_fColorTimeDelta(0.f),
-	m_bDead(false), m_bHit(false), m_bBoss(false), m_eMstType(MONSTER_TYPE_END), m_bScaleReduce(true), m_bHitColor(false), m_eBossType(NONE_BOSS), m_bTimeScale(false)
+	m_bDead(false), m_bHit(false), m_bBoss(false), m_eMstType(MONSTER_TYPE_END), m_bScaleReduce(true), m_bHitColor(false), m_eBossType(NONE_BOSS), m_bTimeScale(false), m_bCreate(false)
 {
 	m_vOriginScale = { 1.f, 1.f, 1.f };
 }
@@ -17,7 +17,7 @@ CMonster::CMonster(const CMonster& rhs)
 	: Engine::CGameObject(rhs),
 	m_pBufferCom(rhs.m_pBufferCom), m_pTransformCom(rhs.m_pTransformCom), m_pTargetTransCom(rhs.m_pTargetTransCom),
 	m_pTextureCom(rhs.m_pTextureCom), m_pCalculCom(rhs.m_pCalculCom), m_fColorTimeDelta(rhs.m_fColorTimeDelta),
-	m_fCallLimit(rhs.m_fCallLimit), m_fAccTimeDelta(rhs.m_fAccTimeDelta), m_fSpeed(rhs.m_fSpeed), m_fSecAccTimeDelta(rhs.m_fSecAccTimeDelta), m_fSlowDelta(rhs.m_fSlowDelta),
+	m_fCallLimit(rhs.m_fCallLimit), m_fAccTimeDelta(rhs.m_fAccTimeDelta), m_fSpeed(rhs.m_fSpeed), m_fSecAccTimeDelta(rhs.m_fSecAccTimeDelta), m_fSlowDelta(rhs.m_fSlowDelta), m_bCreate(rhs.m_bCreate),
 	m_bDead(rhs.m_bDead), m_bHit(rhs.m_bHit), m_bBoss(rhs.m_bBoss), m_eMstType(rhs.m_eMstType), m_bScaleReduce(rhs.m_bScaleReduce), m_bHitColor(rhs.m_bHitColor), m_eBossType(rhs.m_eBossType), m_bTimeScale(rhs.m_bTimeScale)
 {
 }
@@ -109,6 +109,15 @@ void CMonster::Check_Outof_Map()
 	}
 }
 
+void CMonster::Create_Start_Particle(_float fCallLimit)
+{
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.7f, 5);
+	m_fCallLimit = fCallLimit;
+	m_bCreate = true;
+}
+
 bool CMonster::Check_Time(const _float& fTimeDelta)
 {
 	m_fAccTimeDelta += fTimeDelta;
@@ -138,13 +147,6 @@ bool CMonster::Check_Time(const _float& fTimeDelta, float fLimit)
 bool CMonster::Check_Color_Time(const _float& fTimeDelta)
 {
 	return false;
-}
-
-void CMonster::Check_Map_Range()
-{
-	// 맵 밖으로 나갈 시 예외 처리
-	// 해당 객체의 Pos 값을 받아와 Terrain 과 비교 후 Terrain 범위를 벗어나면 true 반환
-
 }
 
 void CMonster::Hit_PushBack(const _float& fTimeDelta)

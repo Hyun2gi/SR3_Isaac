@@ -24,7 +24,7 @@ HRESULT CDople::Ready_GameObject()
 	m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
 	m_pTransformCom->Set_Pos(0.f, 1.5f, 0.f);
 
-	m_fCallLimit = 1.f;
+	m_fCallLimit = 0.1f;
 	m_fSpeed = 10.f;
 
 	m_ePreState = DP_END;
@@ -36,6 +36,12 @@ HRESULT CDople::Ready_GameObject()
 
 _int CDople::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bCreate)
+	{
+		if (Check_Time(fTimeDelta))
+			Create_Start_Particle(1.f);
+	}
+
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
 	if (!m_bTimeScale)

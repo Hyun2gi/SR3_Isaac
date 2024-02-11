@@ -28,7 +28,7 @@ HRESULT CMomParts::Ready_GameObject()
 
 	m_iRandNum = 0;
 
-	m_fCallLimit = 3.f;
+	m_fCallLimit = 0.1f;
 	m_fSpeed = 10.f;
 
 	m_ePreState = MOM_END;
@@ -41,6 +41,12 @@ HRESULT CMomParts::Ready_GameObject()
 
 _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bCreate)
+	{
+		if (Check_Time(fTimeDelta))
+			Create_Start_Particle(3.f);
+	}
+
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
 	if (!m_bTimeScale)

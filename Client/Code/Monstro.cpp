@@ -46,7 +46,7 @@ HRESULT CMonstro::Ready_GameObject()
 
 	m_iHp = 30;
 
-	m_fCallLimit = 5.f;
+	m_fCallLimit = 0.1f;
 	m_fSpeed = 10.f;
 
 	m_fPower = 2.7f;
@@ -66,6 +66,12 @@ HRESULT CMonstro::Ready_GameObject()
 
 _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bCreate)
+	{
+		if (Check_Time(fTimeDelta))
+			Create_Start_Particle(5.f);
+	}
+
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
 	if (!m_bTimeScale)
