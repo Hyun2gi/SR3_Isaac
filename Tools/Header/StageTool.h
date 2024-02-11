@@ -46,6 +46,7 @@ private:
 	void		Key_Input(const _float& fTimeDelta);
 
 	_vec3	Picking_OnTerrain();
+	_vec3	Picking_OnTerrain_Tile();
 
 private:
 	CStageToolGui* m_pStageTools;
