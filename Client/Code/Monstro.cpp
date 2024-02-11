@@ -10,14 +10,12 @@
 #include "BossHPTool.h"
 
 CMonstro::CMonstro(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CMonster(pGraphicDev),
-	m_fHitCoolTime(0.f)
+	: CMonster(pGraphicDev)
 {
 }
 
 CMonstro::CMonstro(const CMonstro& rhs)
-	: CMonster(rhs),
-	m_fHitCoolTime(rhs.m_fHitCoolTime)
+	: CMonster(rhs)
 {
 }
 
@@ -98,96 +96,17 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 	}
 
 	// Bullet Update
-	if (!m_BulletList.empty())
-	{
-		int iResult = 0;
-		for (auto& iter = m_BulletList.begin();
-			iter != m_BulletList.end();)
-		{
-			iResult = dynamic_cast<CMstBullet*>(*iter)->Update_GameObject(m_fSlowDelta);
-
-			if (1 == iResult)
-			{
-				Safe_Release<CGameObject*>(*iter);
-				iter = m_BulletList.erase(iter);
-			}
-			else
-				++iter;
-		}
-	}
+	Bullet_Update();
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	if (!m_bDeadWait)
 	{
-		if (MONSTRO_IDLE == m_eCurState || MONSTRO_END == m_eCurState) // 기본 상태일 때
-		{
-			if (Check_Time(m_fSlowDelta)) // 일정 시간마다 기믹3 - 큰 점프 발동
-			{
-				int iRandBum;
-
-				DWORD dwSeed = (time(NULL) % 1000);
-				srand(dwSeed);
-				iRandBum = rand() % 2;
-
-				if (1 == iRandBum)
-				{
-					m_bJump = true;
-					m_eCurState = MONSTRO_UP;
-				}
-				else
-				{
-					//m_bBullet = true;
-					m_eCurState = MONSTRO_WAIT;
-				}
-				Check_TargetPos();
-			}
-			else
-			{
-				if (Check_Time(m_fSlowDelta, 1.f)) // 일정 시간마다 기믹 1 - 작은 점프 발동
-				{
-					m_eCurState = MONSTRO_MOVE;
-					Check_TargetPos();
-				}
-			}
-		}
-		else if (MONSTRO_MOVE == m_eCurState)
-		{
-			MoveTo_Player(m_fSlowDelta);
-		}
-		else if (MONSTRO_WAIT == m_eCurState)
-		{
-			m_fCallLimit = 1.f; // MONSTRO_WAIT
-
-			if (Check_Time(m_fSlowDelta))
-			{
-				m_eCurState = MONSTRO_ATTACK;
-				m_bBullet = true;
-			}
-		}
-		else if (MONSTRO_ATTACK == m_eCurState)
-		{
-			if (m_bBullet)
-			{
-				AttackTo_Player();
-				m_bBullet = false;
-			}
-
-			if (Check_Time(m_fSlowDelta, 2.5f))
-			{
-				m_eCurState = MONSTRO_IDLE; // 이 부분 수정 필요할지도
-				m_bBullet = false;
-				m_fCallLimit = 5.f;
-			}
-		}
-
-		if (m_bJump)
-			JumpTo_Player(m_fSlowDelta);
+		Monstro_Default();
 	}
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
-	// 
 	if (m_bDead)
 		return 1;
 
@@ -371,7 +290,7 @@ void CMonstro::MoveTo_Player(const _float& fTimeDelta)
 	if (fY < CENTERY)
 	{
 		m_fAccelTime = 0.f;
-		fY = CENTERY;
+		fY = CENTERY + 0.1f;
 		m_eCurState = MONSTRO_IDLE;
 	}
 
@@ -381,7 +300,6 @@ void CMonstro::MoveTo_Player(const _float& fTimeDelta)
 
 	D3DXVec3Normalize(&vDir, &vDir);
 	m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
-
 }
 
 void CMonstro::JumpTo_Player(const _float& fTimeDelta)
@@ -460,16 +378,95 @@ void CMonstro::Check_TargetPos()
 	m_pTargetTransCom->Get_Info(INFO_POS, &m_vTargetPos);
 }
 
-_bool CMonstro::Check_CoolTime(const _float& fTimeDelta)
+void CMonstro::Bullet_Update()
 {
-	m_fHitCoolTime += fTimeDelta;
-
-	if (m_fHitCoolTime >= 1.f)
+	if (!m_BulletList.empty())
 	{
-		m_fHitCoolTime = 0.f;
-		return true;
+		int iResult = 0;
+		for (auto& iter = m_BulletList.begin();
+			iter != m_BulletList.end();)
+		{
+			iResult = dynamic_cast<CMstBullet*>(*iter)->Update_GameObject(m_fSlowDelta);
+
+			if (1 == iResult)
+			{
+				Safe_Release<CGameObject*>(*iter);
+				iter = m_BulletList.erase(iter);
+			}
+			else
+				++iter;
+		}
 	}
-	return false;
+}
+
+void CMonstro::Monstro_Default()
+{
+	if (MONSTRO_IDLE == m_eCurState || MONSTRO_END == m_eCurState) // 기본 상태일 때
+	{
+		if (Check_Time(m_fSlowDelta)) // 일정 시간마다 기믹3 - 큰 점프 발동
+		{
+			int iRandBum;
+
+			DWORD dwSeed = (time(NULL) % 1000);
+			srand(dwSeed);
+			iRandBum = rand() % 2;
+
+			if (1 == iRandBum)
+			{
+				m_bJump = true;
+				m_eCurState = MONSTRO_UP;
+			}
+			else
+			{
+				//m_bBullet = true;
+				m_eCurState = MONSTRO_WAIT;
+			}
+			Check_TargetPos();
+		}
+		else
+		{
+			if (Check_Time(m_fSlowDelta, 1.f)) // 일정 시간마다 기믹 1 - 작은 점프 발동
+			{
+				m_eCurState = MONSTRO_MOVE;
+				Check_TargetPos();
+			}
+		}
+	}
+	else if (MONSTRO_MOVE == m_eCurState)
+	{
+		MoveTo_Player(m_fSlowDelta);
+	}
+	else if (MONSTRO_WAIT == m_eCurState)
+	{
+		m_fCallLimit = 1.f; // MONSTRO_WAIT
+		// 스케일 체인지
+
+		if (Check_Time(m_fSlowDelta))
+		{
+			// 이 순간에 scale change 멈추는 것으로
+
+			m_eCurState = MONSTRO_ATTACK;
+			m_bBullet = true;
+		}
+	}
+	else if (MONSTRO_ATTACK == m_eCurState)
+	{
+		if (m_bBullet)
+		{
+			AttackTo_Player();
+			m_bBullet = false;
+		}
+
+		if (Check_Time(m_fSlowDelta, 2.5f))
+		{
+			m_eCurState = MONSTRO_IDLE; // 이 부분 수정 필요할지도
+			m_bBullet = false;
+			m_fCallLimit = 5.f;
+		}
+	}
+
+	if (m_bJump)
+		JumpTo_Player(m_fSlowDelta);
 }
 
 CMonster* CMonstro::Create(LPDIRECT3DDEVICE9 pGraphicDev)

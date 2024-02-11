@@ -47,7 +47,6 @@ protected:
 
 	bool			Check_Time(const _float& fTimeDelta);
 	bool			Check_Time(const _float& fTimeDelta, float fLimit);
-	bool			Check_Color_Time(const _float& fTimeDelta);
 
 	void			Hit_PushBack(const _float& fTimeDelta);
 	void			Fix_Y(_float fY);

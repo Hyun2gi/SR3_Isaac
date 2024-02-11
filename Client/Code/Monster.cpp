@@ -67,7 +67,7 @@ void CMonster::Change_Scale() // 호출방법 고민
 	{
 		if (m_pTransformCom->m_vScale.x >= m_vOriginScale.x)
 		{
-			m_bScaleReduce = false;
+			m_bScaleReduce = true;
 		}
 
 		m_pTransformCom->m_vScale.x += 0.1f;
@@ -141,11 +141,6 @@ bool CMonster::Check_Time(const _float& fTimeDelta, float fLimit)
 		return true;
 	}
 
-	return false;
-}
-
-bool CMonster::Check_Color_Time(const _float& fTimeDelta)
-{
 	return false;
 }
 
