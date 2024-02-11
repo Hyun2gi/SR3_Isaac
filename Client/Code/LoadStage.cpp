@@ -46,6 +46,9 @@
 #include "MoveXObstacle.h"
 #include "MoveZObstacle.h"
 
+// 총알
+#include "EpicBullet.h"
+
 //아이템
 #include "Coin.h"
 #include "Pill.h"
@@ -871,35 +874,23 @@ void CLoadStage::Moster_Collision()
 				}
 				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 2) // 에픽페투스
 				{
-					//if()
+					if (dynamic_cast<CEpicBullet*>(*iter)->Get_CanAttacked()) // true일 때 공격
+					{
+						if (FLY == dynamic_cast<CMonster*>(pMonster)->Get_MstType() || // Epic과 충돌이 이루어지는 몬스터들
+							DIP == dynamic_cast<CMonster*>(pMonster)->Get_MstType() ||
+							SQUIRT == dynamic_cast<CMonster*>(pMonster)->Get_MstType() ||
+							PACER == dynamic_cast<CMonster*>(pMonster)->Get_MstType() ||
+							LEAPER == dynamic_cast<CMonster*>(pMonster)->Get_MstType())
+						{
+							dynamic_cast<CMonster*>(pMonster)->Set_Dead();
+							break;
+						}
+						else
+							++iter;
+					}
+					else
+						++iter;
 				}
-
-				//else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포 (엄마/엄마파츠만)
-			//{// dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() && 
-			//   if (dynamic_cast<CBrimStone*>(*iter)->Get_BulletState() &&
-			//      !dynamic_cast<CMonster*>(pMonster)->Get_Dead())               // Player가 Dead가 아닌 경우
-			//   {
-			//      if (MOM == dynamic_cast<CMonster*>(pMonster)->Get_BossType())   // MOM인 경우
-			//      {
-			//         dynamic_cast<CMonster*>(pMonster)->Hit();
-			//         break;
-			//      }
-			//      else if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType()) // MOM Parts인 경우
-			//      {
-			//         if (!dynamic_cast<CMomParts*>(pMonster)->Get_DoorState())         // Door 상태가 아닌 경우
-			//         {
-			//            dynamic_cast<CMonster*>(pMonster)->Hit();
-			//            break;
-			//         }
-			//         else
-			//            ++iter;
-			//      }
-			//      else
-			//         ++iter;
-			//   }
-			//   else
-			//      ++iter;
-			//}
 				else
 					++iter;
 			}

@@ -28,6 +28,7 @@ public:
 	bool Key_Pressing(MOUSEKEYSTATE eMouse);
 	bool Key_Down(_ubyte byKeyID);
 	bool Key_Down(MOUSEKEYSTATE eMouse);
+	bool Key_Down2(MOUSEKEYSTATE eMouse);
 	bool Key_Up(_ubyte byKeyID);
 	bool Key_Up(MOUSEKEYSTATE eMouse);
 	
@@ -48,6 +49,7 @@ private:
 	
 	DIMOUSESTATE			m_tMouseState;	
 	DIMOUSESTATE			m_tOldMouseState;	
+	DIMOUSESTATE			m_tOldMouseState2;	
 
 public:
 	virtual void	Free(void);
