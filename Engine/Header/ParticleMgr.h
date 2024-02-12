@@ -22,6 +22,7 @@ public:
 	void	Create_Splash(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, const _tchar* pTexturePath, _int iMaxFrame, _float fSize = 0.5f, _int iCount = 10);
 	void	Create_Splash_Left(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, const _tchar* pTexturePath, _int iMaxFrame, _float fSize = 0.5f, _int iCount = 10);
 	void	Create_Splash_Right(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, const _tchar* pTexturePath, _int iMaxFrame, _float fSize = 0.5f, _int iCount = 10);
+	void	Create_Splash_Forward(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, const _tchar* pTexturePath, _int iMaxFrame, _float fSize = 0.5f, _int iCount = 10);
 	void	Create_Burst(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize = 0.5f, _int iCount = 10);
 
 	void	Update_Particles(_float fDeltaTime);

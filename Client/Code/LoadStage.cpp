@@ -83,7 +83,7 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	m_bMenu = false;
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
-	Engine::Create_Scatter(m_pGraphicDev);
+	//Engine::Create_Scatter(m_pGraphicDev);
 
 	FAILED_CHECK_RETURN(CStageLoadMgr::GetInstance()->Ready_StageLoadMgr(), E_FAIL);
 
@@ -103,6 +103,11 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 {
 	Engine::Update_Particles(fTimeDelta);
+
+	if (GetAsyncKeyState(VK_DOWN))
+	{
+		Create_Map_Particles();
+	}
 
 	if (m_bIsCreated)
 	{
@@ -1086,12 +1091,12 @@ void CLoadStage::Obstacle_Collsion()
 
 		for (auto& iter : mapObj)
 		{
-			CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
-			Engine::Check_Collision(pPlayerTrans, pTrans);
+			if (OBSTACLE <= dynamic_cast<CMapObj*>(iter.second)->Get_Type() && dynamic_cast<CMapObj*>(iter.second)->Get_Type() <= OBSTACLE_Z)
+			{
+				CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+				Engine::Check_Collision(pPlayerTrans, pTrans);
+			}
 		}
-
-		//m_mapLayer.at(L"MapObj")->Get_GameObject()
-
 	}
 }
 	
@@ -1304,7 +1309,7 @@ void CLoadStage::Play_Ending(const _float& fTimeDelta)
 	}
 	else
 	{
-		Engine::Kill_Scatter();
+		//Engine::Kill_Scatter();
 		Engine::Set_Ending();
 
 		Engine::CScene* pScene = nullptr;
@@ -1313,6 +1318,16 @@ void CLoadStage::Play_Ending(const _float& fTimeDelta)
 
 		return;
 	}
+
+}
+
+void CLoadStage::Create_Map_Particles()
+{
+	CTransform* pTest = dynamic_cast<CTransform*>(m_pTopWall->Get_Transform());
+
+	_matrix* mat = pTest->Get_WorldMatrix();
+
+	Engine::Create_Splash_Forward(m_pGraphicDev, *mat);
 
 }
 

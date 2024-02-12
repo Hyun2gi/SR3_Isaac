@@ -60,6 +60,13 @@ void CParticleMgr::Create_Splash_Right(LPDIRECT3DDEVICE9 pGraphicDev, _matrix ma
 	m_pParticleList.emplace_back(pParticle);
 }
 
+void CParticleMgr::Create_Splash_Forward(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, const _tchar* pTexturePath, _int iMaxFrame, _float fSize, _int iCount)
+{
+	CParticleSplashForward* pParticle = CParticleSplashForward::Create(pGraphicDev, matWorld, pTexturePath, iMaxFrame, fSize, iCount);
+
+	m_pParticleList.emplace_back(pParticle);
+}
+
 void CParticleMgr::Create_Burst(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount)
 {
 	CParticleBurst* pParticle = CParticleBurst::Create(pGraphicDev, matWorld, fSize, iCount);
