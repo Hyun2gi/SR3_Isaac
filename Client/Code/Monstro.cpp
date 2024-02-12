@@ -42,7 +42,7 @@ HRESULT CMonstro::Ready_GameObject()
 	m_pTransformCom->Set_Pos(0.f, CENTERY, 0.f);
 	m_pTransformCom->m_vScale = { ORIGIN_SCALE, ORIGIN_SCALE, ORIGIN_SCALE };
 
-	m_iHp = 1; // 30
+	m_iHp = 30; // 30
 
 	m_fCallLimit = 0.1f;
 	m_fSpeed = 10.f;
