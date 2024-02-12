@@ -50,6 +50,10 @@ HRESULT CDoor::Ready_GameObject()
 	m_bOpen = false;
 	m_bCollision = false;
 
+	m_bScaleChange = false;
+	m_bScaleReduce = true;
+	m_iScaleCount = 0;
+
 	m_ePreState = DOOR_END;
 
 	return S_OK;
@@ -65,6 +69,9 @@ _int CDoor::Update_GameObject(const _float& fTimeDelta)
 	}
 	else
 		m_eCurState = DOOR_CLOSE;
+
+	if (m_bScaleChange)
+		Animation_Change();
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -189,6 +196,7 @@ void CDoor::Motion_Change()
 			m_fFrameSpeed = 1.f;
 			wstrTexture = wstrProto + wstrTheme + L"DoorOpenTexture";
 			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"Door", wstrTexture.c_str()));
+			m_bScaleChange = true; // 애니메이션 적용
 			break;
 
 		case CDoor::DOOR_CLOSE:
@@ -203,6 +211,43 @@ void CDoor::Motion_Change()
 		}
 		m_ePreState = m_eCurState;
 	}
+}
+
+void CDoor::Animation_Change()
+{
+	if (2 == m_iScaleCount)
+	{
+		m_bScaleChange = false;
+		m_pTransformCom->m_vScale = { ORIGIN_SCALE, ORIGIN_SCALE, ORIGIN_SCALE };
+		m_iScaleCount = 0;
+	}
+
+	_vec3 vScale;
+	vScale = m_pTransformCom->m_vScale;
+
+	if (m_bScaleReduce)
+	{
+		vScale.x -= 0.1f;
+
+		if (vScale.x <= ORIGIN_SCALE - 0.5f)
+		{
+			m_bScaleReduce = false;
+			vScale.x = ORIGIN_SCALE - 0.5f;
+		}
+	}
+	else
+	{
+		vScale.x += 0.1f;
+
+		if (vScale.x >= ORIGIN_SCALE + 0.5f)
+		{
+			m_bScaleReduce = true;
+			vScale.x = ORIGIN_SCALE + 0.5f;
+			++m_iScaleCount;
+		}
+	}
+	m_pTransformCom->m_vScale = vScale;
+
 }
 
 CDoor* CDoor::Create(LPDIRECT3DDEVICE9 pGraphicDev)

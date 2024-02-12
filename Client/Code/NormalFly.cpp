@@ -32,7 +32,7 @@ HRESULT CNormalFly::Ready_GameObject()
 	m_fCallLimit = 0.1f;
 	m_fSpeed = 1.f;
 
-	m_fDistance = 2.f; // 4
+	m_fDistance = 2.f;
 	m_fAngle = 30.f * m_iIndex;
 
 	m_ePreState = FLY_END;
