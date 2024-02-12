@@ -515,8 +515,10 @@ void CMonstro::Animation_Dead()
 		// 피 튀는 파티클
 		_vec3 vPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
-		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()),
+			L"../Bin/Resource/Texture/Particle/BloodExp_Left/BloodExp_%d.png", 2, 1.7f, 15);
+		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()),
+			L"../Bin/Resource/Texture/Particle/BloodExp_Right/BloodExp_%d.png", 2, 1.7f, 15);
 		m_bDeadAni = false;
 		m_bPosChange = false;
 	}
