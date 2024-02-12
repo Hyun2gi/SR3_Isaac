@@ -26,7 +26,7 @@ HRESULT CMom::Ready_GameObject()
 	m_pTransformCom->m_vScale = { ORIGIN_SCALE, ORIGIN_SCALE, ORIGIN_SCALE };
 	m_pTransformCom->Set_Pos(10.f, 50.f, 10.f);
 
-	m_iHp = 645; // 조정 필요 할지도
+	m_iHp = 1; // 645
 
 	m_iRandNum = 0;
 	m_iPicNum = 1;
@@ -72,7 +72,16 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 		Mom_Default();
 	else
 	{
-		// 사망 후 처리 (파티클)
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		vPos.y = 5.f;
+		m_pTransformCom->Set_Pos(vPos);
+
+		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), L"../Bin/Resource/Texture/Particle/BloodExp_Left/BloodExp_%d.png", 2, 2.f, 25);
+		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()),L"../Bin/Resource/Texture/Particle/BloodExp_Right/BloodExp_%d.png", 2, 2.f, 25);
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 10.f, 30);
+		
+		return 1;
 	}
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
