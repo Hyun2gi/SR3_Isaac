@@ -42,7 +42,7 @@ HRESULT CMonstro::Ready_GameObject()
 	m_pTransformCom->Set_Pos(0.f, CENTERY, 0.f);
 	m_pTransformCom->m_vScale = { 4.f, 4.f, 4.f };
 
-	m_iHp = 30;
+	m_iHp = 1; // 30
 
 	m_fCallLimit = 0.1f;
 	m_fSpeed = 10.f;
@@ -53,6 +53,11 @@ HRESULT CMonstro::Ready_GameObject()
 	m_bJump = false;
 	m_bBullet = false;
 	m_bDeadWait = false;
+	m_bDeadAni = false;
+
+	m_bScaleReduce = true;
+	m_bScaleChange = false;
+	m_vOriginScale = { 4.f, 4.f, 4.f };
 
 	m_eCurState = MONSTRO_END;
 
@@ -84,19 +89,27 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 		m_fFrame = 0.f;
 	}
 
-	if (m_bDeadWait && Check_Time(m_fSlowDelta, 4.f))
-	{
-		m_bDead = true;
+	//if (m_bDeadWait && Check_Time(m_fSlowDelta, 4.f))
+	//{
+	//	m_bDead = true;
 
-		// 피 튀는 파티클
-		_vec3 vPos;
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
-		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+	//	// 피 튀는 파티클
+	//	_vec3 vPos;
+	//	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	//	Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+	//	Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+	//}
+	
+	if (m_bDeadWait && m_bDeadAni)
+	{
+		Animation_Dead(m_fSlowDelta);
+			
 	}
 
 	// Bullet Update
 	Bullet_Update();
+
+	Scale_Change_Dead(); // 사망 시 애니메이션
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
@@ -129,6 +142,11 @@ void CMonstro::LateUpdate_GameObject()
 			m_eCurState = MONSTRO_DEAD;
 			m_pTransformCom->m_vInfo->y = CENTERY;
 			m_bDeadWait = true;
+
+			m_pTransformCom->Get_Info(INFO_POS, &m_vDeadPos); // 현재 위치 저장
+			m_fAccTimeDelta = 0.f; // 필요 X ?
+			m_fCallLimit = 3.f; // 좌우 흔들 애니메이션 시간
+			m_bDeadAni = true;
 		}
 	}
 
@@ -438,13 +456,10 @@ void CMonstro::Monstro_Default()
 	}
 	else if (MONSTRO_WAIT == m_eCurState)
 	{
-		m_fCallLimit = 1.f; // MONSTRO_WAIT
-		// 스케일 체인지
+		m_fCallLimit = 1.f;
 
 		if (Check_Time(m_fSlowDelta))
 		{
-			// 이 순간에 scale change 멈추는 것으로
-
 			m_eCurState = MONSTRO_ATTACK;
 			m_bBullet = true;
 		}
@@ -467,6 +482,71 @@ void CMonstro::Monstro_Default()
 
 	if (m_bJump)
 		JumpTo_Player(m_fSlowDelta);
+}
+
+void CMonstro::Scale_Change_Dead()
+{
+	//if (m_bScaleReduce)
+	//{
+	//	if (m_pTransformCom->m_vScale.x <= m_vOriginScale.x - 1.f)
+	//	{
+	//		m_bScaleReduce = false;
+	//	}
+
+	//	m_pTransformCom->m_vScale.x -= 0.1f;
+	//}
+	//else
+	//{
+	//	if (m_pTransformCom->m_vScale.y >= m_vOriginScale.y)
+	//	{
+	//		m_pTransformCom->m_vScale.y = m_vOriginScale.y;
+	//		m_bScaleReduce = true;
+	//	}
+
+	//	m_pTransformCom->m_vScale.y += 0.1f;
+	//}
+}
+
+void CMonstro::Animation_Dead(const _float& fTimeDelta)
+{
+	if((m_bDeadWait && Check_Time(m_fSlowDelta, 2.f)))
+	{
+		m_bDead = true;
+
+		// 피 튀는 파티클
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		m_bDeadAni = false;
+		m_bScaleReduce = true;
+	}
+
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	if (m_bScaleReduce)
+	{
+		vPos.x -= 0.1f;
+
+		if (vPos.x <= (m_vDeadPos.x - 0.2f))
+		{
+			m_bScaleReduce = false;
+			vPos.x = m_vDeadPos.x - 0.2f;
+		}
+	}
+	else
+	{
+		vPos.x += 0.1f;
+
+		if (vPos.x >= (m_vDeadPos.x + 0.2f))
+		{
+			vPos.x = m_vDeadPos.x + 0.2f;
+			m_bScaleReduce = true;
+		}
+	}
+
+	m_pTransformCom->Set_Pos(vPos);
 }
 
 CMonster* CMonstro::Create(LPDIRECT3DDEVICE9 pGraphicDev)

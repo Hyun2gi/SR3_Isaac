@@ -36,10 +36,17 @@ private:
 	void			Bullet_Update();
 	void			Monstro_Default();
 
+	void			Scale_Change_Dead();
+	void			Animation_Dead(const _float& fTimeDelta);
+
 private:
 	_bool			m_bDeadWait;
 	_bool			m_bJump;
 	_bool			m_bBullet;
+	_bool			m_bDeadAni;
+
+	_bool			m_bScaleChange;
+	_bool			m_bScaleReduce;
 
 	_int			m_iPicNum;
 	_float			m_fFrameSpeed = 1.f;
@@ -48,6 +55,7 @@ private:
 	_float			m_fHitCoolTime; // 피격 쿨타임(혈사포 대책)
 
 	_vec3			m_vTargetPos;
+	_vec3			m_vDeadPos;
 
 	MONSTROSTATE	m_ePreState;
 	MONSTROSTATE	m_eCurState;
