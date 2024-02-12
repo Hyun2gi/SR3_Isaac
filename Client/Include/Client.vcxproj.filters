@@ -271,6 +271,12 @@
     <Filter Include="02. GameObject\12. UI\03. Ending\HJ">
       <UniqueIdentifier>{070d201d-c7b6-456b-aeb3-ef2e66d49344}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\00. Player\00. PlayerLeg">
+      <UniqueIdentifier>{956028be-50c8-4d5a-b6a4-6ff6a459cb0b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\07. Bullet\03. EpicBullet\00. EpicBulletMark">
+      <UniqueIdentifier>{995ce57f-74f8-40d0-98af-479d08da4141}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -453,9 +459,6 @@
     <ClInclude Include="..\Header\Shop.h">
       <Filter>02. GameObject\09. MapObject\04. Shop</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\EpicBulletMark.h">
-      <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\CoinFont.h">
       <Filter>02. GameObject\09. MapObject\04. Shop\02. Font</Filter>
     </ClInclude>
@@ -516,6 +519,12 @@
     </ClInclude>
     <ClInclude Include="..\Header\EndingHJ.h">
       <Filter>02. GameObject\12. UI\03. Ending\HJ</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\PlayerLeg.h">
+      <Filter>02. GameObject\00. Player\00. PlayerLeg</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\EpicBulletMark.h">
+      <Filter>02. GameObject\07. Bullet\03. EpicBullet\00. EpicBulletMark</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -690,9 +699,6 @@
     <ClCompile Include="..\Code\Shop.cpp">
       <Filter>02. GameObject\09. MapObject\04. Shop</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\EpicBulletMark.cpp">
-      <Filter>02. GameObject\07. Bullet\03. EpicBullet</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\CoinFont.cpp">
       <Filter>02. GameObject\09. MapObject\04. Shop\02. Font</Filter>
     </ClCompile>
@@ -755,6 +761,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\EndingHJ.cpp">
       <Filter>02. GameObject\12. UI\03. Ending\HJ</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PlayerLeg.cpp">
+      <Filter>02. GameObject\00. Player\00. PlayerLeg</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EpicBulletMark.cpp">
+      <Filter>02. GameObject\07. Bullet\03. EpicBullet\00. EpicBulletMark</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

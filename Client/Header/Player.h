@@ -31,6 +31,8 @@ private:
 	enum BULLETID
 	{ P_BULLET_IDLE, P_BULLET_BRIMSTONE, P_BULLET_EPIC, P_BULLET_END };
 
+	enum PLAYER_VER_ID { P_ISAAC, P_AZAZEL };
+
 public:
 	virtual HRESULT Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
@@ -191,6 +193,10 @@ private:
 	// Bullet 상태 저장
 	BULLETID			m_ePreBulletState;
 	BULLETID			m_eCurBulletState;
+
+	// 아이작인지 아자젤인지 파악
+	PLAYER_VER_ID		m_eCurPlayerVer;
+
 
 	//움직이는 속도
 	_float				m_fMoveSpeed;
