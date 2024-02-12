@@ -32,7 +32,7 @@ HRESULT CNormalFly::Ready_GameObject()
 	m_fCallLimit = 0.1f;
 	m_fSpeed = 1.f;
 
-	m_fDistance = 4.f;
+	m_fDistance = 2.f;
 	m_fAngle = 30.f * m_iIndex;
 
 	m_ePreState = FLY_END;
@@ -72,9 +72,7 @@ _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bDead)
 	{
-		_vec3 vPos;
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		// Ã³¸® X
 	}
 
 	if(!m_bDeadWait)

@@ -5,6 +5,7 @@
 
 class CDoor : public CMapObj
 {
+	const _float ORIGIN_SCALE = 3.f;
 private:
 	explicit CDoor(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CDoor(const CDoor& rhs);
@@ -39,7 +40,13 @@ private:
 	virtual HRESULT		Add_Component()						override;
 	virtual void		Motion_Change()						override;
 
+	void				Animation_Change();
+
 private:
+	_bool				m_bScaleReduce;
+	_bool				m_bScaleChange;
+	_int				m_iScaleCount;
+
 	_bool				m_bOpen;
 	_bool				m_bCollision;
 	string				m_strStageKey;

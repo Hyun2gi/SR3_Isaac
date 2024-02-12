@@ -77,7 +77,7 @@ void CMapToolGui::Update_ImGuiTools()
 
     ImGui::Text("Key: ");
     ImGui::SameLine();
-    ImGui::SetNextItemWidth(100.f);
+    ImGui::SetNextItemWidth(140.f);
     ImGui::InputText("##Key", szStageKey, MAX_PATH);
 
     //스테이지 리스트를 보여주는 map에 방금 작성한 스테이지를 Add한다.
@@ -122,7 +122,7 @@ void CMapToolGui::Update_ImGuiTools()
     if (ImGui::Button("Save"))
         Save_Stage_List();
 
-    ImGui::SetNextItemWidth(100.f);
+    //ImGui::SetNextItemWidth(100.f);
     ImGui::BeginListBox("##");
     if (0 < vecString.size())
         ImGui::ListBox("##", &m_iSelectedStageIndex, items.data(), vecString.size());
@@ -202,7 +202,7 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     ImGui::SameLine();
     if (m_strGetLine != "")
     {
-        ImGui::Text("%c", m_strGetLine[0]);
+        ImGui::Text("%s", Get_Text(LEFT).c_str());
         ImGui::SameLine();
     }
 
@@ -213,7 +213,7 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     ImGui::SameLine();
     if (m_strGetLine != "")
     {
-        ImGui::Text("%c", m_strGetLine[2]);
+        ImGui::Text("%s", Get_Text(RIGHT).c_str());
         ImGui::SameLine();
     }
     ImGui::SetNextItemWidth(30.f);
@@ -223,7 +223,7 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     ImGui::SameLine();
     if (m_strGetLine != "")
     {
-        ImGui::Text("%c", m_strGetLine[4]);
+        ImGui::Text("%s", Get_Text(TOP).c_str());
         ImGui::SameLine();
     }
     ImGui::SetNextItemWidth(30.f);
@@ -233,7 +233,7 @@ void CMapToolGui::Popup_Stage_Connection(const char* items)
     ImGui::SameLine();
     if (m_strGetLine != "")
     {
-        ImGui::Text("%c", m_strGetLine[6]);
+        ImGui::Text("%s", Get_Text(BOTTOM).c_str());
         ImGui::SameLine();
     }
     ImGui::SetNextItemWidth(30.f);
@@ -434,6 +434,28 @@ void CMapToolGui::Set_Index_Val(const char* items)
             }
         }
     }
+}
+
+string CMapToolGui::Get_Text(_int iNum)
+{
+    //0번째에 key값, 1번째에 Stage_
+    vector<string> vecStr;
+    int iIndex = 0;
+
+    while (true) {
+        // , 위치 찾기
+        int pos = m_strGetLine.find_first_of(',', iIndex);
+
+        // ,를 찾지 못하면 종료
+        if (pos == string::npos)
+            break;
+
+        // 분리된 문자열 출력
+        vecStr.push_back(m_strGetLine.substr(iIndex, pos - iIndex));
+        iIndex = pos + 1;
+    }
+
+    return vecStr[iNum];
 }
 
 void CMapToolGui::Free()

@@ -40,9 +40,9 @@ HRESULT CMonstro::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->Set_Pos(0.f, CENTERY, 0.f);
-	m_pTransformCom->m_vScale = { 4.f, 4.f, 4.f };
+	m_pTransformCom->m_vScale = { ORIGIN_SCALE, ORIGIN_SCALE, ORIGIN_SCALE };
 
-	m_iHp = 30;
+	m_iHp = 30; // 30
 
 	m_fCallLimit = 0.1f;
 	m_fSpeed = 10.f;
@@ -53,6 +53,12 @@ HRESULT CMonstro::Ready_GameObject()
 	m_bJump = false;
 	m_bBullet = false;
 	m_bDeadWait = false;
+	m_bDeadAni = false;
+
+	m_bScaleReduce = true;
+	m_bScaleChange = false;
+	m_bPosChange = false;
+	m_vOriginScale = { ORIGIN_SCALE, ORIGIN_SCALE, ORIGIN_SCALE };
 
 	m_eCurState = MONSTRO_END;
 
@@ -83,17 +89,9 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_fFrame = 0.f;
 	}
-
-	if (m_bDeadWait && Check_Time(m_fSlowDelta, 4.f))
-	{
-		m_bDead = true;
-
-		// 피 튀는 파티클
-		_vec3 vPos;
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
-		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
-	}
+	
+	if (m_bDeadWait && m_bDeadAni)
+		Animation_Dead(); // 사망 시 애니메이션
 
 	// Bullet Update
 	Bullet_Update();
@@ -129,6 +127,11 @@ void CMonstro::LateUpdate_GameObject()
 			m_eCurState = MONSTRO_DEAD;
 			m_pTransformCom->m_vInfo->y = CENTERY;
 			m_bDeadWait = true;
+
+			m_pTransformCom->Get_Info(INFO_POS, &m_vDeadPos);
+			m_fAccTimeDelta = 0.f;
+			m_fCallLimit = 3.f;
+			m_bDeadAni = true;
 		}
 	}
 
@@ -147,7 +150,7 @@ void CMonstro::LateUpdate_GameObject()
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
-	m_pTransformCom->Get_Info(INFO_POS, &vPos); // 여기서는 0이 아님
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 	__super::Compute_ViewZ(&vPos);
 }
 
@@ -254,9 +257,9 @@ void CMonstro::Motion_Change()
 
 		case CMonstro::MONSTRO_WAIT:
 			m_iPicNum = 1;
-			m_fFrame = 1.4f;
+			m_fFrame = 0.f;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_MonstroTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_MonstroUpTexture"));
 			break;
 
 		case CMonstro::MONSTRO_DEAD:
@@ -418,8 +421,10 @@ void CMonstro::Monstro_Default()
 			}
 			else
 			{
-				//m_bBullet = true;
 				m_eCurState = MONSTRO_WAIT;
+
+				m_bScaleChange = true;
+				m_fAccTimeDelta = 0.f;
 			}
 			Check_TargetPos();
 		}
@@ -438,21 +443,29 @@ void CMonstro::Monstro_Default()
 	}
 	else if (MONSTRO_WAIT == m_eCurState)
 	{
-		m_fCallLimit = 1.f; // MONSTRO_WAIT
-		// 스케일 체인지
+		m_fCallLimit = 2.f; // 1
+
+		if (m_bScaleChange)
+			Animation_Attack();
 
 		if (Check_Time(m_fSlowDelta))
 		{
-			// 이 순간에 scale change 멈추는 것으로
-
 			m_eCurState = MONSTRO_ATTACK;
 			m_bBullet = true;
+			m_bScaleChange = false;
+
+
 		}
 	}
 	else if (MONSTRO_ATTACK == m_eCurState)
 	{
 		if (m_bBullet)
 		{
+			m_pTransformCom->m_vScale = { 4.f, 4.f, 4.f };
+			_vec3 vPos;
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			m_pTransformCom->Set_Pos(vPos.x, CENTERY, vPos.z);
+
 			AttackTo_Player();
 			m_bBullet = false;
 		}
@@ -467,6 +480,74 @@ void CMonstro::Monstro_Default()
 
 	if (m_bJump)
 		JumpTo_Player(m_fSlowDelta);
+}
+
+void CMonstro::Animation_Attack()
+{
+	_vec3 vScale, vPos;
+	vScale = m_pTransformCom->m_vScale;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+
+	if (m_bScaleReduce)
+	{
+		vScale.y -= 0.2f;
+		
+
+		if (vScale.y <= (m_vOriginScale.y - 2.f))
+		{
+			m_bScaleReduce = false;
+			vScale.y = m_vOriginScale.y - 2.f;
+		}else
+			vPos.y -= 0.12f;
+	}
+
+	m_pTransformCom->m_vScale = vScale;
+	m_pTransformCom->Set_Pos(vPos);
+}
+
+void CMonstro::Animation_Dead()
+{
+	if((m_bDeadWait && Check_Time(m_fSlowDelta, 2.f)))
+	{
+		m_bDead = true;
+
+		// 피 튀는 파티클
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()),
+			L"../Bin/Resource/Texture/Particle/BloodExp_Left/BloodExp_%d.png", 2, 1.7f, 15);
+		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()),
+			L"../Bin/Resource/Texture/Particle/BloodExp_Right/BloodExp_%d.png", 2, 1.7f, 15);
+		m_bDeadAni = false;
+		m_bPosChange = false;
+	}
+
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+	if (m_bPosChange)
+	{
+		vPos.x -= 0.1f;
+
+		if (vPos.x <= (m_vDeadPos.x - 0.2f))
+		{
+			m_bPosChange = false;
+			vPos.x = m_vDeadPos.x - 0.2f;
+		}
+	}
+	else
+	{
+		vPos.x += 0.1f;
+
+		if (vPos.x >= (m_vDeadPos.x + 0.2f))
+		{
+			vPos.x = m_vDeadPos.x + 0.2f;
+			m_bPosChange = true;
+		}
+	}
+
+	m_pTransformCom->Set_Pos(vPos);
 }
 
 CMonster* CMonstro::Create(LPDIRECT3DDEVICE9 pGraphicDev)

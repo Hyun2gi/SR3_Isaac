@@ -190,7 +190,7 @@ CWall * CWall::Create(LPDIRECT3DDEVICE9 pGraphicDev, bool bStartScene)
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("SkyBox Create Failed");
+		MSG_BOX("Wall Create Failed");
 		return nullptr;
 	}
 

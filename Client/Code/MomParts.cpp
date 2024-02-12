@@ -33,6 +33,10 @@ HRESULT CMomParts::Ready_GameObject()
 
 	m_ePreState = MOM_END;
 
+	m_bScaleReduce = false;
+	m_bScaleChange = false;
+	m_iScaleCount = 0;
+
 	m_bBoss = true;
 	m_eBossType = MOM_PARTS;
 
@@ -41,6 +45,18 @@ HRESULT CMomParts::Ready_GameObject()
 
 _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bDead)
+	{
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), L"../Bin/Resource/Texture/Particle/BloodExp_Left/BloodExp_%d.png", 2, 2.f, 15);
+		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), L"../Bin/Resource/Texture/Particle/BloodExp_Right/BloodExp_%d.png", 2, 2.f, 15);
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 10.f, 30);
+
+		return 1;
+	}
+
 	if (!m_bCreate)
 	{
 		if (Check_Time(fTimeDelta))
@@ -73,8 +89,14 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_fCallLimit = (_float)m_iRandNum;
 
-		Change_State();
+		Change_State(); // 이때 애니메이션도 들어가야함
 	}
+
+	if (m_bScaleChange)
+		Animation_Change();
+
+	if (m_pMom->Get_Dead())
+		m_bDead = true;
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
@@ -206,13 +228,59 @@ void CMomParts::Set_RandNum()
 void CMomParts::Change_State()
 {
 	if (0 == (m_iRandNum % 4))
+	{
 		m_eCurState = MOM_EYE;
+		m_bScaleChange = true;
+	}
 	else if (1 == (m_iRandNum % 4))
+	{
 		m_eCurState = MOM_SKIN;
+		m_bScaleChange = true;
+	}
 	else if (2 == (m_iRandNum % 4))
+	{
 		m_eCurState = MOM_HAND;
+		m_bScaleChange = true;
+	}
 	else if (3 == (m_iRandNum % 4))
 		m_eCurState = MOM_DOOR;
+}
+
+void CMomParts::Animation_Change()
+{
+	// 총 두 번 말랑말랑
+	if (2 == m_iScaleCount)
+	{
+		m_bScaleChange = false;
+		m_pTransformCom->m_vScale = { ORIGIN_SCALE_X, 12.f, 1.f };
+		m_iScaleCount = 0;
+	}
+
+	_vec3 vScale;
+	vScale = m_pTransformCom->m_vScale;
+
+	if (m_bScaleReduce)
+	{
+		vScale.x -= 0.2f;
+
+		if (vScale.x <= ORIGIN_SCALE_X - 1.f)
+		{
+			m_bScaleReduce = false;
+			vScale.x = ORIGIN_SCALE_X - 1.f;
+		}
+	}
+	else
+	{
+		vScale.x += 0.2f;
+
+		if (vScale.x >= ORIGIN_SCALE_X + 1.f)
+		{
+			m_bScaleReduce = true;
+			vScale.x = ORIGIN_SCALE_X + 1.f;
+			++m_iScaleCount;
+		}
+	}
+	m_pTransformCom->m_vScale = vScale;
 }
 
 void CMomParts::Setting_Value()

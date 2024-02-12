@@ -5,6 +5,12 @@
 
 class CCubeObject;
 
+BEGIN(Engine)
+
+class CTransform;
+
+END
+
 class CFloor :	public Engine::CGameObject
 {
 private:
@@ -20,6 +26,8 @@ public:
 
 	HRESULT			Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag);
 
+	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
+
 	bool	Get_Arrived();
 
 private:
@@ -28,6 +36,8 @@ private:
 private:
 	// 벽을 하나로해서 여러개의 큐브를 띄우기 위해 큐브를 가지고 있게하려고 만든 벡터배열
 	bool m_bStartScene;
+
+	Engine::CTransform* m_pTransformCom;
 	vector<CCubeObject*> m_vecCubes;
 
 public:

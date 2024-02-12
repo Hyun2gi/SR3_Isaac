@@ -6,6 +6,11 @@ class CMapTool;
 
 class CMapToolGui : public CBase
 {
+    enum Room_Dir
+    {
+        LEFT, RIGHT, TOP, BOTTOM
+    };
+
     struct StageStruct
     {
         string  strStageName;
@@ -25,7 +30,7 @@ public:
     void    Set_Target_Scene(CMapTool* pScene) { m_pTargetScene = pScene; }
 
 private:
-    void Popup_Stage_Connection(const char* items);
+    void    Popup_Stage_Connection(const char* items);
 
     void    Load_MapLevel();
     void    Load_Room_Type();
@@ -35,6 +40,8 @@ private:
 
     void    Change_Theme_Texture();
     void    Set_Index_Val(const char* items);
+
+    string    Get_Text(_int iNum);
 
 private:
     LPDIRECT3DDEVICE9 m_pGraphicDev;

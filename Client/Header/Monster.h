@@ -65,7 +65,6 @@ protected:
 	_bool					m_bBoss;
 
 	_bool					m_bTimeScale;
-	_bool					m_bScaleReduce;
 	_bool					m_bHit;
 	_bool					m_bDead;
 	_bool					m_bHitColor;
@@ -80,8 +79,8 @@ protected:
 	_float					m_fColorTimeDelta;
 	_float					m_fSlowDelta;
 
-	_vec3					m_vOriginScale;
 	_vec3					m_vMoveLook;
+	_vec3					m_vOriginScale;
 
 	MONSTER_TYPE			m_eMstType;
 	BOSS_TYPE				m_eBossType;

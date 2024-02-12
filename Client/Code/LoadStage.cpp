@@ -83,7 +83,7 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	m_bMenu = false;
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
-	Engine::Create_Scatter(m_pGraphicDev);
+	//Engine::Create_Scatter(m_pGraphicDev);
 
 	FAILED_CHECK_RETURN(CStageLoadMgr::GetInstance()->Ready_StageLoadMgr(), E_FAIL);
 
@@ -104,6 +104,11 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 {
 	Engine::Update_Particles(fTimeDelta);
 
+	if (GetAsyncKeyState(VK_DOWN))
+	{
+		Create_Map_Particles();
+	}
+
 	if (m_bIsCreated)
 	{
 		// 자식 클래스 Layer에 Insert
@@ -120,8 +125,6 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		// 아이템 드랍
 		Drop_ITem();
 	}
-
-
 
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
@@ -491,7 +494,6 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 					pGameObject->Set_MyLayer(pLayerTag);
 					dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
-					dynamic_cast<CMomParts*>(pGameObject)->Set_Mom(dynamic_cast<CMom*>(pLayer->Get_GameObject(L"Mom")));
 					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
 				}
 				break;
@@ -510,13 +512,52 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 
 HRESULT CLoadStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 {
-
 	// 아이템 관련
-
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
 	Engine::CGameObject* pGameObject = nullptr;
+
+	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
+
+	for (auto& iter : mapLoadObj)
+	{
+		switch (iter.second.iType)
+		{
+		case ITEM:
+		{
+			switch (iter.second.iIndex)
+			{
+			case BRIM:
+			{
+				_vec3 vPos = { iter.second.iX, iter.second.iY, iter.second.iZ };
+				_vec3 vDir = { 0, 0, 1 };
+
+				pGameObject = CBrimStone::Create(m_pGraphicDev, 0, vPos, vDir);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BrimStone", pGameObject), E_FAIL);
+				break;
+			}
+			case EPIC:
+			{
+				_vec3 vPos = { iter.second.iX, iter.second.iY, iter.second.iZ };
+				_vec3 vDir = { 0, 0, 1 };
+
+				pGameObject = CEpic::Create(m_pGraphicDev, 0, vPos, vDir);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Epic", pGameObject), E_FAIL);
+
+				++m_vecMonsterCount[ATTACK_FLY];
+
+				break;
+			}
+			}
+
+		}
+		}
+	}
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
@@ -538,7 +579,11 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 	int i = 0;
 	for (auto& iter : vecDoorTheme)
 	{
-		if (1 > iter) continue;
+		if (1 > iter)
+		{
+			++i;
+			continue;
+		}
 
 		switch (i)
 		{
@@ -1046,12 +1091,12 @@ void CLoadStage::Obstacle_Collsion()
 
 		for (auto& iter : mapObj)
 		{
-			CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
-			Engine::Check_Collision(pPlayerTrans, pTrans);
+			if (OBSTACLE <= dynamic_cast<CMapObj*>(iter.second)->Get_Type() && dynamic_cast<CMapObj*>(iter.second)->Get_Type() <= OBSTACLE_Z)
+			{
+				CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+				Engine::Check_Collision(pPlayerTrans, pTrans);
+			}
 		}
-
-		//m_mapLayer.at(L"MapObj")->Get_GameObject()
-
 	}
 }
 	
@@ -1197,6 +1242,14 @@ void CLoadStage::Insert_Child()
 		dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))
 			->Set_ShellObj_ToStage(m_mapLayer.at(L"MapObj"));
 	}
+	
+	for (auto& iter : m_mapLayer.at(L"GameMst")->Get_ObjectMap()) // MomParts에 Mom 설정
+	{
+		if (MOM_PARTS == dynamic_cast<CMonster*>(iter.second)->Get_BossType())
+		{
+			dynamic_cast<CMomParts*>(iter.second)->Set_Mom(dynamic_cast<CMom*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Mom")));
+		}
+	}
 }
 
 void CLoadStage::Setting_UI()
@@ -1221,14 +1274,19 @@ void CLoadStage::Setting_UI()
 	CPlayerHP* pPlayerHP = CPlayerHP::Create(m_pGraphicDev, 30.f, 30.f, -370.f, 170.f, 1, 1);
 	m_mapLayer.at(L"UI")->Add_GameObject(L"PlayerHP", pPlayerHP);
 
-	// Boss HP Tool
+	// Monstro HP
 	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro") != nullptr &&
 		m_mapLayer.at(L"UI")->Get_GameObject(L"BossHPTool") == nullptr)
 	{
 		dynamic_cast<CMonstro*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro"))->Print_UI(m_mapLayer.at(L"UI"));
 	}
 
-	// Boss HP Bar
+	// Mom HP
+	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Mom") != nullptr &&
+		m_mapLayer.at(L"UI")->Get_GameObject(L"MomHPTool") == nullptr)
+	{
+		dynamic_cast<CMom*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Mom"))->Print_UI(m_mapLayer.at(L"UI"));
+	}
 
 #pragma endregion Boss HP
 
@@ -1251,7 +1309,7 @@ void CLoadStage::Play_Ending(const _float& fTimeDelta)
 	}
 	else
 	{
-		Engine::Kill_Scatter();
+		//Engine::Kill_Scatter();
 		Engine::Set_Ending();
 
 		Engine::CScene* pScene = nullptr;
@@ -1260,6 +1318,16 @@ void CLoadStage::Play_Ending(const _float& fTimeDelta)
 
 		return;
 	}
+
+}
+
+void CLoadStage::Create_Map_Particles()
+{
+	CTransform* pTest = dynamic_cast<CTransform*>(m_pTopWall->Get_Transform());
+
+	_matrix* mat = pTest->Get_WorldMatrix();
+
+	Engine::Create_Splash_Forward(m_pGraphicDev, *mat);
 
 }
 

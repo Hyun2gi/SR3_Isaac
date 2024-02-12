@@ -50,13 +50,40 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 
 			return 0;
 		}
-    
-    if (GetAsyncKeyState('1'))
+
+		if (GetAsyncKeyState('0'))
 		{
 			Engine::CScene* pScene = nullptr;
 
-			pScene = CLoadStage::Create(m_pGraphicDev, 6, true);
+			pScene = CLoadStage::Create(m_pGraphicDev, 10, true);
+
+			NULL_CHECK_RETURN(pScene, -1);
+
+			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			return 0;
+		}
+
+
+		if (GetAsyncKeyState('1'))
+		{
+			Engine::CScene* pScene = nullptr;
+
+			pScene = CLoadStage::Create(m_pGraphicDev, 1, true);
       
+			NULL_CHECK_RETURN(pScene, -1);
+
+			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			return 0;
+		}
+
+		if (GetAsyncKeyState('2'))
+		{
+			Engine::CScene* pScene = nullptr;
+
+			pScene = CLoadStage::Create(m_pGraphicDev, 2, true);
+
 			NULL_CHECK_RETURN(pScene, -1);
 
 			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
@@ -75,6 +102,19 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 
 			return 0;
 		}		
+
+		if (GetAsyncKeyState('4'))
+		{
+			Engine::CScene* pScene = nullptr;
+
+			pScene = CLoadStage::Create(m_pGraphicDev, 4, true);
+
+			NULL_CHECK_RETURN(pScene, -1);
+
+			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			return 0;
+		}
 
 		if (GetAsyncKeyState('5'))
 		{
@@ -100,6 +140,44 @@ Engine::_int CLogo::Update_Scene(const _float& fTimeDelta)
 			return 0;
 		}
 
+		if (GetAsyncKeyState('7'))
+		{
+			Engine::CScene* pScene = nullptr;
+
+			pScene = CLoadStage::Create(m_pGraphicDev, 7, true);
+
+			NULL_CHECK_RETURN(pScene, -1);
+
+			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			return 0;
+		}
+
+		if (GetAsyncKeyState('8'))
+		{
+			Engine::CScene* pScene = nullptr;
+
+			pScene = CLoadStage::Create(m_pGraphicDev, 8, true);
+
+			NULL_CHECK_RETURN(pScene, -1);
+
+			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			return 0;
+		}
+
+		if (GetAsyncKeyState('9'))
+		{
+			Engine::CScene* pScene = nullptr;
+
+			pScene = CLoadStage::Create(m_pGraphicDev, 9, true);
+
+			NULL_CHECK_RETURN(pScene, -1);
+
+			FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+			return 0;
+		}
 
 		if (GetAsyncKeyState(VK_BACK))
 		{
