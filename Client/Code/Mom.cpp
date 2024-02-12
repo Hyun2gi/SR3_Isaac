@@ -34,6 +34,10 @@ HRESULT CMom::Ready_GameObject()
 	m_fCallLimit = 3;
 	m_fSpeed = 3.f;
 
+	m_bScaleChange = false;
+	m_bScaleReduce = true;
+	m_iScaleCount = 0;
+
 	m_bReduce = true;
 	
 	m_eState = MOM_IDLE;
@@ -79,8 +83,8 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 		if (Check_Time(m_fSlowDelta))
 		{
 			int iX, iZ;
-			iX = rand() % 30;
-			iZ = rand() % 30;
+			iX = rand() % 20;
+			iZ = rand() % 20;
 
 			m_pTransformCom->Set_Pos(iX, 50.f, iZ);
 

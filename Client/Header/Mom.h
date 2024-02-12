@@ -30,7 +30,14 @@ private:
 	void				Scale_Change();
 	void				Attack(const _float& fTimeDelta);
 
+	void				Animation_Attack();
+	void				Anomation_Up();
+
 private:
+	_bool				m_bScaleReduce;
+	_bool				m_bScaleChange;
+	_int				m_iScaleCount;
+
 	_bool				m_bReduce;
 	_int				m_iRandNum;
 	_int				m_iPicNum;
