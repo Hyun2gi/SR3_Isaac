@@ -8,7 +8,7 @@
 class CMomParts : public CMonster
 {
 	const _float INTERVAL = 1.f;
-	const _float INTERVAL_Y = 3.3f;
+	const _float INTERVAL_Y = 4.2f;
 	const _float ORIGIN_SCALE_X = 7.f;
 private:
 	explicit CMomParts(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex);
@@ -39,6 +39,7 @@ private:
 private:
 	_bool				m_bScaleReduce;
 	_bool				m_bScaleChange;
+	_int				m_iScaleCount;
 
 	_int				m_iRandNum;
 	_int				m_iIndex;
