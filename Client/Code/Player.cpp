@@ -115,7 +115,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	if (m_bStartAnim)
 	{
 		m_bStartAnim = false;
-		Set_Cry_Anim();
+		//Set_Cry_Anim();
 	}
 
 	// 특정 모션 처리

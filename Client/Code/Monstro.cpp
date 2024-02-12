@@ -40,7 +40,7 @@ HRESULT CMonstro::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->Set_Pos(0.f, CENTERY, 0.f);
-	m_pTransformCom->m_vScale = { 4.f, 4.f, 4.f };
+	m_pTransformCom->m_vScale = { ORIGIN_SCALE, ORIGIN_SCALE, ORIGIN_SCALE };
 
 	m_iHp = 1; // 30
 
@@ -57,7 +57,8 @@ HRESULT CMonstro::Ready_GameObject()
 
 	m_bScaleReduce = true;
 	m_bScaleChange = false;
-	m_vOriginScale = { 4.f, 4.f, 4.f };
+	m_bPosChange = false;
+	m_vOriginScale = { ORIGIN_SCALE, ORIGIN_SCALE, ORIGIN_SCALE };
 
 	m_eCurState = MONSTRO_END;
 
@@ -88,28 +89,12 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_fFrame = 0.f;
 	}
-
-	//if (m_bDeadWait && Check_Time(m_fSlowDelta, 4.f))
-	//{
-	//	m_bDead = true;
-
-	//	// 피 튀는 파티클
-	//	_vec3 vPos;
-	//	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-	//	Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
-	//	Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
-	//}
 	
 	if (m_bDeadWait && m_bDeadAni)
-	{
-		Animation_Dead(m_fSlowDelta);
-			
-	}
+		Animation_Dead(); // 사망 시 애니메이션
 
 	// Bullet Update
 	Bullet_Update();
-
-	Scale_Change_Dead(); // 사망 시 애니메이션
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
@@ -143,9 +128,9 @@ void CMonstro::LateUpdate_GameObject()
 			m_pTransformCom->m_vInfo->y = CENTERY;
 			m_bDeadWait = true;
 
-			m_pTransformCom->Get_Info(INFO_POS, &m_vDeadPos); // 현재 위치 저장
-			m_fAccTimeDelta = 0.f; // 필요 X ?
-			m_fCallLimit = 3.f; // 좌우 흔들 애니메이션 시간
+			m_pTransformCom->Get_Info(INFO_POS, &m_vDeadPos);
+			m_fAccTimeDelta = 0.f;
+			m_fCallLimit = 3.f;
 			m_bDeadAni = true;
 		}
 	}
@@ -165,7 +150,7 @@ void CMonstro::LateUpdate_GameObject()
 	__super::LateUpdate_GameObject();
 
 	_vec3	vPos;
-	m_pTransformCom->Get_Info(INFO_POS, &vPos); // 여기서는 0이 아님
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 	__super::Compute_ViewZ(&vPos);
 }
 
@@ -272,9 +257,9 @@ void CMonstro::Motion_Change()
 
 		case CMonstro::MONSTRO_WAIT:
 			m_iPicNum = 1;
-			m_fFrame = 1.4f;
+			m_fFrame = 0.f;
 			m_fFrameSpeed = 1.f;
-			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_MonstroTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_MonstroUpTexture"));
 			break;
 
 		case CMonstro::MONSTRO_DEAD:
@@ -436,8 +421,10 @@ void CMonstro::Monstro_Default()
 			}
 			else
 			{
-				//m_bBullet = true;
 				m_eCurState = MONSTRO_WAIT;
+
+				m_bScaleChange = true;
+				m_fAccTimeDelta = 0.f;
 			}
 			Check_TargetPos();
 		}
@@ -456,18 +443,29 @@ void CMonstro::Monstro_Default()
 	}
 	else if (MONSTRO_WAIT == m_eCurState)
 	{
-		m_fCallLimit = 1.f;
+		m_fCallLimit = 2.f; // 1
+
+		if (m_bScaleChange)
+			Animation_Attack();
 
 		if (Check_Time(m_fSlowDelta))
 		{
 			m_eCurState = MONSTRO_ATTACK;
 			m_bBullet = true;
+			m_bScaleChange = false;
+
+
 		}
 	}
 	else if (MONSTRO_ATTACK == m_eCurState)
 	{
 		if (m_bBullet)
 		{
+			m_pTransformCom->m_vScale = { 4.f, 4.f, 4.f };
+			_vec3 vPos;
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			m_pTransformCom->Set_Pos(vPos.x, CENTERY, vPos.z);
+
 			AttackTo_Player();
 			m_bBullet = false;
 		}
@@ -484,30 +482,31 @@ void CMonstro::Monstro_Default()
 		JumpTo_Player(m_fSlowDelta);
 }
 
-void CMonstro::Scale_Change_Dead()
+void CMonstro::Animation_Attack()
 {
-	//if (m_bScaleReduce)
-	//{
-	//	if (m_pTransformCom->m_vScale.x <= m_vOriginScale.x - 1.f)
-	//	{
-	//		m_bScaleReduce = false;
-	//	}
+	_vec3 vScale, vPos;
+	vScale = m_pTransformCom->m_vScale;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	//	m_pTransformCom->m_vScale.x -= 0.1f;
-	//}
-	//else
-	//{
-	//	if (m_pTransformCom->m_vScale.y >= m_vOriginScale.y)
-	//	{
-	//		m_pTransformCom->m_vScale.y = m_vOriginScale.y;
-	//		m_bScaleReduce = true;
-	//	}
 
-	//	m_pTransformCom->m_vScale.y += 0.1f;
-	//}
+	if (m_bScaleReduce)
+	{
+		vScale.y -= 0.2f;
+		
+
+		if (vScale.y <= (m_vOriginScale.y - 2.f))
+		{
+			m_bScaleReduce = false;
+			vScale.y = m_vOriginScale.y - 2.f;
+		}else
+			vPos.y -= 0.12f;
+	}
+
+	m_pTransformCom->m_vScale = vScale;
+	m_pTransformCom->Set_Pos(vPos);
 }
 
-void CMonstro::Animation_Dead(const _float& fTimeDelta)
+void CMonstro::Animation_Dead()
 {
 	if((m_bDeadWait && Check_Time(m_fSlowDelta, 2.f)))
 	{
@@ -519,19 +518,19 @@ void CMonstro::Animation_Dead(const _float& fTimeDelta)
 		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
 		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
 		m_bDeadAni = false;
-		m_bScaleReduce = true;
+		m_bPosChange = false;
 	}
 
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-	if (m_bScaleReduce)
+	if (m_bPosChange)
 	{
 		vPos.x -= 0.1f;
 
 		if (vPos.x <= (m_vDeadPos.x - 0.2f))
 		{
-			m_bScaleReduce = false;
+			m_bPosChange = false;
 			vPos.x = m_vDeadPos.x - 0.2f;
 		}
 	}
@@ -542,7 +541,7 @@ void CMonstro::Animation_Dead(const _float& fTimeDelta)
 		if (vPos.x >= (m_vDeadPos.x + 0.2f))
 		{
 			vPos.x = m_vDeadPos.x + 0.2f;
-			m_bScaleReduce = true;
+			m_bPosChange = true;
 		}
 	}
 
