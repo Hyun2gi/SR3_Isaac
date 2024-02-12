@@ -507,13 +507,52 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 
 HRESULT CLoadStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 {
-
 	// 아이템 관련
-
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
 	Engine::CGameObject* pGameObject = nullptr;
+
+	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
+
+	for (auto& iter : mapLoadObj)
+	{
+		switch (iter.second.iType)
+		{
+		case ITEM:
+		{
+			switch (iter.second.iIndex)
+			{
+			case BRIM:
+			{
+				_vec3 vPos = { iter.second.iX, iter.second.iY, iter.second.iZ };
+				_vec3 vDir = { 0, 0, 1 };
+
+				pGameObject = CBrimStone::Create(m_pGraphicDev, 0, vPos, vDir);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BrimStone", pGameObject), E_FAIL);
+				break;
+			}
+			case EPIC:
+			{
+				_vec3 vPos = { iter.second.iX, iter.second.iY, iter.second.iZ };
+				_vec3 vDir = { 0, 0, 1 };
+
+				pGameObject = CEpic::Create(m_pGraphicDev, 0, vPos, vDir);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Epic", pGameObject), E_FAIL);
+
+				++m_vecMonsterCount[ATTACK_FLY];
+
+				break;
+			}
+			}
+
+		}
+		}
+	}
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
