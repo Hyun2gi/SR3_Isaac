@@ -147,6 +147,16 @@ HRESULT CDoor::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_DevilDoorCloseTexture", pComponent });
 
+	// TREASURE _ OPEN
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_TreasureDoorOpenTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_TreasureDoorOpenTexture", pComponent });
+
+	// TREASURE _ CLOSE
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_TreasureDoorCloseTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_TreasureDoorCloseTexture", pComponent });
+
 #pragma endregion Texture
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));

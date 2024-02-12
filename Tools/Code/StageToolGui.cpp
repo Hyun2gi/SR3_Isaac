@@ -92,7 +92,7 @@ void CStageToolGui::Update_ImGuiTools()
 
     ImGui::Text("Stage List");
 
-    ImGui::SetNextItemWidth(100.f);
+    //ImGui::SetNextItemWidth(100.f);
     ImGui::BeginListBox("##");
     if (0 < vecString.size())
         ImGui::ListBox("##", &m_iSelectedStageIndex, items.data(), vecString.size());
