@@ -182,6 +182,7 @@ call CopyUtility.bat</Command>
     <ClInclude Include="..\..\Header\ParticleMgr.h" />
     <ClInclude Include="..\..\Header\ParticleScatter.h" />
     <ClInclude Include="..\..\Header\ParticleSplash.h" />
+    <ClInclude Include="..\..\Header\ParticleSplashForward.h" />
     <ClInclude Include="..\..\Header\ParticleSplashLeft.h" />
     <ClInclude Include="..\..\Header\ParticleSplashRight.h" />
     <ClInclude Include="..\..\Header\ParticleSystem.h" />
@@ -214,6 +215,7 @@ call CopyUtility.bat</Command>
     <ClCompile Include="..\Code\ParticleMgr.cpp" />
     <ClCompile Include="..\Code\ParticleScatter.cpp" />
     <ClCompile Include="..\Code\ParticleSplash.cpp" />
+    <ClCompile Include="..\Code\ParticleSplashForward.cpp" />
     <ClCompile Include="..\Code\ParticleSplashLeft.cpp" />
     <ClCompile Include="..\Code\ParticleSplashRight.cpp" />
     <ClCompile Include="..\Code\ParticleSystem.cpp" />

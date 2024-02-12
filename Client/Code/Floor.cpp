@@ -105,16 +105,17 @@ bool CFloor::Get_Arrived()
 
 HRESULT CFloor::Add_Component()
 {
-	//CComponent*		pComponent = nullptr;
+	CComponent*		pComponent = nullptr;
 	//	
 	//pComponent = m_pBufferCom = dynamic_cast<CCubeTex*>(Engine::Clone_Proto(L"Proto_CubeTex"));
 	//NULL_CHECK_RETURN(pComponent, E_FAIL);
 	//m_mapComponent[ID_STATIC].insert({ L"Proto_CubeTex", pComponent });
 
-	//pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
-	//NULL_CHECK_RETURN(pComponent, E_FAIL);
-	//m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
-	//	
+	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
+	m_pTransformCom->m_vInfo[INFO_POS] = { VTXCNTX * 0.5f, 0.f, VTXCNTX * 0.5f };
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
+		
 	return S_OK;
 }
 

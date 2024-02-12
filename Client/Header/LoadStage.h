@@ -78,6 +78,8 @@ private:
 
 	void			Play_Ending(const _float& fTimeDelta);
 
+	void			Create_Map_Particles();
+
 public:
 	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene = false);
 

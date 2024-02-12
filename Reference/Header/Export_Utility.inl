@@ -104,6 +104,11 @@ inline void Create_Splash_Right(LPDIRECT3DDEVICE9 pDevice, _matrix matWorld, con
 	CParticleMgr::GetInstance()->Create_Splash_Right(pDevice, matWorld, pTextruePath, iMaxFrame, fSize, iCount);
 }
 
+inline void Create_Splash_Forward(LPDIRECT3DDEVICE9 pDevice, _matrix matWorld, const _tchar* pTextruePath, _int iMaxFrame, _float fSize, _int iCount)
+{
+	CParticleMgr::GetInstance()->Create_Splash_Forward(pDevice, matWorld, pTextruePath, iMaxFrame, fSize, iCount);
+}
+
 inline void Create_Burst(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount)
 {
 	CParticleMgr::GetInstance()->Create_Burst(pGraphicDev, matWorld, fSize, iCount);
