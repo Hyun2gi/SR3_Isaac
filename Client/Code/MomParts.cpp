@@ -45,6 +45,18 @@ HRESULT CMomParts::Ready_GameObject()
 
 _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bDead)
+	{
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), L"../Bin/Resource/Texture/Particle/BloodExp_Left/BloodExp_%d.png", 2, 2.f, 15);
+		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), L"../Bin/Resource/Texture/Particle/BloodExp_Right/BloodExp_%d.png", 2, 2.f, 15);
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 10.f, 30);
+
+		return 1;
+	}
+
 	if (!m_bCreate)
 	{
 		if (Check_Time(fTimeDelta))
@@ -82,6 +94,9 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bScaleChange)
 		Animation_Change();
+
+	if (m_pMom->Get_Dead())
+		m_bDead = true;
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 

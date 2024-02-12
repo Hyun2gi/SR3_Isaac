@@ -3,9 +3,11 @@
 #include "Monster.h"
 #include "GameObject.h"
 
+#include "Layer.h"
+
 class CMom : public CMonster
 {
-	const _float LIMIT_Y = 6.3f;
+	const _float LIMIT_Y = 6.f; // 6.3
 	const _float ORIGIN_SCALE = 10.f;
 private:
 	explicit CMom(LPDIRECT3DDEVICE9 pGraphicDev);
@@ -16,6 +18,7 @@ private:
 
 public:
 	void			Set_Hp_Minus() { m_iHp -= 1; }
+	void			Print_UI(CLayer* pLayer);
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -33,7 +36,6 @@ private:
 	void				Mom_Default();
 
 	void				Animation_Attack();
-	void				Anomation_Up();
 
 private:
 	_bool				m_bScaleReduceX;

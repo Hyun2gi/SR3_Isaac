@@ -1269,14 +1269,19 @@ void CLoadStage::Setting_UI()
 	CPlayerHP* pPlayerHP = CPlayerHP::Create(m_pGraphicDev, 30.f, 30.f, -370.f, 170.f, 1, 1);
 	m_mapLayer.at(L"UI")->Add_GameObject(L"PlayerHP", pPlayerHP);
 
-	// Boss HP Tool
+	// Monstro HP
 	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro") != nullptr &&
 		m_mapLayer.at(L"UI")->Get_GameObject(L"BossHPTool") == nullptr)
 	{
 		dynamic_cast<CMonstro*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro"))->Print_UI(m_mapLayer.at(L"UI"));
 	}
 
-	// Boss HP Bar
+	// Mom HP
+	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Mom") != nullptr &&
+		m_mapLayer.at(L"UI")->Get_GameObject(L"MomHPTool") == nullptr)
+	{
+		dynamic_cast<CMom*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Mom"))->Print_UI(m_mapLayer.at(L"UI"));
+	}
 
 #pragma endregion Boss HP
 

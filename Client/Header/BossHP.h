@@ -22,6 +22,7 @@ private:
 
 public:
 	void		Set_Target(CMonster* pMonster) { m_pMonster = pMonster; }
+	void		Set_IsMom() { m_bIsMom = true; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -37,6 +38,8 @@ private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
+
+	_bool				m_bIsMom;
 
 	_float				m_fAnimSpeed = 1.f;
 	_float				m_fCurFrame = 0.f;
