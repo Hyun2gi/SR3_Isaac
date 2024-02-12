@@ -8,6 +8,7 @@
 class CMonstro : public CMonster
 {
 	const _float CENTERY = 2.5f;
+	const _float ORIGIN_SCALE = 4.f;
 private:
 	explicit CMonstro(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CMonstro(const CMonstro& rhs);
@@ -36,10 +37,18 @@ private:
 	void			Bullet_Update();
 	void			Monstro_Default();
 
+	void			Animation_Attack();
+	void			Animation_Dead();
+
 private:
 	_bool			m_bDeadWait;
 	_bool			m_bJump;
 	_bool			m_bBullet;
+	_bool			m_bDeadAni;
+
+	_bool			m_bPosChange;
+	_bool			m_bScaleReduce;
+	_bool			m_bScaleChange;
 
 	_int			m_iPicNum;
 	_float			m_fFrameSpeed = 1.f;
@@ -48,6 +57,7 @@ private:
 	_float			m_fHitCoolTime; // 피격 쿨타임(혈사포 대책)
 
 	_vec3			m_vTargetPos;
+	_vec3			m_vDeadPos;
 
 	MONSTROSTATE	m_ePreState;
 	MONSTROSTATE	m_eCurState;

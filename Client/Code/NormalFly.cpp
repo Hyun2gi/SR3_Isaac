@@ -72,9 +72,7 @@ _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bDead)
 	{
-		_vec3 vPos;
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		// Ã³¸® X
 	}
 
 	if(!m_bDeadWait)
