@@ -4,6 +4,9 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
+#include "BossHP.h"
+#include "BossHPTool.h"
+
 CMom::CMom(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMonster(pGraphicDev)
 {
@@ -20,13 +23,27 @@ CMom::~CMom()
 {
 }
 
+void CMom::Print_UI(CLayer* pLayer)
+{
+	// 보스 HP UI 출력
+	//디바이스, x크기, y크기, x좌표, y좌표, x전체 크기, y전체 크기 (전체크기는 default 잡혀있음)
+	CBossHPTool* pBossHPTool = CBossHPTool::Create(m_pGraphicDev, 400.f, 170.f, 0.f, 230.f, 1, 1);
+	pLayer->Add_GameObject(L"MomHPTool", pBossHPTool);
+
+	// 보스 HP
+	CBossHP* pBossHP = CBossHP::Create(m_pGraphicDev, 400.f, 170.f, 0.f, 230.f, 1, 1);
+	pLayer->Add_GameObject(L"MomHP", pBossHP);
+	pBossHP->Set_Target(this);
+	pBossHP->Set_IsMom();
+}
+
 HRESULT CMom::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->m_vScale = { ORIGIN_SCALE, ORIGIN_SCALE, ORIGIN_SCALE };
 	m_pTransformCom->Set_Pos(10.f, 50.f, 10.f);
 
-	m_iHp = 1; // 645
+	m_iHp = 645; // 645
 
 	m_iRandNum = 0;
 	m_iPicNum = 1;
@@ -52,6 +69,20 @@ HRESULT CMom::Ready_GameObject()
 
 _int CMom::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bDead)
+	{
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		vPos.y = 5.f;
+		m_pTransformCom->Set_Pos(vPos);
+
+		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), L"../Bin/Resource/Texture/Particle/BloodExp_Left/BloodExp_%d.png", 2, 2.f, 25);
+		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), L"../Bin/Resource/Texture/Particle/BloodExp_Right/BloodExp_%d.png", 2, 2.f, 25);
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 10.f, 30);
+
+		return 1;
+	}
+
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
 	if (!m_bTimeScale)
@@ -70,19 +101,6 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 
 	if(!m_bDead)
 		Mom_Default();
-	else
-	{
-		_vec3 vPos;
-		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		vPos.y = 5.f;
-		m_pTransformCom->Set_Pos(vPos);
-
-		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), L"../Bin/Resource/Texture/Particle/BloodExp_Left/BloodExp_%d.png", 2, 2.f, 25);
-		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()),L"../Bin/Resource/Texture/Particle/BloodExp_Right/BloodExp_%d.png", 2, 2.f, 25);
-		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 10.f, 30);
-		
-		return 1;
-	}
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
@@ -103,6 +121,7 @@ void CMom::LateUpdate_GameObject()
 		if (0 >= m_iHp)
 		{
 			// 아이작을 부르는 소리를 지르며 아예 사라짐
+			m_iHp = 0;
 			m_bDead = true;
 		}
 	}
@@ -231,6 +250,11 @@ void CMom::Mom_Default()
 	}
 	else if (MOM_WAIT == m_eState)
 	{
+		_vec3 vPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+		vPos.y = LIMIT_Y;
+		m_pTransformCom->Set_Pos(vPos);
+
 		if (Check_Time(m_fSlowDelta))
 		{
 			m_eState = MOM_UP;

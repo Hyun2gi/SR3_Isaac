@@ -30,6 +30,8 @@ HRESULT CBossHP::Ready_GameObject()
 
 	m_pTransformCom->Set_Pos(_vec3(m_fPosX, m_fPosY, 0.0f));
 
+	m_bIsMom = false;
+
 	__super::Ready_GameObject();
 	Compute_ProjectionMatrix();
 
@@ -88,13 +90,30 @@ void CBossHP::Update_Scale()
 {
 	m_iTargetHP = m_pMonster->Get_HP();
 
-	_float fHpSize = 30 * 6.6f;
-	_float fItvX = fHpSize / 30;
+	if (!m_bIsMom)
+	{
+		_float fHpSize = 30 * 6.6f;
+		_float fItvX = fHpSize / 30;
 
-	m_pTransformCom->m_vScale.x = m_iTargetHP * 6.6f;
+		m_pTransformCom->m_vScale.x = m_iTargetHP * 6.6f;
 
-	m_pTransformCom->m_vInfo[INFO_POS].x = -fItvX * (30 - m_iTargetHP) * 0.6f;
+		m_pTransformCom->m_vInfo[INFO_POS].x = -fItvX * (30 - m_iTargetHP) * 0.6f;
+	}
+	else
+	{
+		_float fHpSize = 645 * 0.3f;
+		_float fItvX = fHpSize / 645;
 
+		if (1 > m_iTargetHP * fItvX)
+		{
+			m_pTransformCom->m_vScale.x = 5.f;
+		}
+		else
+		{
+			m_pTransformCom->m_vScale.x = m_iTargetHP * fItvX;
+			m_pTransformCom->m_vInfo[INFO_POS].x = -fItvX * (645 - m_iTargetHP) * 0.6f;
+		}
+	}
 }
 
 CBossHP* CBossHP::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
