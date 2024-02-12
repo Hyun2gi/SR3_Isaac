@@ -121,8 +121,6 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		Drop_ITem();
 	}
 
-
-
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
@@ -491,7 +489,6 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
 					pGameObject->Set_MyLayer(pLayerTag);
 					dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
-					dynamic_cast<CMomParts*>(pGameObject)->Set_Mom(dynamic_cast<CMom*>(pLayer->Get_GameObject(L"Mom")));
 					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
 				}
 				break;
@@ -1200,6 +1197,14 @@ void CLoadStage::Insert_Child()
 	{
 		dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))
 			->Set_ShellObj_ToStage(m_mapLayer.at(L"MapObj"));
+	}
+	
+	for (auto& iter : m_mapLayer.at(L"GameMst")->Get_ObjectMap()) // MomParts에 Mom 설정
+	{
+		if (MOM_PARTS == dynamic_cast<CMonster*>(iter.second)->Get_BossType())
+		{
+			dynamic_cast<CMomParts*>(iter.second)->Set_Mom(dynamic_cast<CMom*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Mom")));
+		}
 	}
 }
 

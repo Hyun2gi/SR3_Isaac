@@ -18,6 +18,7 @@ private:
 	enum PARTSSTATE { MOM_DOOR, MOM_EYE, MOM_SKIN, MOM_HAND, MOM_END };
 
 public:
+	CMom*			Get_Mom() { return m_pMom; }
 	void			Set_Mom(CMom* pMom) { m_pMom = pMom; }
 
 public:
