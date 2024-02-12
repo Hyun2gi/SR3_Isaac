@@ -149,6 +149,8 @@ public:
 
 	_vec3		Get_BulletDir();
 
+	int			Get_Azazel_Anim() { return m_iAzaelStateSet; }
+
 public:
 	void		Bullet_Change_To_Brim();
 
@@ -245,6 +247,12 @@ private:
 	_vec3				m_vBulletDir;
 
 	int					m_iShootWalkDir;
+
+
+	CGameObject*		m_pLeg;
+
+	int					m_iAzaelStateSet;
+
 
 private:
 	list<CGameObject*>	m_PlayerBulletList;

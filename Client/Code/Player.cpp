@@ -10,6 +10,8 @@
 #include "EpicBullet.h"
 #include "EpicBulletMark.h"
 
+#include "PlayerLeg.h"
+
 IMPLEMENT_SINGLETON(CPlayer)
 
 CPlayer::CPlayer()
@@ -75,7 +77,13 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_bStartAnim = true;
 
 		// 아이작으로 시작
-		m_eCurPlayerVer = P_ISAAC;
+		m_eCurPlayerVer = P_ISAAC;  //P_AZAZEL;
+
+		// 0일때는 가만히
+		m_iAzaelStateSet = 0;
+
+		// 아자젤때를 위해 다리만들기
+		m_pLeg = CPlayerLeg::Create(m_pGraphicDev);
 	}
 	else
 	{
@@ -130,7 +138,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	if (m_bStartAnim)
 	{
 		m_bStartAnim = false;
-		Set_Cry_Anim();
+		//Set_Cry_Anim();
 	}
 
 	// 특정 모션 처리
@@ -156,8 +164,22 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
 	}
 
+
+	if (m_eCurPlayerVer == P_AZAZEL && m_eCurState != P_SHOOTIDLE && m_eCurState != P_SHOOTWALK && m_fPicNum < m_fFrame)
+	{
+		m_fFrame = 0.f;
+	}
+	else if (m_eCurPlayerVer == P_AZAZEL && (m_eCurState == P_SHOOTIDLE || m_eCurState == P_SHOOTWALK))
+	{
+		if (m_fPicNum < m_fFrame)
+		{
+			m_fFrame = m_fPicNum - 1;
+		}
+	}
+
+
 	// P_THUMBS_UP 일때는 처음 스프라이트로 돌아가면 안됨
-	if (m_fPicNum < m_fFrame && m_eCurState != P_THUMBS_UP)
+	if (m_fPicNum < m_fFrame && m_eCurState != P_THUMBS_UP && m_eCurPlayerVer == P_ISAAC)
 	{
 		m_fFrame = 0.f;
 	}
@@ -218,6 +240,19 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		
 	}
 
+	// 아자젤일때 다리 업데이트
+	if (m_eCurPlayerVer == P_AZAZEL)
+	{
+		dynamic_cast<CPlayerLeg*>(m_pLeg)->Update_GameObject(fTimeDelta);
+
+		// 아자젤일때 다리 조금 낮게 출력
+		_vec3 playerpos = m_pTransformCom->m_vInfo[INFO_POS];
+		playerpos -= _vec3(0, 0.2, 0);
+		m_pTransformCom->Set_Pos(playerpos);
+	}
+
+
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	if (m_bRender)
@@ -260,6 +295,14 @@ void CPlayer::LateUpdate_GameObject()
 			dynamic_cast<CEpicBulletMark*>(iter)->LateUpdate_GameObject();
 		}
 	}
+
+	// 아자젤일때 다리 업데이트
+	if (m_eCurPlayerVer == P_AZAZEL)
+	{
+		dynamic_cast<CPlayerLeg*>(m_pLeg)->LateUpdate_GameObject();
+
+	}
+
 
 	__super::LateUpdate_GameObject();
 
@@ -334,7 +377,6 @@ HRESULT CPlayer::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_IDLE", pComponent });
 
-
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
@@ -342,6 +384,27 @@ HRESULT CPlayer::Add_Component()
 	pComponent = m_pCalculatorCom = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
+
+	// 아자젤 텍스처
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_AZAZEL_HEAD_BACK"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_AZAZEL_HEAD_BACK", pComponent });
+
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_AZAZEL_HEAD_LEFT"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_AZAZEL_HEAD_LEFT", pComponent });
+
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_AZAZEL_HEAD_RIGHT"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_AZAZEL_HEAD_RIGHT", pComponent });
+
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_AZAZEL_HEAD_IDLE"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_AZAZEL_HEAD_IDLE", pComponent });
+
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_AZAZEL_ATTACKED"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_AZAZEL_ATTACKED", pComponent });
 		
 	return S_OK;
 }
@@ -383,6 +446,7 @@ void CPlayer::Set_MouseRotation(float xRad, float yRad)
 	m_pTransformCom->Rotation(ROT_Y, xRad);
 }
 
+
 void CPlayer::Set_BulletType(int _bullet)
 {
 	switch (_bullet)
@@ -393,11 +457,11 @@ void CPlayer::Set_BulletType(int _bullet)
 		break;
 	case 2:
 		m_eCurBulletState = P_BULLET_BRIMSTONE;
-		m_fShootDelayTime = 90;
+		m_fAttackSpeed = 120;
 		break;
 	case 3:
 		m_eCurBulletState = P_BULLET_EPIC;
-		m_fShootDelayTime = 90;
+		m_fAttackSpeed = 80;
 		break;
 	}
 }
@@ -592,6 +656,9 @@ void CPlayer::Set_Attacked()
 		// 키막기
 		m_bKeyBlock = true;
 		m_fDelayTime = 0.f;
+
+		// 아자젤은 피격당할때 다리 삭제되도록
+		m_iAzaelStateSet = 5;
 	}
 }
 
@@ -631,6 +698,7 @@ _vec3 CPlayer::Get_BulletDir()
 
 	return m_vBulletDir;
 }
+
 
 void CPlayer::Bullet_Change_To_Brim()
 {
@@ -690,6 +758,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				// 쏘면서 걸을때 방향 얻기
 				m_iShootWalkDir = 0;
 			}
+
+			// 아자젤 anim 설정
+			m_iAzaelStateSet = 1;
 		}
 		else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
 		{
@@ -711,6 +782,10 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_eCurState = P_SHOOTWALK;
 				m_iShootWalkDir = 1;
 			}
+
+
+			// 아자젤 anim 설정
+			m_iAzaelStateSet = 2;
 		}
 		else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
 		{
@@ -734,6 +809,9 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_iShootWalkDir = 2;
 			}
 
+
+			// 아자젤 anim 설정
+			m_iAzaelStateSet = 3;
 		}
 		else if (Engine::Get_DIKeyState(DIK_D) & 0x80)
 		{
@@ -757,6 +835,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_iShootWalkDir = 3;
 			}
 
+			// 아자젤 anim 설정
+			m_iAzaelStateSet = 4;
 		}
 		else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
 		{
@@ -774,6 +854,8 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_eCurState = P_IDLE;
 			}
 			
+			// 아자젤 anim 설정
+			m_iAzaelStateSet = 0;
 		}
 	}
 	
@@ -802,21 +884,39 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_eCurState = P_SHOOTIDLE;
 			}
 
-			
-			if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTIDLE && m_iTempTimer > 30)
+			// m_iTempTimer : 머리 작아지고 커지는거에 변화주는 요소
+			if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTIDLE && m_iTempTimer > 30 && m_eCurBulletState == P_BULLET_IDLE)
 			{
 				// 슛은 눌렀지만 슛은 못하고 있을때
 				// 가만히 서있을때
 				m_iTempTimer = 0;
 				m_eCurState = P_BACKIDLE;
 			}
-			else if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTWALK && m_iTempTimer > 30)
+			else if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTWALK && m_iTempTimer > 30 && m_eCurBulletState == P_BULLET_IDLE)
 			{
 				// 슛은 눌렀지만 슛은 못하고 있을때
 				// 움직일때
 				m_iTempTimer = 0;
 				m_eCurState = P_BACKWALK;
 			}
+
+			// m_iTempTimer : 머리 커지는거 변화안받을땐
+			if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTIDLE  && m_eCurBulletState != P_BULLET_IDLE)
+			{
+				// 슛은 눌렀지만 슛은 못하고 있을때
+				// 가만히 서있을때
+				m_iTempTimer = 0;
+				m_eCurState = P_BACKIDLE;
+			}
+			else if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTWALK && m_eCurBulletState != P_BULLET_IDLE)
+			{
+				// 슛은 눌렀지만 슛은 못하고 있을때
+				// 움직일때
+				m_iTempTimer = 0;
+				m_eCurState = P_BACKWALK;
+			}
+
+
 
 			// m_fShootDelay가 0일때만 쏠 수 있음
 			if (m_fShootDelayTime == 0)
@@ -835,6 +935,13 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 					}
 				}
 				m_fShootDelayTime++;
+			}
+			else
+			{
+				if (m_PlayerBulletList.empty())
+				{
+					m_eCurState = P_BACKIDLE;
+				}
 			}
 		}
 		else if (m_eCurBulletState == P_BULLET_EPIC)
@@ -958,50 +1065,42 @@ void CPlayer::Motion_Change()
 				m_fPicNum = 11;
 				m_fSpriteSpeed = 1.5f;
 				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_IDLE"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_IDLE"));
 				break;
 			case P_BACKWALK:
 				m_fPicNum = 11;
 				m_fSpriteSpeed = 1.5f;
 				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK"));
 				break;
 			case P_BACKIDLE:
 				m_fPicNum = 1;
 				m_fSpriteSpeed = 1.5f;
 				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK"));
 				break;
 			case P_SHOOTWALK:
 				m_fPicNum = 11;
 				m_fSpriteSpeed = 1.5f;
 				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK_SMALL"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK_SMALL"));
 				break;
 			case P_SHOOTIDLE:
 				m_fPicNum = 1;
 				m_fSpriteSpeed = 1.5f;
 				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK_SMALL"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK_SMALL"));
 				break;
 			case P_LEFTWALK:
 				m_fPicNum = 8;
 				m_fSpriteSpeed = 1.5f;
 				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_LEFT"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_LEFT"));
 				break;
 			case P_RIGHTWALK:
 				m_fPicNum = 8;
 				m_fSpriteSpeed = 1.5f;
 				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_RIGHT"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_RIGHT"));
 				break;
 			case P_THUMBS_UP:
 				m_fPicNum = 3;
 				m_fSpriteSpeed = 1.f;
 				m_bKeyBlock = true; //key 막기
 				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_THUMBS_UP"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_THUMBS_UP"));
 				break;
 			case P_GET_BAD_ITEM:
 				m_fPicNum = 1;
@@ -1031,85 +1130,54 @@ void CPlayer::Motion_Change()
 		}
 		else if (m_eCurPlayerVer == P_AZAZEL)
 		{
+			// HEAD만 넘기는
 			switch (m_eCurState)
 			{
 			case P_IDLE:
 				m_fPicNum = 1;
 				m_fSpriteSpeed = 1.5f;
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_IDLE"));
+				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_AZAZEL_HEAD_IDLE"));
 				break;
 			case P_IDLEWALK:
-				m_fPicNum = 11;
+				m_fPicNum = 1;
 				m_fSpriteSpeed = 1.5f;
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_IDLE"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_IDLE"));
+				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_AZAZEL_HEAD_IDLE"));
 				break;
 			case P_BACKWALK:
-				m_fPicNum = 11;
+				m_fPicNum = 1;
 				m_fSpriteSpeed = 1.5f;
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK"));
+				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_AZAZEL_HEAD_BACK"));
 				break;
 			case P_BACKIDLE:
 				m_fPicNum = 1;
 				m_fSpriteSpeed = 1.5f;
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK"));
+				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_AZAZEL_HEAD_BACK"));
 				break;
 			case P_SHOOTWALK:
-				m_fPicNum = 11;
-				m_fSpriteSpeed = 1.5f;
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK_SMALL"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK_SMALL"));
+				m_fPicNum = 8;
+				m_fSpriteSpeed = 1.f;
+				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_AZAZEL_HEAD_BACK"));
 				break;
 			case P_SHOOTIDLE:
-				m_fPicNum = 1;
-				m_fSpriteSpeed = 1.5f;
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_BACK_SMALL"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_BACK_SMALL"));
+				m_fPicNum = 8;
+				m_fSpriteSpeed = 1.f;
+				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_AZAZEL_HEAD_BACK"));
 				break;
 			case P_LEFTWALK:
-				m_fPicNum = 8;
+				m_fPicNum = 1;
 				m_fSpriteSpeed = 1.5f;
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_LEFT"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_LEFT"));
+				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_AZAZEL_HEAD_LEFT"));
 				break;
 			case P_RIGHTWALK:
-				m_fPicNum = 8;
-				m_fSpriteSpeed = 1.5f;
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_RIGHT"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_RIGHT"));
-				break;
-			case P_THUMBS_UP:
-				m_fPicNum = 3;
-				m_fSpriteSpeed = 1.f;
-				m_bKeyBlock = true; //key 막기
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_THUMBS_UP"));
-				//m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, L"GameLogic", L"Player", L"Proto_PlayerTexture_THUMBS_UP"));
-				break;
-			case P_GET_BAD_ITEM:
 				m_fPicNum = 1;
-				m_fSpriteSpeed = 1.f;
-				m_bKeyBlock = true; //key 막기
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_GET_BAD_ITEM"));
+				m_fSpriteSpeed = 1.5f;
+				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_AZAZEL_HEAD_RIGHT"));
 				break;
 			case P_ATTACKED:
 				m_fPicNum = 1;
 				m_fSpriteSpeed = 1.f;
 				m_bKeyBlock = true; //key 막기
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_ATTACKED"));
-				break;
-			case P_CRY_LIE:
-				m_fPicNum = 1;
-				m_fSpriteSpeed = 1.f;
-				m_bKeyBlock = true; //key 막기
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_LIE_CRY"));
-				break;
-			case P_CRY_OPEN_EYE:
-				m_fPicNum = 1;
-				m_fSpriteSpeed = 1.f;
-				m_bKeyBlock = true; //key 막기
-				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_LIE_CRY_OPEN_EYE"));
+				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_AZAZEL_ATTACKED"));
 				break;
 			}
 		}
@@ -1129,7 +1197,7 @@ void CPlayer::Bullet_Change()
 			m_fAttackSpeed = 20;
 			break;
 		case P_BULLET_BRIMSTONE:
-			m_fAttackSpeed = 100;
+			m_fAttackSpeed = 120;
 			break;
 		case P_BULLET_EPIC:
 			m_fAttackSpeed = 80;
@@ -1299,6 +1367,11 @@ void CPlayer::Free()
 			Engine::Safe_Release(*iter);
 			iter = m_EpicMarkList.erase(iter);
 		}
+	}
+
+	if (m_pLeg != nullptr)
+	{
+		Engine::Safe_Release(m_pLeg);
 	}
 	
 	__super::Free();

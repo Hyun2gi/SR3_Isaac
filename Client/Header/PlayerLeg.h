@@ -21,7 +21,7 @@ private:
 	explicit CPlayerLeg(const CPlayerLeg& rhs);
 	virtual ~CPlayerLeg();
 
-	enum PLAYER_LEG_ID { P_LEG_IDLE, P_LEG_FRONT, P_LEG_LEFT, P_LEG_RIGHT, P_LEG_END};
+	enum PLAYER_LEG_ID { P_LEG_FRONT_IDLE, P_LEG_FRONT, P_LEG_BACK, P_LEG_LEFT, P_LEG_RIGHT, P_LEG_NO_SHOW, P_LEG_END};
 
 public:
 	virtual HRESULT Ready_GameObject();
@@ -47,6 +47,7 @@ private:
 	_float				m_iPicNum; // 이미지 개수
 	_float				m_fCallLimit;
 	_float				m_fAccTimeDelta;
+	_float				m_fMoveSpeed;
 
 	_float				m_fSpriteSpeed; // 스프라이트 변화속도
 

@@ -138,18 +138,9 @@ void CEpic::Render_GameObject()
 
 void CEpic::Run_Item_Effect()
 {
-    if (m_eCurItemPlace == SP_SHOP)
-    {
-        // 구매해야할 경우
-        if (CPlayer::GetInstance()->Get_Coin() >= m_iCoin)
-        {
-            CPlayer::GetInstance()->Set_BulletType(3);
-            CPlayer::GetInstance()->Set_Coin(-m_iCoin);
-            m_bDead = true;
-            CPlayer::GetInstance()->Set_Item_Get_Anim();
-        }
-    }
-    
+    CPlayer::GetInstance()->Set_BulletType(3);
+    m_bDead = true;
+    CPlayer::GetInstance()->Set_Item_Get_Anim();
 }
 
 void CEpic::Item_Spawn_Action()
