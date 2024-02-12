@@ -33,6 +33,9 @@ HRESULT CMomParts::Ready_GameObject()
 
 	m_ePreState = MOM_END;
 
+	m_bScaleReduce = false;
+	m_bScaleChange = false;
+
 	m_bBoss = true;
 	m_eBossType = MOM_PARTS;
 
@@ -73,7 +76,7 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_fCallLimit = (_float)m_iRandNum;
 
-		Change_State();
+		Change_State(); // 이때 애니메이션도 들어가야함
 	}
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
@@ -213,6 +216,10 @@ void CMomParts::Change_State()
 		m_eCurState = MOM_HAND;
 	else if (3 == (m_iRandNum % 4))
 		m_eCurState = MOM_DOOR;
+}
+
+void CMomParts::Animation_Change()
+{
 }
 
 void CMomParts::Setting_Value()
