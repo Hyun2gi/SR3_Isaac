@@ -6,6 +6,7 @@
 class CMom : public CMonster
 {
 	const _float LIMIT_Y = 6.3f;
+	const _float ORIGIN_SCALE = 10.f;
 private:
 	explicit CMom(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CMom(const CMom& rhs);
@@ -29,8 +30,18 @@ private:
 
 	void				Scale_Change();
 	void				Attack(const _float& fTimeDelta);
+	void				Mom_Default();
+
+	void				Animation_Attack();
+	void				Anomation_Up();
 
 private:
+	_bool				m_bScaleReduceX;
+	_bool				m_bScaleReduceY;
+	_bool				m_bScaleChange;
+	_int				m_iScaleCountX;
+	_int				m_iScaleCountY;
+
 	_bool				m_bReduce;
 	_int				m_iRandNum;
 	_int				m_iPicNum;
