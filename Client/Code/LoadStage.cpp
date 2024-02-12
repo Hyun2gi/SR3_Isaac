@@ -538,7 +538,11 @@ HRESULT CLoadStage::Ready_Layer_Door(const _tchar* pLayerTag)
 	int i = 0;
 	for (auto& iter : vecDoorTheme)
 	{
-		if (1 > iter) continue;
+		if (1 > iter)
+		{
+			++i;
+			continue;
+		}
 
 		switch (i)
 		{
