@@ -137,7 +137,7 @@ void CItemFontUI::Change_Font()
 		m_vecDetailPos = { 200.f, 120.f };
 		break;
 	case Engine::SAD_ONION:
-		lstrcpy(m_szItem, L"THE SAD ONION");
+		lstrcpy(m_szItem, L"폰트확인중"); // THE SAD ONION 
 		lstrcpy(m_szItemDetail, L"Tears up");
 		m_vecEndPos = { 190.f, 100.f };
 		m_vecDetailPos = { 200.f, 120.f };

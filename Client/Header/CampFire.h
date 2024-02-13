@@ -17,6 +17,7 @@ private:
 
 public:
 	void			Set_Fire_ToStage(CLayer* pLayer);
+	CFire*			Get_Fire() { return m_pFire; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;

@@ -1253,12 +1253,19 @@ void CLoadStage::Insert_Child()
 			->Set_NormalFly_ToStage(m_mapLayer.at(L"GameMst"));
 	}
 
-	// Fire (Campfire) 추가
-	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Campfire") != nullptr &&
-		m_mapLayer.at(L"MapObj")->Get_GameObject(L"Fire") == nullptr)
+	// Fire (Campfire) 추가 // (auto& iter : m_mapLayer.at(L"GameMst")->Get_ObjectMap()
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Fire") == nullptr)
 	{
-		dynamic_cast<CCampFire*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"Campfire"))
-			->Set_Fire_ToStage(m_mapLayer.at(L"MapObj"));
+		for (auto& iter : m_mapLayer.at(L"MapObj")->Get_ObjectMap()) // 맵에 저장된 campfire 전부 순회하며 child 를 추가
+		{
+			if (CAMPFIRE == dynamic_cast<CMapObj*>(iter.second)->Get_Type())
+			{
+				if (dynamic_cast<CCampFire*>(iter.second)->Get_Fire() != nullptr)
+				{
+					dynamic_cast<CCampFire*>(iter.second)->Set_Fire_ToStage(m_mapLayer.at(L"MapObj")); // 한번만 추가할 방법?
+				}
+			}
+		}
 	}
 
 	// SlotMC
