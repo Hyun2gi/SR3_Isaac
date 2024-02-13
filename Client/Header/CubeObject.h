@@ -26,7 +26,7 @@ public:
 
 	HRESULT Set_Cute_Texture(const _tchar* pTextureTag);
 	void	Set_Dst_Pos(_vec3 vDst);
-	void	Set_Cube_Action_Type(_int iAction) { m_iActionType = iAction; }
+	void	Set_Cube_Action_Type(_int iAction);
 
 	bool	Get_Arrived() { return m_bIsArrived; }
 
@@ -64,7 +64,7 @@ private:
 
 	_vec3 m_vDstScale;
 	_vec3 m_vTempScale;
-	bool	m_bIsExpanion;
+	bool	m_bIsExpansion;
 
 	_vec3 m_vTempAngle;
 	bool	m_bIsShaked;
