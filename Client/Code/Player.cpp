@@ -726,6 +726,7 @@ _vec3 CPlayer::Get_BulletDir()
 void CPlayer::Set_CameraShaking(float shakeTime, float shakeIntensity)
 {
 	//OnShakeCameraPos(0.2, 2);
+	// shakeIntensity : 1권장..(기본값)
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnShakeCameraPos(shakeTime, shakeIntensity);
 }
 
