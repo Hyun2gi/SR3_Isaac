@@ -136,7 +136,7 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 		if (m_bShakeCamera == false)
 		{
 			//OnShakeCameraPos(float shakeTime, float shakeIntensity)
-			OnShakeCameraPos(0.2, 2);
+			OnShakeCameraPos(1.2, 1);
 			//OnShakeCameraRot(2, 2);
 		}
 	}
@@ -524,6 +524,8 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 					playerRightDir *= -1;
 				}
 				m_iShakeNum++;
+
+				playerRightDir *= m_fShakeIntensity;
 
 				// 목표위치
 				// moveDir과 곱해주는 값은 작아야함!!
