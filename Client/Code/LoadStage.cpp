@@ -1028,27 +1028,33 @@ void CLoadStage::MapObj_Collision()
 
 			if (pMapObj)
 			{
-				// 일반 총알일때 이펙트 보여주려고 해당부분 처리
-				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
+				if (dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() && // Bullet이 Dead가 아닐 때
+					!dynamic_cast<CMapObj*>(pMapObj)->Get_Dead())			// MapObj도 Dead가 아닐 때
 				{
-					// 일반 총알 충돌처리
-					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
-				}
+					// 일반 총알일때 이펙트 보여주려고 해당부분 처리
+					if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
+					{
+						// 일반 총알 충돌처리
+						dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
+					}
 
-				if (POOP == dynamic_cast<CMapObj*>(pMapObj)->Get_Type())
-				{
-					dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
-					break;
-				}
-				else if (0 == dynamic_cast<CMapObj*>(pMapObj)->Get_ObjID())
-				{
-					dynamic_cast<CFire*>(pMapObj)->Set_Hit();
-					break;
+					if (POOP == dynamic_cast<CMapObj*>(pMapObj)->Get_Type())
+					{
+						dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
+						break;
+					}
+					else if (0 == dynamic_cast<CMapObj*>(pMapObj)->Get_ObjID())
+					{
+						dynamic_cast<CFire*>(pMapObj)->Set_Hit();
+						break;
+					}
+					else
+					{
+						break; // 머야
+					}
 				}
 				else
-				{
-					break;
-				}
+					++iter;
 			}
 			else
 				++iter;
