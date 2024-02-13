@@ -35,7 +35,7 @@ HRESULT CItemFontUI::Ready_GameObject()
 
 	m_pTransformCom->Set_Pos(_vec3(m_fPosX, m_fPosY, 0.0f));
 
-	m_eItemType = ITEM_NONE;
+	m_eItemType = TRINKET; // ITEM_NONE
 
 	__super::Ready_GameObject();
 
@@ -63,8 +63,10 @@ _int CItemFontUI::Update_GameObject(const _float& fTimeDelta)
 		//m_vecFontPos = { 10.f, m_vecEndPos.y };
 	}
 
-	// m_bRender가 true이면 좌측에서 생성되어 중앙까지 이동 후 몇 초 뒤에 사라지기
-	//m_bRender = true;
+	m_vecFontPos.y = FONT_Y;
+	m_vecDetailPos.y = DETAIL_Y;
+
+	m_bRender = true;
 
 	return 0;
 }
@@ -83,8 +85,8 @@ void CItemFontUI::Render_GameObject()
 	if (m_bRender)
 	{
 		m_pBufferCom->Render_Buffer(); // 뒷배경
-		Engine::Render_Font(L"Font_Item", m_szItem, &m_vecEndPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-		Engine::Render_Font(L"Font_Item_Detail", m_szItemDetail, &m_vecDetailPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+		Engine::Render_Font(L"Neo둥근모 Code", m_szItem, &m_vecFontPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+		Engine::Render_Font(L"Neo둥근모", m_szItemDetail, &m_vecDetailPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 	}
 }
 
@@ -127,34 +129,32 @@ void CItemFontUI::Change_Font()
 	case Engine::BRIM:
 		lstrcpy(m_szItem, L"BRIMSTONE");
 		lstrcpy(m_szItemDetail, L"Blood Laser Barrage");
-		m_vecEndPos = { 400.f, 180.f };
-		m_vecDetailPos = { 200.f, 120.f };
+		m_vecFontPos.x = 265.f;
+		m_vecDetailPos.x = 250.f;
 		break;
 	case Engine::EPIC:
 		lstrcpy(m_szItem, L"EPIC FETUS");
 		lstrcpy(m_szItemDetail, L"On-demand air strike");
-		m_vecEndPos = { 400.f, 180.f };
-		m_vecDetailPos = { 200.f, 120.f };
+		m_vecFontPos.x = 245.f;
+		m_vecDetailPos.x = 240.f;
 		break;
 	case Engine::SAD_ONION:
-		lstrcpy(m_szItem, L"폰트확인중"); // THE SAD ONION 
+		lstrcpy(m_szItem, L"THE SAD ONION"); // THE SAD ONION 【 】
 		lstrcpy(m_szItemDetail, L"Tears up");
-		m_vecEndPos = { 190.f, 100.f };
-		m_vecDetailPos = { 200.f, 120.f };
+		m_vecFontPos.x = 210.f;
+		m_vecDetailPos.x = 330.f; // 320
 		break;
 	case Engine::TRINKET:
 		lstrcpy(m_szItem, L"WHIP WORM");
 		lstrcpy(m_szItemDetail, L"Wooosh!");
-		m_vecEndPos = { 400.f, 180.f };
-		m_vecDetailPos = { 200.f, 120.f };
+		m_vecFontPos.x = 270.f;
+		m_vecDetailPos.x = 350.f;
 		break;
 	case Engine::PILL:
 		lstrcpy(m_szItem, L"PILL"); // 추후 바꿔야함
-		m_vecEndPos = { 400.f, 180.f };
+		m_vecFontPos = { 400.f, DETAIL_Y };
 		break;
 	default:
-		lstrcpy(m_szItem, L"Test"); // 추후 바꿔야함
-		lstrcpy(m_szItemDetail, L"BRIMSTONE");
 		break;
 	}
 }

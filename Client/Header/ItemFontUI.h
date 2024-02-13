@@ -13,6 +13,8 @@ END
 
 class CItemFontUI : public Engine::CUI
 {
+	const _float FONT_Y = 95.f;
+	const _float DETAIL_Y = 123.f;
 private:
 	explicit CItemFontUI(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CItemFontUI(const CItemFontUI& rhs);
