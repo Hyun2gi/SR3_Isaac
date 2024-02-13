@@ -277,6 +277,9 @@
     <Filter Include="02. GameObject\07. Bullet\03. EpicBullet\00. EpicBulletMark">
       <UniqueIdentifier>{995ce57f-74f8-40d0-98af-479d08da4141}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. MapObject\07. Shadow">
+      <UniqueIdentifier>{599193bc-3e96-4b75-bd4c-7434a9cc3139}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -483,15 +486,6 @@
     <ClInclude Include="..\Header\Menu.h">
       <Filter>02. GameObject\12. UI\00. Menu</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\PlayerCoin.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\PlayerHP.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\PLCoinFont.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\MoveXObstacle.h">
       <Filter>02. GameObject\10. Room\03.Obstacle\MoveX</Filter>
     </ClInclude>
@@ -501,7 +495,6 @@
     <ClInclude Include="..\Header\Obstacle.h">
       <Filter>02. GameObject\10. Room\03.Obstacle\Normal</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\HeartUI.h" />
     <ClInclude Include="..\Header\Ending.h">
       <Filter>01. Scene\05. Ending</Filter>
     </ClInclude>
@@ -525,6 +518,21 @@
     </ClInclude>
     <ClInclude Include="..\Header\EpicBulletMark.h">
       <Filter>02. GameObject\07. Bullet\03. EpicBullet\00. EpicBulletMark</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\PlayerCoin.h">
+      <Filter>02. GameObject\12. UI\01. Player\01. Player Coin</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\PlayerHP.h">
+      <Filter>02. GameObject\12. UI\01. Player\00. Player HP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\HeartUI.h">
+      <Filter>02. GameObject\12. UI\01. Player\00. Player HP\00. Player Heart</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\PLCoinFont.h">
+      <Filter>02. GameObject\12. UI\01. Player\01. Player Coin\00. PLCoinFont</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\Shadow.h">
+      <Filter>02. GameObject\09. MapObject\07. Shadow</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -723,18 +731,6 @@
     <ClCompile Include="..\Code\Menu.cpp">
       <Filter>02. GameObject\12. UI\00. Menu</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\HeartUI.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\PlayerCoin.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\PlayerHP.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\PLCoinFont.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\MoveXObstacle.cpp">
       <Filter>02. GameObject\10. Room\03.Obstacle\MoveX</Filter>
     </ClCompile>
@@ -767,6 +763,21 @@
     </ClCompile>
     <ClCompile Include="..\Code\EpicBulletMark.cpp">
       <Filter>02. GameObject\07. Bullet\03. EpicBullet\00. EpicBulletMark</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PlayerCoin.cpp">
+      <Filter>02. GameObject\12. UI\01. Player\01. Player Coin</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PlayerHP.cpp">
+      <Filter>02. GameObject\12. UI\01. Player\00. Player HP</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\HeartUI.cpp">
+      <Filter>02. GameObject\12. UI\01. Player\00. Player HP\00. Player Heart</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\PLCoinFont.cpp">
+      <Filter>02. GameObject\12. UI\01. Player\01. Player Coin\00. PLCoinFont</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Shadow.cpp">
+      <Filter>02. GameObject\09. MapObject\07. Shadow</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

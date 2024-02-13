@@ -194,6 +194,7 @@
     <ClInclude Include="..\Header\PlayerHP.h" />
     <ClInclude Include="..\Header\PlayerLeg.h" />
     <ClInclude Include="..\Header\PLCoinFont.h" />
+    <ClInclude Include="..\Header\Shadow.h" />
     <ClInclude Include="..\Header\Shell.h" />
     <ClInclude Include="..\Header\ShellGame.h" />
     <ClInclude Include="..\Header\ShellNpc.h" />
@@ -278,6 +279,7 @@
     <ClCompile Include="..\Code\PlayerHP.cpp" />
     <ClCompile Include="..\Code\PlayerLeg.cpp" />
     <ClCompile Include="..\Code\PLCoinFont.cpp" />
+    <ClCompile Include="..\Code\Shadow.cpp" />
     <ClCompile Include="..\Code\Shell.cpp" />
     <ClCompile Include="..\Code\ShellGame.cpp" />
     <ClCompile Include="..\Code\ShellNpc.cpp" />
