@@ -6,7 +6,7 @@
 #include "CubeObject.h"
 
 CFloor::CFloor(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CGameObject(pGraphicDev), m_bStartScene(false)
+	: Engine::CGameObject(pGraphicDev), m_bStartScene(false), m_iCubeActionType(0)
 {
 }
 
@@ -82,6 +82,7 @@ HRESULT CFloor::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag)
 			_vec3 vScale(pTemp->m_vScale.x * 2, pTemp->m_vScale.y * 2, pTemp->m_vScale.z * 2);
 
 			pCube->Set_Dst_Pos({ (_float)(j * vScale.x), -vScale.y * 0.5f, (_float)(i * vScale.z) });
+			pCube->Set_Cube_Action_Type(m_iCubeActionType);
 			m_vecCubes[iIdx] = pCube;
 		}
 
@@ -119,15 +120,18 @@ HRESULT CFloor::Add_Component()
 	return S_OK;
 }
 
-CFloor * CFloor::Create(LPDIRECT3DDEVICE9 pGraphicDev, bool bStartScene)
+CFloor * CFloor::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
+	_int iCubeActionType,
+	bool bStartScene)
 {
 	CFloor *	pInstance = new CFloor(pGraphicDev);
 	pInstance->m_bStartScene = bStartScene;
+	pInstance->m_iCubeActionType = iCubeActionType;
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("SkyBox Create Failed");
+		MSG_BOX("Floor Create Failed");
 		return nullptr;
 	}
 

@@ -707,6 +707,8 @@ HRESULT CLoadStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 
 HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 {
+	CUBE_ACTION_TYPE eAction = (CUBE_ACTION_TYPE)(rand() % ACTION_END);
+
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
@@ -721,11 +723,10 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 
 	//바닥 추가
 	wstrTag = wstrProto + wstrTheme + L"FloorCubeTexture";
-	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev, m_bStartScene);
+	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev, 1, m_bStartScene);
 	m_pFloor->Set_Cube_Texture_Tag(wstrTag.c_str());
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Floor", pGameObject), E_FAIL);
-
 
 	//벽 추가
 	// 여기는 벽의 큐브 텍스처의 태그를 만들어서 넘겨주는 부분

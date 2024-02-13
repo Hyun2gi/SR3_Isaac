@@ -40,8 +40,12 @@ private:
 	Engine::CTransform* m_pTransformCom;
 	vector<CCubeObject*> m_vecCubes;
 
+	_int	m_iCubeActionType;
+
 public:
-	static CFloor*		Create(LPDIRECT3DDEVICE9	pGraphicDev, bool bStart = false);
+	static CFloor*		Create(LPDIRECT3DDEVICE9	pGraphicDev,
+		_int iCubeActionType,
+		bool bStart = false);
 
 private:
 	virtual void Free() override;
