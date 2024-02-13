@@ -33,8 +33,11 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 		m_pGraphicDev = pGraphicDev;
 
+		m_ePreState = P_END;
+		m_eCurState = P_IDLE;
+
 		m_ePreBulletState = P_BULLET_END;
-		m_eCurBulletState = P_BULLET_EPIC; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
+		m_eCurBulletState = P_BULLET_BRIMSTONE; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
 		m_ePreState = P_END;
 
 		// 딜레이 시간 초기화
@@ -64,6 +67,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_bEpicLieTiming = false;
 
 		m_bShoot = false;
+		m_bBrimeStoneShoot = false;
 
 		m_bUnbeatable = false;
 		m_fUnbeatableTime = 0;
@@ -77,7 +81,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_bStartAnim = true;
 
 		// 아이작으로 시작
-		m_eCurPlayerVer = P_ISAAC;   //P_ISAAC;  //P_AZAZEL;
+		m_eCurPlayerVer = P_AZAZEL;   //P_ISAAC;  //P_AZAZEL;
 
 		// 0일때는 가만히
 		m_iAzaelStateSet = 0;
@@ -172,6 +176,23 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	}
 	else if (m_eCurPlayerVer == P_AZAZEL && (m_eCurState == P_SHOOTIDLE || m_eCurState == P_SHOOTWALK))
 	{
+		// 7 이상
+		if (6 < m_fFrame)
+		{
+			if (m_PlayerBulletList.empty() && m_bBrimeStoneShoot)
+			{
+				// bullet 추가하기
+				for (int i = 0; i < 50; i++)
+				{
+					m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag, i, false));
+					m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag, i, true));
+				}
+
+				m_bBrimeStoneShoot = false;
+			}
+		}
+
+		// 아자젤일때 계속 유지
 		if (m_fPicNum < m_fFrame)
 		{
 			m_fFrame = m_fPicNum - 1;
@@ -459,7 +480,7 @@ void CPlayer::Set_BulletType(int _bullet)
 	case 2:
 		m_eCurBulletState = P_BULLET_BRIMSTONE;
 		m_eCurPlayerVer = P_AZAZEL;
-		m_fAttackSpeed = 120;
+		m_fAttackSpeed = 200;
 		break;
 	case 3:
 		m_eCurBulletState = P_BULLET_EPIC;
@@ -729,12 +750,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	vScale = m_pTransformCom->m_vScale;
 
 
-	// BRIMSTONE은 왼쪽 클릭 제외하고 내뱉을때도 SHOOT이어서 LIST에 BULLET이 있으면 m_bShoot = true로함
-	if (m_eCurBulletState == P_BULLET_BRIMSTONE && !m_PlayerBulletList.empty())
-	{
-		m_bShoot = true;
-	}
-
 	// epictarget 쓰는 상태일때는 block됨
 	if (m_bEpicTargetRun == false)
 	{
@@ -754,12 +769,19 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
 			}
 
-			if (m_bShoot)
+			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
 			{
 				m_eCurState = P_SHOOTWALK;
 				// 쏘면서 걸을때 방향 얻기
 				m_iShootWalkDir = 0;
 			}
+			else if ((m_bBrimeStoneShoot || !m_PlayerBulletList.empty()) && m_eCurPlayerVer == P_AZAZEL)
+			{
+				m_eCurState = P_SHOOTWALK;
+				// 쏘면서 걸을때 방향 얻기
+				m_iShootWalkDir = 0;
+			}
+
 
 			// 아자젤 anim 설정
 			m_iAzaelStateSet = 1;
@@ -779,12 +801,17 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
 			}
 
-			if (m_bShoot)
+			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
 			{
 				m_eCurState = P_SHOOTWALK;
 				m_iShootWalkDir = 1;
 			}
-
+			else if ((m_bBrimeStoneShoot || !m_PlayerBulletList.empty()) && m_eCurPlayerVer == P_AZAZEL)
+			{
+				m_eCurState = P_SHOOTWALK;
+				// 쏘면서 걸을때 방향 얻기
+				m_iShootWalkDir = 0;
+			}
 
 			// 아자젤 anim 설정
 			m_iAzaelStateSet = 2;
@@ -805,12 +832,18 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
 			}
 
-			if (m_bShoot)
+			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
 			{
 				m_eCurState = P_SHOOTWALK;
 				m_iShootWalkDir = 2;
 			}
-
+			else if ((m_bBrimeStoneShoot || !m_PlayerBulletList.empty()) && m_eCurPlayerVer == P_AZAZEL)
+			{
+				m_eCurState = P_SHOOTWALK;
+				// 쏘면서 걸을때 방향 얻기
+				m_iShootWalkDir = 0;
+			}
+		
 
 			// 아자젤 anim 설정
 			m_iAzaelStateSet = 3;
@@ -831,11 +864,18 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
 			}
 
-			if (m_bShoot)
+			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
 			{
 				m_eCurState = P_SHOOTWALK;
 				m_iShootWalkDir = 3;
 			}
+			else if ((m_bBrimeStoneShoot || !m_PlayerBulletList.empty()) && m_eCurPlayerVer == P_AZAZEL)
+			{
+				m_eCurState = P_SHOOTWALK;
+				// 쏘면서 걸을때 방향 얻기
+				m_iShootWalkDir = 0;
+			}
+			
 
 			// 아자젤 anim 설정
 			m_iAzaelStateSet = 4;
@@ -847,7 +887,16 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		}
 		else
 		{
-			if (m_bShoot)
+			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
+			{
+				m_eCurState = P_SHOOTIDLE;
+			}
+			else
+			{
+				m_eCurState = P_IDLE;
+			}
+
+			if (m_bBrimeStoneShoot && m_eCurPlayerVer == P_AZAZEL)
 			{
 				m_eCurState = P_SHOOTIDLE;
 			}
@@ -879,7 +928,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	if (Engine::Get_DIMouseState(DIM_LB) & 0x80)
 	{
 		m_iTempTimer++;
-		if (m_eCurBulletState == P_BULLET_IDLE || m_eCurBulletState == P_BULLET_BRIMSTONE)
+		if (m_eCurBulletState == P_BULLET_IDLE)
 		{
 			if (m_eCurState != P_SHOOTWALK)
 			{
@@ -902,21 +951,21 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_eCurState = P_BACKWALK;
 			}
 
-			// m_iTempTimer : 머리 커지는거 변화안받을땐
-			if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTIDLE  && m_eCurBulletState != P_BULLET_IDLE)
-			{
-				// 슛은 눌렀지만 슛은 못하고 있을때
-				// 가만히 서있을때
-				m_iTempTimer = 0;
-				m_eCurState = P_BACKIDLE;
-			}
-			else if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTWALK && m_eCurBulletState != P_BULLET_IDLE)
-			{
-				// 슛은 눌렀지만 슛은 못하고 있을때
-				// 움직일때
-				m_iTempTimer = 0;
-				m_eCurState = P_BACKWALK;
-			}
+			//// m_iTempTimer : 머리 커지는거 변화안받을땐
+			//if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTIDLE  && m_eCurBulletState != P_BULLET_IDLE)
+			//{
+			//	// 슛은 눌렀지만 슛은 못하고 있을때
+			//	// 가만히 서있을때
+			//	m_iTempTimer = 0;
+			//	m_eCurState = P_BACKIDLE;
+			//}
+			//else if (m_fShootDelayTime != 0 && m_eCurState == P_SHOOTWALK && m_eCurBulletState != P_BULLET_IDLE)
+			//{
+			//	// 슛은 눌렀지만 슛은 못하고 있을때
+			//	// 움직일때
+			//	m_iTempTimer = 0;
+			//	m_eCurState = P_BACKWALK;
+			//}
 
 
 
@@ -930,11 +979,11 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				}
 				else if (m_eCurBulletState == P_BULLET_BRIMSTONE)
 				{
-					for (int i = 0; i < 50; i++)
+					/*for (int i = 0; i < 50; i++)
 					{
 						m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag, i, false));
 						m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag, i, true));
-					}
+					}*/
 				}
 				m_fShootDelayTime++;
 			}
@@ -945,6 +994,18 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 					m_eCurState = P_BACKIDLE;
 				}
 			}
+		}
+		else if (m_eCurBulletState == P_BULLET_BRIMSTONE)
+		{
+			// delay가 0이면 쏠 수 있음
+			if (m_fShootDelayTime == 0)
+			{
+				m_fShootDelayTime++;
+				m_bShoot = true;
+				//brimstone 쏠 수 있는지 없는지
+				m_bBrimeStoneShoot = true;
+			}
+			
 		}
 		else if (m_eCurBulletState == P_BULLET_EPIC)
 		{
@@ -976,6 +1037,14 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		// 왼쪽 마우스 클릭안함
 		m_bShoot = false;
 	}
+
+
+	// BRIMSTONE은 왼쪽 클릭 제외하고 내뱉을때도 SHOOT이어서 LIST에 BULLET이 있으면 m_bShoot = true로함
+	//if (m_eCurBulletState == P_BULLET_BRIMSTONE )
+	//{
+	//	m_bShoot = true;
+	//}
+
 
 	if ((Engine::Get_DIMouseState(DIM_RB) & 0x80) && m_eCurBulletState == P_BULLET_EPIC && m_eCurState!= P_SHOOTWALK)
 	{
@@ -1052,7 +1121,16 @@ void CPlayer::Motion_Change()
 	*/
 	if (m_ePreState != m_eCurState)
 	{
-		m_fFrame = 0.f;
+		if (m_eCurPlayerVer == P_AZAZEL && ((m_ePreState == P_SHOOTIDLE && m_eCurState == P_SHOOTWALK) || (m_ePreState == P_SHOOTWALK && m_eCurState == P_SHOOTIDLE)))
+		{
+			// 아자젤일때는 shootidle과 shootwalk 차이없게
+			return;
+		}
+		else
+		{
+			m_fFrame = 0.f;
+		}
+		
 
 		if (m_eCurPlayerVer == P_ISAAC)
 		{
@@ -1199,7 +1277,7 @@ void CPlayer::Bullet_Change()
 			m_fAttackSpeed = 20;
 			break;
 		case P_BULLET_BRIMSTONE:
-			m_fAttackSpeed = 120;
+			m_fAttackSpeed = 200;
 			break;
 		case P_BULLET_EPIC:
 			m_fAttackSpeed = 80;

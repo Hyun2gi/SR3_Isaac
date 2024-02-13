@@ -233,6 +233,7 @@ private:
 
 	// 총을 쏘는지 마는지
 	bool				m_bShoot; 
+	bool				m_bBrimeStoneShoot;
 
 	// 총쏠때 머리작아지는거 시간 격차두기용
 	int					m_iTempTimer;
