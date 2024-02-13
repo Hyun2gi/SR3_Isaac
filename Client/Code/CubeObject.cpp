@@ -37,7 +37,7 @@ Engine::_int CCubeObject::Update_GameObject(const _float& fTimeDelta)
 	switch (m_iActionType)
 	{
 	//랜덤하게 모이기
-	case 0:
+	case RANDOM_CREATE:
 	{
 		if (m_fS > 0.88f)
 		{
@@ -54,7 +54,7 @@ Engine::_int CCubeObject::Update_GameObject(const _float& fTimeDelta)
 		break;
 	}
 	// 큐브 쉐이킹하면서 커지기
-	case 1:
+	case SHAKE_CREATE:
 	{
 		m_pTransformCom->m_vScale = m_vTempScale;
 
@@ -68,33 +68,6 @@ Engine::_int CCubeObject::Update_GameObject(const _float& fTimeDelta)
 				m_vTempScale.y += 0.005;
 				m_vTempScale.z += 0.005;
 			}
-
-			//띠용하기
-			//if (m_pTransformCom->m_vScale.x < m_vDstScale.x + 0.2f && !m_bIsExpanion)
-			//{
-			//	//m_vTempScale.x += GetRandomFloat(0.01f, 0.03f);
-			//	//m_vTempScale.y += GetRandomFloat(0.01f, 0.03f);
-			//	//m_vTempScale.z += GetRandomFloat(0.01f, 0.03f);
-			//	m_vTempScale.x += 0.01;
-			//	m_vTempScale.y += 0.01;
-			//	m_vTempScale.z += 0.01;
-			//}
-			//else
-			//{
-			//	m_bIsExpanion = true;
-			//}
-			//
-			//if (m_pTransformCom->m_vScale.x > m_vDstScale.x && m_bIsExpanion)
-			//{
-			//	m_vTempScale.x -= 0.01f;
-			//	m_vTempScale.y -= 0.01f;
-			//	m_vTempScale.z -= 0.01f;
-			//}
-			//else
-			//{
-			//	m_bIsExpanion = false;
-			//}
-
 
 			if (m_fShakingTimer > 0.07f)
 			{
@@ -132,8 +105,8 @@ Engine::_int CCubeObject::Update_GameObject(const _float& fTimeDelta)
 
 		break;
 	}
-	// 큐브 순차적으로 커지기
-	case 2:
+	// 큐브 띠용거리기
+	case EXPANSION_CREATE:
 	{
 		m_pTransformCom->m_vScale = m_vTempScale;
 
@@ -141,7 +114,6 @@ Engine::_int CCubeObject::Update_GameObject(const _float& fTimeDelta)
 		{
 			m_fS = m_fS - (0.03f * fTimeDelta);
 
-			//띠용하기
 			if (m_pTransformCom->m_vScale.x < m_vDstScale.x + 0.2f && !m_bIsExpansion)
 			{
 				m_vTempScale.x += GetRandomFloat(0.02f, 0.04f);
@@ -182,6 +154,40 @@ Engine::_int CCubeObject::Update_GameObject(const _float& fTimeDelta)
 		m_pTransformCom->m_vScale = m_vTempScale;
 		m_pTransformCom->m_vAngle = m_vTempAngle;
 
+		break;
+	}
+	//한바퀴 돌면서 커지기
+	case TURN_CREATE:
+	{
+		m_pTransformCom->m_vScale = m_vTempScale;
+
+		if (m_fS > 0.94f)
+		{
+			m_fS = m_fS - (0.03f * fTimeDelta);
+
+			if (m_pTransformCom->m_vScale.x < m_vDstScale.x)
+			{
+				m_vTempScale.x += 0.005;
+				m_vTempScale.y += 0.005;
+				m_vTempScale.z += 0.005;
+			}
+
+			_float fValue = GetRandomFloat(90.f, 180.f);
+			m_vTempAngle.x -= D3DXToRadian(fValue) * fTimeDelta;
+			m_vTempAngle.y += D3DXToRadian(fValue) * fTimeDelta;
+			m_vTempAngle.z += D3DXToRadian(fValue) * fTimeDelta;
+
+		}
+		else
+		{
+			m_vTempScale = { 0.5f, 0.5f, 0.5f };
+			m_vTempAngle = { 0.f, 0.f, 0.f };
+			m_bIsArrived = true;
+		}
+
+		m_pTransformCom->m_vInfo[INFO_POS] = m_vDstPos;
+		m_pTransformCom->m_vScale = m_vTempScale;
+		m_pTransformCom->m_vAngle = m_vTempAngle;
 		break;
 	}
 	}
@@ -233,10 +239,12 @@ void CCubeObject::Set_Cube_Action_Type(_int iAction)
 {
 	m_iActionType = iAction;
 
-	if (m_iActionType == 3)
+	if (m_iActionType == SEQUENTIAL_CREATE)
+	{
 		m_iActionType = 0;
+		m_pTransformCom->m_vInfo[INFO_POS] = {-100, -100, 0};
+	}
 
-	m_pTransformCom->m_vInfo[INFO_POS] = {-100, -100, 0};
 }
 
 HRESULT CCubeObject::Add_Component()

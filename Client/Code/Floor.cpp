@@ -6,7 +6,10 @@
 #include "CubeObject.h"
 
 CFloor::CFloor(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CGameObject(pGraphicDev), m_bStartScene(false), m_iCubeActionType(0)
+	: Engine::CGameObject(pGraphicDev), 
+	m_bStartScene(false), 
+	m_iCubeActionType(0), m_iCubeCount(0),
+	m_fCubeCreateTimer(0.f)
 {
 }
 
@@ -24,11 +27,33 @@ HRESULT CFloor::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+	m_vecCubes.reserve((VTXCNTZ * VTXCNTX) / 4);
+
 	return S_OK;
 }
 
 Engine::_int CFloor::Update_GameObject(const _float& fTimeDelta)
 {
+	m_fCubeCreateTimer += fTimeDelta;
+
+	if (m_iCubeCount < VTXCNTZ && m_bGood)
+	{
+		if (m_fCubeCreateTimer > 0.1f)
+		{
+			m_fCubeCreateTimer = 0.f;
+			Create_Cubes(m_bGood);
+		}
+	}
+	else 
+	{
+		m_bGood = false;
+		if (m_fCubeCreateTimer > 0.1f)
+		{
+			m_fCubeCreateTimer = 0.f;
+			Create_Cubes(m_bGood);
+		}
+	}
+
 	for (auto& iter : m_vecCubes)
 		iter->Update_GameObject(fTimeDelta);
 
@@ -64,31 +89,88 @@ void CFloor::Render_GameObject()
 // 큐브 텍스쳐 태그를 지정해주면, 그 태그에 맞는 큐브 오브젝트를 타일 개수만큼 생성시키고 포지션을 지정해준다.
 HRESULT CFloor::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag)
 {
+	m_wstrTexture = pCubeTextureTag;
+	//CCubeObject* pCube = nullptr;
+
+	//for (int i = 0; i < VTXCNTZ; ++i)
+	//{
+	//	for (int j = 0; j < VTXCNTX; ++j)
+	//	{
+	//		int iIdx = i * VTXCNTZ + j;
+
+	//		pCube = CCubeObject::Create(m_pGraphicDev, m_bStartScene);
+	//		NULL_CHECK_RETURN(pCube, E_FAIL);
+	//		pCube->Set_Cute_Texture(pCubeTextureTag);
+	//		CTransform* pTemp = dynamic_cast<CTransform*>(pCube->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+
+	//		_vec3 vScale(pTemp->m_vScale.x * 2, pTemp->m_vScale.y * 2, pTemp->m_vScale.z * 2);
+
+	//		pCube->Set_Dst_Pos({ (_float)(j * vScale.x), -vScale.y * 0.5f, (_float)(i * vScale.z) });
+	//		pCube->Set_Cube_Action_Type(m_iCubeActionType);
+	//		m_vecCubes[iIdx] = pCube;
+	//	}
+
+	//}
+
+	return S_OK;
+}
+
+HRESULT CFloor::Create_Cubes(bool bBool)
+{
 	CCubeObject* pCube = nullptr;
 
-	m_vecCubes.resize(VTXCNTZ * VTXCNTX);
-
-	for (int i = 0; i < VTXCNTZ; ++i)
+	if (bBool)
 	{
-		for (int j = 0; j < VTXCNTX; ++j)
+		for (int i = 0; i < m_iCubeCount + 1; i++)
 		{
-			int iIdx = i * VTXCNTZ + j;
+			_int iIndex = (m_iCubeCount - i) + (VTXCNTZ * i);
+
+			_float z = iIndex / VTXCNTZ;
+			_float x = iIndex - (z * VTXCNTZ);
 
 			pCube = CCubeObject::Create(m_pGraphicDev, m_bStartScene);
 			NULL_CHECK_RETURN(pCube, E_FAIL);
-			pCube->Set_Cute_Texture(pCubeTextureTag);
+			pCube->Set_Cute_Texture(m_wstrTexture.c_str());
 			CTransform* pTemp = dynamic_cast<CTransform*>(pCube->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
 
 			_vec3 vScale(pTemp->m_vScale.x * 2, pTemp->m_vScale.y * 2, pTemp->m_vScale.z * 2);
 
-			pCube->Set_Dst_Pos({ (_float)(j * vScale.x), -vScale.y * 0.5f, (_float)(i * vScale.z) });
+			pCube->Set_Dst_Pos({ (_float)(x * vScale.x), -vScale.y * 0.5f, (_float)(z * vScale.z) });
 			pCube->Set_Cube_Action_Type(m_iCubeActionType);
-			m_vecCubes[iIdx] = pCube;
+			m_vecCubes.push_back(pCube);
 		}
 
+		m_iCubeCount++;
+	}
+	else
+	{
+		for (int i = 0; i < m_iCubeCount; i++)
+		{
+			_int iIndex = VTXCNTZ * (VTXCNTZ - m_iCubeCount) + VTXCNTZ * i + VTXCNTZ - i;
+
+			_float z = iIndex / VTXCNTZ;
+			_float x = iIndex - (z * VTXCNTZ);
+
+			pCube = CCubeObject::Create(m_pGraphicDev, m_bStartScene);
+			NULL_CHECK_RETURN(pCube, E_FAIL);
+			pCube->Set_Cute_Texture(m_wstrTexture.c_str());
+			CTransform* pTemp = dynamic_cast<CTransform*>(pCube->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+
+			_vec3 vScale(pTemp->m_vScale.x * 2, pTemp->m_vScale.y * 2, pTemp->m_vScale.z * 2);
+
+			pCube->Set_Dst_Pos({ (_float)(x * vScale.x), -vScale.y * 0.5f, (_float)(z * vScale.z) });
+			pCube->Set_Cube_Action_Type(m_iCubeActionType);
+			m_vecCubes.push_back(pCube);
+		}
+
+		m_iCubeCount--;
 	}
 
-	return S_OK;
+	
+
+	
+
+	//m_iCubeCount++;
 }
 
 bool CFloor::Get_Arrived()

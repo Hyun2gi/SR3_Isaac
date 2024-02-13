@@ -721,7 +721,8 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 
 	wstrTheme.assign(strType.begin(), strType.end());
 
-	_int iRandValue = rand() % ACTION_END;
+	_int iRandValue = 0;
+	//_int iRandValue = rand() % ACTION_END;
 
 	//바닥 추가
 	wstrTag = wstrProto + wstrTheme + L"FloorCubeTexture";

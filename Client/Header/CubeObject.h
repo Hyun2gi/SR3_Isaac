@@ -14,6 +14,17 @@ END
 class CCubeObject :	public Engine::CGameObject
 {
 private:
+	enum CUBE_ACTION_TYPE
+	{
+		RANDOM_CREATE,
+		SHAKE_CREATE,
+		EXPANSION_CREATE,
+		TURN_CREATE,
+		SEQUENTIAL_CREATE,
+		ACTION_END
+	};
+
+private:
 	explicit CCubeObject(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CCubeObject(const CCubeObject& rhs);
 	virtual ~CCubeObject();

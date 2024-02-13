@@ -26,6 +26,8 @@ public:
 
 	HRESULT			Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag);
 
+	HRESULT		Create_Cubes(bool bBool);
+
 	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
 
 	bool	Get_Arrived();
@@ -41,6 +43,14 @@ private:
 	vector<CCubeObject*> m_vecCubes;
 
 	_int	m_iCubeActionType;
+
+	_int		m_iCubeCount;
+	_int		m_iCubeMaxCount;
+	_float		m_fCubeCreateTimer;
+
+	wstring m_wstrTexture;
+
+	bool m_bGood = true;
 
 public:
 	static CFloor*		Create(LPDIRECT3DDEVICE9	pGraphicDev,
