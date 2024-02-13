@@ -151,6 +151,8 @@ public:
 
 	int			Get_Azazel_Anim() { return m_iAzaelStateSet; }
 
+	void		Set_CameraShaking(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
+
 public:
 	void		Bullet_Change_To_Brim();
 

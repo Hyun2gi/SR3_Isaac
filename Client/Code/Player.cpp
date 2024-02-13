@@ -723,6 +723,12 @@ _vec3 CPlayer::Get_BulletDir()
 }
 
 
+void CPlayer::Set_CameraShaking(float shakeTime, float shakeIntensity)
+{
+	//OnShakeCameraPos(0.2, 2);
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnShakeCameraPos(shakeTime, shakeIntensity);
+}
+
 void CPlayer::Bullet_Change_To_Brim()
 {
 	if (!m_PlayerBulletList.empty())

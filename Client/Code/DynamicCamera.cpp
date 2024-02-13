@@ -119,8 +119,6 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 		}
 
 	}
-	
-	
 
 	return iExit;
 }
@@ -492,36 +490,46 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 
 				srand((unsigned)time(NULL));
 
-				_vec3 templook;
+				CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+				_vec3		playerPos;
+				_vec3		playerRightDir;
+				_vec3		cameraDir;
+				_vec3		cameraPos;
+
+				playerInfo->Get_Info(INFO_POS, &playerPos);
+				playerInfo->Get_Info(INFO_RIGHT, &playerRightDir);
+
+				/*_vec3 templook;
 				templook = _vec3(m_vAt.x, 0, m_vAt.z) - _vec3(m_vStartAtPosition.x, 0, m_vStartAtPosition.x);
 				templook = m_vAt - m_vStartAtPosition;
 
 				D3DXVec3Normalize(&templook, &templook);
-
-
 				_vec3 moveDir;
-				D3DXVec3Cross(&moveDir, &(_vec3(0, 1, 0)), &templook);
+				D3DXVec3Cross(&moveDir, &(_vec3(0, 1, 0)), &templook);*/
 
-				//테스트추가
-				//moveDir = _vec3(moveDir.x, 0, moveDir.z);
-				// x축으로 직선일때는 양옆으로
-				// moveDir = _vec3(1, 0, 0);
-				//moveDir = _vec3(0.5, 0, 0.5);
+				D3DXVec3Normalize(&playerRightDir, &playerRightDir);
 
-				D3DXVec3Normalize(&moveDir, &moveDir);
 
+				
+
+
+				//D3DXVec3Normalize(&moveDir, &moveDir);
+				D3DXVec3Normalize(&playerRightDir, &playerRightDir);
 
 
 				if (m_iShakeNum % 2 == 0)
 				{
-					moveDir *= -1;
+					//moveDir *= -1;
+					playerRightDir *= -1;
 				}
 				m_iShakeNum++;
 
 				// 목표위치
 				// moveDir과 곱해주는 값은 작아야함!!
 				//m_vGoalPosition = m_vStartEyePosition + moveDir*0.2;
-				m_vGoalPosition = m_vStartEyePosition + moveDir * 0.2;
+				// m_vGoalPosition = m_vStartEyePosition + moveDir * 0.2;
+				m_vGoalPosition = m_vStartEyePosition + playerRightDir * 0.2;
 			}
 			else
 			{
