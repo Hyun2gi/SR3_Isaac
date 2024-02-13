@@ -921,12 +921,12 @@ void CLoadStage::Moster_Collision()
 					ATTACK_FLY != dynamic_cast<CMonster*>(pMonster)->Get_MstType() && // 도플, 공격형 파리가 아닌 경우
 					DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
 				{
-					// 일반 총알 충돌처리
-					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
-
 					if (dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() &&		// Bullet이 Dead가 아닌 경우
 						!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Monster가 Dead가 아닌 경우
 					{
+						// 일반 총알 충돌처리
+						dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
+
 						if (dynamic_cast<CMonster*>(pMonster)->Get_IsBoss()) // 보스인 경우
 						{
 							if (MONSTRO == dynamic_cast<CMonster*>(pMonster)->Get_BossType())
