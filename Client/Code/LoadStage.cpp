@@ -1086,7 +1086,6 @@ void CLoadStage::Obstacle_Collsion()
 
 	if (m_mapLayer.at(L"MapObj") != nullptr)
 	{
-
 		auto& mapObj = m_mapLayer.at(L"MapObj")->Get_ObjectMap();
 
 		for (auto& iter : mapObj)
@@ -1117,7 +1116,7 @@ void CLoadStage::Player_Collision_With_Monster()
 
 	if (pObj_Fire)
 	{
-		if (0 == dynamic_cast<CMapObj*>(pObj_Fire)->Get_ObjID())
+		if (CAMPFIRE == dynamic_cast<CMapObj*>(pObj_Fire)->Get_Type())
 		{
 			// 플레이어 피 감소
 			CPlayer::GetInstance()->Set_Attacked();
