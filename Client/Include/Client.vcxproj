@@ -192,6 +192,7 @@
     <ClInclude Include="..\Header\Obstacle.h" />
     <ClInclude Include="..\Header\PlayerCoin.h" />
     <ClInclude Include="..\Header\PlayerHP.h" />
+    <ClInclude Include="..\Header\PlayerLeg.h" />
     <ClInclude Include="..\Header\PLCoinFont.h" />
     <ClInclude Include="..\Header\Shell.h" />
     <ClInclude Include="..\Header\ShellGame.h" />
@@ -275,6 +276,7 @@
     <ClCompile Include="..\Code\Obstacle.cpp" />
     <ClCompile Include="..\Code\PlayerCoin.cpp" />
     <ClCompile Include="..\Code\PlayerHP.cpp" />
+    <ClCompile Include="..\Code\PlayerLeg.cpp" />
     <ClCompile Include="..\Code\PLCoinFont.cpp" />
     <ClCompile Include="..\Code\Shell.cpp" />
     <ClCompile Include="..\Code\ShellGame.cpp" />

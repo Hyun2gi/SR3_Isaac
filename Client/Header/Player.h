@@ -31,6 +31,8 @@ private:
 	enum BULLETID
 	{ P_BULLET_IDLE, P_BULLET_BRIMSTONE, P_BULLET_EPIC, P_BULLET_END };
 
+	enum PLAYER_VER_ID { P_ISAAC, P_AZAZEL };
+
 public:
 	virtual HRESULT Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
@@ -147,6 +149,8 @@ public:
 
 	_vec3		Get_BulletDir();
 
+	int			Get_Azazel_Anim() { return m_iAzaelStateSet; }
+
 public:
 	void		Bullet_Change_To_Brim();
 
@@ -191,6 +195,10 @@ private:
 	// Bullet 상태 저장
 	BULLETID			m_ePreBulletState;
 	BULLETID			m_eCurBulletState;
+
+	// 아이작인지 아자젤인지 파악
+	PLAYER_VER_ID		m_eCurPlayerVer;
+
 
 	//움직이는 속도
 	_float				m_fMoveSpeed;
@@ -239,6 +247,12 @@ private:
 	_vec3				m_vBulletDir;
 
 	int					m_iShootWalkDir;
+
+
+	CGameObject*		m_pLeg;
+
+	int					m_iAzaelStateSet;
+
 
 private:
 	list<CGameObject*>	m_PlayerBulletList;

@@ -1391,7 +1391,7 @@ HRESULT CLoadStage::Door_Collision()
 					// false : 처음 방문하는방
 					CPlayer::GetInstance()->Set_Camera_Cinemachine_01();
 					// 중간에 스폰
-					startpos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
+					//startpos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 					CPlayer::GetInstance()->Set_StartPos(startpos);
 				}
 				else
