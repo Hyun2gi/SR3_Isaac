@@ -30,7 +30,7 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_fFar = fFar;
 
 	m_fCameraHeight = 5.f;
-	m_fCameraDistance = 8.f;
+	m_fCameraDistance = 5.f;
 
 	m_pTarget = nullptr;
 	m_ePreState = C_END;

@@ -34,7 +34,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_pGraphicDev = pGraphicDev;
 
 		m_ePreBulletState = P_BULLET_END;
-		m_eCurBulletState = P_BULLET_IDLE; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
+		m_eCurBulletState = P_BULLET_EPIC; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
 		m_ePreState = P_END;
 
 		// 딜레이 시간 초기화
@@ -48,7 +48,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 
 		m_fMaxHp = 3;
 		m_fHp = 3;
-		m_iCoin = 90;
+		m_iCoin = 20;
 
 		m_fMoveSpeed = 10;
 		m_fBulletSpeed = 60;
@@ -77,7 +77,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_bStartAnim = true;
 
 		// 아이작으로 시작
-		m_eCurPlayerVer = P_ISAAC;  //P_AZAZEL;
+		m_eCurPlayerVer = P_ISAAC;   //P_ISAAC;  //P_AZAZEL;
 
 		// 0일때는 가만히
 		m_iAzaelStateSet = 0;
@@ -138,6 +138,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	if (m_bStartAnim)
 	{
 		m_bStartAnim = false;
+		// 주석 없애기
 		//Set_Cry_Anim();
 	}
 
@@ -457,6 +458,7 @@ void CPlayer::Set_BulletType(int _bullet)
 		break;
 	case 2:
 		m_eCurBulletState = P_BULLET_BRIMSTONE;
+		m_eCurPlayerVer = P_AZAZEL;
 		m_fAttackSpeed = 120;
 		break;
 	case 3:

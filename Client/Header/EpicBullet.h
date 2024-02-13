@@ -49,7 +49,7 @@ public:
 	// 피격당할때의 bool을 return해줌
 	bool					Get_CanAttacked()
 	{
-		if (m_eCurState == EPIC_BULLET)
+		if (m_eCurState == EPIC_BULLET && m_bCanAttack)
 		{
 			return true;
 		}
@@ -70,6 +70,8 @@ public:
 			return false;
 		}
 	}
+
+	void					Set_CanAttack() { m_bCanAttack = false; }
 
 	void					Set_Shoot(_vec3 shootpos);
 	void					Set_StartFall(bool start) { m_bStartFall = start; }
@@ -101,6 +103,9 @@ protected:
 
 	bool					m_bStartFall;
 	bool					m_bEndingSetTarget;
+
+	// 공격 한번 들어가면 false로 들어가기
+	bool					m_bCanAttack = true;
 
 private:
 	_vec3		m_vBulletDir;

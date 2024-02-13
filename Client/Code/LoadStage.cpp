@@ -923,6 +923,9 @@ void CLoadStage::Moster_Collision()
 				{
 					if (dynamic_cast<CEpicBullet*>(*iter)->Get_CanAttacked()) // true일 때 공격
 					{
+						// 공격 한번 하면 true해서 연속으로 딜 안들어가게
+						dynamic_cast<CEpicBullet*>(*iter)->Set_CanAttack();
+
 						if (FLY == dynamic_cast<CMonster*>(pMonster)->Get_MstType() || // Epic과 충돌이 이루어지는 몬스터들
 							DIP == dynamic_cast<CMonster*>(pMonster)->Get_MstType() ||
 							SQUIRT == dynamic_cast<CMonster*>(pMonster)->Get_MstType() ||
@@ -930,6 +933,12 @@ void CLoadStage::Moster_Collision()
 							LEAPER == dynamic_cast<CMonster*>(pMonster)->Get_MstType())
 						{
 							dynamic_cast<CMonster*>(pMonster)->Set_Dead();
+
+							// Squirt 인 경우 Dip 두 마리 생성 
+							if (SQUIRT == dynamic_cast<CMonster*>(pMonster)->Get_MstType()) // Squirt인 경우
+							{
+								dynamic_cast<CSquirt*>(pMonster)->Create_Dip(m_mapLayer.at(L"GameMst"));
+							}
 							break;
 						}
 						else
@@ -1125,6 +1134,7 @@ void CLoadStage::Player_Collision_With_Monster()
 	}
 
 }
+
 void CLoadStage::Drop_ITem()
 {
 	// 똥
@@ -1391,7 +1401,7 @@ HRESULT CLoadStage::Door_Collision()
 					// false : 처음 방문하는방
 					CPlayer::GetInstance()->Set_Camera_Cinemachine_01();
 					// 중간에 스폰
-					//startpos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
+					startpos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 					CPlayer::GetInstance()->Set_StartPos(startpos);
 				}
 				else
