@@ -144,7 +144,7 @@ private:
 
 	float		m_fMoveTime;
 
-	_bool		m_bShake;
+	_bool		m_bShakeCamera;
 	_bool		m_bMove;
 	_bool		m_bFirstPerson;
 	_bool		m_bPreFirstPerson;

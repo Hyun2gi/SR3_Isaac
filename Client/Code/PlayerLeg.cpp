@@ -94,14 +94,14 @@ _int CPlayerLeg::Update_GameObject(const _float& fTimeDelta)
 	}
 	else if (m_eCurLegState == P_LEG_LEFT) 
 	{
-		playerPos += (playerLookDir *0.008);
+		playerPos += (playerLookDir *0.02);
 		//playerPos += (-playerRightDir * 0.2);
 	}
 	else if (m_eCurLegState == P_LEG_RIGHT)
 	{
 		/*playerPos += (playerLookDir * 0.01);
 		playerPos += (playerRightDir * 0.1);*/
-		playerPos += (playerLookDir * 0.008);
+		playerPos += (playerLookDir * 0.02);
 	}
 	else if (m_eCurLegState == P_LEG_FRONT_IDLE)
 	{

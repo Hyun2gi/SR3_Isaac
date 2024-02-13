@@ -30,13 +30,13 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_fFar = fFar;
 
 	m_fCameraHeight = 5.f;
-	m_fCameraDistance = 8.f;
+	m_fCameraDistance = 5.f;
 
 	m_pTarget = nullptr;
 	m_ePreState = C_END;
 	m_eCurState = C_PLAYERCHASE;
 
-	m_bShake = false;
+	m_bShakeCamera = false;
 	m_bMove = false;
 	m_bCollisionWall = false;
 	m_bPreCollisionWall = false;
@@ -119,8 +119,6 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 		}
 
 	}
-	
-	
 
 	return iExit;
 }
@@ -135,17 +133,17 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 {
 	if (Engine::Get_DIKeyState(DIK_N) & 0x80)
 	{
-		if (m_bShake == false)
+		if (m_bShakeCamera == false)
 		{
 			//OnShakeCameraPos(float shakeTime, float shakeIntensity)
-			OnShakeCameraPos(0.5, 2);
+			OnShakeCameraPos(1.2, 1);
 			//OnShakeCameraRot(2, 2);
 		}
 	}
 
 	if (Engine::Get_DIKeyState(DIK_Y) & 0x80)
 	{
-		if (m_bShake == false)
+		if (m_bShakeCamera == false)
 		{
 			Cinemachine_01_TotalLand();
 		}
@@ -479,7 +477,7 @@ void CDynamicCamera::Mouse_Move()
 // 흔들림 짧게 줄때 쓰기 적당하지만 계속적인 쉐이킹에는 사용x
 void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 {
-	if (m_eCurState == C_SHAKING_POS)
+	if (m_bShakeCamera == true)
 	{
 		//잠깐 맞았을때 살짝 흔들리는거
 
@@ -492,36 +490,48 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 
 				srand((unsigned)time(NULL));
 
-				_vec3 templook;
+				CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+				_vec3		playerPos;
+				_vec3		playerRightDir;
+				_vec3		cameraDir;
+				_vec3		cameraPos;
+
+				playerInfo->Get_Info(INFO_POS, &playerPos);
+				playerInfo->Get_Info(INFO_RIGHT, &playerRightDir);
+
+				/*_vec3 templook;
 				templook = _vec3(m_vAt.x, 0, m_vAt.z) - _vec3(m_vStartAtPosition.x, 0, m_vStartAtPosition.x);
 				templook = m_vAt - m_vStartAtPosition;
 
 				D3DXVec3Normalize(&templook, &templook);
-
-
 				_vec3 moveDir;
-				D3DXVec3Cross(&moveDir, &(_vec3(0, 1, 0)), &templook);
+				D3DXVec3Cross(&moveDir, &(_vec3(0, 1, 0)), &templook);*/
 
-				//테스트추가
-				//moveDir = _vec3(moveDir.x, 0, moveDir.z);
-				// x축으로 직선일때는 양옆으로
-				// moveDir = _vec3(1, 0, 0);
-				//moveDir = _vec3(0.5, 0, 0.5);
+				D3DXVec3Normalize(&playerRightDir, &playerRightDir);
 
-				D3DXVec3Normalize(&moveDir, &moveDir);
 
+				
+
+
+				//D3DXVec3Normalize(&moveDir, &moveDir);
+				D3DXVec3Normalize(&playerRightDir, &playerRightDir);
 
 
 				if (m_iShakeNum % 2 == 0)
 				{
-					moveDir *= -1;
+					//moveDir *= -1;
+					playerRightDir *= -1;
 				}
 				m_iShakeNum++;
+
+				playerRightDir *= m_fShakeIntensity;
 
 				// 목표위치
 				// moveDir과 곱해주는 값은 작아야함!!
 				//m_vGoalPosition = m_vStartEyePosition + moveDir*0.2;
-				m_vGoalPosition = m_vStartEyePosition + moveDir * 0.2;
+				// m_vGoalPosition = m_vStartEyePosition + moveDir * 0.2;
+				m_vGoalPosition = m_vStartEyePosition + playerRightDir * 0.2;
 			}
 			else
 			{
@@ -542,8 +552,11 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 			//다시 플레이어 향하게
 			m_eCurState = C_PLAYERCHASE;
 			m_fShakeTime = 0;
-			m_bShake = false;
+			m_bShakeCamera = false;
 			m_bFix = false; //잠금 풀어주기
+
+			// 플레이어 잠금 풀기
+			CPlayer::GetInstance()->Set_KeyBlock(false);
 		}
 
 	}
@@ -603,7 +616,7 @@ void CDynamicCamera::ShakeByRotation(const _float& fTimeDelta)
 			m_vEye = m_vStartEyePosition;
 			m_eCurState = C_PLAYERCHASE;
 			m_fShakeTime = 0;
-			m_bShake = false;
+			m_bShakeCamera = false;
 			m_bFix = false; //잠금 풀어주기
 		}
 	}
@@ -749,10 +762,13 @@ void CDynamicCamera::OnShakeCameraPos(float shakeTime, float shakeIntensity)
 
 	m_vStartEyePosition = m_vEye;
 
-	m_bShake = true;
+	m_bShakeCamera = true;
 	m_bFix = true; // 사용자 움직임 잠금 
 
 	m_vGoalPosition = m_vEye;
+
+	// 움직이지 못하게
+	CPlayer::GetInstance()->Set_KeyBlock(true);
 }
 
 void CDynamicCamera::OnShakeCameraRot(float shakeTime, float shakeIntensity)
@@ -772,7 +788,7 @@ void CDynamicCamera::OnShakeCameraRot(float shakeTime, float shakeIntensity)
 	m_fAngleY = 0;
 	m_fAngleZ = 0;
 
-	m_bShake = true;
+	m_bShakeCamera = true;
 	m_bFix = true; // 사용자 움직임 잠금 
 }
 

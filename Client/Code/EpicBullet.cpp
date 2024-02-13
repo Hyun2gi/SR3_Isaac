@@ -30,6 +30,7 @@ HRESULT CEpicBullet::Ready_GameObject()
     m_vBulletSpeed = _vec3(0, 5, 0);
     m_bStartFall = false;
     m_bEndingSetTarget = false;
+    m_bCanAttack = true;
 
 	return S_OK;
 }

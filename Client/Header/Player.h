@@ -151,6 +151,8 @@ public:
 
 	int			Get_Azazel_Anim() { return m_iAzaelStateSet; }
 
+	void		Set_CameraShaking(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
+
 public:
 	void		Bullet_Change_To_Brim();
 
@@ -233,6 +235,7 @@ private:
 
 	// 총을 쏘는지 마는지
 	bool				m_bShoot; 
+	bool				m_bBrimeStoneShoot;
 
 	// 총쏠때 머리작아지는거 시간 격차두기용
 	int					m_iTempTimer;

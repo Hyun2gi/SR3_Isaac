@@ -26,7 +26,7 @@ HRESULT CBrimStoneBullet::Ready_GameObject()
     m_fAccTimeDelta = 0;
 
     // 지속시간
-    m_fCallLimit = 1;
+    m_fCallLimit = 1.5;
     m_bRotate = false;
     m_iParticleTimer = 0;
     m_pTransformCom->m_vScale = { 0.6f,0.6f,0.6f };
@@ -60,26 +60,53 @@ _int CBrimStoneBullet::Update_GameObject(const _float& fTimeDelta)
 
     //플레이어 첫 시작 위치 받아와서 거기서부터 시작
     _vec3   playerPos;
-    _vec3   playerDir;
+    _vec3   playerDir, playerDirRight;
     _vec3   bulletPos;
     //dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"))->Get_Info(INFO_POS, &playerPos);
     //dynamic_cast<CTransform*>(Engine::Get_Component(ID_DYNAMIC, m_vecMyLayer[0], L"Player", L"Proto_Transform"))->Get_Info(INFO_LOOK, &m_vBulletDir);
 
     dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_POS, &playerPos);
     dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_LOOK, &playerDir);
+    dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"))->Get_Info(INFO_LOOK, &playerDirRight);
 
     m_vBulletDir = _vec3(playerDir.x, 0, playerDir.z);
     D3DXVec3Normalize(&m_vBulletDir, &m_vBulletDir);
 
     bulletPos = playerPos + ((m_iBulletIndex + 1) * m_pTransformCom->m_vScale.x) * playerDir;
     bulletPos += _vec3(0, 0, 0);
+
+    int legstate = CPlayer::GetInstance()->Get_Azazel_Anim();
+    switch (legstate)
+    {
+    case 0:
+        //front
+        break;
+    case 1:
+        //front
+        break;
+    case 2:
+        //back
+        break;
+    case 3:
+        //left
+        bulletPos += (-playerDirRight * 0.5);
+        break;
+    case 4:
+        //right
+        bulletPos += (playerDirRight * 0.6);
+        break;
+    case 5:
+        //no show
+        break;
+    }
+
     m_pTransformCom->Set_Pos(bulletPos);
 
-    if (m_bLie == false)
+   /* if (m_bLie == false)
     {
         m_pTransformCom->Rotation(ROT_X, 100);
         m_pTransformCom->Rotation(ROT_Z, 100);
-    }
+    }*/
    
     m_bRotate = true;
 
@@ -207,7 +234,8 @@ HRESULT CBrimStoneBullet::Add_Component()
 
     if (m_bLie == true)
     {
-        m_pTransformCom->Rotation(ROT_X, 90);
+        //m_pTransformCom->Rotation(ROT_X, 90);
+        m_pTransformCom->m_vAngle = { D3DXToRadian(90),0,0 };
     }
 
     if (m_bLie == false)
