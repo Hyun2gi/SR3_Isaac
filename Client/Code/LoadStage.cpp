@@ -893,6 +893,12 @@ void CLoadStage::Item_Collision()
 		}
 		dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))
 			->Set_ItemType(dynamic_cast<CItem*>(pObj)->Get_Item_Type());
+
+		if (PILL == temp) // 알약인 경우
+		{
+			dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))->Set_PillState(
+				dynamic_cast<CPill*>(pObj)->Get_Pill_Num());
+		}
 	}
 }
 

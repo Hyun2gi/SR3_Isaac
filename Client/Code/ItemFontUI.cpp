@@ -20,6 +20,30 @@ CItemFontUI::~CItemFontUI()
 {
 }
 
+void CItemFontUI::Set_PillState(int iState)
+{
+	switch (iState)
+	{
+	case 0:
+		m_ePillState = PILL_0;
+		break;
+	case 1:
+		m_ePillState = PILL_1;
+		break;
+	case 2:
+		m_ePillState = PILL_2;
+		break;
+	case 3:
+		m_ePillState = PILL_3;
+		break;
+	case 4:
+		m_ePillState = PILL_4;
+		break;
+	default:
+		break;
+	}
+}
+
 HRESULT CItemFontUI::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -35,7 +59,8 @@ HRESULT CItemFontUI::Ready_GameObject()
 
 	m_pTransformCom->Set_Pos(_vec3(m_fPosX, m_fPosY, 0.0f));
 
-	m_eItemType = TRINKET; // ITEM_NONE
+	m_eItemType = ITEM_NONE; // ITEM_NONE
+	m_ePillState = PILL_NONE; // PILL_NONE
 
 	__super::Ready_GameObject();
 
@@ -50,23 +75,22 @@ _int CItemFontUI::Update_GameObject(const _float& fTimeDelta)
 
 	if (Check_Time(fTimeDelta))
 	{
-		m_bRender = false; // 얘를 주석치면 애초에 아예 출력이 안 되는?
+		m_bRender = false;
 	}
 
 	if (m_bRender)
 	{
 		Change_Font();
-		//Animation_Font();
-	}
-	else
-	{
-		//m_vecFontPos = { 10.f, m_vecEndPos.y };
 	}
 
-	m_vecFontPos.y = FONT_Y;
+	if (PILL == m_eItemType)
+		m_vecFontPos.y = PILL_FONT_Y; // PILL_FONT_Y
+	else
+		m_vecFontPos.y = FONT_Y;
+	
 	m_vecDetailPos.y = DETAIL_Y;
 
-	m_bRender = true;
+	//m_bRender = true;
 
 	return 0;
 }
@@ -139,7 +163,7 @@ void CItemFontUI::Change_Font()
 		m_vecDetailPos.x = 240.f;
 		break;
 	case Engine::SAD_ONION:
-		lstrcpy(m_szItem, L"THE SAD ONION"); // THE SAD ONION 【 】
+		lstrcpy(m_szItem, L"THE SAD ONION");
 		lstrcpy(m_szItemDetail, L"Tears up");
 		m_vecFontPos.x = 210.f;
 		m_vecDetailPos.x = 330.f; // 320
@@ -150,23 +174,40 @@ void CItemFontUI::Change_Font()
 		m_vecFontPos.x = 270.f;
 		m_vecDetailPos.x = 350.f;
 		break;
-	case Engine::PILL:
-		lstrcpy(m_szItem, L"PILL"); // 추후 바꿔야함
-		m_vecFontPos = { 400.f, DETAIL_Y };
+	default:
+		break;
+	}
+
+	switch (m_ePillState)
+	{
+	case CItemFontUI::PILL_0:
+		lstrcpy(m_szItem, L"MAX HP");
+		lstrcpy(m_szItemDetail, L"");
+		m_vecFontPos.x = 300.f;
+		break;
+	case CItemFontUI::PILL_1:
+		lstrcpy(m_szItem, L"HP DOWN");
+		lstrcpy(m_szItemDetail, L"");
+		m_vecFontPos.x = 300.f;
+		break;
+	case CItemFontUI::PILL_2:
+		lstrcpy(m_szItem, L"POWER PILL!");
+		lstrcpy(m_szItemDetail, L"");
+		m_vecFontPos.x = 230.f;
+		break;
+	case CItemFontUI::PILL_3:
+		lstrcpy(m_szItem, L"SPEED UP");
+		lstrcpy(m_szItemDetail, L"");
+		m_vecFontPos.x = 280.f;
+		break;
+	case CItemFontUI::PILL_4:
+		lstrcpy(m_szItem, L"SPEED DOWN");
+		lstrcpy(m_szItemDetail, L"");
+		m_vecFontPos.x = 250.f;
 		break;
 	default:
 		break;
 	}
-}
-
-void CItemFontUI::Animation_Font()
-{
-	if (m_vecFontPos.x < m_vecEndPos.x) // EndPos에 도달할 때까지
-	{
-		m_vecFontPos.x += 10.f;
-	}
-	else
-		m_vecFontPos = m_vecEndPos;
 }
 
 CItemFontUI* CItemFontUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
