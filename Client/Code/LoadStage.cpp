@@ -1056,8 +1056,6 @@ void CLoadStage::MapObj_Collision()
 						}
 					}
 				}else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 2)// && // 에픽페투스와의 충돌
-					//(SLOT_MC == dynamic_cast<CMapObj*>(pMapObj)->Get_Type() || // 슬롯 머신
-					//	SHOP == dynamic_cast<CMapObj*>(pMapObj)->Get_Type())) // 상점
 				{
 					if (dynamic_cast<CEpicBullet*>(*iter)->Get_CanAttacked()) // Epic이 로켓 상태일 때(공격 가능)
 					{
