@@ -29,6 +29,8 @@ HRESULT CSadOnion::Ready_GameObject()
 
 	m_pTransformCom->m_vScale = { 1, 1, 1 };
 
+	m_eItemType = SAD_ONION;
+
 	return S_OK;
 }
 

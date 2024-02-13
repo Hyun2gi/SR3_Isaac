@@ -884,6 +884,15 @@ void CLoadStage::Item_Collision()
 	{
 		//충돌됨
 		dynamic_cast<CItem*>(pObj)->Run_Item_Effect();
+		
+		// 아이템 습득 UI
+		ITEM_TYPE temp = dynamic_cast<CItem*>(pObj)->Get_Item_Type();
+		if (PILL == temp || BRIM == temp || EPIC == temp || SAD_ONION == temp || TRINKET == temp)
+		{
+			dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))->Set_Render();
+		}
+		dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))
+			->Set_ItemType(dynamic_cast<CItem*>(pObj)->Get_Item_Type());
 	}
 }
 
@@ -1299,6 +1308,10 @@ void CLoadStage::Setting_UI()
 	{
 		dynamic_cast<CMom*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Mom"))->Print_UI(m_mapLayer.at(L"UI"));
 	}
+
+	// 아이템 설명 UI
+	CItemFontUI* pItemFontUI = CItemFontUI::Create(m_pGraphicDev, 620, 100, 0.f, 180.f, 1, 1);
+	m_mapLayer.at(L"UI")->Add_GameObject(L"ItemFontUI", pItemFontUI);
 
 #pragma endregion Boss HP
 

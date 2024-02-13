@@ -28,6 +28,8 @@ HRESULT CWhipWorm::Ready_GameObject()
 
     m_pTransformCom->m_vScale = { 0.7,0.7,0.7 };
 
+    m_eItemType = TRINKET;
+
     return S_OK;
 }
 

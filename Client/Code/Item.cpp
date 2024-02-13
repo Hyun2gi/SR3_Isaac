@@ -6,13 +6,13 @@
 
 CItem::CItem(LPDIRECT3DDEVICE9 pGraphicDev)
 	:Engine::CGameObject(pGraphicDev), 
-	m_pCalculCom(nullptr),m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_bDead(false), m_iTimer(0)
+	m_pCalculCom(nullptr),m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_bDead(false), m_iTimer(0), m_eItemType(ITEM_NONE)
 {
 }
 
 CItem::CItem(const CItem& rhs)
 	: Engine::CGameObject(rhs),
-	m_pCalculCom(nullptr), m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_bDead(false), m_iTimer(0)
+	m_pCalculCom(nullptr), m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSpeed(0.f), m_bDead(false), m_iTimer(0), m_eItemType(rhs.m_eItemType)
 {
 }
 

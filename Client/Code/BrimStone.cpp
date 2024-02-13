@@ -28,6 +28,8 @@ HRESULT CBrimStone::Ready_GameObject()
 	m_iCoin = 4;
 	m_iUpTimer = 0;
 
+	m_eItemType = BRIM;
+
 	return S_OK;
 }
 
