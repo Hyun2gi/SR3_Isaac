@@ -5,7 +5,7 @@
 
 #include "ShopNpc.h"
 #include "Pill.h"
-#include "Epic.h"
+#include "SadOnion.h"
 #include "Heart.h"
 #include "CoinFont.h"
 
@@ -43,7 +43,7 @@ private:
 	CShopNpc*			m_pShopNpc;
 	
 	CPill*				m_pPill;
-	CEpic*				m_pEpic;
+	CSadOnion*			m_pSadOnion;
 	CHeart*				m_pHeart;
 	vector<CCoinFont*>	m_vecCoinFont;
 

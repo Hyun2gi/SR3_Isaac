@@ -44,6 +44,8 @@ public:
 	CTransform*		Get_Transform() { return m_pTransformCom; }
 	bool			Get_Item_Dead() { return m_bDead; }
 
+	ITEM_TYPE		Get_Item_Type() { return m_eItemType; }
+
 protected:
 	virtual HRESULT			Add_Component();
 	virtual void			Motion_Change() {};
@@ -72,6 +74,8 @@ protected:
 	ITEMSPAWN				m_eCurItemPlace;
 	_vec3					m_vSpawnPos;
 	_vec3					m_vLookVec;
+
+	ITEM_TYPE				m_eItemType;
 
 public:
 	static CItem* Create(LPDIRECT3DDEVICE9	pGraphicDev);

@@ -28,7 +28,7 @@ namespace Engine
 	enum ITEM_TYPE 
 	{	
 		BRIM, EPIC, SAD_ONION, TRINKET,
-		COIN, HEART, HEART_HALF, PILL
+		COIN, HEART, HEART_HALF, PILL, ITEM_NONE
 	};
 
 }

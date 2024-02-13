@@ -64,6 +64,7 @@
 #include "PlayerCoin.h"
 #include "PLCoinFont.h"
 #include "PlayerHP.h"
+#include "ItemFontUI.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev), 
@@ -192,6 +193,11 @@ void CLoadStage::LateUpdate_Scene()
 void CLoadStage::Render_Scene()
 {
 	// DEBUG
+	_tchar	m_szLoading[128];
+	ZeroMemory(m_szLoading, sizeof(m_szLoading));
+	lstrcpy(m_szLoading, L"Test");
+	//Engine::Render_Font(L"Font_Default", m_szLoading, &_vec2(10.f, 10.f), D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+
 }
 
 
@@ -779,7 +785,33 @@ HRESULT CLoadStage::Ready_Layer_UI(const _tchar* pLayerTag)
 
 	Engine::CGameObject* pGameObject = nullptr;
 
+	/*pGameObject = CTerrain::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Terrain", pGameObject), E_FAIL);*/
 
+	// Menu
+	pGameObject = CMenu::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f, 1, 1);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Menu", pGameObject), E_FAIL);
+
+	// Player Coin UI
+	pGameObject = CPlayerCoin::Create(m_pGraphicDev, 28.f, 28.f, -350.f, 180.f, 1, 1);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CoinUI", pGameObject), E_FAIL);
+
+	// Player Coin Font UI
+	for (int i = 0; i < 2; ++i)
+	{
+		pGameObject = CPLCoinFont::Create(m_pGraphicDev, 60.f, 60.f, -310 + (i * 20.f), 180.f, 1, 1);
+		NULL_CHECK_RETURN(pGameObject, E_FAIL);
+		dynamic_cast<CPLCoinFont*>(pGameObject)->Set_Index(i);
+		FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"CoinFontUI", pGameObject), E_FAIL);
+	}
+
+	// Player HP
+	pGameObject = CPlayerHP::Create(m_pGraphicDev, 30.f, 30.f, -370.f, 170.f, 1, 1);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerHP", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
@@ -852,6 +884,15 @@ void CLoadStage::Item_Collision()
 	{
 		//충돌됨
 		dynamic_cast<CItem*>(pObj)->Run_Item_Effect();
+		
+		// 아이템 습득 UI
+		ITEM_TYPE temp = dynamic_cast<CItem*>(pObj)->Get_Item_Type();
+		if (PILL == temp || BRIM == temp || EPIC == temp || SAD_ONION == temp || TRINKET == temp)
+		{
+			dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))->Set_Render();
+		}
+		dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))
+			->Set_ItemType(dynamic_cast<CItem*>(pObj)->Get_Item_Type());
 	}
 }
 
@@ -1222,12 +1263,19 @@ void CLoadStage::Insert_Child()
 			->Set_NormalFly_ToStage(m_mapLayer.at(L"GameMst"));
 	}
 
-	// Fire (Campfire) 추가
-	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Campfire") != nullptr &&
-		m_mapLayer.at(L"MapObj")->Get_GameObject(L"Fire") == nullptr)
+	// Fire (Campfire) 추가 // (auto& iter : m_mapLayer.at(L"GameMst")->Get_ObjectMap()
+	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Fire") == nullptr)
 	{
-		dynamic_cast<CCampFire*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"Campfire"))
-			->Set_Fire_ToStage(m_mapLayer.at(L"MapObj"));
+		for (auto& iter : m_mapLayer.at(L"MapObj")->Get_ObjectMap()) // 맵에 저장된 campfire 전부 순회하며 child 를 추가
+		{
+			if (CAMPFIRE == dynamic_cast<CMapObj*>(iter.second)->Get_Type())
+			{
+				if (dynamic_cast<CCampFire*>(iter.second)->Get_Fire() != nullptr)
+				{
+					dynamic_cast<CCampFire*>(iter.second)->Set_Fire_ToStage(m_mapLayer.at(L"MapObj")); // 한번만 추가할 방법?
+				}
+			}
+		}
 	}
 
 	// SlotMC
@@ -1264,26 +1312,6 @@ void CLoadStage::Insert_Child()
 
 void CLoadStage::Setting_UI()
 {
-	// Menu
-	CMenu* pMenu = CMenu::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f, 1, 1);
-	m_mapLayer.at(L"UI")->Add_GameObject(L"Menu", pMenu);
-
-	// Player Coin UI
-	CPlayerCoin* pCoinUI = CPlayerCoin::Create(m_pGraphicDev, 28.f, 28.f, -350.f, 180.f, 1, 1);
-	m_mapLayer.at(L"UI")->Add_GameObject(L"CoinUI", pCoinUI);
-
-	// Player Coin Font UI
-	for (int i = 0; i < 2; ++i)
-	{
-		CPLCoinFont* pCoinFont = CPLCoinFont::Create(m_pGraphicDev, 60.f, 60.f, -310 + (i * 20.f), 180.f, 1, 1);
-		pCoinFont->Set_Index(i);
-		m_mapLayer.at(L"UI")->Add_GameObject(L"CoinFontUI", pCoinFont);
-	}
-
-	// Player HP
-	CPlayerHP* pPlayerHP = CPlayerHP::Create(m_pGraphicDev, 30.f, 30.f, -370.f, 170.f, 1, 1);
-	m_mapLayer.at(L"UI")->Add_GameObject(L"PlayerHP", pPlayerHP);
-
 	// Monstro HP
 	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Monstro") != nullptr &&
 		m_mapLayer.at(L"UI")->Get_GameObject(L"BossHPTool") == nullptr)
@@ -1297,6 +1325,10 @@ void CLoadStage::Setting_UI()
 	{
 		dynamic_cast<CMom*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Mom"))->Print_UI(m_mapLayer.at(L"UI"));
 	}
+
+	// 아이템 설명 UI
+	CItemFontUI* pItemFontUI = CItemFontUI::Create(m_pGraphicDev, 620, 100, 0.f, 180.f, 1, 1);
+	m_mapLayer.at(L"UI")->Add_GameObject(L"ItemFontUI", pItemFontUI);
 
 #pragma endregion Boss HP
 

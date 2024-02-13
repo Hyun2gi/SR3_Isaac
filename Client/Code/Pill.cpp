@@ -51,6 +51,8 @@ HRESULT CPill::Ready_GameObject()
 	m_iUpTimer = 0;
 	m_bBadItem = false;
 
+	m_eItemType = PILL;
+
 	return S_OK;
 }
 

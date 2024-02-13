@@ -27,7 +27,9 @@ HRESULT CSadOnion::Ready_GameObject()
 	m_iUpTimer = 0;
 	m_iCoin = 15;
 
-	m_pTransformCom->m_vScale = { 0.4,0.4,0.4 };
+	m_pTransformCom->m_vScale = { 1, 1, 1 };
+
+	m_eItemType = SAD_ONION;
 
 	return S_OK;
 }

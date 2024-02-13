@@ -27,6 +27,8 @@ HRESULT CHeartHalf::Ready_GameObject()
 
     m_pTransformCom->m_vScale = { 0.7,0.7,0.7 };
 
+    m_eItemType = HEART_HALF;
+
     return S_OK;
 }
 
