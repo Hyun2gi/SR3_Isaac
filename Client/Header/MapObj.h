@@ -25,6 +25,7 @@ protected:
 enum MAPOBJID { MOBJID_FIRE, MOBJID_SLOTMC_MC, MOBJID_SHELL_NPC, MOBJID_SHELL, MOBJID_NONE };
 
 public:
+	void			Set_Dead() { m_bDead = true; }
 	_bool			Get_Dead() { return m_bDead; }
 	_bool			Get_Drop() { return m_bItemDrop; }
 	void			Set_Drop() { m_bItemDrop = true; } // true

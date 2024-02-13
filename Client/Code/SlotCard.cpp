@@ -37,6 +37,9 @@ HRESULT CSlotCard::Ready_GameObject()
 
 _int CSlotCard::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bDead)
+		return 1;
+
 	if (!m_bStart)
 	{
 		m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"SlotMC", L"Proto_SlotCardTexture"));

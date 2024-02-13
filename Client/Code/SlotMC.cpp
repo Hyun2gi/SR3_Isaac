@@ -29,7 +29,7 @@ void CSlotMC::Set_Machine_ToStage(CLayer* pLayer)
 HRESULT CSlotMC::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(25.f, 1.f, 20.f);
+	m_pTransformCom->Set_Pos(0.f, 1.9f, 0.f);
 
 	m_iLimitHit = 4;
 
@@ -87,6 +87,16 @@ void CSlotMC::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
 
+	if (m_bHit)
+	{
+		m_pMachine->Set_Dead();
+
+		for (auto& iter : m_pCardList)
+		{
+			iter->Set_Dead();
+		}
+	}
+
 	if (m_pMachine != nullptr)
 		m_pMachine->LateUpdate_GameObject();
 
@@ -123,15 +133,7 @@ HRESULT CSlotMC::Add_Component()
 
 #pragma region SlotMC Texture
 
-	// IDLE
-	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_SlotMCTexture"));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_SlotMCTexture", pComponent });
 
-	// BROKEN
-	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BrokenSlotMCTexture"));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_BrokenSlotMCTexture", pComponent });
 
 #pragma endregion SlotMC Texture
 
