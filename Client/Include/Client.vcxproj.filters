@@ -280,6 +280,9 @@
     <Filter Include="02. GameObject\09. MapObject\07. Shadow">
       <UniqueIdentifier>{599193bc-3e96-4b75-bd4c-7434a9cc3139}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\12. UI\04. Item">
+      <UniqueIdentifier>{b17b613d-f8e1-425c-9f94-e7dabe9f4c7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -534,6 +537,9 @@
     <ClInclude Include="..\Header\Shadow.h">
       <Filter>02. GameObject\09. MapObject\07. Shadow</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\ItemFontUI.h">
+      <Filter>02. GameObject\12. UI\04. Item</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -778,6 +784,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Shadow.cpp">
       <Filter>02. GameObject\09. MapObject\07. Shadow</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\ItemFontUI.cpp">
+      <Filter>02. GameObject\12. UI\04. Item</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

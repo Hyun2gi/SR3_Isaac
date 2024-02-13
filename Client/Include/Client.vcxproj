@@ -186,6 +186,7 @@
     <ClInclude Include="..\Header\Fire.h" />
     <ClInclude Include="..\Header\GameEnd.h" />
     <ClInclude Include="..\Header\HeartUI.h" />
+    <ClInclude Include="..\Header\ItemFontUI.h" />
     <ClInclude Include="..\Header\Menu.h" />
     <ClInclude Include="..\Header\MoveXObstacle.h" />
     <ClInclude Include="..\Header\MoveZObstacle.h" />
@@ -271,6 +272,7 @@
     <ClCompile Include="..\Code\Fire.cpp" />
     <ClCompile Include="..\Code\GameEnd.cpp" />
     <ClCompile Include="..\Code\HeartUI.cpp" />
+    <ClCompile Include="..\Code\ItemFontUI.cpp" />
     <ClCompile Include="..\Code\Menu.cpp" />
     <ClCompile Include="..\Code\MoveXObstacle.cpp" />
     <ClCompile Include="..\Code\MoveZObstacle.cpp" />
