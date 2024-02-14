@@ -821,14 +821,9 @@ HRESULT CLoadStage::Ready_Layer_UI(const _tchar* pLayerTag)
 
 bool CLoadStage::Check_Cube_Arrived()
 {
-	if (m_pLeftWall->Get_Arrived() && m_pRightWall->Get_Arrived()
+	return m_pLeftWall->Get_Arrived() && m_pRightWall->Get_Arrived()
 		&& m_pTopWall->Get_Arrived() && m_pBottomWall->Get_Arrived()
-		&& m_pFloor->Get_Arrived())
-	{
-		return true;
-	}
-	return false;
-	
+		&& m_pFloor->Get_Arrived();
 
 }
 
@@ -1480,7 +1475,7 @@ CLoadStage* CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bS
 {
 	CLoadStage* pInstance = new CLoadStage(pGraphicDev);
 	pInstance->m_bStartScene = bStratScene;
-	CPlayer::GetInstance()->Set_Bool_StartScene(bStratScene);
+	CPlayer::GetInstance()->Set_Bool_StartScene(true);
 
 	if (FAILED(pInstance->Ready_Scene(iType)))
 	{
