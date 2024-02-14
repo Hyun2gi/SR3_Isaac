@@ -35,7 +35,7 @@ public:
 	virtual void Render_GameObject()						 override;
 
 public:
-	virtual void	Run_Item_Effect();
+	virtual bool	Run_Item_Effect();
 	void			Set_Item_SpawnSpot(int _spawnspot);
 	virtual void	Item_Spawn_Action();
 	void			Set_SpawnPos(_vec3 pos) { m_vSpawnPos = pos; }

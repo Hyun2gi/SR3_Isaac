@@ -18,6 +18,7 @@ private:
 
 public:
 	void PlaySound(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume);
+	void PlayEffect(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume);
 	void PlayBGM(TCHAR* pSoundKey, _float fVolume);
 	void StopSound(CHANNEL_ID eID);
 	void StopAll();

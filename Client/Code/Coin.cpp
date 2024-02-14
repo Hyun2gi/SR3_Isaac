@@ -108,7 +108,7 @@ void CCoin::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-void CCoin::Run_Item_Effect()
+bool CCoin::Run_Item_Effect()
 {
 	// 튀어나올때 먹지 않도록
 	if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT && m_eCurState != COIN_GET)
@@ -117,9 +117,14 @@ void CCoin::Run_Item_Effect()
 		// 첫 이미지부터 시작
 		m_fFrame = 0;
 
+		// 코인 먹기
+		Engine::PlayEffect(L"CoinPick.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+
 		CPlayer::GetInstance()->Set_Coin(1);
+
+		return true;
 	}
-	
+	return false;
 }
 
 void CCoin::Item_Spawn_Action()

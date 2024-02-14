@@ -117,7 +117,7 @@ void CPill::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-void CPill::Run_Item_Effect()
+bool CPill::Run_Item_Effect()
 {
 	if (m_eCurItemPlace == SP_SHOP)
 	{
@@ -158,7 +158,7 @@ void CPill::Run_Item_Effect()
 			}
 
 			m_bDead = true;
-			
+			return true;
 		}
 	}
 	else if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT)
@@ -196,7 +196,10 @@ void CPill::Run_Item_Effect()
 		}
 
 		m_bDead = true;
+		return true;
 	}
+
+	return false;
 }
 
 void CPill::Item_Spawn_Action()

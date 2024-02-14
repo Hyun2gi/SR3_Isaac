@@ -46,6 +46,7 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_bChaseInit = true;
 	m_bMouseCameraStart = false;
 
+	m_bStart = false;
 
 	m_fAngleX = 0;
 	m_fAngleY = 0;
@@ -170,6 +171,14 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 
 void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 {
+	if (m_bStart)
+	{
+		// 시작씬에만 임시적으로 실행
+		m_bStart = false;
+		Engine::StopAll();
+		Engine::PlayBGM(L"the caves.ogg",  1.f);
+	}
+
 	if (m_eCurState == C_PLAYERCHASE)
 	{
 		CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
@@ -1068,6 +1077,9 @@ void CDynamicCamera::Cinemachine_00_Start()
 	m_eCurState = C_MOVE_TO_TARGET;
 	m_fAngleY = 0;
 
+	// 사운드위해
+	m_bStart = true;
+
 	CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
 	_vec3		playerPos;
@@ -1097,11 +1109,11 @@ void CDynamicCamera::Cinemachine_00_Start()
 
 
 	goalPos = _vec3(VTXCNTX / 2, 1, VTXCNTZ / 2) - (playerDir) * 3;
-	startPos = _vec3(VTXCNTX / 2, 1, VTXCNTZ / 2) - (playerDir) * 3 + _vec3(3, 2, 0);
+	startPos = _vec3(VTXCNTX / 2, 1, VTXCNTZ / 2) - (playerDir) * 3 + _vec3(6, 6, -3);
 
 
 	// false하면 chaseInit이 true
-	OnMoveTargetCamera(m_vAt, 7.5f, 0.7f, goalPos, startPos, false, 0);
+	OnMoveTargetCamera(m_vAt, 32.f, 0.5f, goalPos, startPos, false, 0);
 }
 
 void CDynamicCamera::Cinemachine_01_TotalLand()

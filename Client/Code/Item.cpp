@@ -41,7 +41,7 @@ void CItem::Render_GameObject()
 {
 }
 
-void CItem::Run_Item_Effect()
+bool CItem::Run_Item_Effect()
 {
 }
 

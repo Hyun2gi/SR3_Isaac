@@ -66,6 +66,7 @@ inline void Update_ImGuiMgr();
 inline void Render_ImGuiMgr();
 
 inline void PlaySound(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume);
+inline void PlayEffect(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume);
 inline void Ready_Sound();
 inline void PlayBGM(TCHAR* pSoundKey, _float fVolume);
 inline void StopSound(CHANNEL_ID eID);

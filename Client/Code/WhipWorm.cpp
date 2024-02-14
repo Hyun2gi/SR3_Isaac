@@ -84,14 +84,18 @@ void CWhipWorm::Render_GameObject()
 
 }
 
-void CWhipWorm::Run_Item_Effect()
+bool CWhipWorm::Run_Item_Effect()
 {
     if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT)
     {
         m_bDead = true;
         CPlayer::GetInstance()->Set_BulletSpeed(50);
         CPlayer::GetInstance()->Set_Item_Get_Anim();
+
+        return true;
     }
+
+    return false;
 }
 
 void CWhipWorm::Item_Spawn_Action()
