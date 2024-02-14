@@ -194,6 +194,10 @@ Engine::_int CCubeObject::Update_GameObject(const _float& fTimeDelta)
 		}
 		}
 	}
+	else
+	{
+		m_pTransformCom->m_vInfo[INFO_POS] = m_vDstPos;
+	}
 
 
 	CGameObject::Update_GameObject(fTimeDelta);
