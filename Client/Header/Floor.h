@@ -51,6 +51,7 @@ private:
 	wstring m_wstrTexture;
 
 	bool m_bGood = true;
+	bool m_bCreated = false;
 
 public:
 	static CFloor*		Create(LPDIRECT3DDEVICE9	pGraphicDev,

@@ -45,7 +45,7 @@ public:
 
 	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
 
-	bool Get_Arrived();
+	bool			Get_Arrived();
 
 private:
 	HRESULT			Add_Component();
@@ -62,6 +62,7 @@ private:
 
 	bool		m_bIsDeleted;
 	bool		m_bStartScene;
+	bool		m_bCreated = false;
 
 	_int		m_iCubeActionType;
 
