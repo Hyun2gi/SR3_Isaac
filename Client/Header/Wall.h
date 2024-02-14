@@ -41,6 +41,8 @@ public:
 	HRESULT			Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag, int iAxis);
 	void			Set_Texture_Tag(const _tchar* pTextureTag, int iAxis);
 
+	HRESULT			Create_Cubes();
+
 	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
 
 	bool Get_Arrived();
@@ -58,10 +60,18 @@ private:
 	Engine::CTransform* m_pTransformCom;
 	//Engine::CTexture* m_pTextureCom;
 
-	bool m_bIsDeleted;
-	bool m_bStartScene;
+	bool		m_bIsDeleted;
+	bool		m_bStartScene;
 
-	_int	m_iCubeActionType;
+	_int		m_iCubeActionType;
+
+	_int		m_iAxis;
+
+	_int		m_iCubeCount;
+	_int		m_iCubeMaxCount;
+	_float		m_fCubeCreateTimer;
+
+	wstring		m_wstrTexture;
 
 public:
 	static CWall*		Create(LPDIRECT3DDEVICE9	pGraphicDev, 

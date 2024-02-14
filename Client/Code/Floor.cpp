@@ -38,7 +38,7 @@ Engine::_int CFloor::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_iCubeCount < VTXCNTZ && m_bGood)
 	{
-		if (m_fCubeCreateTimer > 0.1f)
+		if (m_fCubeCreateTimer > 0.05f)
 		{
 			m_fCubeCreateTimer = 0.f;
 			Create_Cubes(m_bGood);
@@ -47,7 +47,7 @@ Engine::_int CFloor::Update_GameObject(const _float& fTimeDelta)
 	else 
 	{
 		m_bGood = false;
-		if (m_fCubeCreateTimer > 0.1f)
+		if (m_fCubeCreateTimer > 0.05f)
 		{
 			m_fCubeCreateTimer = 0.f;
 			Create_Cubes(m_bGood);
@@ -165,10 +165,6 @@ HRESULT CFloor::Create_Cubes(bool bBool)
 
 		m_iCubeCount--;
 	}
-
-	
-
-	
 
 	//m_iCubeCount++;
 }

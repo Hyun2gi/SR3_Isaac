@@ -39,7 +39,7 @@ Engine::_int CCubeObject::Update_GameObject(const _float& fTimeDelta)
 	//랜덤하게 모이기
 	case RANDOM_CREATE:
 	{
-		if (m_fS > 0.88f)
+		if (m_fS > 0.86f)
 		{
 			m_fS = m_fS - (0.03f * fTimeDelta);
 			D3DXVec3Lerp(&m_vTempPos, &m_vDstPos, &m_pTransformCom->m_vInfo[INFO_POS], m_fS);
