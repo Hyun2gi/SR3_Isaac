@@ -29,7 +29,7 @@ public:
 public:
 	bool			Run_Item_Effect()						override;
 	void			Item_Spawn_Action()						override;
-	int				Get_Pill_Num() { return m_eCurState; }
+	int				Get_Pill_Num() { return m_iPillEffect; }
 
 private:
 	virtual HRESULT		Add_Component()						override;
@@ -41,8 +41,10 @@ private:
 	bool				m_bBadItem;
 	_int				m_iPicNum;
 	_int				m_iUpTimer;
+	_int				m_iPillEffect;
 
 	PILLSTATE			m_eCurState;
+
 
 public:
 	static CPill* Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, _vec3 look);

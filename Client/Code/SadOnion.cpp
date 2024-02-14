@@ -2,6 +2,7 @@
 #include "SadOnion.h"
 #include "Export_Utility.h"
 #include "Player.h"
+#include "Export_System.h"
 
 CSadOnion::CSadOnion(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CItem(pGraphicDev)
@@ -96,6 +97,7 @@ bool CSadOnion::Run_Item_Effect()
 			CPlayer::GetInstance()->Set_Coin(-m_iCoin);
 			CPlayer::GetInstance()->Set_AttackSpeed(-6);
 			CPlayer::GetInstance()->Set_Item_Get_Anim();
+			Engine::PlayEffect(L"Item_Good.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
 			m_bDead = true;
 
 			return true;

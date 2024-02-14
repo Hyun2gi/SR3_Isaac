@@ -3,6 +3,9 @@
 #include "Export_Utility.h"
 #include "Player.h"
 
+#include "Export_System.h"
+#include "Export_Utility.h"
+
 CHeartHalf::CHeartHalf(LPDIRECT3DDEVICE9 pGraphicDev)
     : CItem(pGraphicDev)
 {
@@ -143,7 +146,8 @@ void CHeartHalf::Item_Spawn_Action()
             if (temp.y <= fHeight + 1)
             {
                 m_eCurItemPlace = SP_END;
-                m_pTransformCom->Set_Pos(itemPos.x, fHeight + 1, itemPos.z);
+
+                m_pTransformCom->Set_Pos(itemPos.x + 0.1, fHeight + 1.3, itemPos.z + 0.1);
             }
             else
             {
