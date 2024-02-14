@@ -53,6 +53,8 @@ private:
 	CShellNpc*			m_pShellNpc;
 	vector<CShell*>		m_vecShell;
 
+	_int				m_iSoundTimer = 0;
+
 public:
 	static CShellGame* Create(LPDIRECT3DDEVICE9 pGraphicDev);
 

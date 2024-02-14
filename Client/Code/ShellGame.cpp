@@ -258,8 +258,46 @@ void CShellGame::Shaking_Shell(const _float& fTimeDelta)
 		}
 	}
 
+
+	m_iSoundTimer++;
+	int randnum = rand() % 2;
+
+	if (m_iSoundTimer < 80)
+	{
+		if (m_iSoundTimer % 20 == 0)
+		{
+			if (randnum % 2 == 0)
+			{
+				Engine::PlayEffect(L"ShellGame_1.wav", SOUND_EFFECT_OBJ_STOPSUDDEN, 0.8f);
+			}
+			else
+			{
+				Engine::PlayEffect(L"ShellGame_2.wav", SOUND_EFFECT_OBJ_STOPSUDDEN, 0.8f);
+			}
+		}
+	}
+	else
+	{
+		if (m_iSoundTimer % 5 == 0)
+		{
+			if (randnum % 2 == 0)
+			{
+				Engine::PlayEffect(L"ShellGame_1.wav", SOUND_EFFECT_OBJ_STOPSUDDEN, 0.8f);
+			}
+			else
+			{
+				Engine::PlayEffect(L"ShellGame_2.wav", SOUND_EFFECT_OBJ_STOPSUDDEN, 0.8f);
+			}
+		}
+	}
+	
+	
+
+
 	if (0.5 <= m_fSpeed) // 게임 종료
 	{
+		m_iSoundTimer = 0;
+		Engine::StopSound(SOUND_EFFECT_OBJ_STOPSUDDEN);
 		m_fSpeed = 0.1f;
 		m_iShake_Lev = 0;
 		m_bShellShaking = false;

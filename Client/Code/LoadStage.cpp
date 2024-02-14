@@ -1581,6 +1581,7 @@ void CLoadStage::MapObj_Collision()
 							ITEM_TYPE eType = dynamic_cast<CShell*>(pShellObj)->Get_ItemType();
 							wstring wstrObjTag = dynamic_cast<CShell*>(pShellObj)->Get_DropItemTag();
 
+							Engine::PlayEffect(L"CoinDrop.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
 							for (int i = 0; i < 3; ++i)
 							{
 								pGameObject = dynamic_cast<CShell*>(pShellObj)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), i);
@@ -1874,8 +1875,10 @@ void CLoadStage::BGM_INTRO_START()
 			}
 			else if (roomtype == "Devil")
 			{
-				// intro가 없음
-				m_bBGMIntro = false;
+				if (Engine::PlayEffect(L"DevilRoom.ogg", SOUND_BGM, 0.8f))
+				{
+					m_bBGMIntro = false;
+				}
 			}
 			else if (roomtype == "Arcade")
 			{
@@ -1907,11 +1910,12 @@ void CLoadStage::BGM_START()
 			}
 			else if (roomtype == "Treasure")
 			{
-				Engine::PlayBGM(L"TreasureRoom.ogg", 0.8f);
+				// 다시 기본음으로
+				Engine::PlayBGM(L"diptera sonata(basement).ogg", 0.8f);
 			}
 			else if (roomtype == "Devil")
 			{
-				Engine::PlayBGM(L"DevilRoom.wav", 0.8f);
+				Engine::PlayBGM(L"secret to everyone.ogg", 0.8f);
 			}
 			else if (roomtype == "Arcade")
 			{

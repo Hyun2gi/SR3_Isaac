@@ -26,6 +26,12 @@ void CSlotMC::Set_Machine_ToStage(CLayer* pLayer)
 		pLayer->Add_GameObject(L"Machine", m_pMachine);
 }
 
+void CSlotMC::Set_Game()
+{
+	m_bGame = true; 
+	Engine::PlayEffect(L"SlotMC.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.0f);
+}
+
 void CSlotMC::Set_Reward()
 {
 	m_bReward = false;
@@ -192,6 +198,21 @@ void CSlotMC::Set_Item_Value()
 	default:
 		break;
 	}
+
+	if (m_bReward == true)
+	{
+		int randsound = rand() % 2;
+		//slot_throw1.wav
+		if (randsound == 0)
+		{
+			Engine::PlayEffect(L"slot_throw1.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.0f);
+		}
+		else
+		{
+			Engine::PlayEffect(L"slot_throw2.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.0f);
+		}
+	}
+	
 }
 
 void CSlotMC::Create_Machine()

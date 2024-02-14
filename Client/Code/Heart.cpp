@@ -124,7 +124,7 @@ bool CHeart::Run_Item_Effect()
             }
         }
     }
-    else if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT)
+    else
     {
         if (CPlayer::GetInstance()->Get_Hp() < CPlayer::GetInstance()->Get_MaxHp())
         {
@@ -167,7 +167,7 @@ void CHeart::Item_Spawn_Action()
         if (temp.y <= fHeight + 1)
         {
             m_eCurItemPlace = SP_END;
-            m_pTransformCom->Set_Pos(temp.x, fHeight + 1, temp.z);
+            m_pTransformCom->Set_Pos(temp.x, fHeight + 0.4, temp.z);
         }
 
 
@@ -186,7 +186,8 @@ void CHeart::Item_Spawn_Action()
             if (temp.y <= fHeight + 1)
             {
                 m_eCurItemPlace = SP_END;
-                m_pTransformCom->Set_Pos(itemPos.x, fHeight + 1, itemPos.z);
+
+                m_pTransformCom->Set_Pos(itemPos.x + 0.1, fHeight + 1.3, itemPos.z + 0.1);
             }
             else
             {
