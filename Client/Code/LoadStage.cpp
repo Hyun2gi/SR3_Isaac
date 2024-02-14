@@ -131,11 +131,19 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
 
+	// 맨 처음 방에서는 player에서 bgm 나와야해서 player update보다 순서 뒤로
+	// 비지엠 인트로 먼저 재생
+	BGM_INTRO_START();
+
+	// 비지엠
+	BGM_START();
+
 	if (Check_Cube_Arrived() && !m_bIsCreated)
 	{
 		// m_bStartScene : 한번 왔다간 방인지 아닌지 확인해주는 변수
 		if (!m_bStartScene)
 		{
+			Engine::StopSound(SOUND_BGM);
 			// 한번 왔다간 방이 아닐경우처리
 			CPlayer::GetInstance()->Set_IssacRender(true);
 			// 올라간 시네머신이 진행 후 내려오는 시네머신 필요
@@ -1394,6 +1402,83 @@ void CLoadStage::Create_Map_Particles()
 
 }
 
+void CLoadStage::BGM_INTRO_START()
+{
+	// 첫번째 방 인트로 bgm은 dynamic camera에서 시작
+	if (m_bBGMIntro)
+	{
+		if (!Engine::CheckIsPlaying(SOUND_BGM))
+		{
+			StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
+			string roomtype = info.m_strTheme;
+
+			if (roomtype == "Normal")
+			{
+				if (Engine::PlayEffect(L"diptera sonata intro.ogg", SOUND_BGM, 0.8f))
+				{
+					m_bBGMIntro = false;
+				}
+			}
+			else if (roomtype == "Treasure")
+			{
+				if (Engine::PlayEffect(L"TreasureRoom.ogg", SOUND_BGM, 0.8f))
+				{
+					m_bBGMIntro = false;
+				}
+			}
+			else if (roomtype == "Devil")
+			{
+				// intro가 없음
+				m_bBGMIntro = false;
+			}
+			else if (roomtype == "Arcade")
+			{
+				// intro가 없음
+				m_bBGMIntro = false;
+			}
+			else if (roomtype == "Boss")
+			{
+				if (Engine::PlayEffect(L"boss fight intro jingle v2.1.ogg", SOUND_BGM, 0.8f))
+				{
+					m_bBGMIntro = false;
+				}
+			}
+		}
+	}
+}
+
+void CLoadStage::BGM_START()
+{
+	if (!m_bBGMIntro)
+	{
+		if (!Engine::CheckIsPlaying(SOUND_BGM))
+		{
+			StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
+			string roomtype = info.m_strTheme;
+			if (roomtype == "Normal")
+			{
+				Engine::PlayBGM(L"diptera sonata(basement).ogg", 0.8f);
+			}
+			else if (roomtype == "Treasure")
+			{
+				Engine::PlayBGM(L"TreasureRoom.ogg", 0.8f);
+			}
+			else if (roomtype == "Devil")
+			{
+				Engine::PlayBGM(L"DevilRoom.wav", 0.8f);
+			}
+			else if (roomtype == "Arcade")
+			{
+				Engine::PlayBGM(L"ArcadeRoom.ogg", 0.8f);
+			}
+			else if (roomtype == "Boss")
+			{
+				Engine::PlayEffect(L"basic boss fight.ogg", SOUND_BGM, 0.8f);
+			}
+		}
+	}
+}
+
 HRESULT CLoadStage::Door_Collision()
 {
 	if (m_mapLayer.at(L"GameDoor"))
@@ -1473,9 +1558,16 @@ HRESULT CLoadStage::Door_Collision()
 
 CLoadStage* CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene)
 {
+	Engine::StopSound(SOUND_BGM);
 	CLoadStage* pInstance = new CLoadStage(pGraphicDev);
 	pInstance->m_bStartScene = bStratScene;
 	CPlayer::GetInstance()->Set_Bool_StartScene(true);
+
+	if (!bStratScene)
+	{
+		Engine::StopAll();
+		Engine::PlayEffect(L"earthquake4.wav", SOUND_BGM, 0.8f);
+	}
 
 	if (FAILED(pInstance->Ready_Scene(iType)))
 	{
