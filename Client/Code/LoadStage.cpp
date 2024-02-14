@@ -98,6 +98,11 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	FAILED_CHECK_RETURN(Ready_Layer_GameLogic(L"GameLogic"), E_FAIL);
 
 	FAILED_CHECK_RETURN(Ready_Layer_UI(L"UI"), E_FAIL);
+
+	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
+
+	m_iLoadDataSize = mapLoadObj.size();
+
 	return S_OK;
 }
 
@@ -140,20 +145,58 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 			CPlayer::GetInstance()->Set_IssacRender(true);
 			// 올라간 시네머신이 진행 후 내려오는 시네머신 필요
 			CPlayer::GetInstance()->Set_Camera_Cinemachine_02();
+
+			if (m_iLoadDataSize <= m_iCreatedCnt)
+			{
+				m_bIsCreated = true;
+			}
 		}
 		else
 		{
 			// 한번 왔다간 방임
 			CPlayer::GetInstance()->Set_StartCameraMouse();
+			m_bIsCreated = true;
+		}
+		
+		//Setting_UI(); // UI 생성
+	}
+
+
+	//연출이 필요하다면 큐브가 다 온 이후부터 타이머를 돌면서 하나씩 생성시켜준다.
+	if (!m_bStartScene && !m_bIsLoadDataCreated)
+	{
+		if (m_iCreatedCnt >= m_iLoadDataSize)
+		{
+			m_bIsLoadDataCreated = true;
 		}
 
-		m_bIsCreated = true;
+		if (Check_Cube_Arrived() && m_iCreatedCnt < m_iLoadDataSize && !m_bIsLoadDataCreated)
+		{
+			m_fSpawnTimer += fTimeDelta;
+
+			if (0.3f < m_fSpawnTimer)
+			{
+				m_fSpawnTimer = 0.f;
+
+				FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
+				FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
+				FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
+
+				if(1 > m_iCreatedCnt)
+					FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
+
+				++m_iCreatedCnt;
+			}
+		}
+	}
+	//연출이 필요 없고 생성되지 않은 상황이면 한번에 생성시켜준다.
+	else if(!m_bIsLoadDataCreated)
+	{
 		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
-		
-		Setting_UI(); // UI 생성
+		m_bIsLoadDataCreated = true;
 	}
 
 	//타임 델타 스케일 조절 예시 _ 사용
@@ -205,72 +248,235 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 {
 	CPlayer::GetInstance()->Set_LayerTag((_tchar*)pLayerTag);
 
-	Engine::CLayer* pLayer = Engine::CLayer::Create();
-	NULL_CHECK_RETURN(pLayer, E_FAIL);
+	Engine::CLayer* pLayer;
 
-	Engine::CGameObject* pGameObject = nullptr;
-
-	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
-
-	for (auto& iter : mapLoadObj)
+	if (m_bStartScene)
 	{
-		switch (iter.second.iType)
+		pLayer = Engine::CLayer::Create();
+		NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+		Engine::CGameObject* pGameObject = nullptr;
+
+		auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
+
+		for (auto& iter : mapLoadObj)
+		{
+			switch (iter.second.iType)
+			{
+			case OBJECT:
+			{
+				switch (iter.second.iIndex)
+				{
+				case POOP:
+				{
+					pGameObject = CPoop::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
+
+					break;
+				}
+				case CAMPFIRE:
+				{
+					pGameObject = CCampFire::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
+
+					break;
+				}
+				case SPIKE:
+				{
+					pGameObject = CSpike::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
+
+					break;
+				}
+				case SHELL_GAME:
+				{
+					pGameObject = CShellGame::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
+
+					break;
+				}
+				case SLOT_MC:
+				{
+					pGameObject = CSlotMC::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
+
+					break;
+				}
+
+				case SHOP:
+				{
+					pGameObject = CShop::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Shop", pGameObject), E_FAIL);
+
+					break;
+				}
+
+				case OBSTACLE:
+				{
+					pGameObject = CObstacle::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle", pGameObject), E_FAIL);
+
+					break;
+				}
+
+				case OBSTACLE_X:
+				{
+					pGameObject = CMoveXObstacle::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+
+					int randNum1 = rand() % 10 + 5;
+					int randNum2 = rand() % 10 + 5;
+					int randNumSpeed = rand() % 30 + 10;
+
+					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Left(randNum1);
+					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Right(randNum2);
+					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Speed(randNumSpeed);
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle_X", pGameObject), E_FAIL);
+
+					break;
+				}
+
+				case OBSTACLE_Z:
+				{
+					pGameObject = CMoveZObstacle::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+
+					int randNum1 = rand() % 10 + 5;
+					int randNum2 = rand() % 10 + 5;
+					int randNumSpeed = rand() % 30 + 10;
+
+					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Up(randNum1);
+					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Down(randNum2);
+					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Speed(randNumSpeed);
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle_Z", pGameObject), E_FAIL);
+
+					break;
+				}
+
+				}
+				break;
+			}
+
+			}
+		}
+
+	}
+	else
+	{
+		auto	pLayerFind = find_if(m_mapLayer.begin(), m_mapLayer.end(), CTag_Finder(pLayerTag));
+
+		if (pLayerFind == m_mapLayer.end())
+		{
+			pLayer = Engine::CLayer::Create();
+		}
+		else
+		{
+			pLayer = (*pLayerFind).second;
+		}
+
+		NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+		Engine::CGameObject* pGameObject = nullptr;
+
+		auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
+
+		auto iter = mapLoadObj.at(m_iCreatedCnt);
+
+		switch (iter.iType)
 		{
 		case OBJECT:
 		{
-			switch (iter.second.iIndex)
+			switch (iter.iIndex)
 			{
 			case POOP:
 			{
 				pGameObject = CPoop::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Poop", pGameObject), E_FAIL);
 
 				break;
 			}
+
 			case CAMPFIRE:
 			{
 				pGameObject = CCampFire::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
 
 				break;
 			}
+
 			case SPIKE:
 			{
 				pGameObject = CSpike::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
 
 				break;
 			}
+
 			case SHELL_GAME:
 			{
 				pGameObject = CShellGame::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
 
 				break;
 			}
+
 			case SLOT_MC:
 			{
 				pGameObject = CSlotMC::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"SlotMC", pGameObject), E_FAIL);
 
 				break;
@@ -281,8 +487,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CShop::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Shop", pGameObject), E_FAIL);
 
 				break;
@@ -293,8 +499,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CObstacle::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle", pGameObject), E_FAIL);
 
 				break;
@@ -305,8 +511,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CMoveXObstacle::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 
 				int randNum1 = rand() % 10 + 5;
 				int randNum2 = rand() % 10 + 5;
@@ -325,8 +531,8 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				pGameObject = CMoveZObstacle::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 
 				int randNum1 = rand() % 10 + 5;
 				int randNum2 = rand() % 10 + 5;
@@ -341,39 +547,217 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 			}
 
 			}
-			break;
-		}
 
+			break;
+
+		}
 		}
 	}
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
+
+	return S_OK;
 }
 
 HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 {
-	Engine::CLayer* pLayer = Engine::CLayer::Create();
-	NULL_CHECK_RETURN(pLayer, E_FAIL);
+	Engine::CLayer* pLayer;
 
-	Engine::CGameObject* pGameObject = nullptr;
-
-	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
-
-	for (auto& iter : mapLoadObj)
+	if (m_bStartScene)
 	{
-		switch (iter.second.iType)
+		pLayer = Engine::CLayer::Create();
+		NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+		Engine::CGameObject* pGameObject = nullptr;
+
+		auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
+
+		for (auto& iter : mapLoadObj)
+		{
+			switch (iter.second.iType)
+			{
+			case MONSTER:
+			{
+				switch (iter.second.iIndex)
+				{
+				case FLY:
+				{
+					pGameObject = CFly::Create(m_pGraphicDev, m_vecMonsterCount[FLY]++);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
+
+					break;
+				}
+				case ATTACK_FLY:
+				{
+					pGameObject = CAttackFly::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
+
+					++m_vecMonsterCount[ATTACK_FLY];
+
+					break;
+				}
+				case PACER:
+				{
+					pGameObject = CPacer::Create(m_pGraphicDev, m_vecMonsterCount[PACER]++);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pacer", pGameObject), E_FAIL);
+
+					break;
+				}
+				case LEAPER:
+				{
+					pGameObject = CLeaper::Create(m_pGraphicDev, m_vecMonsterCount[LEAPER]++);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Leaper", pGameObject), E_FAIL);
+
+					break;
+				}
+				case SQUIRT:
+				{
+					pGameObject = CSquirt::Create(m_pGraphicDev, m_vecMonsterCount[SQUIRT]++);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
+
+					++m_vecMonsterCount[SQUIRT];
+
+					break;
+				}
+				case DIP:
+				{
+					pGameObject = CDip::Create(m_pGraphicDev, m_vecMonsterCount[DIP]++);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					pGameObject->Set_MyLayer(pLayerTag);
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dip", pGameObject), E_FAIL);
+
+					break;
+				}
+				case DOPLE:
+				{
+					pGameObject = CDople::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					pGameObject->Set_MyLayer(pLayerTag);
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dople", pGameObject), E_FAIL);
+
+					m_vecMonsterCount[DOPLE]++;
+
+					break;
+				}
+				case CHARGER:
+				{
+					pGameObject = CCharger::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Charger", pGameObject), E_FAIL);
+
+					++m_vecMonsterCount[CHARGER];
+
+					break;
+				}
+				}
+				break;
+			}
+			case BOSS:
+			{
+				switch (iter.second.iIndex)
+				{
+				case MONSTRO:
+				{
+					pGameObject = CMonstro::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					pGameObject->Set_MyLayer(pLayerTag);
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Monstro", pGameObject), E_FAIL);
+
+					break;
+				}
+				case MOM:
+				{
+					pGameObject = CMom::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					pGameObject->Set_MyLayer(pLayerTag);
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Mom", pGameObject), E_FAIL);
+
+					break;
+				}
+				case MOM_PARTS:
+				{
+					for (int i = 0; i < 4; ++i)
+					{
+						pGameObject = CMomParts::Create(m_pGraphicDev, i);
+						NULL_CHECK_RETURN(pGameObject, E_FAIL);
+						dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+						dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+						pGameObject->Set_MyLayer(pLayerTag);
+						dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
+						FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
+					}
+					break;
+				}
+				}
+				break;
+			}
+
+			}
+		}
+	}
+	else
+	{
+		auto	pLayerFind = find_if(m_mapLayer.begin(), m_mapLayer.end(), CTag_Finder(pLayerTag));
+
+		if (pLayerFind == m_mapLayer.end())
+		{
+			pLayer = Engine::CLayer::Create();
+		}
+		else
+		{
+			pLayer = (*pLayerFind).second;
+		}
+
+		NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+		Engine::CGameObject* pGameObject = nullptr;
+
+		auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
+
+		auto iter = mapLoadObj.at(m_iCreatedCnt);
+
+		switch (iter.iType)
 		{
 		case MONSTER:
 		{
-			switch (iter.second.iIndex)
+			switch (iter.iIndex)
 			{
 			case FLY:
 			{
 				pGameObject = CFly::Create(m_pGraphicDev, m_vecMonsterCount[FLY]++);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Fly", pGameObject), E_FAIL);
 
 				break;
@@ -383,8 +767,8 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 				pGameObject = CAttackFly::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"AttackFly", pGameObject), E_FAIL);
 
 				++m_vecMonsterCount[ATTACK_FLY];
@@ -395,8 +779,8 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 			{
 				pGameObject = CPacer::Create(m_pGraphicDev, m_vecMonsterCount[PACER]++);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Pacer", pGameObject), E_FAIL);
 
 				break;
@@ -406,8 +790,8 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 				pGameObject = CLeaper::Create(m_pGraphicDev, m_vecMonsterCount[LEAPER]++);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Leaper", pGameObject), E_FAIL);
 
 				break;
@@ -417,8 +801,8 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 				pGameObject = CSquirt::Create(m_pGraphicDev, m_vecMonsterCount[SQUIRT]++);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
 				pGameObject->Set_MyLayer(pLayerTag);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Squirt", pGameObject), E_FAIL);
 
 				++m_vecMonsterCount[SQUIRT];
@@ -429,8 +813,8 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 			{
 				pGameObject = CDip::Create(m_pGraphicDev, m_vecMonsterCount[DIP]++);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				pGameObject->Set_MyLayer(pLayerTag);
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dip", pGameObject), E_FAIL);
 
@@ -440,8 +824,8 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 			{
 				pGameObject = CDople::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				pGameObject->Set_MyLayer(pLayerTag);
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Dople", pGameObject), E_FAIL);
 
@@ -453,8 +837,8 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 			{
 				pGameObject = CCharger::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Charger", pGameObject), E_FAIL);
 
 				++m_vecMonsterCount[CHARGER];
@@ -466,14 +850,14 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 		}
 		case BOSS:
 		{
-			switch (iter.second.iIndex)
+			switch (iter.iIndex)
 			{
 			case MONSTRO:
 			{
 				pGameObject = CMonstro::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				pGameObject->Set_MyLayer(pLayerTag);
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Monstro", pGameObject), E_FAIL);
 
@@ -483,8 +867,8 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 			{
 				pGameObject = CMom::Create(m_pGraphicDev);
 				NULL_CHECK_RETURN(pGameObject, E_FAIL);
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 				pGameObject->Set_MyLayer(pLayerTag);
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Mom", pGameObject), E_FAIL);
 
@@ -496,8 +880,8 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 				{
 					pGameObject = CMomParts::Create(m_pGraphicDev, i);
 					NULL_CHECK_RETURN(pGameObject, E_FAIL);
-					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
-					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
 					pGameObject->Set_MyLayer(pLayerTag);
 					dynamic_cast<CMomParts*>(pGameObject)->Setting_Value();
 					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MomParts", pGameObject), E_FAIL);
@@ -518,25 +902,87 @@ HRESULT CLoadStage::Ready_Layer_GameMonster(const _tchar* pLayerTag)
 
 HRESULT CLoadStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 {
-	// 아이템 관련
-	Engine::CLayer* pLayer = Engine::CLayer::Create();
-	NULL_CHECK_RETURN(pLayer, E_FAIL);
+	Engine::CLayer* pLayer;
 
-	Engine::CGameObject* pGameObject = nullptr;
-
-	auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
-
-	for (auto& iter : mapLoadObj)
+	if (m_bStartScene)
 	{
-		switch (iter.second.iType)
+		pLayer = Engine::CLayer::Create();
+		NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+		Engine::CGameObject* pGameObject = nullptr;
+
+		auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
+
+		for (auto& iter : mapLoadObj)
+		{
+			switch (iter.second.iType)
+			{
+			case ITEM:
+			{
+				switch (iter.second.iIndex)
+				{
+				case BRIM:
+				{
+					_vec3 vPos = { iter.second.iX, iter.second.iY, iter.second.iZ };
+					_vec3 vDir = { 0, 0, 1 };
+
+					pGameObject = CBrimStone::Create(m_pGraphicDev, 0, vPos, vDir);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BrimStone", pGameObject), E_FAIL);
+					break;
+				}
+				case EPIC:
+				{
+					_vec3 vPos = { iter.second.iX, iter.second.iY, iter.second.iZ };
+					_vec3 vDir = { 0, 0, 1 };
+
+					pGameObject = CEpic::Create(m_pGraphicDev, 0, vPos, vDir);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Epic", pGameObject), E_FAIL);
+
+					++m_vecMonsterCount[ATTACK_FLY];
+
+					break;
+				}
+				}
+
+			}
+			}
+		}
+
+	}
+	else
+	{
+		auto	pLayerFind = find_if(m_mapLayer.begin(), m_mapLayer.end(), CTag_Finder(pLayerTag));
+
+		if (pLayerFind == m_mapLayer.end())
+		{
+			pLayer = Engine::CLayer::Create();
+		}
+		else
+		{
+			pLayer = (*pLayerFind).second;
+		}
+
+		NULL_CHECK_RETURN(pLayer, E_FAIL);
+
+		Engine::CGameObject* pGameObject = nullptr;
+
+		auto mapLoadObj = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_mapLoadObj;
+
+		auto iter = mapLoadObj.at(m_iCreatedCnt);
+
+		switch (iter.iType)
 		{
 		case ITEM:
 		{
-			switch (iter.second.iIndex)
+			switch (iter.iIndex)
 			{
 			case BRIM:
 			{
-				_vec3 vPos = { iter.second.iX, iter.second.iY, iter.second.iZ };
+				_vec3 vPos = { iter.iX, iter.iY, iter.iZ };
 				_vec3 vDir = { 0, 0, 1 };
 
 				pGameObject = CBrimStone::Create(m_pGraphicDev, 0, vPos, vDir);
@@ -547,7 +993,7 @@ HRESULT CLoadStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 			}
 			case EPIC:
 			{
-				_vec3 vPos = { iter.second.iX, iter.second.iY, iter.second.iZ };
+				_vec3 vPos = { iter.iX, iter.iY, iter.iZ };
 				_vec3 vDir = { 0, 0, 1 };
 
 				pGameObject = CEpic::Create(m_pGraphicDev, 0, vPos, vDir);
@@ -566,7 +1012,6 @@ HRESULT CLoadStage::Ready_Layer_GameItem(const _tchar* pLayerTag)
 	}
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
-
 
 	return S_OK;
 }
@@ -870,10 +1315,8 @@ void CLoadStage::Check_All_Dead()
 
 	if (Check_Monster_Dead())
 	{
-
 		for (auto& iter : m_mapLayer.at(L"GameDoor")->Get_ObjectMap())
 			dynamic_cast<CDoor*>(iter.second)->Set_Open();
-
 	}
 }
 

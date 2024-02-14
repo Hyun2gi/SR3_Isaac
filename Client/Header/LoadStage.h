@@ -97,27 +97,47 @@ private:
 	virtual void Free() override;
 
 private:
-	CLoading* m_pLoading;
+	CLoading*			m_pLoading;
 
 	//바닥과 벽면을 가지고있게 한다.
-	CFloor* m_pFloor;
-	CWall* m_pLeftWall;
-	CWall* m_pRightWall;
-	CWall* m_pTopWall;
-	CWall* m_pBottomWall;
+	CFloor*				m_pFloor;
+	CWall*				m_pLeftWall;
+	CWall*				m_pRightWall;
+	CWall*				m_pTopWall;
+	CWall*				m_pBottomWall;
 
-	int m_iCurStageKey;
+	//현재 스테이지의 방 번호를 저장하는 멤버변수
+	int					m_iCurStageKey;
 
-	bool m_bIsCreated;
-	bool m_bStartScene;
+	/* 연출 관련 */
+	// 생성되었던 스테이지인지를 판단하는 불변수
+	_bool				m_bIsCreated;
+	// 로드한 데이터를 전부 생성했는지를 저장하는 불변수
+	_bool				m_bIsLoadDataCreated = false;
 
-	_bool	m_bMenu;
+	// 연출이 필요한 스테이지인지에 대한 값을 저장하는 불변수
+	_bool				m_bStartScene;		//true면 연출 제거, false면 연출 있음
 
-	//엔딩 관련
-	_float m_fEndingTimer = 4.5f;
-	bool m_bEndingPlay;
+	// 몬스터나 오브젝트, 문 등 맵에 Load되어야 하는 것들을 생성할 때 연출을 위해 사용할 타이머
+	_float				m_fSpawnTimer = 0.0f;
+
+
+	/* 메뉴 관련 */
+	_bool				m_bMenu;
+
+
+	/* 엔딩 관련 */
+	// 엔딩 넘어가는 타이머
+	_float				m_fEndingTimer = 4.5f;
+	// 엔딩 타이머를 시작할 때 사용하는 불변수
+	_bool				m_bEndingPlay;
+
+	_int				m_iLoadDataSize = 0;
+	_int				m_iCreatedCnt = 0;
+
+
 
 	// 맵에 배치한 몬스터의 개수를 카운트해주는 벡터
-	vector<int> m_vecMonsterCount;
+	vector<int>			m_vecMonsterCount;
 };
 
