@@ -37,7 +37,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_eCurState = P_IDLE;
 
 		m_ePreBulletState = P_BULLET_END;
-		m_eCurBulletState = P_BULLET_BRIMSTONE; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
+		m_eCurBulletState = P_BULLET_IDLE; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
 		m_ePreState = P_END;
 
 		// 딜레이 시간 초기화
@@ -81,7 +81,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_bStartAnim = true;
 
 		// 아이작으로 시작
-		m_eCurPlayerVer = P_AZAZEL;   //P_ISAAC;  //P_AZAZEL;
+		m_eCurPlayerVer = P_ISAAC;   //P_ISAAC;  //P_AZAZEL;
 
 		// 0일때는 가만히
 		m_iAzaelStateSet = 0;
