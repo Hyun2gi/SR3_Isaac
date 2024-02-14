@@ -171,13 +171,6 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 
 void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 {
-	if (m_bStart)
-	{
-		// 시작씬에만 임시적으로 실행
-		m_bStart = false;
-		Engine::StopAll();
-		Engine::PlayBGM(L"the caves.ogg",  1.f);
-	}
 
 	if (m_eCurState == C_PLAYERCHASE)
 	{
@@ -671,6 +664,12 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 		{
 			m_bMove = false;
 			m_bFix = false; //잠금 풀어주기
+
+			if (m_bStart)
+			{
+				m_bStart = false;
+				Engine::StopSound(SOUND_BGM);
+			}
 
 
 			// 에픽에투스일때 위로 고정

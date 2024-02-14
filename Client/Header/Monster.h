@@ -32,7 +32,7 @@ public:
 	BOSS_TYPE		Get_BossType() { return m_eBossType; }
 	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
 
-	void			Set_Time_Scale() { m_bTimeScale != m_bTimeScale; }
+	void			Set_Time_Scale() { m_bTimeScale = !m_bTimeScale; }
 public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;

@@ -188,6 +188,7 @@
     <ClInclude Include="..\Header\HeartUI.h" />
     <ClInclude Include="..\Header\ItemFontUI.h" />
     <ClInclude Include="..\Header\Menu.h" />
+    <ClInclude Include="..\Header\MiniMap.h" />
     <ClInclude Include="..\Header\MoveXObstacle.h" />
     <ClInclude Include="..\Header\MoveZObstacle.h" />
     <ClInclude Include="..\Header\Obstacle.h" />
@@ -274,6 +275,7 @@
     <ClCompile Include="..\Code\HeartUI.cpp" />
     <ClCompile Include="..\Code\ItemFontUI.cpp" />
     <ClCompile Include="..\Code\Menu.cpp" />
+    <ClCompile Include="..\Code\MiniMap.cpp" />
     <ClCompile Include="..\Code\MoveXObstacle.cpp" />
     <ClCompile Include="..\Code\MoveZObstacle.cpp" />
     <ClCompile Include="..\Code\Obstacle.cpp" />

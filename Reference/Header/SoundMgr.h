@@ -17,8 +17,10 @@ private:
 	virtual ~CSoundMgr();
 
 public:
+	bool CheckIsPlaying(CHANNEL_ID eID);
 	void PlaySound(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume);
-	void PlayEffect(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume);
+	void PlayEffectLoop(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume);
+	bool PlayEffect(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume);
 	void PlayBGM(TCHAR* pSoundKey, _float fVolume);
 	void StopSound(CHANNEL_ID eID);
 	void StopAll();

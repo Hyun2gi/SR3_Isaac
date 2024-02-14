@@ -90,6 +90,9 @@ private:
 
 	void			Create_Map_Particles();
 
+	void			BGM_INTRO_START();
+	void			BGM_START();
+
 public:
 	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene = false);
 
@@ -135,6 +138,8 @@ private:
 	_int				m_iLoadDataSize = 0;
 	_int				m_iCreatedCnt = 0;
 
+  /* 사운드 관련 */
+	_bool	m_bBGMIntro; //intro 나온지 안나온지 체크
 
 
 	// 맵에 배치한 몬스터의 개수를 카운트해주는 벡터

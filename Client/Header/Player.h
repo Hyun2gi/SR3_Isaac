@@ -256,7 +256,6 @@ private:
 
 	int					m_iAzaelStateSet;
 
-
 private:
 	list<CGameObject*>	m_PlayerBulletList;
 	list<CGameObject*>	m_EpicMarkList;

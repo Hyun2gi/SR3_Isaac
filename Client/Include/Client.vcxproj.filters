@@ -283,6 +283,15 @@
     <Filter Include="02. GameObject\12. UI\04. Item">
       <UniqueIdentifier>{b17b613d-f8e1-425c-9f94-e7dabe9f4c7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\12. UI\05. MiniMap">
+      <UniqueIdentifier>{392a9d5e-02c1-48a0-b33a-f341ff266bd7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\05. MiniMap\00. MiniMapParts">
+      <UniqueIdentifier>{3b017fbd-12e1-4b92-9883-03f7c4f2b7f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\05. MiniMap\01. MiniMapIcon">
+      <UniqueIdentifier>{14126214-2fc4-4ac5-bc89-793c6e1f8b59}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -540,6 +549,9 @@
     <ClInclude Include="..\Header\ItemFontUI.h">
       <Filter>02. GameObject\12. UI\04. Item</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\MiniMap.h">
+      <Filter>02. GameObject\12. UI\05. MiniMap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -787,6 +799,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ItemFontUI.cpp">
       <Filter>02. GameObject\12. UI\04. Item</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MiniMap.cpp">
+      <Filter>02. GameObject\12. UI\05. MiniMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
