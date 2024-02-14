@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Door.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 
 CDoor::CDoor(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -38,6 +39,15 @@ void CDoor::Set_Theme(int iID)
 		break;
 	default:
 		break;
+	}
+}
+
+void CDoor::Set_Open()
+{
+	if(m_bOpen == false)
+	{
+		m_bOpen = true; // 방 문 열리는 사운드
+		Engine::PlayEffect(L"DoorOpen.wav", SOUND_EFFECT_ETC_ALLPLAY, 1.f);
 	}
 }
 

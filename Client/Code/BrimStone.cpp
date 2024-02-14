@@ -114,15 +114,17 @@ void CBrimStone::Motion_Change()
 {
 }
 
-void CBrimStone::Run_Item_Effect()
+bool CBrimStone::Run_Item_Effect()
 {
 	if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT)
 	{
 		CPlayer::GetInstance()->Set_BulletType(2);
 		CPlayer::GetInstance()->Set_Item_Get_Anim();
 		m_bDead = true;
+
+		return true;
 	}
-	
+	return false;
 }
 
 void CBrimStone::Item_Spawn_Action()

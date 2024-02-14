@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PlayerBullet.h"
 
+#include "Export_System.h"
 #include "Export_Utility.h"
 #include "Player.h"
 
@@ -197,6 +198,9 @@ void CPlayerBullet::Motion_Change()
             m_fAccTimeDelta = 0;
             m_fFrame = 0;
             m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_PlayerTear_Effect"));
+            // 눈물터지는 사운드 
+            Engine::PlayEffect(L"Tear.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.f);
+            
             break;
         }
 

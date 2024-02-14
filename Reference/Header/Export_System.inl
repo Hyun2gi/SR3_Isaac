@@ -130,6 +130,11 @@ inline void PlaySound(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
 	CSoundMgr::GetInstance()->PlaySound(pSoundKey, eID, fVolume);
 }
 
+inline void PlayEffect(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
+{
+	CSoundMgr::GetInstance()->PlayEffect(pSoundKey, eID, fVolume);
+}
+
 inline void Ready_Sound()
 {
 	CSoundMgr::GetInstance()->Ready_Sound();

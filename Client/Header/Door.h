@@ -17,7 +17,7 @@ private:
 public:
 	void			Set_Theme(int iID);
 	void			Set_Theme(string strStageKey) { m_strStageKey = strStageKey; }
-	void			Set_Open() { m_bOpen = true; }
+	void			Set_Open();
 	_bool			Get_Open() { return m_bOpen; } 
 	void			Set_Collision() { m_bCollision = true; }
 	_bool			Get_Collision() { return m_bCollision; }

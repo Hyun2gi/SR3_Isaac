@@ -69,7 +69,7 @@ void CHeartHalf::Render_GameObject()
     m_pBufferCom->Render_Buffer();
 }
 
-void CHeartHalf::Run_Item_Effect()
+bool CHeartHalf::Run_Item_Effect()
 {
     if (m_eCurItemPlace == SP_SHOP)
     {
@@ -81,7 +81,8 @@ void CHeartHalf::Run_Item_Effect()
                 CPlayer::GetInstance()->Set_Coin(-m_iCoin);
                 m_bDead = true;
                 CPlayer::GetInstance()->Set_Hp(0.5);
-            }            
+                return true;
+            }
         }
     }
     else if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT)
@@ -91,9 +92,13 @@ void CHeartHalf::Run_Item_Effect()
             // 그냥 바로 적용
             m_bDead = true;
             CPlayer::GetInstance()->Set_Hp(0.5);
+
+            return true;
         }
         
     }
+
+    return false;
 }
 
 void CHeartHalf::Item_Spawn_Action()

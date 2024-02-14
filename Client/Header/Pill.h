@@ -27,7 +27,7 @@ public:
 	virtual void	Render_GameObject()						 override;
 
 public:
-	void			Run_Item_Effect()						override;
+	bool			Run_Item_Effect()						override;
 	void			Item_Spawn_Action()						override;
 	int				Get_Pill_Num() { return m_eCurState; }
 

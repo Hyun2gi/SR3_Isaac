@@ -713,6 +713,8 @@ HRESULT CLoadStage::Ready_Layer_GameLogic(const _tchar* pLayerTag)
 
 HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 {
+	CUBE_ACTION_TYPE eAction = (CUBE_ACTION_TYPE)(rand() % ACTION_END);
+
 	Engine::CLayer* pLayer = Engine::CLayer::Create();
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
@@ -725,18 +727,20 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 
 	wstrTheme.assign(strType.begin(), strType.end());
 
+	_int iRandValue = 0;
+	//_int iRandValue = rand() % ACTION_END;
+
 	//바닥 추가
 	wstrTag = wstrProto + wstrTheme + L"FloorCubeTexture";
-	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev, m_bStartScene);
+	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev, iRandValue, m_bStartScene);
 	m_pFloor->Set_Cube_Texture_Tag(wstrTag.c_str());
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Floor", pGameObject), E_FAIL);
 
-
 	//벽 추가
 	// 여기는 벽의 큐브 텍스처의 태그를 만들어서 넘겨주는 부분
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
-	pGameObject = m_pLeftWall = CWall::Create(m_pGraphicDev, m_bStartScene);
+	pGameObject = m_pLeftWall = CWall::Create(m_pGraphicDev, iRandValue, m_bStartScene);
 	m_pLeftWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_LEFT);
 
 	// 여기는 벽면 텍스처의 태그를 만들어서 넘겨주는 부분
@@ -747,7 +751,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 
 	//반복
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
-	pGameObject = m_pRightWall = CWall::Create(m_pGraphicDev, m_bStartScene);
+	pGameObject = m_pRightWall = CWall::Create(m_pGraphicDev, iRandValue, m_bStartScene);
 	m_pRightWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_RIGHT);
 
 	wstrTag = wstrProto + wstrTheme + L"Wall";
@@ -756,7 +760,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
-	pGameObject = m_pTopWall = CWall::Create(m_pGraphicDev, m_bStartScene);
+	pGameObject = m_pTopWall = CWall::Create(m_pGraphicDev, iRandValue, m_bStartScene);
 	m_pTopWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_TOP);
 
 	wstrTag = wstrProto + wstrTheme + L"Wall";
@@ -765,7 +769,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
-	pGameObject = m_pBottomWall = CWall::Create(m_pGraphicDev, m_bStartScene);
+	pGameObject = m_pBottomWall = CWall::Create(m_pGraphicDev, iRandValue, m_bStartScene);
 	m_pBottomWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_BOTTOM);
 
 	wstrTag = wstrProto + wstrTheme + L"Wall";
@@ -869,6 +873,7 @@ void CLoadStage::Check_All_Dead()
 
 	if (Check_Monster_Dead())
 	{
+
 		for (auto& iter : m_mapLayer.at(L"GameDoor")->Get_ObjectMap())
 			dynamic_cast<CDoor*>(iter.second)->Set_Open();
 
@@ -1158,7 +1163,6 @@ void CLoadStage::Obstacle_Collsion()
 
 	if (m_mapLayer.at(L"MapObj") != nullptr)
 	{
-
 		auto& mapObj = m_mapLayer.at(L"MapObj")->Get_ObjectMap();
 
 		for (auto& iter : mapObj)
@@ -1189,7 +1193,7 @@ void CLoadStage::Player_Collision_With_Monster()
 
 	if (pObj_Fire)
 	{
-		if (0 == dynamic_cast<CMapObj*>(pObj_Fire)->Get_ObjID())
+		if (CAMPFIRE == dynamic_cast<CMapObj*>(pObj_Fire)->Get_Type())
 		{
 			// 플레이어 피 감소
 			CPlayer::GetInstance()->Set_Attacked();

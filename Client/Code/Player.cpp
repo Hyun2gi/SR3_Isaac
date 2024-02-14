@@ -37,7 +37,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_eCurState = P_IDLE;
 
 		m_ePreBulletState = P_BULLET_END;
-		m_eCurBulletState = P_BULLET_EPIC; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
+		m_eCurBulletState = P_BULLET_BRIMSTONE; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
 		m_ePreState = P_END;
 
 		// 딜레이 시간 초기화
@@ -81,7 +81,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_bStartAnim = true;
 
 		// 아이작으로 시작
-		m_eCurPlayerVer = P_ISAAC;   //P_ISAAC;  //P_AZAZEL;
+		m_eCurPlayerVer = P_AZAZEL;   //P_ISAAC;  //P_AZAZEL;
 
 		// 0일때는 가만히
 		m_iAzaelStateSet = 0;
@@ -143,7 +143,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_bStartAnim = false;
 		// 주석 없애기
-		//Set_Cry_Anim();
+		Set_Cry_Anim();
 	}
 
 	// 특정 모션 처리
@@ -196,6 +196,11 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		if (m_fPicNum < m_fFrame)
 		{
 			m_fFrame = m_fPicNum - 1;
+		}
+
+		if (!m_PlayerBulletList.empty())
+		{
+			Engine::PlayEffect(L"monster yell b5.wav", SOUND_EFFECT_PLAYER_ALLPLAY, 1.f);
 		}
 	}
 
@@ -664,12 +669,41 @@ void CPlayer::Set_Cry_Anim()
 	m_bKeyBlock = true;
 	m_fDelayTime = 0.f;
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_00_Start();
+
+	// 다끄고 시작음
+	Engine::StopAll();
+	Engine::PlayEffect(L"GameStart.ogg", SOUND_EFFECT_PLAYER_ALLPLAY, 1.f);
 }
 
 void CPlayer::Set_Attacked()
 {
 	if (m_eCurState != P_ATTACKED && m_bUnbeatable == false)
 	{
+		srand((unsigned)time(NULL));
+		int num = rand() % 4;
+
+		if (num == 0)
+		{
+			// 사운드
+			Engine::PlayEffect(L"hurt grunt 1.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+		}
+		else if (num == 1)
+		{
+			// 사운드
+			Engine::PlayEffect(L"Hit_1.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+		}
+		else if (num == 2)
+		{
+			// 사운드
+			Engine::PlayEffect(L"Hit_2.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+		}
+		else if (num == 3)
+		{
+			// 사운드
+			Engine::PlayEffect(L"Hit_3.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+		}
+		
+
 		if (m_fHp >= 0.5)
 		{
 			m_fHp -= 0.5;
@@ -1184,12 +1218,18 @@ void CPlayer::Motion_Change()
 				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_RIGHT"));
 				break;
 			case P_THUMBS_UP:
+				// 사운드
+				Engine::StopSound(SOUND_EFFECT_PLAYER_ALLPLAY);
+				Engine::PlayEffect(L"Item_Good.wav", SOUND_EFFECT_PLAYER_ALLPLAY, 1.f);
 				m_fPicNum = 3;
 				m_fSpriteSpeed = 1.f;
 				m_bKeyBlock = true; //key 막기
 				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_THUMBS_UP"));
 				break;
 			case P_GET_BAD_ITEM:
+				// 사운드
+				Engine::StopSound(SOUND_EFFECT_PLAYER_ALLPLAY);
+				Engine::PlayEffect(L"thumbs down.wav", SOUND_EFFECT_PLAYER_ALLPLAY, 1.f);
 				m_fPicNum = 1;
 				m_fSpriteSpeed = 1.f;
 				m_bKeyBlock = true; //key 막기
@@ -1313,7 +1353,7 @@ void CPlayer::Specific_Motion(const _float& fTimeDelta)
 	{
 		m_fDelayTime += fTimeDelta;
 
-		if (m_fDelayTime > 2)
+		if (m_fDelayTime > 4)
 		{
 			m_eCurState = P_CRY_OPEN_EYE;
 			m_fDelayTime = 0; // 딜레이 시간 초기화
@@ -1398,6 +1438,12 @@ void CPlayer::Specific_Motion(const _float& fTimeDelta)
 	{
 		m_fDelayTime += fTimeDelta;
 
+		if (m_fDelayTime < 2.7 && m_fDelayTime >2.6)
+		{
+			// 사운드
+			Engine::PlayEffect(L"thumbs up.wav", SOUND_EFFECT_PLAYER_ALLPLAY, 1.f);
+		}
+
 		if (m_fDelayTime > 2)
 		{
 			m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
@@ -1426,13 +1472,15 @@ void CPlayer::Check_UnBeatable_Time(const _float& fTimeDelta)
 	{
 		m_fUnbeatableTime += fTimeDelta;
 
-		if (m_fUnbeatableTime >= 2)
+		// 무적시간 조절
+		if (m_fUnbeatableTime >= 1.5)
 		{
 			m_bUnbeatable = false;
 			m_fUnbeatableTime = 0;
 		}
 	}
 }
+
 
 void CPlayer::Free()
 {

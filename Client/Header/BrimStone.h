@@ -20,7 +20,7 @@ private:
 	virtual void		Motion_Change()						override;
 
 public:
-	void			Run_Item_Effect()						override;
+	bool			Run_Item_Effect()						override;
 	void			Item_Spawn_Action()						override;
 
 private:

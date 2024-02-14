@@ -41,8 +41,9 @@ void CItem::Render_GameObject()
 {
 }
 
-void CItem::Run_Item_Effect()
+bool CItem::Run_Item_Effect()
 {
+	return true;
 }
 
 void CItem::Set_Item_SpawnSpot(int _spawnspot)
