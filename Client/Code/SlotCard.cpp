@@ -57,7 +57,7 @@ _int CSlotCard::Update_GameObject(const _float& fTimeDelta)
 	if(m_bRandom) // 플레이어와 충돌한 슬롯머신이 카드의 m_bRandom을 true로 만들어준 상황
 	{
 		m_eCurState = CARD_RANDOM;
-
+		m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_SlotCardRandTexture"));
 		m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed; // 휘리릭~
 
 		if (m_iPicNum < m_fFrame)
