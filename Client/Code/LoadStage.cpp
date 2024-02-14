@@ -1065,6 +1065,7 @@ void CLoadStage::MapObj_Collision()
 							break; // 머야
 						}
 					}
+					++iter;
 				}else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 2)// && // 에픽페투스와의 충돌
 				{
 					if (dynamic_cast<CEpicBullet*>(*iter)->Get_CanAttacked()) // Epic이 로켓 상태일 때(공격 가능)
