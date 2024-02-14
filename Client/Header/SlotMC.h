@@ -38,7 +38,6 @@ private:
 	_bool				Check_Reward();
 
 private:
-	// º¯¼ö
 	_bool				m_bCreate;
 	_bool				m_bGame;
 	_bool				m_bReward;

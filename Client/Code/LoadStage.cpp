@@ -1080,12 +1080,12 @@ void CLoadStage::MapObj_Collision()
 
 		if (pMachine)
 		{
-			if (1 == dynamic_cast<CMapObj*>(pMachine)->Get_ObjID())
+			if (1 == dynamic_cast<CMapObj*>(pMachine)->Get_ObjID() &&
+				!dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Game()) // 게임중이 아닐 때
 			{
 				if (0 < CPlayer::GetInstance()->Get_Coin())
 				{
 					CPlayer::GetInstance()->Set_Coin(-1);
-					//dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Drop_False(); // 
 					dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Game();
 				}
 			}
