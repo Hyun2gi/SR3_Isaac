@@ -1239,26 +1239,24 @@ void CLoadStage::Drop_ITem()
 	// 슬롯머신
 	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC") != nullptr)
 	{
-		if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Machine") != nullptr)//Get_GameObject(L"MapObj", L"Machine") != nullptr) // Get_Reward
+		if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Machine") != nullptr)
 		{
-			//Get_GameObject(L"MapObj", L"SlotMC"))->Get_Reward() && // 문제 발생(메모리 못 읽어옴)
-			//!dynamic_cast<CMapObj*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Drop()
-			if (dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Reward() &&
-				!dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Drop()) // !dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Game()
+			if (dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Reward() )//&& // SlotMC가 보상 true일 때
+				//!dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Drop()) // SlotMC가 보상을 Drop하지 않았을 때(false)
 			{
 				CGameObject* pSlotMC = nullptr;
 				CGameObject* pDropItem = nullptr;
-				pSlotMC = m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"); //Get_GameObject(L"MapObj", L"SlotMC");
+				pSlotMC = m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC");
 
-				ITEM_TYPE eType = dynamic_cast<CSlotMC*>(pSlotMC)->Get_ItemType();
+				ITEM_TYPE eType = dynamic_cast<CSlotMC*>(pSlotMC)->Get_ItemType(); // 랜덤 결과로부터 Drop 아이템 세팅
 				wstring wstrObjTag = dynamic_cast<CSlotMC*>(pSlotMC)->Get_DropItemTag();
 
 				if (HEART == eType)
 				{
 					pDropItem = dynamic_cast<CMapObj*>(pSlotMC)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), 1);
 					m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pDropItem);
-					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop();
-					dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Set_Reward();
+					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop(); // 아이템을 드랍한 녀석임을 표시
+					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Reward(); // -> false로 변환
 				}
 				else if (COIN == eType)
 				{
@@ -1268,7 +1266,7 @@ void CLoadStage::Drop_ITem()
 						m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pDropItem);
 					}
 					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop();
-					dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Reward();
+					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Reward();
 				}
 			}
 		}
