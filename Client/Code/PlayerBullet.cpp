@@ -50,6 +50,9 @@ _int CPlayerBullet::Update_GameObject(const _float& fTimeDelta)
 
     Motion_Change();
 
+
+    _vec3 pos;
+    m_pTransformCom->Get_Info(INFO_POS, &pos);
    
     // 충돌하지 않고 시간이 다되면 바로 DEAD 처리
     if (Check_Time(fTimeDelta) && !m_bCollision)

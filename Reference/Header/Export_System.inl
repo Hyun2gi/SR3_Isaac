@@ -125,14 +125,24 @@ inline void Render_ImGuiMgr()
 	CImGuiMgr::GetInstance()->Render_ImGuiMgr();
 }
 
+inline bool CheckIsPlaying(CHANNEL_ID eID)
+{
+	return CSoundMgr::GetInstance()->CheckIsPlaying(eID);
+}
+
 inline void PlaySound(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
 {
 	CSoundMgr::GetInstance()->PlaySound(pSoundKey, eID, fVolume);
 }
 
-inline void PlayEffect(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
+inline bool PlayEffect(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
 {
-	CSoundMgr::GetInstance()->PlayEffect(pSoundKey, eID, fVolume);
+	return CSoundMgr::GetInstance()->PlayEffect(pSoundKey, eID, fVolume);
+}
+
+inline void PlayEffectLoop(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
+{
+	CSoundMgr::GetInstance()->PlayEffectLoop(pSoundKey, eID, fVolume);
 }
 
 inline void Ready_Sound()
