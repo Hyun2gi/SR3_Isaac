@@ -39,8 +39,6 @@ private:
 
 	void				Change_Scale();
 	void				Setting_FirstCard();
-	void				Check_Result();
-
 	void				Setting_Result();
 
 private:

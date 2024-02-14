@@ -62,24 +62,13 @@ _int CSlotCard::Update_GameObject(const _float& fTimeDelta)
 
 		if (m_iPicNum < m_fFrame)
 			m_fFrame = 0.f;
-
-		//if (Check_Time(fTimeDelta)) // 랜덤인 동안 일정 시간이 될 때까지 프레임 돌고 일정 시간 되면 랜덤 = false
-		//{
-		//	m_bRandom = false;
-		//	m_eCurState = CARD_IDLE;
-		//	Check_Result(); // 보상 체크
-		//	// 랜덤 체크를 카드가 아니라 슬롯머신에서 할 수 있도록
-		//}
 	}
-	else if(m_bStart && !m_bRandom)// Start, Result 상태인 경우에는 한 카드만 보여주기
+	else if(m_bStart && !m_bRandom)
 	{
-		m_eCurState = CARD_IDLE; // 기본 카드 텍스쳐 사용
-		m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_SlotCardTexture")); // 머얌
+		m_eCurState = CARD_IDLE;
+		m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_SlotCardTexture"));
 		Setting_Result();
 	}
-
-	// 카드에서 m_bResult의 존재 의의 : 내부적으로 영향을 끼치지는 X
-	// 카드의 m_bResult가 true인 경우 충돌처리 시 아이템 드랍->false로 바꿔줌으로써 아이템을 여러번 드랍하지 않도록 막아주는?
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -146,8 +135,7 @@ void CSlotCard::Motion_Change()
 		switch (m_eCurState)
 		{
 		case CSlotCard::CARD_IDLE:
-			m_iPicNum = 1; // 7  ---> 카드 하나만 사용
-			//m_fFrameSpeed = 1.f;
+			m_iPicNum = 1;
 			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_SlotCardTexture"));
 			break;
 
@@ -179,41 +167,6 @@ void CSlotCard::Setting_FirstCard()
 		m_fFrame = 4.f;
 		break;
 	}
-}
-
-void CSlotCard::Check_Result()
-{
-	int iResult = rand() % 10;
-
-	switch (iResult)
-	{
-	case 0: // 꽝
-	case 1:
-	case 2:
-	case 3:
-	case 4:
-	case 5:
-		m_fFrame = rand() % 4 + m_iIndex;
-		m_iReward = 0;
-		m_bReward = false;
-		break;
-	case 6: // 코인
-	case 7:
-		m_fFrame = 2.8f;
-		m_iReward = 1;
-		m_bReward = true; // 당첨된 경우 m_bReward = true
-		break;
-	case 8: // 하트
-	case 9:
-		m_fFrame = 5.8f;
-		m_iReward = 2;
-		m_bReward = true;
-		break;
-	default:
-		break;
-	}
-
-	//m_bReward = true;
 }
 
 void CSlotCard::Setting_Result()
