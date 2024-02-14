@@ -898,6 +898,12 @@ void CLoadStage::Item_Collision()
 		}
 		dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))
 			->Set_ItemType(dynamic_cast<CItem*>(pObj)->Get_Item_Type());
+
+		if (PILL == temp) // 알약인 경우
+		{
+			dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))->Set_PillState(
+				dynamic_cast<CPill*>(pObj)->Get_Pill_Num());
+		}
 	}
 }
 
@@ -920,12 +926,12 @@ void CLoadStage::Moster_Collision()
 					ATTACK_FLY != dynamic_cast<CMonster*>(pMonster)->Get_MstType() && // 도플, 공격형 파리가 아닌 경우
 					DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
 				{
-					// 일반 총알 충돌처리
-					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
-
 					if (dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() &&		// Bullet이 Dead가 아닌 경우
 						!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Monster가 Dead가 아닌 경우
 					{
+						// 일반 총알 충돌처리
+						dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
+
 						if (dynamic_cast<CMonster*>(pMonster)->Get_IsBoss()) // 보스인 경우
 						{
 							if (MONSTRO == dynamic_cast<CMonster*>(pMonster)->Get_BossType())
@@ -1027,27 +1033,45 @@ void CLoadStage::MapObj_Collision()
 
 			if (pMapObj)
 			{
-				// 일반 총알일때 이펙트 보여주려고 해당부분 처리
-				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
+				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0) // 일반 Bullet
 				{
-					// 일반 총알 충돌처리
-					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
-				}
+					if (dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() && // Bullet이 Dead가 아닐 때
+						!dynamic_cast<CMapObj*>(pMapObj)->Get_Dead())			// MapObj도 Dead가 아닐 때
+					{
+						// 일반 총알일때 이펙트 보여주려고 해당부분 처리
+						if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
+						{
+							// 일반 총알 충돌처리
+							dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
+						}
 
-				if (POOP == dynamic_cast<CMapObj*>(pMapObj)->Get_Type())
+						if (POOP == dynamic_cast<CMapObj*>(pMapObj)->Get_Type())
+						{
+							dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
+							break;
+						}
+						else if (0 == dynamic_cast<CMapObj*>(pMapObj)->Get_ObjID())
+						{
+							dynamic_cast<CFire*>(pMapObj)->Set_Hit();
+							break;
+						}
+						else
+						{
+							break; // 머야
+						}
+					}
+				}else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 2)// && // 에픽페투스와의 충돌
 				{
-					dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
-					break;
-				}
-				else if (0 == dynamic_cast<CMapObj*>(pMapObj)->Get_ObjID())
-				{
-					dynamic_cast<CFire*>(pMapObj)->Set_Hit();
-					break;
+					if (dynamic_cast<CEpicBullet*>(*iter)->Get_CanAttacked()) // Epic이 로켓 상태일 때(공격 가능)
+					{
+						dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
+						break;
+					}
+					else
+						++iter;
 				}
 				else
-				{
-					break;
-				}
+					++iter;
 			}
 			else
 				++iter;
@@ -1061,19 +1085,17 @@ void CLoadStage::MapObj_Collision()
 
 		if (pMachine)
 		{
-			if (1 == dynamic_cast<CMapObj*>(pMachine)->Get_ObjID())
+			if (1 == dynamic_cast<CMapObj*>(pMachine)->Get_ObjID() &&
+				!dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Game()) // 게임중이 아닐 때
 			{
 				if (0 < CPlayer::GetInstance()->Get_Coin())
 				{
 					CPlayer::GetInstance()->Set_Coin(-1);
-					//dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Drop_False(); // 
 					dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Game();
 				}
 			}
 		}
 	}
-
-	// Shop Npc 는 Epic 과 충돌
 
 	// 야바위 충돌
 	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
@@ -1221,26 +1243,24 @@ void CLoadStage::Drop_ITem()
 	// 슬롯머신
 	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC") != nullptr)
 	{
-		if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Machine") != nullptr)//Get_GameObject(L"MapObj", L"Machine") != nullptr) // Get_Reward
+		if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Machine") != nullptr)
 		{
-			//Get_GameObject(L"MapObj", L"SlotMC"))->Get_Reward() && // 문제 발생(메모리 못 읽어옴)
-			//!dynamic_cast<CMapObj*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Drop()
-			if (dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Reward() &&
-				!dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Drop()) // !dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Game()
+			if (dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Reward() )//&& // SlotMC가 보상 true일 때
+				//!dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Drop()) // SlotMC가 보상을 Drop하지 않았을 때(false)
 			{
 				CGameObject* pSlotMC = nullptr;
 				CGameObject* pDropItem = nullptr;
-				pSlotMC = m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"); //Get_GameObject(L"MapObj", L"SlotMC");
+				pSlotMC = m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC");
 
-				ITEM_TYPE eType = dynamic_cast<CSlotMC*>(pSlotMC)->Get_ItemType();
+				ITEM_TYPE eType = dynamic_cast<CSlotMC*>(pSlotMC)->Get_ItemType(); // 랜덤 결과로부터 Drop 아이템 세팅
 				wstring wstrObjTag = dynamic_cast<CSlotMC*>(pSlotMC)->Get_DropItemTag();
 
 				if (HEART == eType)
 				{
 					pDropItem = dynamic_cast<CMapObj*>(pSlotMC)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), 1);
 					m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pDropItem);
-					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop();
-					dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Set_Reward();
+					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop(); // 아이템을 드랍한 녀석임을 표시
+					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Reward(); // -> false로 변환
 				}
 				else if (COIN == eType)
 				{
@@ -1250,7 +1270,7 @@ void CLoadStage::Drop_ITem()
 						m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pDropItem);
 					}
 					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop();
-					dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Reward();
+					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Reward();
 				}
 			}
 		}

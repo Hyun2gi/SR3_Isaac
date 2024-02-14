@@ -13,14 +13,20 @@ END
 
 class CItemFontUI : public Engine::CUI
 {
+	const _float FONT_Y = 95.f;
+	const _float PILL_FONT_Y = 105.f;
+	const _float DETAIL_Y = 123.f;
 private:
 	explicit CItemFontUI(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CItemFontUI(const CItemFontUI& rhs);
 	virtual ~CItemFontUI();
 
+	enum PILLSTATE{ PILL_0, PILL_1, PILL_2, PILL_3, PILL_4, PILL_NONE };
+
 public:
 	void			Set_Render() { m_bRender = true; m_fAccTimeDelta = 0.f; }
 	void			Set_ItemType(ITEM_TYPE eItemType) { m_eItemType = eItemType; }
+	void			Set_PillState(int iState);
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -34,7 +40,6 @@ private:
 	bool			Check_Time(const _float& fTimeDelta);
 
 	void			Change_Font();
-	void			Animation_Font();		
 
 private:
 	Engine::CRcTex* m_pBufferCom;
@@ -57,10 +62,11 @@ private:
 
 	_tchar				m_szItem[128];
 	_tchar				m_szItemDetail[128];
-	ITEM_TYPE			m_eItemType;
 	_vec2				m_vecFontPos;
 	_vec2				m_vecDetailPos;
-	_vec2				m_vecEndPos;
+
+	ITEM_TYPE			m_eItemType;
+	PILLSTATE			m_ePillState;
 
 public:
 	static CItemFontUI* Create(LPDIRECT3DDEVICE9	pGraphicDev,

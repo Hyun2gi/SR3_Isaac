@@ -29,6 +29,7 @@ public:
 public:
 	bool			Run_Item_Effect()						override;
 	void			Item_Spawn_Action()						override;
+	int				Get_Pill_Num() { return m_eCurState; }
 
 private:
 	virtual HRESULT		Add_Component()						override;

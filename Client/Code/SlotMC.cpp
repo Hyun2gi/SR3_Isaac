@@ -26,12 +26,20 @@ void CSlotMC::Set_Machine_ToStage(CLayer* pLayer)
 		pLayer->Add_GameObject(L"Machine", m_pMachine);
 }
 
+void CSlotMC::Set_Reward()
+{
+	m_bReward = false;
+
+	for (auto& iter : m_pCardList)
+		iter->Set_Reward();
+}
+
 HRESULT CSlotMC::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(25.f, 1.f, 20.f);
+	m_pTransformCom->Set_Pos(0.f, 1.9f, 0.f);
 
-	m_iLimitHit = 4;
+	m_fCallLimit = 1.2f; // 슬롯 카드 돌아가는 시간
 
 	m_bCreate = false;
 	m_bGame = false;
@@ -62,23 +70,38 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	/*if (m_pMachine->Get_Dead())
-		m_bGame = true;
-	else
-		m_bGame = false;*/
-
-	if (m_bGame)
+	if (m_bGame) // 플레이어와 충돌 시 
 	{
-		m_pMachine->Set_Game();
-
+		// 슬롯카드에게 휘리릭 상태를 부여
+		
 		for (auto& iter : m_pCardList)
 		{
-			iter->Set_Random();
+			iter->Set_Random(); // 슬롯 카드들 휘리릭~ true
+		}
+
+		if (Check_Time(fTimeDelta)) // 휘리릭 끝!
+		{
+			// 랜덤 값 받아와서 보상 결정
+			Set_Item_Value();
+			Setting_ItemTag();
+
+			m_bGame = false; // 게임 한판 끝
+
+			for (auto& iter : m_pCardList)
+			{
+				iter->Set_Random_False();
+				iter->Set_Result(true); // 보상을 보여주는 중
+				iter->Set_NoLuckNum(rand()% 4); // 임의의 카드 띄울 수 있도록
+
+				if (COIN == m_eDropItem)
+					iter->Set_RewardResult(1);
+				else if (HEART == m_eDropItem)
+					iter->Set_RewardResult(2);
+				else
+					iter->Set_RewardResult(0);
+			}
 		}
 	}
-
-	Set_Item_Value();
-	Setting_ItemTag();
 
 	return 0;
 }
@@ -86,6 +109,16 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 void CSlotMC::LateUpdate_GameObject()
 {
 	__super::LateUpdate_GameObject();
+
+	if (m_bHit)
+	{
+		m_pMachine->Set_Dead();
+
+		for (auto& iter : m_pCardList)
+		{
+			iter->Set_Dead();
+		}
+	}
 
 	if (m_pMachine != nullptr)
 		m_pMachine->LateUpdate_GameObject();
@@ -121,34 +154,6 @@ HRESULT CSlotMC::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-#pragma region SlotMC Texture
-
-	// IDLE
-	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_SlotMCTexture"));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_SlotMCTexture", pComponent });
-
-	// BROKEN
-	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BrokenSlotMCTexture"));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_BrokenSlotMCTexture", pComponent });
-
-#pragma endregion SlotMC Texture
-
-#pragma region Card Texture
-
-	// Card
-	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_SlotCardTexture"));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_SlotCardTexture", pComponent });
-
-	// Random Card
-	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_SlotCardRandTexture"));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_SlotCardRandTexture", pComponent });
-
-#pragma endregion Card Texture
-
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
@@ -162,29 +167,30 @@ HRESULT CSlotMC::Add_Component()
 
 void CSlotMC::Set_Item_Value()
 {
-	if (Check_Reward())
+	int iResult = rand() % 10;
+
+	switch (iResult)
 	{
-		int iReward = m_pCardList.front()->Get_RewardItem();
-
-		if (0 != iReward)
-		{
-			switch (iReward)
-			{
-			case 1: // 코인
-				m_eDropItem = COIN;
-				break;
-				
-			case 2: // 하트
-				m_eDropItem = HEART;
-				break;
-				
-			default:
-				break;
-			}
-
-			m_bReward = true;
-			m_bGame = false;
-		}
+	case 0: // 꽝
+	case 1:
+	case 2:
+	case 3:
+	case 4:
+	case 5:
+		m_eDropItem = ITEM_NONE;
+		break;
+	case 6: // 코인
+	case 7:
+		m_eDropItem = COIN;
+		m_bReward = true; // 당첨된 경우 m_bReward = true
+		break;
+	case 8: // 하트
+	case 9:
+		m_eDropItem = HEART;
+		m_bReward = true;
+		break;
+	default:
+		break;
 	}
 }
 
@@ -219,13 +225,13 @@ void CSlotMC::Create_Card()
 	}
 }
 
-_bool CSlotMC::Check_Reward()
+_bool CSlotMC::Check_Reward() // 필요 없지 않나
 {
 	if (!m_pCardList.empty())
 	{
 		for (auto& iter : m_pCardList)
 		{
-			if (iter->Get_Reward())
+			if (iter->Get_Reward()) // 카드가 하나라도 m_bReward = true이면 true 반환
 				return true;
 		}
 		return false;

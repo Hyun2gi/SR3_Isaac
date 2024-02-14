@@ -20,6 +20,30 @@ CItemFontUI::~CItemFontUI()
 {
 }
 
+void CItemFontUI::Set_PillState(int iState)
+{
+	switch (iState)
+	{
+	case 0:
+		m_ePillState = PILL_0;
+		break;
+	case 1:
+		m_ePillState = PILL_1;
+		break;
+	case 2:
+		m_ePillState = PILL_2;
+		break;
+	case 3:
+		m_ePillState = PILL_3;
+		break;
+	case 4:
+		m_ePillState = PILL_4;
+		break;
+	default:
+		break;
+	}
+}
+
 HRESULT CItemFontUI::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
@@ -35,7 +59,8 @@ HRESULT CItemFontUI::Ready_GameObject()
 
 	m_pTransformCom->Set_Pos(_vec3(m_fPosX, m_fPosY, 0.0f));
 
-	m_eItemType = ITEM_NONE;
+	m_eItemType = ITEM_NONE; // ITEM_NONE
+	m_ePillState = PILL_NONE; // PILL_NONE
 
 	__super::Ready_GameObject();
 
@@ -50,20 +75,21 @@ _int CItemFontUI::Update_GameObject(const _float& fTimeDelta)
 
 	if (Check_Time(fTimeDelta))
 	{
-		m_bRender = false; // 얘를 주석치면 애초에 아예 출력이 안 되는?
+		m_bRender = false;
 	}
 
 	if (m_bRender)
 	{
 		Change_Font();
-		//Animation_Font();
-	}
-	else
-	{
-		//m_vecFontPos = { 10.f, m_vecEndPos.y };
 	}
 
-	// m_bRender가 true이면 좌측에서 생성되어 중앙까지 이동 후 몇 초 뒤에 사라지기
+	if (PILL == m_eItemType)
+		m_vecFontPos.y = PILL_FONT_Y; // PILL_FONT_Y
+	else
+		m_vecFontPos.y = FONT_Y;
+	
+	m_vecDetailPos.y = DETAIL_Y;
+
 	//m_bRender = true;
 
 	return 0;
@@ -83,8 +109,8 @@ void CItemFontUI::Render_GameObject()
 	if (m_bRender)
 	{
 		m_pBufferCom->Render_Buffer(); // 뒷배경
-		Engine::Render_Font(L"Font_Item", m_szItem, &m_vecEndPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-		Engine::Render_Font(L"Font_Item_Detail", m_szItemDetail, &m_vecDetailPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+		Engine::Render_Font(L"Neo둥근모 Code", m_szItem, &m_vecFontPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
+		Engine::Render_Font(L"Neo둥근모", m_szItemDetail, &m_vecDetailPos, D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
 	}
 }
 
@@ -127,46 +153,61 @@ void CItemFontUI::Change_Font()
 	case Engine::BRIM:
 		lstrcpy(m_szItem, L"BRIMSTONE");
 		lstrcpy(m_szItemDetail, L"Blood Laser Barrage");
-		m_vecEndPos = { 400.f, 180.f };
-		m_vecDetailPos = { 200.f, 120.f };
+		m_vecFontPos.x = 265.f;
+		m_vecDetailPos.x = 250.f;
 		break;
 	case Engine::EPIC:
 		lstrcpy(m_szItem, L"EPIC FETUS");
 		lstrcpy(m_szItemDetail, L"On-demand air strike");
-		m_vecEndPos = { 400.f, 180.f };
-		m_vecDetailPos = { 200.f, 120.f };
+		m_vecFontPos.x = 245.f;
+		m_vecDetailPos.x = 240.f;
 		break;
 	case Engine::SAD_ONION:
-		lstrcpy(m_szItem, L"폰트확인중"); // THE SAD ONION 
+		lstrcpy(m_szItem, L"THE SAD ONION");
 		lstrcpy(m_szItemDetail, L"Tears up");
-		m_vecEndPos = { 190.f, 100.f };
-		m_vecDetailPos = { 200.f, 120.f };
+		m_vecFontPos.x = 210.f;
+		m_vecDetailPos.x = 330.f; // 320
 		break;
 	case Engine::TRINKET:
 		lstrcpy(m_szItem, L"WHIP WORM");
 		lstrcpy(m_szItemDetail, L"Wooosh!");
-		m_vecEndPos = { 400.f, 180.f };
-		m_vecDetailPos = { 200.f, 120.f };
-		break;
-	case Engine::PILL:
-		lstrcpy(m_szItem, L"PILL"); // 추후 바꿔야함
-		m_vecEndPos = { 400.f, 180.f };
+		m_vecFontPos.x = 270.f;
+		m_vecDetailPos.x = 350.f;
 		break;
 	default:
-		lstrcpy(m_szItem, L"Test"); // 추후 바꿔야함
-		lstrcpy(m_szItemDetail, L"BRIMSTONE");
 		break;
 	}
-}
 
-void CItemFontUI::Animation_Font()
-{
-	if (m_vecFontPos.x < m_vecEndPos.x) // EndPos에 도달할 때까지
+	switch (m_ePillState)
 	{
-		m_vecFontPos.x += 10.f;
+	case CItemFontUI::PILL_0:
+		lstrcpy(m_szItem, L"MAX HP");
+		lstrcpy(m_szItemDetail, L"");
+		m_vecFontPos.x = 300.f;
+		break;
+	case CItemFontUI::PILL_1:
+		lstrcpy(m_szItem, L"HP DOWN");
+		lstrcpy(m_szItemDetail, L"");
+		m_vecFontPos.x = 300.f;
+		break;
+	case CItemFontUI::PILL_2:
+		lstrcpy(m_szItem, L"POWER PILL!");
+		lstrcpy(m_szItemDetail, L"");
+		m_vecFontPos.x = 230.f;
+		break;
+	case CItemFontUI::PILL_3:
+		lstrcpy(m_szItem, L"SPEED UP");
+		lstrcpy(m_szItemDetail, L"");
+		m_vecFontPos.x = 280.f;
+		break;
+	case CItemFontUI::PILL_4:
+		lstrcpy(m_szItem, L"SPEED DOWN");
+		lstrcpy(m_szItemDetail, L"");
+		m_vecFontPos.x = 250.f;
+		break;
+	default:
+		break;
 	}
-	else
-		m_vecFontPos = m_vecEndPos;
 }
 
 CItemFontUI* CItemFontUI::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
