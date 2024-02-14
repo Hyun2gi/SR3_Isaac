@@ -6,7 +6,10 @@
 #include "CubeObject.h"
 
 CWall::CWall(LPDIRECT3DDEVICE9 pGraphicDev)
-	: Engine::CGameObject(pGraphicDev), m_bStartScene(false)
+	: Engine::CGameObject(pGraphicDev), 
+	m_bStartScene(false),
+	m_iCubeActionType(0), m_iCubeCount(0),
+	m_fCubeCreateTimer(0.f)
 {
 }
 
@@ -26,6 +29,8 @@ HRESULT CWall::Ready_GameObject()
 
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
+	m_vecCubes.reserve(VTXCNTZ * MAX_Y);
+
 	return S_OK;
 }
 
@@ -37,8 +42,23 @@ Engine::_int CWall::Update_GameObject(const _float& fTimeDelta)
 	//	Free_Cubes();
 	//}
 
+	if (!m_bCreated)
+	{
+		m_fCubeCreateTimer += fTimeDelta;
 
-	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+		if (m_iCubeCount < MAX_Y)
+		{
+			if (m_fCubeCreateTimer > 0.15f)
+			{
+				m_fCubeCreateTimer = 0.f;
+				Create_Cubes();
+			}
+		}
+		else
+		{
+			m_bCreated = true;
+		}
+	}
 
 	for (auto& iter : m_vecCubes)
 		iter->Update_GameObject(fTimeDelta);
@@ -51,6 +71,8 @@ Engine::_int CWall::Update_GameObject(const _float& fTimeDelta)
 
 void CWall::LateUpdate_GameObject()
 {
+	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
+
 	for (auto& iter : m_vecCubes)
 		iter->LateUpdate_GameObject();
 
@@ -74,47 +96,8 @@ void CWall::Render_GameObject()
 // 큐브 텍스쳐 태그를 지정해주면, 그 태그에 맞는 큐브 오브젝트를 타일 개수만큼 생성시키고 포지션을 지정해준다.
 HRESULT CWall::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag, int iAxis)
 {
-	CCubeObject* pCube = nullptr;
-
-	m_vecCubes.resize(MAX_Y * VTXCNTX);
-
-	for (int i = 0; i < MAX_Y; ++i)
-	{
-		for (int j = 0; j < VTXCNTX; ++j)
-		{
-			int iIdx = i * VTXCNTX + j;
-
-			pCube = CCubeObject::Create(m_pGraphicDev, m_bStartScene);
-			
-			NULL_CHECK_RETURN(pCube, E_FAIL);
-			pCube->Set_Cute_Texture(pCubeTextureTag);
-			CTransform* pTemp = dynamic_cast<CTransform*>(pCube->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
-
-			_vec3 vScale(pTemp->m_vScale.x * 2, pTemp->m_vScale.y * 2, pTemp->m_vScale.z * 2);
-
-			//어디 세울 벽인지에 따른 큐브의 목적지 포지션 세팅
-			switch (iAxis)
-			{
-			case WALL_LEFT:
-				pCube->Set_Dst_Pos({ 0, vScale .y * i, (_float)(j * vScale.z) });
-				break;
-			case WALL_RIGHT:
-				pCube->Set_Dst_Pos({ vScale.x * VTXCNTX, vScale.y * i, (_float)(j * vScale.z) });
-				break;
-			case WALL_TOP:
-				pCube->Set_Dst_Pos({ (_float)(j * vScale.x) , vScale.y * i, vScale.z * VTXCNTX });
-				break;
-			case WALL_BOTTOM:
-				pCube->Set_Dst_Pos({ (_float)(j * vScale.x), vScale.y * i, 0 });
-				break;
-			}
-
-			pCube->Set_Cube_Action_Type(m_iCubeActionType);
-				
-			m_vecCubes[iIdx] = pCube;
-		}
-
-	}
+	m_wstrTexture = pCubeTextureTag;
+	m_iAxis = iAxis;
 
 	return S_OK;
 }
@@ -122,10 +105,6 @@ HRESULT CWall::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag, int iAxis)
 void CWall::Set_Texture_Tag(const _tchar* pTextureTag, int iAxis)
 {
 	CComponent* pComponent = nullptr;
-
-	//pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(pTextureTag));
-	//NULL_CHECK_RETURN(pComponent, E_FAIL);
-	//m_mapComponent[ID_STATIC].insert({ pTextureTag, pComponent });
 
 	switch (iAxis)
 	{
@@ -150,8 +129,100 @@ void CWall::Set_Texture_Tag(const _tchar* pTextureTag, int iAxis)
 
 }
 
+HRESULT CWall::Create_Cubes()
+{
+	CCubeObject* pCube = nullptr;
+
+	//액션 제거
+	if (m_bStartScene)
+	{
+		CCubeObject* pCube = nullptr;
+
+		for (int i = 0; i < MAX_Y; ++i)
+		{
+			for (int j = 0; j < VTXCNTX; ++j)
+			{
+				int iIdx = i * VTXCNTX + j;
+
+				pCube = CCubeObject::Create(m_pGraphicDev, m_bStartScene);
+		
+				NULL_CHECK_RETURN(pCube, E_FAIL);
+				pCube->Set_Cute_Texture(m_wstrTexture.c_str());
+				CTransform* pTemp = dynamic_cast<CTransform*>(pCube->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+
+				_vec3 vScale(pTemp->m_vScale.x * 2, pTemp->m_vScale.y * 2, pTemp->m_vScale.z * 2);
+
+				//어디 세울 벽인지에 따른 큐브의 목적지 포지션 세팅
+				switch (m_iAxis)
+				{
+				case WALL_LEFT:
+					pCube->Set_Dst_Pos({ 0, vScale .y * i, (_float)(j * vScale.z) });
+					break;
+				case WALL_RIGHT:
+					pCube->Set_Dst_Pos({ vScale.x * VTXCNTX, vScale.y * i, (_float)(j * vScale.z) });
+					break;
+				case WALL_TOP:
+					pCube->Set_Dst_Pos({ (_float)(j * vScale.x) , vScale.y * i, vScale.z * VTXCNTX });
+					break;
+				case WALL_BOTTOM:
+					pCube->Set_Dst_Pos({ (_float)(j * vScale.x), vScale.y * i, 0 });
+					break;
+				}
+
+				pCube->Set_Cube_Action_Type(m_iCubeActionType);
+				m_vecCubes.push_back(pCube);
+			}
+
+		}
+
+		m_bCreated = true;
+	}
+	else
+	{
+		for (int i = 0; i < VTXCNTX; i++)
+		{
+			_float x = i;
+			_float z = m_iCubeCount;
+
+			pCube = CCubeObject::Create(m_pGraphicDev, m_bStartScene);
+			NULL_CHECK_RETURN(pCube, E_FAIL);
+			pCube->Set_Cute_Texture(m_wstrTexture.c_str());
+			CTransform* pTemp = dynamic_cast<CTransform*>(pCube->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+
+			_vec3 vScale(pTemp->m_vScale.x * 2, pTemp->m_vScale.y * 2, pTemp->m_vScale.z * 2);
+
+			//어디 세울 벽인지에 따른 큐브의 목적지 포지션 세팅
+			switch (m_iAxis)
+			{
+			case WALL_LEFT:
+				pCube->Set_Dst_Pos({ 0, vScale.y * z, (_float)(x * vScale.z) });
+				break;
+			case WALL_RIGHT:
+				pCube->Set_Dst_Pos({ vScale.x * VTXCNTX, vScale.y * z, (_float)(x * vScale.z) });
+				break;
+			case WALL_TOP:
+				pCube->Set_Dst_Pos({ (_float)(x * vScale.x) , vScale.y * z, vScale.z * VTXCNTX });
+				break;
+			case WALL_BOTTOM:
+				pCube->Set_Dst_Pos({ (_float)(x * vScale.x), vScale.y * z, 0 });
+				break;
+			}
+
+			pCube->Set_Cube_Action_Type(m_iCubeActionType);
+			m_vecCubes.push_back(pCube);
+		}
+	}
+
+	
+
+	m_iCubeCount++;
+}
+
 bool CWall::Get_Arrived()
 {
+	// 사이즈가 1미만이라면 한개도 생성되지 않은 시점이기 때문에 검사를 하지않고 거짓을 반환
+	if (1 > m_vecCubes.size()) return false;
+
 	//하나라도 도착하지 않았다면 false를 return 한다
 	for (auto& iter : m_vecCubes)
 	{
