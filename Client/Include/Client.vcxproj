@@ -186,6 +186,7 @@
     <ClInclude Include="..\Header\Fire.h" />
     <ClInclude Include="..\Header\GameEnd.h" />
     <ClInclude Include="..\Header\HeartUI.h" />
+    <ClInclude Include="..\Header\ItemFontUI.h" />
     <ClInclude Include="..\Header\Menu.h" />
     <ClInclude Include="..\Header\MoveXObstacle.h" />
     <ClInclude Include="..\Header\MoveZObstacle.h" />
@@ -194,6 +195,7 @@
     <ClInclude Include="..\Header\PlayerHP.h" />
     <ClInclude Include="..\Header\PlayerLeg.h" />
     <ClInclude Include="..\Header\PLCoinFont.h" />
+    <ClInclude Include="..\Header\Shadow.h" />
     <ClInclude Include="..\Header\Shell.h" />
     <ClInclude Include="..\Header\ShellGame.h" />
     <ClInclude Include="..\Header\ShellNpc.h" />
@@ -270,6 +272,7 @@
     <ClCompile Include="..\Code\Fire.cpp" />
     <ClCompile Include="..\Code\GameEnd.cpp" />
     <ClCompile Include="..\Code\HeartUI.cpp" />
+    <ClCompile Include="..\Code\ItemFontUI.cpp" />
     <ClCompile Include="..\Code\Menu.cpp" />
     <ClCompile Include="..\Code\MoveXObstacle.cpp" />
     <ClCompile Include="..\Code\MoveZObstacle.cpp" />
@@ -278,6 +281,7 @@
     <ClCompile Include="..\Code\PlayerHP.cpp" />
     <ClCompile Include="..\Code\PlayerLeg.cpp" />
     <ClCompile Include="..\Code\PLCoinFont.cpp" />
+    <ClCompile Include="..\Code\Shadow.cpp" />
     <ClCompile Include="..\Code\Shell.cpp" />
     <ClCompile Include="..\Code\ShellGame.cpp" />
     <ClCompile Include="..\Code\ShellNpc.cpp" />

@@ -30,6 +30,8 @@ HRESULT CHeart::Ready_GameObject()
 
     m_pTransformCom->m_vScale = { 0.5,0.5,0.5 };
 
+    m_eItemType = HEART;
+
     return S_OK;
 }
 

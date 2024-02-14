@@ -35,6 +35,8 @@ HRESULT CEpic::Ready_GameObject()
     m_iSubTimer = 0;
     m_iSubSizeTimer = 0;
 
+    m_eItemType = EPIC;
+
     return S_OK;
 }
 

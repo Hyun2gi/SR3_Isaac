@@ -108,6 +108,8 @@ HRESULT CWall::Set_Cube_Texture_Tag(const _tchar* pCubeTextureTag, int iAxis)
 				pCube->Set_Dst_Pos({ (_float)(j * vScale.x), vScale.y * i, 0 });
 				break;
 			}
+
+			pCube->Set_Cube_Action_Type(m_iCubeActionType);
 				
 			m_vecCubes[iIdx] = pCube;
 		}
@@ -182,10 +184,13 @@ void CWall::Free_Cubes()
 	m_vecCubes.clear();
 }
 
-CWall * CWall::Create(LPDIRECT3DDEVICE9 pGraphicDev, bool bStartScene)
+CWall * CWall::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
+	_int iCubeActionType, 
+	bool bStartScene)
 {
 	CWall *	pInstance = new CWall(pGraphicDev);
 	pInstance->m_bStartScene = bStartScene;
+	pInstance->m_iCubeActionType = iCubeActionType;
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
