@@ -145,6 +145,13 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	// CoinFont
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_CoinFontTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Font/CoinFont_%d.png", 3)), E_FAIL);
 
+	// Shadow
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ShadowTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Shadow.png")), E_FAIL);
+
+	// FontBackGround
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_FontBackGroundTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Item/FontBackGround.png")), E_FAIL);
+
+
 #pragma endregion MapObject
 
 

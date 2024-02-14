@@ -37,6 +37,8 @@ HRESULT CCoin::Ready_GameObject()
 
 	m_bDead = false;
 
+	m_eItemType = COIN;
+
 	return S_OK;
 }
 

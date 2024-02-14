@@ -6,14 +6,14 @@
 CShop::CShop(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CMapObj(pGraphicDev),
 	m_pShopNpc(nullptr),
-	m_pPill(nullptr), m_pEpic(nullptr), m_pHeart(nullptr)
+	m_pPill(nullptr), m_pHeart(nullptr), m_pSadOnion(nullptr)
 {
 }
 
 CShop::CShop(const CShop& rhs)
 	: CMapObj(rhs),
 	m_pShopNpc(rhs.m_pShopNpc),
-	m_pPill(rhs.m_pPill), m_pEpic(rhs.m_pEpic), m_pHeart(rhs.m_pHeart)
+	m_pPill(rhs.m_pPill), m_pHeart(rhs.m_pHeart), m_pSadOnion(rhs.m_pSadOnion)
 {
 }
 
@@ -25,10 +25,10 @@ void CShop::Set_Item_ToStage(CLayer* pLayer)
 {
 	if (!m_bIsLayerInsert)
 	{
-		if (m_pPill != nullptr && m_pEpic != nullptr && m_pHeart != nullptr)
+		if (m_pPill != nullptr && m_pSadOnion != nullptr && m_pHeart != nullptr)
 		{
 			pLayer->Add_GameObject(L"Pill", m_pPill);
-			pLayer->Add_GameObject(L"Epic", m_pEpic);
+			pLayer->Add_GameObject(L"Epic", m_pSadOnion);
 			pLayer->Add_GameObject(L"Heart", m_pHeart);
 
 			m_bIsLayerInsert = true;
@@ -161,11 +161,13 @@ void CShop::Create_Obj()
 		dynamic_cast<CCoinFont*>(m_vecCoinFont.front())->Set_State(1);
 	}
 
-	if (m_pEpic == nullptr)
+	
+
+	if (m_pSadOnion == nullptr)
 	{
 		_vec3 vEpicPos = { vPos.x, vPos.y - 0.5f, vPos.z - INTERVALZ };
-		m_pEpic = CEpic::Create(m_pGraphicDev, 3, vEpicPos, vDir);
-		m_pEpic->Set_MyLayer(L"GameItem");
+		m_pSadOnion = CSadOnion::Create(m_pGraphicDev, 3, vEpicPos, vDir);
+		m_pSadOnion->Set_MyLayer(L"GameItem");
 
 		// Coin font
 		m_vecCoinFont.push_back(CCoinFont::Create(m_pGraphicDev));
@@ -213,8 +215,8 @@ void CShop::Free()
 	Safe_Release<CPill*>(m_pPill);
 	m_pPill = nullptr;
 
-	Safe_Release<CEpic*>(m_pEpic);
-	m_pEpic = nullptr;
+	Safe_Release<CSadOnion*>(m_pSadOnion);
+	m_pSadOnion = nullptr;
 
 	Safe_Release<CHeart*>(m_pHeart);
 	m_pHeart = nullptr;

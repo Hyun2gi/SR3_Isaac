@@ -61,8 +61,12 @@ private:
 	bool m_bIsDeleted;
 	bool m_bStartScene;
 
+	_int	m_iCubeActionType;
+
 public:
-	static CWall*		Create(LPDIRECT3DDEVICE9	pGraphicDev, bool bStartScene = false);
+	static CWall*		Create(LPDIRECT3DDEVICE9	pGraphicDev, 
+		_int iCubeActionType,
+		bool bStartScene = false);
 
 private:
 	virtual void Free() override;
