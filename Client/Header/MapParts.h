@@ -3,8 +3,6 @@
 #include "Base.h"
 #include "UI.h"
 
-#include "MapParts.h"
-
 BEGIN(Engine)
 
 class CRcTex;
@@ -13,16 +11,20 @@ class CTransform;
 
 END
 
-class CMiniMap : public Engine::CUI
+class CMapParts : public Engine::CUI
 {
 private:
-	explicit CMiniMap(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CMiniMap(const CMiniMap& rhs);
-	virtual ~CMiniMap();
+	explicit CMapParts(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CMapParts(const CMapParts& rhs);
+	virtual ~CMapParts();
+
+	// 현재 방 / 가본 방 / 못 가본 방
+	enum ROOMSTATE{ ROOM_NOW, ROON_OPEN, ROOM_CLOSE, ROOM_END };
 
 public:
-	void			Set_RoomTypeNow(string strRoomType) { m_strRoomTypeNow = strRoomType; }
-	void			Set_NowRoom(_int iStageKey) { m_iNowRoomNum = iStageKey; }
+	_int			Get_RoomNumber() { return m_iRoomNumber; }
+	void			Set_RoomNumber(_int iNum) { m_iRoomNumber = iNum; }
+	void			Set_NowRoom(_bool IsNowRoom) { m_bNowRoom = IsNowRoom; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -33,16 +35,13 @@ public:
 private:
 	HRESULT			Add_Component();
 
-	void			Create_RoomParts();
-	void			Setting_RoomType();
-	void			Setting_NowRoom(); // 현재 방
-
 private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
-	_bool				m_bRender;
+	_bool				m_bFrontRoom;
+	_bool				m_bNowRoom;
 
 	_float				m_fAnimSpeed = 1.f;
 	_float				m_fCurFrame = 0.f;
@@ -53,14 +52,13 @@ private:
 	_int				m_iAnimFrameCount;
 	_int				m_iMaxFrameCount;
 
-	_int				m_iNowRoomNum; // 현재 방 번호
+	_int				m_iRoomNumber;
 
-	string				m_strRoomTypeNow; // 현재 방 정보
+	ROOMSTATE			m_eRoomState;
 
-	vector<CMapParts*>	m_vecRoomParts;
 
 public:
-	static CMiniMap* Create(LPDIRECT3DDEVICE9	pGraphicDev,
+	static CMapParts* Create(LPDIRECT3DDEVICE9	pGraphicDev,
 		_float fSizeX, _float fSizeY,
 		_float fPosX, _float fPosY,
 		_int iAnimFrameCount, _int iMaxFrameCount,
@@ -68,6 +66,5 @@ public:
 
 private:
 	virtual void Free() override;
-
 };
 

@@ -85,6 +85,7 @@ private:
 
 	void			Insert_Child();
 	void			Setting_UI();
+	void			Update_MiniMap();
 
 	void			Play_Ending(const _float& fTimeDelta);
 

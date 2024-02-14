@@ -126,6 +126,9 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 		// 아이템 드랍
 		Drop_ITem();
+		
+		// MiniMap을 매번 업데이트?
+		Update_MiniMap();
 	}
 
 	_int	iExit = __super::Update_Scene(fTimeDelta);
@@ -202,11 +205,6 @@ void CLoadStage::LateUpdate_Scene()
 void CLoadStage::Render_Scene()
 {
 	// DEBUG
-	_tchar	m_szLoading[128];
-	ZeroMemory(m_szLoading, sizeof(m_szLoading));
-	lstrcpy(m_szLoading, L"Test");
-	//Engine::Render_Font(L"Font_Default", m_szLoading, &_vec2(10.f, 10.f), D3DXCOLOR(1.f, 1.f, 1.f, 1.f));
-
 }
 
 
@@ -823,9 +821,10 @@ HRESULT CLoadStage::Ready_Layer_UI(const _tchar* pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerHP", pGameObject), E_FAIL);
 
-	//// MiniMap
-	//CMiniMap* pMiniMap = CMiniMap::Create(m_pGraphicDev, 128, 128, 600.f, 50.f, 1, 1);
-	//m_mapLayer.at(L"UI")->Add_GameObject(L"MiniMap", pMiniMap);
+	// MiniMap
+	pGameObject = CMiniMap::Create(m_pGraphicDev, 140, 140, 330.f, 230.f, 1, 1);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MiniMap", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
@@ -1364,6 +1363,22 @@ void CLoadStage::Setting_UI()
 	// 아이템 설명 UI
 	CItemFontUI* pItemFontUI = CItemFontUI::Create(m_pGraphicDev, 620, 100, 0.f, 180.f, 1, 1);
 	m_mapLayer.at(L"UI")->Add_GameObject(L"ItemFontUI", pItemFontUI);
+}
+
+void CLoadStage::Update_MiniMap()
+{
+	// MiniMap이 있다면 매번 업데이트
+	if (m_mapLayer.at(L"UI"))
+	{
+		if (m_mapLayer.at(L"UI")->Get_GameObject(L"MiniMap"))
+		{
+			/*string strType = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_strType;
+			dynamic_cast<CMiniMap*>(m_mapLayer.at(L"UI")->Get_GameObject(L"MiniMap"))->Set_RoomTypeNow(strType);*/
+
+			// m_iCurStageKey
+			dynamic_cast<CMiniMap*>(m_mapLayer.at(L"UI")->Get_GameObject(L"MiniMap"))->Set_NowRoom(m_iCurStageKey);
+		}
+	}
 }
 
 void CLoadStage::Play_Ending(const _float& fTimeDelta)
