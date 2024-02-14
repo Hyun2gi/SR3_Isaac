@@ -90,6 +90,9 @@ private:
 
 	void			Create_Map_Particles();
 
+	void			BGM_INTRO_START();
+	void			BGM_START();
+
 public:
 	static CLoadStage*		Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene = false);
 
@@ -112,6 +115,7 @@ private:
 	bool m_bStartScene;
 
 	_bool	m_bMenu;
+	_bool	m_bBGMIntro; //intro 나온지 안나온지 체크
 
 	//엔딩 관련
 	_float m_fEndingTimer = 4.5f;

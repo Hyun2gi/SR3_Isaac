@@ -11,6 +11,22 @@ CSoundMgr::~CSoundMgr()
 	Free();
 }
 
+bool CSoundMgr::CheckIsPlaying(CHANNEL_ID eID)
+{
+	FMOD_BOOL isplaying;
+	FMOD_Channel_IsPlaying(m_pChannelArr[eID], &isplaying);
+	// isplaying 값이 1이면 출력,  1 이외 값이면, 출력 아님
+	if (isplaying == 1)
+	{
+		// 음악이 나오고 있으면 true
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
 void CSoundMgr::PlaySound(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
 {
 	map<TCHAR*, FMOD_SOUND*>::iterator iter; 
@@ -37,7 +53,26 @@ void CSoundMgr::PlaySound(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
 	FMOD_System_Update(m_pSystem);
 }
 
-void CSoundMgr::PlayEffect(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
+void CSoundMgr::PlayEffectLoop(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
+{
+	map<TCHAR*, FMOD_SOUND*>::iterator iter;
+
+	// iter = find_if(m_mapSound.begin(), m_mapSound.end(), CTag_Finder(pSoundKey));
+	iter = find_if(m_mapSound.begin(), m_mapSound.end(), [&](auto& iter)->bool
+		{
+			return !lstrcmp(pSoundKey, iter.first);
+		});
+
+	if (iter == m_mapSound.end())
+		return;
+
+	FMOD_System_PlaySound(m_pSystem, FMOD_CHANNEL_FREE, iter->second, FALSE, &m_pChannelArr[eID]);
+	FMOD_Channel_SetMode(m_pChannelArr[eID], FMOD_LOOP_NORMAL);
+	FMOD_Channel_SetVolume(m_pChannelArr[eID], fVolume);
+	FMOD_System_Update(m_pSystem);
+}
+
+bool CSoundMgr::PlayEffect(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
 {
 	map<TCHAR*, FMOD_SOUND*>::iterator iter;
 
@@ -45,11 +80,18 @@ void CSoundMgr::PlayEffect(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
 	iter = find_if(m_mapSound.begin(), m_mapSound.end(),
 		[&](auto& iter)->bool
 		{
-			return !lstrcmp(pSoundKey, iter.first);
+			if (lstrcmp(pSoundKey, iter.first))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
 		});
 
 	if (iter == m_mapSound.end())
-		return;
+		return false;
 
 	FMOD_BOOL bPlay = FALSE;
 
@@ -62,10 +104,16 @@ void CSoundMgr::PlayEffect(TCHAR* pSoundKey, CHANNEL_ID eID, _float fVolume)
 		StopSound(eID);
 		FMOD_System_PlaySound(m_pSystem, FMOD_CHANNEL_FREE, iter->second, FALSE, &m_pChannelArr[eID]);
 	}
+	else
+	{
+		return false;
+	}
 
 	FMOD_Channel_SetVolume(m_pChannelArr[eID], fVolume);
 
 	FMOD_System_Update(m_pSystem);
+
+	return true;
 }
 
 void CSoundMgr::PlayBGM(TCHAR* pSoundKey, _float fVolume)

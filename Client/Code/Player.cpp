@@ -37,7 +37,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_eCurState = P_IDLE;
 
 		m_ePreBulletState = P_BULLET_END;
-		m_eCurBulletState = P_BULLET_BRIMSTONE; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
+		m_eCurBulletState = P_BULLET_IDLE; //P_BULLET_IDLE; // P_BULLET_BRIMSTONE // P_BULLET_EPIC
 		m_ePreState = P_END;
 
 		// 딜레이 시간 초기화
@@ -81,7 +81,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_bStartAnim = true;
 
 		// 아이작으로 시작
-		m_eCurPlayerVer = P_AZAZEL;   //P_ISAAC;  //P_AZAZEL;
+		m_eCurPlayerVer = P_ISAAC;   //P_ISAAC;  //P_AZAZEL;
 
 		// 0일때는 가만히
 		m_iAzaelStateSet = 0;
@@ -181,13 +181,13 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		{
 			if (m_PlayerBulletList.empty() && m_bBrimeStoneShoot)
 			{
+				Engine::PlayEffect(L"blood laser long.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 0.8f);
 				// bullet 추가하기
 				for (int i = 0; i < 50; i++)
 				{
 					m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag, i, false));
 					m_PlayerBulletList.push_back(CBrimStoneBullet::Create(m_pGraphicDev, m_pLayerTag, i, true));
 				}
-
 				m_bBrimeStoneShoot = false;
 			}
 		}
@@ -200,7 +200,12 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 
 		if (!m_PlayerBulletList.empty())
 		{
-			Engine::PlayEffect(L"monster yell b5.wav", SOUND_EFFECT_PLAYER_ALLPLAY, 1.f);
+			//Engine::PlayEffect(L"blood laser short.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 0.8f);
+		}
+
+		if (m_PlayerBulletList.empty())
+		{
+			Engine::StopSound(SOUND_EFFECT_PLAYER_STOPSUDDEN);
 		}
 	}
 
@@ -672,7 +677,7 @@ void CPlayer::Set_Cry_Anim()
 
 	// 다끄고 시작음
 	Engine::StopAll();
-	Engine::PlayEffect(L"GameStart.ogg", SOUND_EFFECT_PLAYER_ALLPLAY, 1.f);
+	Engine::PlayEffect(L"GameStart.ogg", SOUND_BGM, 1.f);
 }
 
 void CPlayer::Set_Attacked()
