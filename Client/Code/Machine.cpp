@@ -36,29 +36,33 @@ _int CMachine::Update_GameObject(const _float& fTimeDelta)
 {
 	if (m_bDead)
 		m_eCurState = MC_BROKEN;
-
-	// 충돌 했을 때 bool 값 true 만들면서 Motion Change() 호출
-	if (m_bGame)
-	{
-		m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
-
-		if (m_iPicNum < m_fFrame)
-		{
-			m_fFrame = 0.f;
-			m_bGame = false;
-		}
-	}
 	else
 	{
-		m_fFrame = 0.f;
+		// 충돌 했을 때 bool 값 true 만들면서 Motion Change() 호출
+		if (m_bGame)
+		{
+			m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
+
+			if (m_iPicNum < m_fFrame)
+			{
+				m_fFrame = 0.f;
+				m_bGame = false;
+			}
+		}
+		else
+		{
+			m_fFrame = 0.f;
+		}
+
+		m_eCurState = MC_IDLE;
 	}
 
-	if (m_bBroken)
+	/*if (m_bBroken)
 	{
 		m_eCurState = MC_BROKEN;
 	}
 	else
-		m_eCurState = MC_IDLE;
+		m_eCurState = MC_IDLE;*/
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
@@ -98,6 +102,16 @@ HRESULT CMachine::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
+	// IDLE
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_SlotMCTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_SlotMCTexture", pComponent });
+
+	// BROKEN
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_BrokenSlotMCTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_BrokenSlotMCTexture", pComponent });
+
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
@@ -120,12 +134,12 @@ void CMachine::Motion_Change()
 		case CMachine::MC_IDLE:
 			m_iPicNum = 3;
 			m_fFrameSpeed = 1.5f;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"SlotMC", L"Proto_SlotMCTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_SlotMCTexture"));
 			break;
 
 		case CMachine::MC_BROKEN:
 			m_iPicNum = 1;
-			m_pTextureCom = dynamic_cast<CTexture*>(Engine::Get_Component(ID_STATIC, m_vecMyLayer[0], L"SlotMC", L"Proto_BrokenSlotMCTexture"));
+			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_BrokenSlotMCTexture"));
 			break;
 		}
 		m_ePreState = m_eCurState;

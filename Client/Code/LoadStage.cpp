@@ -82,7 +82,6 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	m_vecMonsterCount.resize(MONSTER_TYPE_END);
 	m_bIsCreated = false;
 	m_bMenu = false;
-	m_bBGMIntro = true;
 
 	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 	//Engine::Create_Scatter(m_pGraphicDev);
@@ -132,19 +131,11 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
 
-	// 맨 처음 방에서는 player에서 bgm 나와야해서 player update보다 순서 뒤로
-	// 비지엠 인트로 먼저 재생
-	BGM_INTRO_START();
-
-	// 비지엠
-	BGM_START();
-
 	if (Check_Cube_Arrived() && !m_bIsCreated)
 	{
 		// m_bStartScene : 한번 왔다간 방인지 아닌지 확인해주는 변수
 		if (!m_bStartScene)
 		{
-			Engine::StopSound(SOUND_BGM);
 			// 한번 왔다간 방이 아닐경우처리
 			CPlayer::GetInstance()->Set_IssacRender(true);
 			// 올라간 시네머신이 진행 후 내려오는 시네머신 필요
@@ -736,18 +727,9 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 
 	wstrTheme.assign(strType.begin(), strType.end());
 
-	_int iRandValue = 0;
-	//_int iRandValue = rand() % ACTION_END;
-
-	if (m_bStartScene)
-	{
-		/*Engine::StopAll();
-		Engine::PlayBGM(L"earthquake1.wav", 0.8f);*/
-	}
-
 	//바닥 추가
 	wstrTag = wstrProto + wstrTheme + L"FloorCubeTexture";
-	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev, iRandValue, m_bStartScene);
+	pGameObject = m_pFloor = CFloor::Create(m_pGraphicDev, eAction, m_bStartScene);
 	m_pFloor->Set_Cube_Texture_Tag(wstrTag.c_str());
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Floor", pGameObject), E_FAIL);
@@ -755,7 +737,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	//벽 추가
 	// 여기는 벽의 큐브 텍스처의 태그를 만들어서 넘겨주는 부분
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
-	pGameObject = m_pLeftWall = CWall::Create(m_pGraphicDev, iRandValue, m_bStartScene);
+	pGameObject = m_pLeftWall = CWall::Create(m_pGraphicDev, eAction, m_bStartScene);
 	m_pLeftWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_LEFT);
 
 	// 여기는 벽면 텍스처의 태그를 만들어서 넘겨주는 부분
@@ -766,7 +748,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 
 	//반복
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
-	pGameObject = m_pRightWall = CWall::Create(m_pGraphicDev, iRandValue, m_bStartScene);
+	pGameObject = m_pRightWall = CWall::Create(m_pGraphicDev, eAction, m_bStartScene);
 	m_pRightWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_RIGHT);
 
 	wstrTag = wstrProto + wstrTheme + L"Wall";
@@ -775,7 +757,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
-	pGameObject = m_pTopWall = CWall::Create(m_pGraphicDev, iRandValue, m_bStartScene);
+	pGameObject = m_pTopWall = CWall::Create(m_pGraphicDev, eAction, m_bStartScene);
 	m_pTopWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_TOP);
 
 	wstrTag = wstrProto + wstrTheme + L"Wall";
@@ -784,7 +766,7 @@ HRESULT CLoadStage::Ready_Layer_RoomObject(const _tchar* pLayerTag)
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Wall", pGameObject), E_FAIL);
 
 	wstrTag = wstrProto + wstrTheme + L"WallCubeTexture";
-	pGameObject = m_pBottomWall = CWall::Create(m_pGraphicDev, iRandValue, m_bStartScene);
+	pGameObject = m_pBottomWall = CWall::Create(m_pGraphicDev, eAction, m_bStartScene);
 	m_pBottomWall->Set_Cube_Texture_Tag(wstrTag.c_str(), WALL_BOTTOM);
 
 	wstrTag = wstrProto + wstrTheme + L"Wall";
@@ -913,6 +895,12 @@ void CLoadStage::Item_Collision()
 		}
 		dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))
 			->Set_ItemType(dynamic_cast<CItem*>(pObj)->Get_Item_Type());
+
+		if (PILL == temp) // 알약인 경우
+		{
+			dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))->Set_PillState(
+				dynamic_cast<CPill*>(pObj)->Get_Pill_Num());
+		}
 	}
 }
 
@@ -935,12 +923,12 @@ void CLoadStage::Moster_Collision()
 					ATTACK_FLY != dynamic_cast<CMonster*>(pMonster)->Get_MstType() && // 도플, 공격형 파리가 아닌 경우
 					DOPLE != dynamic_cast<CMonster*>(pMonster)->Get_MstType())
 				{
-					// 일반 총알 충돌처리
-					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
-
 					if (dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() &&		// Bullet이 Dead가 아닌 경우
 						!dynamic_cast<CMonster*>(pMonster)->Get_Dead())					// Monster가 Dead가 아닌 경우
 					{
+						// 일반 총알 충돌처리
+						dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
+
 						if (dynamic_cast<CMonster*>(pMonster)->Get_IsBoss()) // 보스인 경우
 						{
 							if (MONSTRO == dynamic_cast<CMonster*>(pMonster)->Get_BossType())
@@ -1042,27 +1030,45 @@ void CLoadStage::MapObj_Collision()
 
 			if (pMapObj)
 			{
-				// 일반 총알일때 이펙트 보여주려고 해당부분 처리
-				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
+				if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0) // 일반 Bullet
 				{
-					// 일반 총알 충돌처리
-					dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
-				}
+					if (dynamic_cast<CPlayerBullet*>(*iter)->Get_BulletState() && // Bullet이 Dead가 아닐 때
+						!dynamic_cast<CMapObj*>(pMapObj)->Get_Dead())			// MapObj도 Dead가 아닐 때
+					{
+						// 일반 총알일때 이펙트 보여주려고 해당부분 처리
+						if (CPlayer::GetInstance()->Get_PlayerBulletState() == 0)
+						{
+							// 일반 총알 충돌처리
+							dynamic_cast<CPlayerBullet*>(*iter)->Set_BulletCollision();
+						}
 
-				if (POOP == dynamic_cast<CMapObj*>(pMapObj)->Get_Type())
+						if (POOP == dynamic_cast<CMapObj*>(pMapObj)->Get_Type())
+						{
+							dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
+							break;
+						}
+						else if (0 == dynamic_cast<CMapObj*>(pMapObj)->Get_ObjID())
+						{
+							dynamic_cast<CFire*>(pMapObj)->Set_Hit();
+							break;
+						}
+						else
+						{
+							break; // 머야
+						}
+					}
+				}else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 2)// && // 에픽페투스와의 충돌
 				{
-					dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
-					break;
-				}
-				else if (0 == dynamic_cast<CMapObj*>(pMapObj)->Get_ObjID())
-				{
-					dynamic_cast<CFire*>(pMapObj)->Set_Hit();
-					break;
+					if (dynamic_cast<CEpicBullet*>(*iter)->Get_CanAttacked()) // Epic이 로켓 상태일 때(공격 가능)
+					{
+						dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
+						break;
+					}
+					else
+						++iter;
 				}
 				else
-				{
-					break;
-				}
+					++iter;
 			}
 			else
 				++iter;
@@ -1076,19 +1082,17 @@ void CLoadStage::MapObj_Collision()
 
 		if (pMachine)
 		{
-			if (1 == dynamic_cast<CMapObj*>(pMachine)->Get_ObjID())
+			if (1 == dynamic_cast<CMapObj*>(pMachine)->Get_ObjID() &&
+				!dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Game()) // 게임중이 아닐 때
 			{
 				if (0 < CPlayer::GetInstance()->Get_Coin())
 				{
 					CPlayer::GetInstance()->Set_Coin(-1);
-					//dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Drop_False(); // 
 					dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Game();
 				}
 			}
 		}
 	}
-
-	// Shop Npc 는 Epic 과 충돌
 
 	// 야바위 충돌
 	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
@@ -1236,26 +1240,24 @@ void CLoadStage::Drop_ITem()
 	// 슬롯머신
 	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC") != nullptr)
 	{
-		if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Machine") != nullptr)//Get_GameObject(L"MapObj", L"Machine") != nullptr) // Get_Reward
+		if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"Machine") != nullptr)
 		{
-			//Get_GameObject(L"MapObj", L"SlotMC"))->Get_Reward() && // 문제 발생(메모리 못 읽어옴)
-			//!dynamic_cast<CMapObj*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Drop()
-			if (dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Reward() &&
-				!dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Drop()) // !dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Game()
+			if (dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Reward() )//&& // SlotMC가 보상 true일 때
+				//!dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Get_Drop()) // SlotMC가 보상을 Drop하지 않았을 때(false)
 			{
 				CGameObject* pSlotMC = nullptr;
 				CGameObject* pDropItem = nullptr;
-				pSlotMC = m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"); //Get_GameObject(L"MapObj", L"SlotMC");
+				pSlotMC = m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC");
 
-				ITEM_TYPE eType = dynamic_cast<CSlotMC*>(pSlotMC)->Get_ItemType();
+				ITEM_TYPE eType = dynamic_cast<CSlotMC*>(pSlotMC)->Get_ItemType(); // 랜덤 결과로부터 Drop 아이템 세팅
 				wstring wstrObjTag = dynamic_cast<CSlotMC*>(pSlotMC)->Get_DropItemTag();
 
 				if (HEART == eType)
 				{
 					pDropItem = dynamic_cast<CMapObj*>(pSlotMC)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), 1);
 					m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pDropItem);
-					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop();
-					dynamic_cast<CSlotMC*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"SlotMC"))->Set_Reward();
+					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop(); // 아이템을 드랍한 녀석임을 표시
+					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Reward(); // -> false로 변환
 				}
 				else if (COIN == eType)
 				{
@@ -1265,7 +1267,7 @@ void CLoadStage::Drop_ITem()
 						m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pDropItem);
 					}
 					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Drop();
-					dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Set_Reward();
+					dynamic_cast<CSlotMC*>(pSlotMC)->Set_Reward();
 				}
 			}
 		}
@@ -1392,83 +1394,6 @@ void CLoadStage::Create_Map_Particles()
 
 }
 
-void CLoadStage::BGM_INTRO_START()
-{
-	// 첫번째 방 인트로 bgm은 dynamic camera에서 시작
-	if (m_bBGMIntro)
-	{
-		if (!Engine::CheckIsPlaying(SOUND_BGM))
-		{
-			StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
-			string roomtype = info.m_strTheme;
-			
-			if (roomtype == "Normal")
-			{
-				if (Engine::PlayEffect(L"diptera sonata intro.ogg", SOUND_BGM, 0.8f))
-				{
-					m_bBGMIntro = false;
-				}
-			}
-			else if (roomtype == "Treasure")
-			{
-				if (Engine::PlayEffect(L"TreasureRoom.ogg", SOUND_BGM, 0.8f))
-				{
-					m_bBGMIntro = false;
-				}
-			}
-			else if (roomtype == "Devil")
-			{
-				// intro가 없음
-				m_bBGMIntro = false;
-			}
-			else if (roomtype == "Arcade")
-			{
-				// intro가 없음
-				m_bBGMIntro = false;
-			}
-			else if (roomtype == "Boss")
-			{
-				if (Engine::PlayEffect(L"boss fight intro jingle v2.1.ogg", SOUND_BGM, 0.8f))
-				{
-					m_bBGMIntro = false;
-				}
-			}
-		}
-	}
-}
-
-void CLoadStage::BGM_START()
-{
-	if (!m_bBGMIntro)
-	{
-		if (!Engine::CheckIsPlaying(SOUND_BGM))
-		{
-			StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
-			string roomtype = info.m_strTheme;
-			if (roomtype == "Normal")
-			{
-				Engine::PlayBGM(L"diptera sonata(basement).ogg", 0.8f);
-			}
-			else if (roomtype == "Treasure")
-			{
-				Engine::PlayBGM(L"TreasureRoom.ogg", 0.8f);
-			}
-			else if (roomtype == "Devil")
-			{
-				Engine::PlayBGM(L"DevilRoom.wav", 0.8f);
-			}
-			else if (roomtype == "Arcade")
-			{
-				Engine::PlayBGM(L"ArcadeRoom.ogg", 0.8f);
-			}
-			else if (roomtype == "Boss")
-			{
-				Engine::PlayEffect(L"basic boss fight.ogg", SOUND_BGM, 0.8f);
-			}
-		}	
-	}
-}
-
 HRESULT CLoadStage::Door_Collision()
 {
 	if (m_mapLayer.at(L"GameDoor"))
@@ -1548,16 +1473,9 @@ HRESULT CLoadStage::Door_Collision()
 
 CLoadStage* CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene)
 {
-	Engine::StopSound(SOUND_BGM);
 	CLoadStage* pInstance = new CLoadStage(pGraphicDev);
 	pInstance->m_bStartScene = bStratScene;
 	CPlayer::GetInstance()->Set_Bool_StartScene(true);
-
-	if (!bStratScene)
-	{
-		Engine::StopAll();
-		Engine::PlayEffect(L"earthquake4.wav", SOUND_BGM ,0.8f);
-	}
 
 	if (FAILED(pInstance->Ready_Scene(iType)))
 	{

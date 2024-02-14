@@ -38,6 +38,25 @@ HRESULT CShopNpc::Ready_GameObject()
 
 _int CShopNpc::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bDead)
+	{
+		m_eCurState = NPC_DEAD;
+	}
+	else
+	{
+		if (m_bGood)
+		{
+			m_eCurState = NPC_GOOD;
+
+			if (Check_Time(fTimeDelta))
+			{
+				m_bGood = false;
+			}
+		}
+		else
+			m_eCurState = NPC_IDLE;
+	}
+
 	if (!m_bFrameFix)
 	{
 		m_fFrame += m_iPicNum * fTimeDelta * m_fFrameSpeed;
@@ -46,9 +65,10 @@ _int CShopNpc::Update_GameObject(const _float& fTimeDelta)
 		{
 			if(NPC_IDLE == m_eCurState)
 				m_fFrame = 0.f;
+
 			else if(NPC_GOOD == m_eCurState || NPC_DEAD == m_eCurState)
 			{
-				m_fFrame = 2.f;
+				m_fFrame = 1.9f;
 				m_bFrameFix = true;
 			}
 		}
@@ -56,16 +76,7 @@ _int CShopNpc::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	if (m_bGood)
-	{
-		m_eCurState = NPC_GOOD;
 
-		if (Check_Time(fTimeDelta))
-		{
-			m_bGood = false;
-		}
-	}else
-		m_eCurState = NPC_IDLE;
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 

@@ -48,6 +48,11 @@ HRESULT CShop::Ready_GameObject()
 
 _int CShop::Update_GameObject(const _float& fTimeDelta)
 {
+	if (m_bHit)
+	{
+		m_pShopNpc->Set_Dead();
+	}
+
 	CGameObject::Update_GameObject(fTimeDelta);
 
 	Create_Obj();
