@@ -136,11 +136,13 @@ void CEpic::Render_GameObject()
  
 }
 
-void CEpic::Run_Item_Effect()
+bool CEpic::Run_Item_Effect()
 {
     CPlayer::GetInstance()->Set_BulletType(3);
     m_bDead = true;
     CPlayer::GetInstance()->Set_Item_Get_Anim();
+
+    return true;
 }
 
 void CEpic::Item_Spawn_Action()

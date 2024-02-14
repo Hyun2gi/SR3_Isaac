@@ -104,7 +104,7 @@ void CHeart::Render_GameObject()
 
 }
 
-void CHeart::Run_Item_Effect()
+bool CHeart::Run_Item_Effect()
 {
     if (m_eCurItemPlace == SP_SHOP)
     {
@@ -117,6 +117,8 @@ void CHeart::Run_Item_Effect()
                 m_bDead = true;
                 CPlayer::GetInstance()->Set_Hp(1);
                 float hp = CPlayer::GetInstance()->Get_Hp();
+
+                return true;
             }
         }
     }
@@ -127,8 +129,12 @@ void CHeart::Run_Item_Effect()
             // 그냥 바로 적용
             m_bDead = true;
             CPlayer::GetInstance()->Set_Hp(1);
+
+            return true;
         }
     }
+
+    return false;
 }
 
 void CHeart::Item_Spawn_Action()

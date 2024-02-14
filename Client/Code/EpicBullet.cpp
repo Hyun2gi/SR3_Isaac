@@ -3,6 +3,9 @@
 #include "Player.h"
 #include "EpicBullet.h"
 
+#include "Export_System.h"
+#include "Export_Utility.h"
+
 CEpicBullet::CEpicBullet(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CGameObject(pGraphicDev)
 {
@@ -78,6 +81,7 @@ _int CEpicBullet::Update_GameObject(const _float& fTimeDelta)
             m_pTransformCom->Get_Info(INFO_POS, &vPos);
             Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 1.2f, 10);
 
+            Engine::PlayEffect(L"maggot burst out.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.f);
 
             m_eCurState = EPIC_EFFECT;
             m_fFrame = 0;

@@ -19,6 +19,7 @@ CLogo::CLogo(LPDIRECT3DDEVICE9 pGraphicDev, bool isBack)
 
 CLogo::~CLogo()
 {
+	
 }
 
 HRESULT CLogo::Ready_Scene()
