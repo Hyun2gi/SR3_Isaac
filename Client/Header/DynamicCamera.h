@@ -117,6 +117,9 @@ private:
 	_bool		m_bCheck = false;
 	_bool		m_bChaseInit = true;
 
+	// 사운드위해 만든 스타트한지 안한지
+	_bool		m_bStart;
+
 	// 카메라 자체 스타트인지 아닌지
 	_bool		m_bMouseCameraStart = false;
 

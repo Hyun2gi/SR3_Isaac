@@ -873,6 +873,7 @@ void CLoadStage::Check_All_Dead()
 
 	if (Check_Monster_Dead())
 	{
+
 		for (auto& iter : m_mapLayer.at(L"GameDoor")->Get_ObjectMap())
 			dynamic_cast<CDoor*>(iter.second)->Set_Open();
 

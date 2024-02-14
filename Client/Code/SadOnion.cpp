@@ -87,7 +87,7 @@ void CSadOnion::Render_GameObject()
 
 }
 
-void CSadOnion::Run_Item_Effect()
+bool CSadOnion::Run_Item_Effect()
 {
 	if (m_eCurItemPlace == SP_SHOP)
 	{
@@ -97,8 +97,11 @@ void CSadOnion::Run_Item_Effect()
 			CPlayer::GetInstance()->Set_AttackSpeed(-6);
 			CPlayer::GetInstance()->Set_Item_Get_Anim();
 			m_bDead = true;
+
+			return true;
 		}	
 	}
+	return false;
 }
 
 void CSadOnion::Item_Spawn_Action()
