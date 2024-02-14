@@ -65,6 +65,7 @@
 #include "PLCoinFont.h"
 #include "PlayerHP.h"
 #include "ItemFontUI.h"
+#include "MiniMap.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev), 
@@ -822,6 +823,10 @@ HRESULT CLoadStage::Ready_Layer_UI(const _tchar* pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerHP", pGameObject), E_FAIL);
 
+	//// MiniMap
+	//CMiniMap* pMiniMap = CMiniMap::Create(m_pGraphicDev, 128, 128, 600.f, 50.f, 1, 1);
+	//m_mapLayer.at(L"UI")->Add_GameObject(L"MiniMap", pMiniMap);
+
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
 	return S_OK;
@@ -1359,9 +1364,6 @@ void CLoadStage::Setting_UI()
 	// 아이템 설명 UI
 	CItemFontUI* pItemFontUI = CItemFontUI::Create(m_pGraphicDev, 620, 100, 0.f, 180.f, 1, 1);
 	m_mapLayer.at(L"UI")->Add_GameObject(L"ItemFontUI", pItemFontUI);
-
-#pragma endregion Boss HP
-
 }
 
 void CLoadStage::Play_Ending(const _float& fTimeDelta)
