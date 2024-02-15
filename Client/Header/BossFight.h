@@ -6,6 +6,7 @@
 
 class CBlackBackground;
 class CFightName;
+class CFightPlayerThumbnail;
 
 class CBossFight : public Engine::CScene
 {
@@ -35,6 +36,7 @@ private:
 	_int	m_iStageKey = 0;
 
 	CFightName* pPlayerName = nullptr;
+	CFightPlayerThumbnail* pPlayerThumbnail = nullptr;
 
 private:
 	virtual void Free() override;

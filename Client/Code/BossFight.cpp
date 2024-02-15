@@ -7,6 +7,7 @@
 #include "LoadStage.h"
 #include "BlackBackground.h"
 #include "FightName.h"
+#include "FightPlayerThumbnail.h"
 
 CBossFight::CBossFight(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
@@ -75,9 +76,13 @@ HRESULT CBossFight::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BlackBackground", pGameObject), E_FAIL);
 
-	pGameObject = pPlayerName = CFightName::Create(m_pGraphicDev, 192.f, 64.f, -200.f, 200.f);
+	pGameObject = pPlayerName = CFightName::Create(m_pGraphicDev, 192.f * 1.5, 64.f * 1.5, -200.f, 180.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerName", pGameObject), E_FAIL);
+	
+	pGameObject = pPlayerThumbnail = CFightPlayerThumbnail::Create(m_pGraphicDev, 256.f * 2, 256.f * 2, -200.f, -100.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerThumbnail", pGameObject), E_FAIL);
 
 	//pGameObject = CStageToolFly::Create(m_pGraphicDev, 100.f, 100.f, 120.f, -100.f, 2, 4);
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);

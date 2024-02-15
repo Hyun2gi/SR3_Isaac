@@ -310,6 +310,9 @@
     <Filter Include="02. GameObject\12. UI\06. FightScene\Vs">
       <UniqueIdentifier>{2637d5e0-c056-43e0-97b8-22f4499f0d5b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Thumbnail\Player">
+      <UniqueIdentifier>{ad45728a-0478-4d27-847b-e0302a99dfa5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -579,6 +582,9 @@
     <ClInclude Include="..\Header\FightName.h">
       <Filter>02. GameObject\12. UI\06. FightScene\Name</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\FightPlayerThumbnail.h">
+      <Filter>02. GameObject\12. UI\06. FightScene\Thumbnail\Player</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -838,6 +844,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\FightName.cpp">
       <Filter>02. GameObject\12. UI\06. FightScene\Name</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FightPlayerThumbnail.cpp">
+      <Filter>02. GameObject\12. UI\06. FightScene\Thumbnail\Player</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
