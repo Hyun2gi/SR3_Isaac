@@ -109,6 +109,8 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 
 void CMomParts::LateUpdate_GameObject()
 {
+	if (!m_pMom) return;
+
 	if (m_bHit) // 피격 시 Mom 의 HP 를 깎아야 함
 	{
 		if (m_eCurState == MOM_EYE || m_eCurState == MOM_HAND || m_eCurState == MOM_SKIN)
