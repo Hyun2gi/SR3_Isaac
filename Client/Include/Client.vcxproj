@@ -159,6 +159,8 @@
   <ItemGroup>
     <ClInclude Include="..\Header\AttackFly.h" />
     <ClInclude Include="..\Header\BackGround.h" />
+    <ClInclude Include="..\Header\BlackBackground.h" />
+    <ClInclude Include="..\Header\BossFight.h" />
     <ClInclude Include="..\Header\BossHP.h" />
     <ClInclude Include="..\Header\BossHPTool.h" />
     <ClInclude Include="..\Header\BrimStone.h" />
@@ -246,6 +248,8 @@
   <ItemGroup>
     <ClCompile Include="..\Code\AttackFly.cpp" />
     <ClCompile Include="..\Code\BackGround.cpp" />
+    <ClCompile Include="..\Code\BlackBackground.cpp" />
+    <ClCompile Include="..\Code\BossFight.cpp" />
     <ClCompile Include="..\Code\BossHP.cpp" />
     <ClCompile Include="..\Code\BossHPTool.cpp" />
     <ClCompile Include="..\Code\BrimStone.cpp" />

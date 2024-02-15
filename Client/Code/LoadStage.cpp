@@ -9,7 +9,9 @@
 
 #include "StageLoadMgr.h"
 
+//씬
 #include "Ending.h"
+#include "BossFight.h"
 
 //환경
 #include "Terrain.h"
@@ -84,7 +86,6 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	m_bIsCreated = false;
 	m_bMenu = false;
 
-	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 	//Engine::Create_Scatter(m_pGraphicDev);
 
 	FAILED_CHECK_RETURN(CStageLoadMgr::GetInstance()->Ready_StageLoadMgr(), E_FAIL);
@@ -1137,7 +1138,7 @@ HRESULT CLoadStage::Ready_Layer_Environment(const _tchar* pLayerTag)
 
 	// 플레이어에 카메라 설정
 	CPlayer::GetInstance()->Set_Camera(pGameObject);
-
+	CPlayer::GetInstance()->Ready_GameObject(m_pGraphicDev);
 
 	pGameObject = CSkyBox::Create(m_pGraphicDev);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
@@ -1970,19 +1971,27 @@ HRESULT CLoadStage::Door_Collision()
 					startpos = _vec3(15.5, 0, 27.5);
 				}
 
-
 				CPlayer::GetInstance()->Set_KeyBlock(true);
-
-				
 
 				// 스테이지 변경
 				Engine::CScene* pScene = nullptr;
 
 				int iStageKey = dynamic_cast<CDoor*>(pObj)->Get_Stage_Num_Key();
+				string strTheme = CStageLoadMgr::GetInstance()->Get_StageInfo(iStageKey).m_strTheme;
 				bool bClear = CStageLoadMgr::GetInstance()->Get_StageInfo(iStageKey).m_bClear;
 
-				// bClear : false면 처음 방문하는방, true면 이미 깬 방
-				pScene = CLoadStage::Create(m_pGraphicDev, iStageKey, bClear);
+
+				if (strTheme == "Boss")
+				{
+					// 보스 VS 씬으로 전환해줌
+					pScene = CBossFight::Create(m_pGraphicDev, iStageKey);
+				}
+				else
+				{
+					// bClear : false면 처음 방문하는방, true면 이미 깬 방
+					pScene = CLoadStage::Create(m_pGraphicDev, iStageKey, bClear);
+				}
+				
 
 				if (!bClear)
 				{
