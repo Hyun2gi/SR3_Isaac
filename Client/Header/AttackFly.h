@@ -37,6 +37,7 @@ private:
 
 	CCenterFly*			m_CenterFly;
 	vector<CNormalFly*>	m_NormalFlyList;
+	int					m_iNormalCnt;
 
 public:
 	static CAttackFly* Create(LPDIRECT3DDEVICE9 pGraphicDev);

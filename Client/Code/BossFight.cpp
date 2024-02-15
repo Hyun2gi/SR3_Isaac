@@ -25,12 +25,13 @@ HRESULT CBossFight::Ready_Scene()
 {
 
 	FAILED_CHECK_RETURN(Ready_Layer_Environment(L"Environment"), E_FAIL);
-
+	m_bStartBGM = false;
 	return S_OK;
 }
 
 Engine::_int CBossFight::Update_Scene(const _float& fTimeDelta)
 {
+	StartBGM();
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
 	m_fSceneChangeTimer += fTimeDelta;
@@ -135,6 +136,23 @@ CBossFight * CBossFight::Create(LPDIRECT3DDEVICE9 pGraphicDev, _int iStageKey)
 	}
 	
 	return pInstance;
+}
+
+void CBossFight::StartBGM()
+{
+	if (!m_bStartBGM)
+	{
+		Engine::StopSound(SOUND_BGM);
+		m_bStartBGM = true;
+		Engine::PlayBGM(L"boss fight intro jingle v2.1.ogg", 0.8f);
+
+		if (m_iStageKey > 5)
+		{
+			Engine::PlayEffect(L"Mom_Attack.wav", SOUND_EFFECT_ETC_ALLPLAY, 07.f);
+		}
+	}
+	
+	
 }
 
 void CBossFight::Free()
