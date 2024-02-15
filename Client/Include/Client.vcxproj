@@ -187,6 +187,7 @@
     <ClInclude Include="..\Header\GameEnd.h" />
     <ClInclude Include="..\Header\HeartUI.h" />
     <ClInclude Include="..\Header\ItemFontUI.h" />
+    <ClInclude Include="..\Header\MapIcon.h" />
     <ClInclude Include="..\Header\MapParts.h" />
     <ClInclude Include="..\Header\Menu.h" />
     <ClInclude Include="..\Header\MiniMap.h" />
@@ -275,6 +276,7 @@
     <ClCompile Include="..\Code\GameEnd.cpp" />
     <ClCompile Include="..\Code\HeartUI.cpp" />
     <ClCompile Include="..\Code\ItemFontUI.cpp" />
+    <ClCompile Include="..\Code\MapIcon.cpp" />
     <ClCompile Include="..\Code\MapParts.cpp" />
     <ClCompile Include="..\Code\Menu.cpp" />
     <ClCompile Include="..\Code\MiniMap.cpp" />

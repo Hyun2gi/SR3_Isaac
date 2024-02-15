@@ -5,6 +5,7 @@
 #include "Export_Utility.h"
 
 #include "StageLoadMgr.h"
+#include "MapIcon.h"
 
 
 CMiniMap::CMiniMap(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -114,43 +115,6 @@ HRESULT CMiniMap::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
-//#pragma region Texture
-//
-//	// Icon
-//	// Gold
-//	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FontBackGroundTexture"));
-//	NULL_CHECK_RETURN(pComponent, E_FAIL);
-//	m_mapComponent[ID_STATIC].insert({ L"Proto_FontBackGroundTexture", pComponent });
-//
-//	// Arcade
-//	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FontBackGroundTexture"));
-//	NULL_CHECK_RETURN(pComponent, E_FAIL);
-//	m_mapComponent[ID_STATIC].insert({ L"Proto_FontBackGroundTexture", pComponent });
-//
-//	// Mom
-//	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FontBackGroundTexture"));
-//	NULL_CHECK_RETURN(pComponent, E_FAIL);
-//	m_mapComponent[ID_STATIC].insert({ L"Proto_FontBackGroundTexture", pComponent });
-//
-//	// Monstro
-//	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FontBackGroundTexture"));
-//	NULL_CHECK_RETURN(pComponent, E_FAIL);
-//	m_mapComponent[ID_STATIC].insert({ L"Proto_FontBackGroundTexture", pComponent });
-//
-//	// Devil
-//	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FontBackGroundTexture"));
-//	NULL_CHECK_RETURN(pComponent, E_FAIL);
-//	m_mapComponent[ID_STATIC].insert({ L"Proto_FontBackGroundTexture", pComponent });
-//
-//	// Heart
-//	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_FontBackGroundTexture"));
-//	NULL_CHECK_RETURN(pComponent, E_FAIL);
-//	m_mapComponent[ID_STATIC].insert({ L"Proto_FontBackGroundTexture", pComponent });
-//	// 이거 아이콘 으로 가야함
-//
-//#pragma endregion Texture
-
-
 	// Texture
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_MiniMapToolTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -220,14 +184,7 @@ void CMiniMap::Setting_NowRoom()
 		if (m_iNowRoomNum == iter->Get_RoomNumber())
 		{
 			iter->Set_NowRoom(true);
-			//iter->Set_CheckRoom(); // 가본 방으로 변경 (이건 됨. 그러나 그 값이 유지가 안 되는?)
-			// 현재 방에 대해서 받아올 것이 아니라 다른 조건문에서 처리해야 할듯함
 		}
-		else
-		{
-			//iter->Set_NowRoom(false); // 이걸 해주지 않아도 알아서 초기화되네...
-		}
-
 	}
 }
 
@@ -245,6 +202,8 @@ void CMiniMap::Setting_CheckRoom()
 			if (CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(iStageKey).m_bClear)
 			{
 				iter->Set_CheckRoom();
+				if(iter->Get_Icon() != nullptr)
+					iter->Get_Icon()->Set_Render();
 			}
 			++iStageKey;
 		}

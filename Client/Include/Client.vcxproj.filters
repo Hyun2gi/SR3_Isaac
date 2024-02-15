@@ -555,6 +555,9 @@
     <ClInclude Include="..\Header\MapParts.h">
       <Filter>02. GameObject\12. UI\05. MiniMap\00. MiniMapParts</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\MapIcon.h">
+      <Filter>02. GameObject\12. UI\05. MiniMap\01. MiniMapIcon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -808,6 +811,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\MapParts.cpp">
       <Filter>02. GameObject\12. UI\05. MiniMap\00. MiniMapParts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\MapIcon.cpp">
+      <Filter>02. GameObject\12. UI\05. MiniMap\01. MiniMapIcon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

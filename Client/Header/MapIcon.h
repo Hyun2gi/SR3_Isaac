@@ -3,8 +3,6 @@
 #include "Base.h"
 #include "UI.h"
 
-#include "MapIcon.h"
-
 BEGIN(Engine)
 
 class CRcTex;
@@ -13,22 +11,18 @@ class CTransform;
 
 END
 
-class CMapParts : public Engine::CUI
+class CMapIcon : public Engine::CUI
 {
 private:
-	explicit CMapParts(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CMapParts(const CMapParts& rhs);
-	virtual ~CMapParts();
+	explicit CMapIcon(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CMapIcon(const CMapIcon& rhs);
+	virtual ~CMapIcon();
 
-	// 현재 방 / 가본 방 / 못 가본 방
-	enum ROOMSTATE{ ROOM_NOW, ROON_OPEN, ROOM_CLOSE, ROOM_END };
+	enum ICONTYPE { ICON_GOLD, ICON_ARCADE, ICON_DEVIL, ICON_MOM, ICON_MONSTRO, ICON_NONE };
 
 public:
-	_int			Get_RoomNumber() { return m_iRoomNumber; }
-	void			Set_RoomNumber(_int iNum) { m_iRoomNumber = iNum; }
-	void			Set_NowRoom(_bool IsNowRoom) { m_bNowRoom = IsNowRoom; }
-	void			Set_CheckRoom() { m_bCheckRoom = true; } // 가본 방으로 체크
-	CMapIcon*		Get_Icon() { return m_pMapIcon; }
+	void			Set_IconType(_int iTypeNum);
+	void			Set_Render() { m_bRender = true; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -39,17 +33,12 @@ public:
 private:
 	HRESULT			Add_Component();
 
-	void			Create_Icon();
-	void			Setting_Icon();
-
 private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
-	_bool				m_bFrontRoom; // 바라봐지는 방
-	_bool				m_bNowRoom; // 현재 방
-	_bool				m_bCheckRoom; // 가본 방
+	_bool				m_bRender;
 
 	_float				m_fAnimSpeed = 1.f;
 	_float				m_fCurFrame = 0.f;
@@ -60,15 +49,10 @@ private:
 	_int				m_iAnimFrameCount;
 	_int				m_iMaxFrameCount;
 
-	_int				m_iRoomNumber;
-
-	ROOMSTATE			m_eRoomState;
-
-	CMapIcon*			m_pMapIcon;
-
+	ICONTYPE			m_eIconType;
 
 public:
-	static CMapParts* Create(LPDIRECT3DDEVICE9	pGraphicDev,
+	static CMapIcon* Create(LPDIRECT3DDEVICE9	pGraphicDev,
 		_float fSizeX, _float fSizeY,
 		_float fPosX, _float fPosY,
 		_int iAnimFrameCount, _int iMaxFrameCount,

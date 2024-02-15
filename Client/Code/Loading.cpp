@@ -157,11 +157,11 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 
 	// MiniMap - Icon
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MapIcon_ArcadeTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/MiniMap/MapIcon_Arcade.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MapIcon_DevilTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/MiniMap/MapIcon_Arcade.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MapIcon_GoldTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/MiniMap/MapIcon_Arcade.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MapIcon_MomTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/MiniMap/MapIcon_Arcade.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MapIcon_MonstroTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/MiniMap/MapIcon_Arcade.png")), E_FAIL);
-	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MapIcon_HeartTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/MiniMap/MapIcon_Arcade.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MapIcon_DevilTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/MiniMap/MapIcon_Devil.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MapIcon_GoldTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/MiniMap/MapIcon_Gold.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MapIcon_MomTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/MiniMap/MapIcon_Mom.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MapIcon_MonstroTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/MiniMap/MapIcon_Monstro.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MapIcon_HeartTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/MiniMap/MapIcon_Heart.png")), E_FAIL);
 
 	// MiniMap - Tool & Parts
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MiniMapToolTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/MiniMap/MiniMapTool.png")), E_FAIL);
