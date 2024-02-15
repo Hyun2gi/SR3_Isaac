@@ -678,6 +678,7 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 		{
 			m_bMove = false;
 			m_bFix = false; //잠금 풀어주기
+			//m_fAngleY = 0;
 
 			if (m_bStart)
 			{
@@ -996,7 +997,7 @@ void CDynamicCamera::OnMoveToOriginPos()
 	D3DXVec3Normalize(&playerDir, &playerDir);
 
 	// 바라보는 대상은 플레이어
-	m_vAt = playerPos + playerDir * 2;
+	m_vAt = m_vOriginAtPosition;
 
 	m_bFix = true;
 
@@ -1004,6 +1005,7 @@ void CDynamicCamera::OnMoveToOriginPos()
 
 	m_vCameraPosDir = -(playerDir);
 
+	m_eAfterState = C_PLAYERCHASE;
 	_vec3	moveCamPos;
 
 	/*if (m_bCollisionWall == false)
@@ -1018,7 +1020,7 @@ void CDynamicCamera::OnMoveToOriginPos()
 	m_eCurState = C_MOVE_TO_TARGET;
 	//m_vCameraPosDir = m_vCameraPosDir * m_fCameraShortDistance + _vec3(0, m_fCameraShortHeight, 0);
 
-	OnMoveTargetCamera(1.f, 7.f, m_vStartEyePosition, true, 0);
+	OnMoveTargetCamera(1.5f, 7.f, m_vStartEyePosition, true, 0);
 }
 
 void CDynamicCamera::Set_EpicBullet()
