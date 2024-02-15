@@ -178,35 +178,39 @@ void CItemFontUI::Change_Font()
 		break;
 	}
 
-	switch (m_ePillState)
+	if (PILL == m_eItemType)
 	{
-	case CItemFontUI::PILL_0:
-		lstrcpy(m_szItem, L"MAX HP");
-		lstrcpy(m_szItemDetail, L"");
-		m_vecFontPos.x = 300.f;
-		break;
-	case CItemFontUI::PILL_1:
-		lstrcpy(m_szItem, L"HP DOWN");
-		lstrcpy(m_szItemDetail, L"");
-		m_vecFontPos.x = 300.f;
-		break;
-	case CItemFontUI::PILL_2:
-		lstrcpy(m_szItem, L"POWER PILL!");
-		lstrcpy(m_szItemDetail, L"");
-		m_vecFontPos.x = 230.f;
-		break;
-	case CItemFontUI::PILL_3:
-		lstrcpy(m_szItem, L"SPEED UP");
-		lstrcpy(m_szItemDetail, L"");
-		m_vecFontPos.x = 280.f;
-		break;
-	case CItemFontUI::PILL_4:
-		lstrcpy(m_szItem, L"SPEED DOWN");
-		lstrcpy(m_szItemDetail, L"");
-		m_vecFontPos.x = 250.f;
-		break;
-	default:
-		break;
+		switch (m_ePillState)
+		{
+		case CItemFontUI::PILL_0:
+			lstrcpy(m_szItem, L"MAX HP");
+			lstrcpy(m_szItemDetail, L"");
+			m_vecFontPos.x = 300.f;
+			break;
+		case CItemFontUI::PILL_1:
+			lstrcpy(m_szItem, L"HP DOWN");
+			lstrcpy(m_szItemDetail, L"");
+			m_vecFontPos.x = 300.f;
+			break;
+		case CItemFontUI::PILL_2:
+			lstrcpy(m_szItem, L"POWER PILL!");
+			lstrcpy(m_szItemDetail, L"");
+			m_vecFontPos.x = 230.f;
+			break;
+		case CItemFontUI::PILL_3:
+			lstrcpy(m_szItem, L"SPEED UP");
+			lstrcpy(m_szItemDetail, L"");
+			m_vecFontPos.x = 280.f;
+			break;
+		case CItemFontUI::PILL_4:
+			lstrcpy(m_szItem, L"SPEED DOWN");
+			lstrcpy(m_szItemDetail, L"");
+			m_vecFontPos.x = 250.f;
+			break;
+		default:
+			break;
+		}
+
 	}
 }
 

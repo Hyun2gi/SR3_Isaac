@@ -62,7 +62,9 @@ _int CCampFire::Update_GameObject(const _float& fTimeDelta)
 		m_pWood->Update_GameObject(fTimeDelta);
 
 	if (m_pFire != nullptr)
+	{
 		m_pFire->Update_GameObject(fTimeDelta);
+	}
 
 	if (Engine::Get_DIKeyState(DIK_Z) & 0x80)//Engine::Key_Down(DIK_X))
 		m_pFire->Set_Hit();
