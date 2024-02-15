@@ -45,6 +45,8 @@ HRESULT CMomParts::Ready_GameObject()
 
 _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_pMom) return 0;
+
 	if (m_bDead)
 	{
 		_vec3 vPos;
