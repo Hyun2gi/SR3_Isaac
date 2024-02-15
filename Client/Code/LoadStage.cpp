@@ -158,14 +158,46 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 			// 한번 왔다간 방임
 			CPlayer::GetInstance()->Set_StartCameraMouse();
 		}
+		
+		//Setting_UI(); // UI 생성
+	}
 
-		m_bIsCreated = true;
+
+	//연출이 필요하다면 큐브가 다 온 이후부터 타이머를 돌면서 하나씩 생성시켜준다.
+	if (!m_bStartScene && !m_bIsLoadDataCreated)
+	{
+		if (m_iCreatedCnt >= m_iLoadDataSize)
+		{
+			m_bIsLoadDataCreated = true;
+		}
+
+		if (Check_Cube_Arrived() && m_iCreatedCnt < m_iLoadDataSize && !m_bIsLoadDataCreated)
+		{
+			m_fSpawnTimer += fTimeDelta;
+
+			if (0.3f < m_fSpawnTimer)
+			{
+				m_fSpawnTimer = 0.f;
+
+				FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
+				FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
+				FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
+
+				if(1 > m_iCreatedCnt)
+					FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
+
+				++m_iCreatedCnt;
+			}
+		}
+	}
+	//연출이 필요 없고 생성되지 않은 상황이면 한번에 생성시켜준다.
+	else if(!m_bIsLoadDataCreated)
+	{
 		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
-		
-		Setting_UI(); // UI 생성
+		m_bIsLoadDataCreated = true;
 	}
 
 	//타임 델타 스케일 조절 예시 _ 사용
@@ -1203,8 +1235,7 @@ void CLoadStage::Player_Collision_With_Monster()
 
 	if (pObj_Fire)
 	{
-		if (CAMPFIRE == dynamic_cast<CMapObj*>(pObj_Fire)->Get_Type() &&
-			!dynamic_cast<CMapObj*>(pObj_Fire)->Get_Dead())
+		if (CAMPFIRE == dynamic_cast<CMapObj*>(pObj_Fire)->Get_Type())
 		{
 			// 플레이어 피 감소
 			CPlayer::GetInstance()->Set_Attacked();
