@@ -5,7 +5,7 @@
 #include "Loading.h"
 
 class CBlackBackground;
-class CFightName;
+class CFightPlayerName;
 class CFightPlayerThumbnail;
 
 class CBossFight : public Engine::CScene
@@ -35,7 +35,7 @@ private:
 
 	_int	m_iStageKey = 0;
 
-	CFightName* pPlayerName = nullptr;
+	CFightPlayerName* pPlayerName = nullptr;
 	CFightPlayerThumbnail* pPlayerThumbnail = nullptr;
 
 private:

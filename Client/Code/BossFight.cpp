@@ -6,7 +6,7 @@
 
 #include "LoadStage.h"
 #include "BlackBackground.h"
-#include "FightName.h"
+#include "FightPlayerName.h"
 #include "FightPlayerThumbnail.h"
 
 CBossFight::CBossFight(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -76,7 +76,7 @@ HRESULT CBossFight::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BlackBackground", pGameObject), E_FAIL);
 
-	pGameObject = pPlayerName = CFightName::Create(m_pGraphicDev, 192.f * 1.5, 64.f * 1.5, -200.f, 180.f);
+	pGameObject = pPlayerName = CFightPlayerName::Create(m_pGraphicDev, 192.f * 1.5, 64.f * 1.5, -200.f, 180.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerName", pGameObject), E_FAIL);
 	

@@ -313,6 +313,12 @@
     <Filter Include="02. GameObject\12. UI\06. FightScene\Thumbnail\Player">
       <UniqueIdentifier>{ad45728a-0478-4d27-847b-e0302a99dfa5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Thumbnail\Boss">
+      <UniqueIdentifier>{3f5470b5-ef79-48c7-9840-dba152f3fb51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Name\Player">
+      <UniqueIdentifier>{9b0e2914-c7f9-45cd-aace-7e74a3927379}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -579,7 +585,7 @@
     <ClInclude Include="..\Header\BlackBackground.h">
       <Filter>02. GameObject\12. UI\06. FightScene\Back</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\FightName.h">
+    <ClInclude Include="..\Header\FightPlayerName.h">
       <Filter>02. GameObject\12. UI\06. FightScene\Name</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\FightPlayerThumbnail.h">
@@ -842,7 +848,7 @@
     <ClCompile Include="..\Code\BlackBackground.cpp">
       <Filter>02. GameObject\12. UI\06. FightScene\Back</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\FightName.cpp">
+    <ClCompile Include="..\Code\FightPlayerName.cpp">
       <Filter>02. GameObject\12. UI\06. FightScene\Name</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\FightPlayerThumbnail.cpp">

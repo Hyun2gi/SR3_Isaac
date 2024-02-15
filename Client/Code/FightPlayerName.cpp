@@ -1,25 +1,25 @@
 #include "stdafx.h"
-#include "..\Header\FightName.h"
+#include "..\Header\FightPlayerName.h"
 
 #include "Export_Utility.h"
 
 #include "Player.h"
 
-CFightName::CFightName(LPDIRECT3DDEVICE9 pGraphicDev)
+CFightPlayerName::CFightPlayerName(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CUI(pGraphicDev)
 {
 }
 
-CFightName::CFightName(const CFightName& rhs)
+CFightPlayerName::CFightPlayerName(const CFightPlayerName& rhs)
 	: Engine::CUI(rhs)
 {
 }
 
-CFightName::~CFightName()
+CFightPlayerName::~CFightPlayerName()
 {
 }
 
-HRESULT CFightName::Ready_GameObject()
+HRESULT CFightPlayerName::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
@@ -33,14 +33,14 @@ HRESULT CFightName::Ready_GameObject()
 	return S_OK;
 }
 
-Engine::_int CFightName::Update_GameObject(const _float& fTimeDelta)
+Engine::_int CFightPlayerName::Update_GameObject(const _float& fTimeDelta)
 {
 	CUI::Update_GameObject(fTimeDelta);
 
 	return 0;
 }
 
-void CFightName::LateUpdate_GameObject()
+void CFightPlayerName::LateUpdate_GameObject()
 {
 	Engine::Add_RenderGroup(RENDER_NONALPHA, this);
 
@@ -48,7 +48,7 @@ void CFightName::LateUpdate_GameObject()
 	__super::LateUpdate_GameObject();
 }
 
-void CFightName::Render_GameObject()
+void CFightPlayerName::Render_GameObject()
 {	
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
@@ -57,7 +57,7 @@ void CFightName::Render_GameObject()
 	m_pBufferCom->Render_Buffer();
 }
 
-HRESULT CFightName::Add_Component()
+HRESULT CFightPlayerName::Add_Component()
 {
 	CComponent*		pComponent = nullptr;
 		
@@ -85,12 +85,12 @@ HRESULT CFightName::Add_Component()
 	return S_OK;
 }
 
-CFightName * CFightName::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
+CFightPlayerName * CFightPlayerName::Create(LPDIRECT3DDEVICE9 pGraphicDev, 
 	_float fSizeX, _float fSizeY, 
 	_float fPosX, _float fPosY, 
 	_float fWinCX, _float fWinCY)
 {
-	CFightName *	pInstance = new CFightName(pGraphicDev);
+	CFightPlayerName *	pInstance = new CFightPlayerName(pGraphicDev);
 
 	pInstance->Set_WindowSize(fWinCX, fWinCY);
 	pInstance->Set_Size(fSizeX, fSizeY);
@@ -108,7 +108,7 @@ CFightName * CFightName::Create(LPDIRECT3DDEVICE9 pGraphicDev,
 	return pInstance;
 }
 
-void CFightName::Free()
+void CFightPlayerName::Free()
 {	
 	__super::Free();
 }

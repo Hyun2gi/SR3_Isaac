@@ -11,12 +11,12 @@ class CTransform;
 
 END
 
-class CFightName : public Engine::CUI
+class CFightPlayerName : public Engine::CUI
 {
 private:
-	explicit CFightName(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CFightName(const CFightName& rhs);
-	virtual ~CFightName();
+	explicit CFightPlayerName(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CFightPlayerName(const CFightPlayerName& rhs);
+	virtual ~CFightPlayerName();
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -37,7 +37,7 @@ private:
 	_float m_fMoveSpeed = 3.f;
 
 public:
-	static CFightName*		Create(LPDIRECT3DDEVICE9	pGraphicDev, 
+	static CFightPlayerName*		Create(LPDIRECT3DDEVICE9	pGraphicDev, 
 		_float fSizeX, _float fSizeY, 
 		_float fPosX, _float fPosY, 
 		_float fWinCX = WINCX, _float fWinCY = WINCY);
