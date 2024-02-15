@@ -150,11 +150,11 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		// m_bStartScene : 한번 왔다간 방인지 아닌지 확인해주는 변수
 		if (!m_bStartScene)
 		{
-			Engine::StopSound(SOUND_BGM);
+			Engine::StopSound(SOUND_EFFECT_ETC_STOPSUDDEN);
 			// 한번 왔다간 방이 아닐경우처리
 			CPlayer::GetInstance()->Set_IssacRender(true);
 			// 올라간 시네머신이 진행 후 내려오는 시네머신 필요
-			CPlayer::GetInstance()->Set_Camera_Cinemachine_02();
+			//CPlayer::GetInstance()->Set_Camera_Cinemachine_02();
 
 			if (m_iLoadDataSize <= m_iCreatedCnt)
 			{
@@ -1341,23 +1341,24 @@ void CLoadStage::Item_Collision()
 
 	if (pObj)
 	{
-		//충돌됨
-		dynamic_cast<CItem*>(pObj)->Run_Item_Effect();
-		
 		// 아이템 습득 UI
 		ITEM_TYPE temp = dynamic_cast<CItem*>(pObj)->Get_Item_Type();
 		if (PILL == temp || BRIM == temp || EPIC == temp || SAD_ONION == temp || TRINKET == temp)
 		{
 			dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))->Set_Render();
-		}
-		dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))
-			->Set_ItemType(dynamic_cast<CItem*>(pObj)->Get_Item_Type());
 
-		if (PILL == temp) // 알약인 경우
-		{
-			dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))->Set_PillState(
-				dynamic_cast<CPill*>(pObj)->Get_Pill_Num());
+			dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))
+				->Set_ItemType(dynamic_cast<CItem*>(pObj)->Get_Item_Type());
+
+			if (PILL == temp) // 알약인 경우
+			{
+				dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))->Set_PillState(
+					dynamic_cast<CPill*>(pObj)->Get_Pill_Num());
+			}
 		}
+
+		//충돌됨
+		dynamic_cast<CItem*>(pObj)->Run_Item_Effect();
 	}
 }
 
@@ -2024,8 +2025,8 @@ CLoadStage* CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bS
 
 	if (!bStratScene)
 	{
-		Engine::StopAll();
-		Engine::PlayEffect(L"earthquake4.wav", SOUND_BGM, 0.8f);
+		//Engine::StopAll();
+		Engine::PlayEffectLoop(L"earthquake4.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.8f);
 	}
 
 	if (FAILED(pInstance->Ready_Scene(iType)))
