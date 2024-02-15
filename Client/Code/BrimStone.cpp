@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "BrimStone.h"
 #include "Export_Utility.h"
+#include "Export_System.h"
 #include "Player.h"
 
 CBrimStone::CBrimStone(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -120,6 +121,7 @@ bool CBrimStone::Run_Item_Effect()
 	{
 		CPlayer::GetInstance()->Set_BulletType(2);
 		CPlayer::GetInstance()->Set_Item_Get_Anim();
+		Engine::PlayEffect(L"Get_Brimstone.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
 		m_bDead = true;
 
 		return true;

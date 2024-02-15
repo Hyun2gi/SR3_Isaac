@@ -3,6 +3,8 @@
 #include "Export_Utility.h"
 #include "Player.h"
 
+#include "Export_System.h"
+
 CWhipWorm::CWhipWorm(LPDIRECT3DDEVICE9 pGraphicDev)
     : CItem(pGraphicDev)
 {
@@ -93,6 +95,7 @@ bool CWhipWorm::Run_Item_Effect()
         m_bDead = true;
         CPlayer::GetInstance()->Set_BulletSpeed(50);
         CPlayer::GetInstance()->Set_Item_Get_Anim();
+        Engine::PlayEffect(L"Item_Good.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
 
         return true;
     }
@@ -142,7 +145,8 @@ void CWhipWorm::Item_Spawn_Action()
             if (temp.y <= fHeight + 1)
             {
                 m_eCurItemPlace = SP_END;
-                m_pTransformCom->Set_Pos(itemPos.x, fHeight + 1, itemPos.z);
+
+                m_pTransformCom->Set_Pos(itemPos.x + 0.1, fHeight + 1.3, itemPos.z + 0.1);
             }
             else
             {

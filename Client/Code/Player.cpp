@@ -143,7 +143,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_bStartAnim = false;
 		// 주석 없애기
-		Set_Cry_Anim();
+		//Set_Cry_Anim();
 	}
 
 	// 특정 모션 처리
@@ -1225,7 +1225,6 @@ void CPlayer::Motion_Change()
 			case P_THUMBS_UP:
 				// 사운드
 				Engine::StopSound(SOUND_EFFECT_PLAYER_ALLPLAY);
-				Engine::PlayEffect(L"Item_Good.wav", SOUND_EFFECT_PLAYER_ALLPLAY, 1.f);
 				m_fPicNum = 3;
 				m_fSpriteSpeed = 1.f;
 				m_bKeyBlock = true; //key 막기
@@ -1234,7 +1233,7 @@ void CPlayer::Motion_Change()
 			case P_GET_BAD_ITEM:
 				// 사운드
 				Engine::StopSound(SOUND_EFFECT_PLAYER_ALLPLAY);
-				Engine::PlayEffect(L"thumbs down.wav", SOUND_EFFECT_PLAYER_ALLPLAY, 1.f);
+				Engine::PlayEffect(L"thumbs down.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
 				m_fPicNum = 1;
 				m_fSpriteSpeed = 1.f;
 				m_bKeyBlock = true; //key 막기
@@ -1443,10 +1442,10 @@ void CPlayer::Specific_Motion(const _float& fTimeDelta)
 	{
 		m_fDelayTime += fTimeDelta;
 
-		if (m_fDelayTime < 2.7 && m_fDelayTime >2.6)
+		if (m_fDelayTime < 2.6 && m_fDelayTime >2.5)
 		{
 			// 사운드
-			Engine::PlayEffect(L"thumbs up.wav", SOUND_EFFECT_PLAYER_ALLPLAY, 1.f);
+			Engine::PlayEffect(L"thumbs up.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
 		}
 
 		if (m_fDelayTime > 2)

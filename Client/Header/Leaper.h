@@ -36,6 +36,7 @@ private:
 	_int				m_iRandNum;
 	_int				m_iPicNum;
 	_float				m_fFrameSpeed = 1.f;
+	_float				m_fSoundTimer;
 
 	_float				m_fPower;
 	_float				m_fAccelTime;

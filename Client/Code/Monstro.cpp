@@ -91,7 +91,10 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 	}
 	
 	if (m_bDeadWait && m_bDeadAni)
+	{
 		Animation_Dead(); // 사망 시 애니메이션
+	}
+		
 
 	// Bullet Update
 	Bullet_Update();
@@ -127,6 +130,7 @@ void CMonstro::LateUpdate_GameObject()
 			m_eCurState = MONSTRO_DEAD;
 			m_pTransformCom->m_vInfo->y = CENTERY;
 			m_bDeadWait = true;
+			Engine::PlayEffect(L"BossDead.ogg", SOUND_BGM, 1.0f);
 
 			m_pTransformCom->Get_Info(INFO_POS, &m_vDeadPos);
 			m_fAccTimeDelta = 0.f;
@@ -331,6 +335,8 @@ void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 		}
 		else
 		{
+			Engine::PlayEffect(L"hellboss ground pound 2.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+			CPlayer::GetInstance()->Set_CameraShaking(0.8,1.0f);
 			vPos.y = CENTERY;
 			m_bJump = false;
 			m_bBullet = true;
@@ -348,6 +354,8 @@ void CMonstro::AttackTo_Player()
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
 	vRandPos = m_vTargetPos;
+	
+	Engine::PlayEffect(L"monstro_boss gurgle roar.wav", SOUND_EFFECT_MON_STOPSUDDEN, 0.8f);
 
 	for (int i = 0; i < 20; ++i) // 총알 생성
 	{
@@ -372,6 +380,8 @@ void CMonstro::AttackTo_Player()
 		m_BulletList.push_back(CMstBullet::Create(m_pGraphicDev, m_vecMyLayer[0]));
 		dynamic_cast<CMstBullet*>(m_BulletList.back())->Set_Dir(vDir);
 	}
+
+	
 }
 
 void CMonstro::Check_TargetPos()
@@ -418,6 +428,8 @@ void CMonstro::Monstro_Default()
 			{
 				m_bJump = true;
 				m_eCurState = MONSTRO_UP;
+				//boss lite roar 2.wav
+				Engine::PlayEffect(L"boss lite roar 2.wav", SOUND_EFFECT_MON_STOPSUDDEN, 0.8f);
 			}
 			else
 			{
@@ -432,6 +444,8 @@ void CMonstro::Monstro_Default()
 		{
 			if (Check_Time(m_fSlowDelta, 1.f)) // 일정 시간마다 기믹 1 - 작은 점프 발동
 			{
+				//boss lite roar 2.wav
+				Engine::PlayEffect(L"boss lite roar 1.wav", SOUND_EFFECT_MON_STOPSUDDEN, 0.8f);
 				m_eCurState = MONSTRO_MOVE;
 				Check_TargetPos();
 			}
@@ -511,7 +525,8 @@ void CMonstro::Animation_Dead()
 	if((m_bDeadWait && Check_Time(m_fSlowDelta, 2.f)))
 	{
 		m_bDead = true;
-
+		//boss explosions 1.wav
+		Engine::PlayEffect(L"boss explosions 1.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
 		// 피 튀는 파티클
 		_vec3 vPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -522,6 +537,34 @@ void CMonstro::Animation_Dead()
 		m_bDeadAni = false;
 		m_bPosChange = false;
 	}
+
+
+
+	if (m_fSlowDelta < 0.2)
+	{
+		Engine::PlayEffect(L"blood fire.wav", SOUND_EFFECT_MON_STOPSUDDEN, 0.8f);
+	}
+	else if(m_fSlowDelta < 0.6 && m_fSlowDelta > 0.4)
+	{
+		Engine::PlayEffect(L"blood fire 2.wav", SOUND_EFFECT_MON_STOPSUDDEN_SUB, 0.8f);
+	}
+	else if (m_fSlowDelta < 0.9 && m_fSlowDelta > 0.6)
+	{
+		Engine::PlayEffect(L"blood fire 3.wav", SOUND_EFFECT_MON_STOPSUDDEN, 0.8f);
+	}
+	else if (m_fSlowDelta < 1.2 && m_fSlowDelta > 0.9)
+	{
+		Engine::PlayEffect(L"blood fire 4.wav", SOUND_EFFECT_MON_STOPSUDDEN_SUB, 0.8f);
+	}
+	else if (m_fSlowDelta < 1.5 && m_fSlowDelta > 1.2)
+	{
+		Engine::PlayEffect(L"blood fire.wav", SOUND_EFFECT_MON_STOPSUDDEN, 0.8f);
+	}
+	else if (m_fSlowDelta < 1.9 && m_fSlowDelta > 1.5)
+	{
+		Engine::PlayEffect(L"blood fire 3.wav", SOUND_EFFECT_MON_STOPSUDDEN_SUB, 0.8f);
+	}
+	
 
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -546,6 +589,8 @@ void CMonstro::Animation_Dead()
 			m_bPosChange = true;
 		}
 	}
+
+	
 
 	m_pTransformCom->Set_Pos(vPos);
 }

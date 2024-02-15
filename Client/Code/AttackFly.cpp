@@ -66,6 +66,7 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 		{
 			m_CenterFly->Set_Dead();
 			m_bDead = true;
+			Engine::StopSound(SOUND_EFFECT_MON_STOPSUDDEN_SUB);
 		}
 	}
 

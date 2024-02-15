@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Epic.h"
 #include "Export_Utility.h"
+#include "Export_System.h"
 #include "Player.h"
 
 CEpic::CEpic(LPDIRECT3DDEVICE9 pGraphicDev)
@@ -143,6 +144,7 @@ bool CEpic::Run_Item_Effect()
     CPlayer::GetInstance()->Set_BulletType(3);
     m_bDead = true;
     CPlayer::GetInstance()->Set_Item_Get_Anim();
+    Engine::PlayEffect(L"Item_Good.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
 
     return true;
 }
