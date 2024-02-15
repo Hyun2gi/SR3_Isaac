@@ -37,6 +37,16 @@ Engine::_int CFightVs::Update_GameObject(const _float& fTimeDelta)
 {
 	CUI::Update_GameObject(fTimeDelta);
 
+	if (m_bBack)
+	{
+		_vec3 vDir(1.f, 0.f, 0.f);
+
+		m_fMoveSpeed = 1300.f;
+
+		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+		m_pTransformCom->m_vScale.x += 800.f * fTimeDelta;
+	}
+
 	return 0;
 }
 
@@ -86,8 +96,6 @@ CFightVs * CFightVs::Create(LPDIRECT3DDEVICE9 pGraphicDev,
 	pInstance->Set_WindowSize(fWinCX, fWinCY);
 	pInstance->Set_Size(fSizeX, fSizeY);
 	pInstance->Set_Pos(fPosX, fPosY, fWinCX, fWinCY);
-
-	pInstance->m_bIsaac = CPlayer::GetInstance()->Get_AzazelMode();
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{

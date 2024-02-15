@@ -35,13 +35,17 @@ Engine::_int CBossFight::Update_Scene(const _float& fTimeDelta)
 
 	m_fSceneChangeTimer += fTimeDelta;
 
-	// 5초 이후가 되면 다시 화면 바깥으로 빠져나가는 연출을 실행해준다.
-	if (5.f < m_fSceneChangeTimer)
+	// 4.5초 이후가 되면 다시 화면 바깥으로 빠져나가는 연출을 실행해준다.
+	if (4.8f < m_fSceneChangeTimer)
 	{
-
+		pPlayerName->Set_Back();
+		pPlayerThumbnail->Set_Back();
+		pBossThumbnail->Set_Back();
+		pBossName->Set_Back();
+		pVs->Set_Back();
 	}
-	//6초가 되면 씬 전환
-	else if (6.f < m_fSceneChangeTimer)
+	//5초가 되면 씬 전환
+	if (5.f < m_fSceneChangeTimer)
 	{
 		// 스테이지 변경
 		Engine::CScene* pScene = nullptr;

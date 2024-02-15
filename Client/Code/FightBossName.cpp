@@ -26,7 +26,9 @@ HRESULT CFightBossName::Ready_GameObject()
 	m_pTransformCom->m_vScale.x = m_fSizeX;
 	m_pTransformCom->m_vScale.y = m_fSizeY;
 
-	m_pTransformCom->Set_Pos(_vec3(m_fPosX, m_fPosY, 0.98f));
+	m_vDestPos = _vec3(m_fPosX, m_fPosY, 0.98f);
+
+	m_pTransformCom->Set_Pos(_vec3(500.f, m_fPosY, 0.98f));
 
 	__super::Ready_GameObject();
 
@@ -36,6 +38,26 @@ HRESULT CFightBossName::Ready_GameObject()
 Engine::_int CFightBossName::Update_GameObject(const _float& fTimeDelta)
 {
 	CUI::Update_GameObject(fTimeDelta);
+
+	if (!m_bBack)
+	{
+		_vec3 vDir = m_vDestPos - m_pTransformCom->m_vInfo[INFO_POS];
+		D3DXVec3Normalize(&vDir, &vDir);
+
+		m_fMoveSpeed += m_fIncreaseSpeed;
+
+		if (vDir.x < 0)
+			m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+	}
+	else
+	{
+		_vec3 vDir(1.f, 0.f, 0.f);
+
+		m_fMoveSpeed = 1300.f;
+
+		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+		m_pTransformCom->m_vScale.x += 800.f * fTimeDelta;
+	}
 
 	return 0;
 }

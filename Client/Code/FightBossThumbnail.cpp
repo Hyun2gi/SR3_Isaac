@@ -28,7 +28,7 @@ HRESULT CFightBossThumbnail::Ready_GameObject()
 
 	m_vSecondDestPos = _vec3(m_fPosX, m_fPosY, 0.98f);
 	m_pTransformCom->Set_Pos(_vec3(500.f, m_fPosY, 0.98f));
-	m_vDestPos = _vec3(m_pTransformCom->m_vInfo[INFO_POS].x - 250.f, m_fPosY, 0.98f);
+	m_vDestPos = _vec3(m_pTransformCom->m_vInfo[INFO_POS].x - 270.f, m_fPosY, 0.98f);
 
 	__super::Ready_GameObject();
 
@@ -39,34 +39,48 @@ Engine::_int CFightBossThumbnail::Update_GameObject(const _float& fTimeDelta)
 {
 	CUI::Update_GameObject(fTimeDelta);
 
-	_vec3 vDir = m_vDestPos - m_pTransformCom->m_vInfo[INFO_POS];
-	_vec3 vSecondDir = m_vSecondDestPos - m_pTransformCom->m_vInfo[INFO_POS];
-	D3DXVec3Normalize(&vDir, &vDir);
-	D3DXVec3Normalize(&vSecondDir, &vSecondDir);
-
-
-	if (vDir.x < 0)
+	if (!m_bBack)
 	{
-		m_fMoveSpeed += m_fIncreaseSpeed;
-		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
-	}
-	else if (!m_bArrivedFirst)
-	{
-		m_bArrivedFirst = true;
-		m_fMoveSpeed = 100.f;
-	}
+		_vec3 vDir = m_vDestPos - m_pTransformCom->m_vInfo[INFO_POS];
+		_vec3 vSecondDir = m_vSecondDestPos - m_pTransformCom->m_vInfo[INFO_POS];
+		D3DXVec3Normalize(&vDir, &vDir);
+		D3DXVec3Normalize(&vSecondDir, &vSecondDir);
 
-	if (m_bArrivedFirst && vSecondDir.x < 0)
-	{
-		m_fMoveSpeed -= m_fIncreaseSpeed * 0.1;
 
-		if (m_fMoveSpeed < 0.f)
+		if (vDir.x < 0)
 		{
-			m_fMoveSpeed = 10.f;
+			m_fMoveSpeed += m_fIncreaseSpeed;
+			m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+		}
+		else if (!m_bArrivedFirst)
+		{
+			m_bArrivedFirst = true;
+			m_fMoveSpeed = 100.f;
 		}
 
-		m_pTransformCom->Move_Pos(&vSecondDir, m_fMoveSpeed, fTimeDelta);
+		if (m_bArrivedFirst && vSecondDir.x < 0)
+		{
+			m_fMoveSpeed -= m_fIncreaseSpeed * 0.1;
+
+			if (m_fMoveSpeed < 0.f)
+			{
+				m_fMoveSpeed = 10.f;
+			}
+
+			m_pTransformCom->Move_Pos(&vSecondDir, m_fMoveSpeed, fTimeDelta);
+		}
 	}
+	else
+	{
+		_vec3 vDir(1.f, 0.f, 0.f);
+
+		m_fMoveSpeed = 1300.f;
+
+		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+		m_pTransformCom->m_vScale.x += 800.f * fTimeDelta;
+	}
+
+	
 
 	return 0;
 }

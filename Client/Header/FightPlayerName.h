@@ -24,6 +24,8 @@ public:
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
+	void	Set_Back() { m_bBack = true; }
+
 private:
 	HRESULT			Add_Component();
 
@@ -33,11 +35,14 @@ private:
 	Engine::CTexture*	m_pTextureCom;
 
 	_bool		m_bIsaac = false;
+
 	_float		m_fMoveTimer = 0.f;
 	_float		m_fMoveSpeed = 100.f;
 	_float		m_fIncreaseSpeed = 70.f;
 
 	_vec3		m_vDestPos;
+
+	_bool		m_bBack = false;
 
 public:
 	static CFightPlayerName*		Create(LPDIRECT3DDEVICE9	pGraphicDev, 

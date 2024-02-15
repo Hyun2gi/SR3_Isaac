@@ -39,14 +39,27 @@ Engine::_int CFightPlayerName::Update_GameObject(const _float& fTimeDelta)
 {
 	CUI::Update_GameObject(fTimeDelta);
 
-	_vec3 vDir = m_vDestPos - m_pTransformCom->m_vInfo[INFO_POS];
-	D3DXVec3Normalize(&vDir, &vDir);
+	if (!m_bBack)
+	{
+		_vec3 vDir = m_vDestPos - m_pTransformCom->m_vInfo[INFO_POS];
+		D3DXVec3Normalize(&vDir, &vDir);
 
-	m_fMoveSpeed += m_fIncreaseSpeed;
+		m_fMoveSpeed += m_fIncreaseSpeed;
 
-	if(vDir.x > 0)
+		if (vDir.x > 0)
+			m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+	}
+	else
+	{
+
+		_vec3 vDir(-1.f, 0.f, 0.f);
+
+		m_fMoveSpeed = 1300.f;
+
 		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
-
+		m_pTransformCom->m_vScale.x += 800.f * fTimeDelta;
+	}
+	
 	return 0;
 }
 

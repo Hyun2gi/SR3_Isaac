@@ -24,6 +24,8 @@ public:
 	virtual void LateUpdate_GameObject()					 override;
 	virtual void Render_GameObject()						 override;
 
+	void	Set_Back() { m_bBack = true; }
+
 private:
 	HRESULT			Add_Component();
 
@@ -43,6 +45,7 @@ private:
 
 	_bool		m_bArrivedFirst = false;
 
+	_bool		m_bBack = false;
 
 public:
 	static CFightBossThumbnail*		Create(LPDIRECT3DDEVICE9	pGraphicDev, 
