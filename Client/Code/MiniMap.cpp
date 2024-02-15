@@ -5,6 +5,8 @@
 #include "Export_Utility.h"
 
 #include "StageLoadMgr.h"
+#include "Player.h"
+
 #include "MapIcon.h"
 
 
@@ -49,6 +51,8 @@ HRESULT CMiniMap::Ready_GameObject()
 
 	m_iNowRoomNum = 0;
 
+	dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform())->Get_Info(INFO_LOOK, &m_vecOriginLook);
+
 	__super::Ready_GameObject();
 	Compute_ProjectionMatrix();
 
@@ -70,7 +74,7 @@ _int CMiniMap::Update_GameObject(const _float& fTimeDelta)
 		// 씬 전환을 하고 나서도 해당 객체의 bool 값들이 그대로여야 함
 		Setting_CheckRoom();
 
-		// 플레이어의 Look벡터를 받아와서 해당 벡터를 길게 늘렸을 때 벽의 값을 받아오기?
+		Setting_FrontRoom();
 
 		for (auto& iter : m_vecRoomParts)
 			iter->Update_GameObject(fTimeDelta);
@@ -210,6 +214,25 @@ void CMiniMap::Setting_CheckRoom()
 			++iStageKey;
 		}
 	}
+}
+
+void CMiniMap::Setting_FrontRoom()
+{
+	// 플레이어의 Look벡터를 받아와서 해당 벡터를 길게 늘렸을 때 벽의 값을 받아오기?
+	_vec3 vPlayerLook;
+	_float fAngle;
+	m_pPlayerTransformCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
+	m_pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+	fAngle = m_pPlayerTransformCom->m_vAngle.y; // 회전을 하면 할수록 값이 쌓이는 개념인 거 같음 우측으로 한 바퀴 돌면 6?
+	//처음 시작할 때의 방향 벡터와 플레이어의 현재 Look 벡터를 비교하여 값 연산
+
+	m_vecOriginLook;
+	int i = 1; // 60
+
+
+
+	//vPlayerLook = 
 }
 
 CMiniMap* CMiniMap::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
