@@ -283,6 +283,27 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BMTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Ending/BM/BM_%d.png", 2)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_HJTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Ending/HJ/HJ_%d.png", 2)), E_FAIL);
 
+	/* VS 씬 관련 */
+	// 배경에 깔릴 검은색 텍스처
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_BlackBackTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/bgblack.png")), E_FAIL);
+	// VS 텍스처
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_VSTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/BossFight/vs.png")), E_FAIL);
+
+	//아이작
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_IsaacNameTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/BossFight/IssacName.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_IsaacThumbnailTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/BossFight/IsaacThumbnail.png")), E_FAIL);
+
+	//아자젤
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_AzazelNameTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/BossFight/AzazelName.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_AzazelThumbnailTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/BossFight/AzazelThumbnail.png")), E_FAIL);
+
+	//몬스트로
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MonstroNameTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/BossFight/MonstroName.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MonstroThumbnailTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/BossFight/MonstroThumbnail.png")), E_FAIL);
+
+	//마미~
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MomNameTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/BossFight/MomName.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_MomThumbnailTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/BossFight/MomThumbnail.png")), E_FAIL);
 
 #pragma endregion UI Texture
 

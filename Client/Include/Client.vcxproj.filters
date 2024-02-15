@@ -292,6 +292,12 @@
     <Filter Include="02. GameObject\12. UI\05. MiniMap\01. MiniMapIcon">
       <UniqueIdentifier>{14126214-2fc4-4ac5-bc89-793c6e1f8b59}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01. Scene\06. BossFight">
+      <UniqueIdentifier>{690c3a82-405b-4ce3-9938-5bc3deb306cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\06. FightScene">
+      <UniqueIdentifier>{c0923b3f-20cf-4758-80de-208e3b7ec0d7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -552,6 +558,12 @@
     <ClInclude Include="..\Header\MiniMap.h">
       <Filter>02. GameObject\12. UI\05. MiniMap</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\BossFight.h">
+      <Filter>01. Scene\06. BossFight</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\BlackBackground.h">
+      <Filter>02. GameObject\12. UI\06. FightScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -802,6 +814,12 @@
     </ClCompile>
     <ClCompile Include="..\Code\MiniMap.cpp">
       <Filter>02. GameObject\12. UI\05. MiniMap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\BossFight.cpp">
+      <Filter>01. Scene\06. BossFight</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\BlackBackground.cpp">
+      <Filter>02. GameObject\12. UI\06. FightScene</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
