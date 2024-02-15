@@ -1883,43 +1883,44 @@ void CLoadStage::BGM_INTRO_START()
 	// 첫번째 방 인트로 bgm은 dynamic camera에서 시작
 	if (m_bBGMIntro)
 	{
-		if (!Engine::CheckIsPlaying(SOUND_BGM))
-		{
-			StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
-			string roomtype = info.m_strTheme;
+		
+		StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
+		string roomtype = info.m_strTheme;
 
-			if (roomtype == "Normal")
+		if (roomtype == "Normal")
+		{
+			if (Engine::PlayEffect(L"diptera sonata intro.ogg", SOUND_BGM, 0.8f))
 			{
-				if (Engine::PlayEffect(L"diptera sonata intro.ogg", SOUND_BGM, 0.8f))
-				{
-					m_bBGMIntro = false;
-				}
-			}
-			else if (roomtype == "Treasure")
-			{
-				if (Engine::PlayEffect(L"TreasureRoom.ogg", SOUND_BGM, 0.8f))
-				{
-					m_bBGMIntro = false;
-				}
-			}
-			else if (roomtype == "Devil")
-			{
-				// intro가 없음
 				m_bBGMIntro = false;
-			}
-			else if (roomtype == "Arcade")
-			{
-				// intro가 없음
-				m_bBGMIntro = false;
-			}
-			else if (roomtype == "Boss")
-			{
-				if (Engine::PlayEffect(L"boss fight intro jingle v2.1.ogg", SOUND_BGM, 0.8f))
-				{
-					m_bBGMIntro = false;
-				}
 			}
 		}
+		else if (roomtype == "Treasure")
+		{
+			if (Engine::PlayEffect(L"TreasureRoom.ogg", SOUND_BGM, 0.8f))
+			{
+				m_bBGMIntro = false;
+			}
+		}
+		else if (roomtype == "Devil")
+		{
+			Engine::PlayEffect(L"DevilRoom.wav", SOUND_BGM, 0.8f);
+			m_bBGMIntro = false;
+		}
+		else if (roomtype == "Arcade")
+		{
+			// intro가 없음
+			m_bBGMIntro = false;
+		}
+		else if (roomtype == "Boss")
+		{
+			m_bBGMIntro = false;
+			Engine::StopSound(SOUND_BGM);
+			/*if (Engine::PlayEffect(L"boss fight intro jingle v2.1.ogg", SOUND_BGM, 0.8f))
+			{
+				m_bBGMIntro = false;
+			}*/
+		}
+		
 	}
 }
 
@@ -1941,7 +1942,7 @@ void CLoadStage::BGM_START()
 			}
 			else if (roomtype == "Devil")
 			{
-				Engine::PlayBGM(L"DevilRoom.wav", 0.8f);
+				Engine::PlayBGM(L"the calm.ogg", 0.8f);
 			}
 			else if (roomtype == "Arcade")
 			{
@@ -2017,7 +2018,7 @@ HRESULT CLoadStage::Door_Collision()
 				}
 
 
-				if (!bClear)
+				if (!bClear && strTheme != "Boss")
 				{
 					CPlayer::GetInstance()->Set_IssacRender(false);
 					// false : 처음 방문하는방
@@ -2049,8 +2050,9 @@ CLoadStage* CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bS
 
 	if (!bStratScene)
 	{
-		Engine::StopAll();
-		Engine::PlayEffect(L"earthquake4.wav", SOUND_BGM, 0.8f);
+		//Engine::StopAll();
+		Engine::StopSound(SOUND_EFFECT_ETC_ALLPLAY);
+		Engine::PlayEffect(L"earthquake4.wav", SOUND_EFFECT_ETC_ALLPLAY, 2.6f);
 	}
 
 	if (FAILED(pInstance->Ready_Scene(iType)))

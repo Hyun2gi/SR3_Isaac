@@ -30,6 +30,7 @@ void CAttackFly::Set_NormalFly_ToStage(CLayer* pLayer)
 	{
 		pLayer->Add_GameObject(L"NormalFly", *iter);
 		++iter;
+		m_iNormalCnt++;
 	}
 }
 
@@ -38,7 +39,7 @@ HRESULT CAttackFly::Ready_GameObject()
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_bCreate = false;
-
+	m_iNormalCnt = 10;
 	m_eMstType = ATTACK_FLY;
 
 	return S_OK;
@@ -55,6 +56,8 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fSecondDelta);
 
+	
+
 	if (!m_bCreate)
 	{
 		Create_AttackFly();
@@ -66,7 +69,7 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 		{
 			m_CenterFly->Set_Dead();
 			m_bDead = true;
-			Engine::StopSound(SOUND_EFFECT_MON_STOPSUDDEN_SUB);
+			
 		}
 	}
 
@@ -79,6 +82,12 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 		{
 			iter->Update_GameObject(fSecondDelta);
 		}
+	}
+
+	if (Check_Fly_Dead())
+	{
+		//true
+		Engine::StopSound(SOUND_EFFECT_MON_STOPSUDDEN_SUB);
 	}
 
 	//if (m_bDead)
