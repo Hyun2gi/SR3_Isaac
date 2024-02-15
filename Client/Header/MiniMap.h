@@ -3,6 +3,8 @@
 #include "Base.h"
 #include "UI.h"
 
+#include "MapParts.h"
+
 BEGIN(Engine)
 
 class CRcTex;
@@ -19,6 +21,12 @@ private:
 	virtual ~CMiniMap();
 
 public:
+	void			Set_RoomTypeNow(string strRoomType) { m_strRoomTypeNow = strRoomType; }
+	void			Set_NowRoom(_int iStageKey) { m_iNowRoomNum = iStageKey; }
+	void			Set_CheckRoom();
+	CMapParts*		Get_MapParts(_int iIndex);
+
+public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
 	virtual void LateUpdate_GameObject()					 override;
@@ -26,6 +34,10 @@ public:
 
 private:
 	HRESULT			Add_Component();
+
+	void			Create_RoomParts();
+	void			Setting_NowRoom(); // 현재 방
+	void			Setting_CheckRoom(); // 가본 방
 
 private:
 	Engine::CRcTex* m_pBufferCom;
@@ -42,6 +54,12 @@ private:
 
 	_int				m_iAnimFrameCount;
 	_int				m_iMaxFrameCount;
+
+	_int				m_iNowRoomNum; // 현재 방 번호
+
+	string				m_strRoomTypeNow; // 현재 방 정보
+
+	vector<CMapParts*>	m_vecRoomParts;
 
 public:
 	static CMiniMap* Create(LPDIRECT3DDEVICE9	pGraphicDev,
