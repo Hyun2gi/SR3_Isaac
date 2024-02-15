@@ -319,6 +319,9 @@
     <Filter Include="02. GameObject\12. UI\06. FightScene\Name\Player">
       <UniqueIdentifier>{9b0e2914-c7f9-45cd-aace-7e74a3927379}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Name\Boss">
+      <UniqueIdentifier>{9e7d9bd3-3a6f-49a5-a9b0-50563c1b6586}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -585,11 +588,20 @@
     <ClInclude Include="..\Header\BlackBackground.h">
       <Filter>02. GameObject\12. UI\06. FightScene\Back</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\FightPlayerName.h">
-      <Filter>02. GameObject\12. UI\06. FightScene\Name</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\FightPlayerThumbnail.h">
       <Filter>02. GameObject\12. UI\06. FightScene\Thumbnail\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\FightPlayerName.h">
+      <Filter>02. GameObject\12. UI\06. FightScene\Name\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\FightBossName.h">
+      <Filter>02. GameObject\12. UI\06. FightScene\Name\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\FightVs.h">
+      <Filter>02. GameObject\12. UI\06. FightScene\Vs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\FightBossThumbnail.h">
+      <Filter>02. GameObject\12. UI\06. FightScene\Thumbnail\Boss</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -848,11 +860,20 @@
     <ClCompile Include="..\Code\BlackBackground.cpp">
       <Filter>02. GameObject\12. UI\06. FightScene\Back</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\FightPlayerName.cpp">
-      <Filter>02. GameObject\12. UI\06. FightScene\Name</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\FightPlayerThumbnail.cpp">
       <Filter>02. GameObject\12. UI\06. FightScene\Thumbnail\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FightPlayerName.cpp">
+      <Filter>02. GameObject\12. UI\06. FightScene\Name\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FightBossName.cpp">
+      <Filter>02. GameObject\12. UI\06. FightScene\Name\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FightVs.cpp">
+      <Filter>02. GameObject\12. UI\06. FightScene\Vs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FightBossThumbnail.cpp">
+      <Filter>02. GameObject\12. UI\06. FightScene\Thumbnail\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

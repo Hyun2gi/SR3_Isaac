@@ -8,6 +8,9 @@
 #include "BlackBackground.h"
 #include "FightPlayerName.h"
 #include "FightPlayerThumbnail.h"
+#include "FightBossName.h"
+#include "FightBossThumbnail.h"
+#include "FightVs.h"
 
 CBossFight::CBossFight(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
@@ -76,13 +79,25 @@ HRESULT CBossFight::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BlackBackground", pGameObject), E_FAIL);
 
-	pGameObject = pPlayerName = CFightPlayerName::Create(m_pGraphicDev, 192.f * 1.5, 64.f * 1.5, -200.f, 180.f);
+	pGameObject = pPlayerName = CFightPlayerName::Create(m_pGraphicDev, 192.f * 1.5, 64.f * 1.5, -220.f, 200.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerName", pGameObject), E_FAIL);
 	
-	pGameObject = pPlayerThumbnail = CFightPlayerThumbnail::Create(m_pGraphicDev, 256.f * 2, 256.f * 2, -200.f, -100.f);
+	pGameObject = pPlayerThumbnail = CFightPlayerThumbnail::Create(m_pGraphicDev, 256.f * 2, 256.f * 2, -200.f, -125.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerThumbnail", pGameObject), E_FAIL);
+
+	pGameObject = pBossName = CFightBossName::Create(m_pGraphicDev, 192.f * 1.5, 64.f * 1.5, 220.f, 200.f, m_iStageKey);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BossName", pGameObject), E_FAIL);
+
+	pGameObject = pBossThumbnail = CFightBossThumbnail::Create(m_pGraphicDev, 256.f * 2, 256.f * 2, 200.f, -100.f, m_iStageKey);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BossThumbnail", pGameObject), E_FAIL);
+
+	pGameObject = pVs = CFightVs::Create(m_pGraphicDev, 128.f * 1.5, 64.f * 1.5, -10.f, 200.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Vs", pGameObject), E_FAIL);
 
 	//pGameObject = CStageToolFly::Create(m_pGraphicDev, 100.f, 100.f, 120.f, -100.f, 2, 4);
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);

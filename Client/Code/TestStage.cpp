@@ -148,7 +148,7 @@ Engine::_int CTestStage::Update_Scene(const _float& fTimeDelta)
 	if (GetAsyncKeyState('P'))
 	{
 		Engine::CScene* pScene = nullptr;
-		pScene = CBossFight::Create(m_pGraphicDev, 4);
+		pScene = CBossFight::Create(m_pGraphicDev, 10);
 		NULL_CHECK_RETURN(pScene, -1);
 
 		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);

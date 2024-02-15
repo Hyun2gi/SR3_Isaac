@@ -7,6 +7,9 @@
 class CBlackBackground;
 class CFightPlayerName;
 class CFightPlayerThumbnail;
+class CFightBossName;
+class CFightBossThumbnail;
+class CFightVs;
 
 class CBossFight : public Engine::CScene
 {
@@ -37,6 +40,9 @@ private:
 
 	CFightPlayerName* pPlayerName = nullptr;
 	CFightPlayerThumbnail* pPlayerThumbnail = nullptr;
+	CFightBossName* pBossName = nullptr;
+	CFightBossThumbnail* pBossThumbnail = nullptr;
+	CFightVs* pVs = nullptr;
 
 private:
 	virtual void Free() override;
