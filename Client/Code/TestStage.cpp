@@ -48,6 +48,8 @@
 #include "Heart.h"
 #include "HeartHalf.h"
 
+#include "BossFight.h"
+
 CTestStage::CTestStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
 {
@@ -142,6 +144,22 @@ Engine::_int CTestStage::Update_Scene(const _float& fTimeDelta)
 		if (CPlayer::GetInstance()->Get_Component_Player_TexBuffer())
 			CPlayer::GetInstance()->Get_Component_Player_TexBuffer()->Set_Color(temp);
 	}
+
+	if (GetAsyncKeyState('P'))
+	{
+		Engine::CScene* pScene = nullptr;
+		pScene = CBossFight::Create(m_pGraphicDev, 4);
+		NULL_CHECK_RETURN(pScene, -1);
+
+		FAILED_CHECK_RETURN(Engine::Set_Scene(pScene), E_FAIL);
+
+		return 0;
+	}
+	if (GetAsyncKeyState('1'))
+	{
+		CPlayer::GetInstance()->Set_BulletType(2);
+	}
+	
 
 
 	Engine::Update_Particles(fTimeDelta);

@@ -5,6 +5,7 @@
 #include "Loading.h"
 
 class CBlackBackground;
+class CFightName;
 
 class CBossFight : public Engine::CScene
 {
@@ -33,7 +34,7 @@ private:
 
 	_int	m_iStageKey = 0;
 
-	//CGameEnd* pBack;
+	CFightName* pPlayerName = nullptr;
 
 private:
 	virtual void Free() override;

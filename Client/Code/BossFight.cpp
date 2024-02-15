@@ -6,6 +6,7 @@
 
 #include "LoadStage.h"
 #include "BlackBackground.h"
+#include "FightName.h"
 
 CBossFight::CBossFight(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev)
@@ -36,7 +37,7 @@ Engine::_int CBossFight::Update_Scene(const _float& fTimeDelta)
 		Engine::CScene* pScene = nullptr;
 
 		// 보스 스테이지는 큐브 연출 불필요하여 true값을 넘겨주기
-		pScene = CLoadStage::Create(m_pGraphicDev, m_iStageKey, false);
+		pScene = CLoadStage::Create(m_pGraphicDev, m_iStageKey, true);
 
 		NULL_CHECK_RETURN(pScene, -1);
 
@@ -74,12 +75,9 @@ HRESULT CBossFight::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BlackBackground", pGameObject), E_FAIL);
 
-	//아이작인지 아자젤인지를 받아와서 텍스처를 생성해준다.
-	//if()
-
-	//pGameObject = pBack = CGameEnd::Create(m_pGraphicDev, 300.f, 300.f, 0.f, 0.f, 2, 2);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"GameEnd", pGameObject), E_FAIL);
+	pGameObject = pPlayerName = CFightName::Create(m_pGraphicDev, 192.f, 64.f, -200.f, 200.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerName", pGameObject), E_FAIL);
 
 	//pGameObject = CStageToolFly::Create(m_pGraphicDev, 100.f, 100.f, 120.f, -100.f, 2, 4);
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);

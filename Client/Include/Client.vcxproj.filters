@@ -298,6 +298,18 @@
     <Filter Include="02. GameObject\12. UI\06. FightScene">
       <UniqueIdentifier>{c0923b3f-20cf-4758-80de-208e3b7ec0d7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Back">
+      <UniqueIdentifier>{3c4bffc2-b8e7-43f7-b263-951cb0bc249d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Name">
+      <UniqueIdentifier>{bbe16999-37e5-4434-8c9b-ce70a29424c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Thumbnail">
+      <UniqueIdentifier>{5e48a80a-f976-4afb-b12a-affd48988295}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Vs">
+      <UniqueIdentifier>{2637d5e0-c056-43e0-97b8-22f4499f0d5b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -562,7 +574,10 @@
       <Filter>01. Scene\06. BossFight</Filter>
     </ClInclude>
     <ClInclude Include="..\Header\BlackBackground.h">
-      <Filter>02. GameObject\12. UI\06. FightScene</Filter>
+      <Filter>02. GameObject\12. UI\06. FightScene\Back</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\FightName.h">
+      <Filter>02. GameObject\12. UI\06. FightScene\Name</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -819,7 +834,10 @@
       <Filter>01. Scene\06. BossFight</Filter>
     </ClCompile>
     <ClCompile Include="..\Code\BlackBackground.cpp">
-      <Filter>02. GameObject\12. UI\06. FightScene</Filter>
+      <Filter>02. GameObject\12. UI\06. FightScene\Back</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FightName.cpp">
+      <Filter>02. GameObject\12. UI\06. FightScene\Name</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
