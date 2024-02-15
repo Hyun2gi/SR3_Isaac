@@ -127,6 +127,7 @@ void CMonstro::LateUpdate_GameObject()
 			m_eCurState = MONSTRO_DEAD;
 			m_pTransformCom->m_vInfo->y = CENTERY;
 			m_bDeadWait = true;
+			Engine::PlayEffect(L"BossDead.ogg", SOUND_BGM, 1.0f);
 
 			m_pTransformCom->Get_Info(INFO_POS, &m_vDeadPos);
 			m_fAccTimeDelta = 0.f;
@@ -331,6 +332,7 @@ void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 		}
 		else
 		{
+			CPlayer::GetInstance()->Set_CameraShaking();
 			vPos.y = CENTERY;
 			m_bJump = false;
 			m_bBullet = true;

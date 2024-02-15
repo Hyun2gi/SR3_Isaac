@@ -151,7 +151,9 @@ public:
 
 	int			Get_Azazel_Anim() { return m_iAzaelStateSet; }
 
-	void		Set_CameraShaking(float shakeTime = 0.2f, float shakeIntensity = 1.0f);
+	void		Set_CameraShaking(float shakeTime = 0.6f, float shakeIntensity = 1.0f);
+
+	bool		Get_AzazelMode() { if (m_eCurPlayerVer == P_AZAZEL) { return true; } else { return false; } }
 
 public:
 	void		Bullet_Change_To_Brim();

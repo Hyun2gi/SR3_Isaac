@@ -19,7 +19,7 @@ private:
 public:
 	void				Set_Machine_ToStage(CLayer* pLayer);
 	_bool				Get_Game() { return m_bGame; }
-	void				Set_Game() { m_bGame = true; }
+	void				Set_Game();
 	_bool				Get_Reward() { return m_bReward; }
 	void				Set_Reward();
 

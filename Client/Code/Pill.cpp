@@ -3,6 +3,10 @@
 #include "Export_Utility.h"
 #include "Player.h"
 
+
+#include "Export_System.h"
+
+
 CPill::CPill(LPDIRECT3DDEVICE9 pGraphicDev)
 	: CItem(pGraphicDev)
 {
@@ -137,25 +141,33 @@ bool CPill::Run_Item_Effect()
 				// 최대피
 				CPlayer::GetInstance()->Set_To_MaxHp();
 				CPlayer::GetInstance()->Set_Item_Get_Anim();
+				Engine::PlayEffect(L"Item_Good.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
+				m_iPillEffect = 0;
 				break;
 			case 1:
 				CPlayer::GetInstance()->Set_Hp(-1);
 				m_bBadItem = true;
 				CPlayer::GetInstance()->Set_Item_Get_Anim_Bad();
+				m_iPillEffect = 1;
 				break;
 			case 2:
 				// hp+1
 				CPlayer::GetInstance()->Set_Hp(1);
 				CPlayer::GetInstance()->Set_Item_Get_Anim();
+				Engine::PlayEffect(L"Item_Good.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
+				m_iPillEffect = 2;
 				break;
 			case 3:
 				CPlayer::GetInstance()->Set_MoveSpeed(1);
 				CPlayer::GetInstance()->Set_Item_Get_Anim();
+				Engine::PlayEffect(L"Item_Good.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
+				m_iPillEffect = 3;
 				break;
 			case 4:
 				CPlayer::GetInstance()->Set_MoveSpeed(-2);
 				m_bBadItem = true;
 				CPlayer::GetInstance()->Set_Item_Get_Anim_Bad();
+				m_iPillEffect = 4;
 				break;
 			}
 
@@ -175,25 +187,33 @@ bool CPill::Run_Item_Effect()
 			// 최대피
 			CPlayer::GetInstance()->Set_To_MaxHp();
 			CPlayer::GetInstance()->Set_Item_Get_Anim();
+			Engine::PlayEffect(L"Item_Good.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
+			m_iPillEffect = 0;
 			break;
 		case 1:
 			CPlayer::GetInstance()->Set_Hp(-1);
 			m_bBadItem = true;
 			CPlayer::GetInstance()->Set_Item_Get_Anim_Bad();
+			m_iPillEffect = 1;
 			break;
 		case 2:
-			// 무적 상태
-			m_bBadItem = true;
-			CPlayer::GetInstance()->Set_Item_Get_Anim_Bad();
+			// hp+1
+			CPlayer::GetInstance()->Set_Hp(1);
+			CPlayer::GetInstance()->Set_Item_Get_Anim();
+			Engine::PlayEffect(L"Item_Good.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
+			m_iPillEffect = 2;
 			break;
 		case 3:
-			CPlayer::GetInstance()->Set_MoveSpeed(4);
+			CPlayer::GetInstance()->Set_MoveSpeed(1);
 			CPlayer::GetInstance()->Set_Item_Get_Anim();
+			Engine::PlayEffect(L"Item_Good.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
+			m_iPillEffect = 3;
 			break;
 		case 4:
 			CPlayer::GetInstance()->Set_MoveSpeed(-2);
 			m_bBadItem = true;
 			CPlayer::GetInstance()->Set_Item_Get_Anim_Bad();
+			m_iPillEffect = 4;
 			break;
 		}
 
@@ -246,7 +266,8 @@ void CPill::Item_Spawn_Action()
 			if (temp.y <= fHeight + 1)
 			{
 				m_eCurItemPlace = SP_END;
-				m_pTransformCom->Set_Pos(itemPos.x, fHeight + 1, itemPos.z);
+				
+				m_pTransformCom->Set_Pos(itemPos.x + 0.1, fHeight + 1.3, itemPos.z + 0.1);
 			}
 			else
 			{

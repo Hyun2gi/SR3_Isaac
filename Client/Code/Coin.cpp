@@ -113,14 +113,14 @@ void CCoin::Render_GameObject()
 bool CCoin::Run_Item_Effect()
 {
 	// 튀어나올때 먹지 않도록
-	if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT && m_eCurState != COIN_GET)
+	if (m_eCurState != COIN_GET)
 	{
 		m_eCurState = COIN_GET;
 		// 첫 이미지부터 시작
 		m_fFrame = 0;
 
 		// 코인 먹기
-		Engine::PlayEffect(L"CoinPick.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+		Engine::PlayEffect(L"CoinPick.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
 
 		CPlayer::GetInstance()->Set_Coin(1);
 
@@ -157,7 +157,7 @@ void CCoin::Item_Spawn_Action()
 		if (temp.y <= fHeight + 1)
 		{
 			m_eCurItemPlace = SP_END;
-			m_pTransformCom->Set_Pos(temp.x, fHeight + 1, temp.z);
+			m_pTransformCom->Set_Pos(temp.x, fHeight + 0.4, temp.z);
 		}
 
 		
@@ -176,7 +176,8 @@ void CCoin::Item_Spawn_Action()
 			if (temp.y <= fHeight + 1)
 			{
 				m_eCurItemPlace = SP_END;
-				m_pTransformCom->Set_Pos(itemPos.x, fHeight + 1, itemPos.z);
+
+				m_pTransformCom->Set_Pos(itemPos.x + 0.1, fHeight + 1.3, itemPos.z + 0.1);
 			}
 			else
 			{

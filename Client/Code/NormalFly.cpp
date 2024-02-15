@@ -102,6 +102,25 @@ void CNormalFly::LateUpdate_GameObject()
 		{
 			m_eCurState = FLY_DEAD;
 			m_bDeadWait = true;
+
+			int soundrand = rand() % 4;
+			if (soundrand == 0)
+			{
+				Engine::PlayEffect(L"blood fire 3.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+			}
+			else if (soundrand == 1)
+			{
+				Engine::PlayEffect(L"blood fire 2.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+			}
+			else if (soundrand == 2)
+			{
+				Engine::PlayEffect(L"blood fire 1.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+			}
+			else if (soundrand == 3)
+			{
+				Engine::PlayEffect(L"blood fire.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+			}
+			
 		}
 	}
 
