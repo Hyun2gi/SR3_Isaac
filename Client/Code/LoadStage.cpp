@@ -184,7 +184,8 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		{
 			m_fSpawnTimer += fTimeDelta;
 
-			if (0.3f < m_fSpawnTimer)
+			//0.2초마다 맵툴로 설치해둔 몬스터/오브젝트를 스폰한다.
+			if (0.2f < m_fSpawnTimer)
 			{
 				m_fSpawnTimer = 0.f;
 
