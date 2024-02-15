@@ -40,6 +40,8 @@ private:
 	void			Setting_CheckRoom(); // °¡º» ¹æ
 	void			Setting_FrontRoom();
 
+	void			Resetting_FrontRoom();
+
 private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;

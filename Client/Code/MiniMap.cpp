@@ -250,7 +250,9 @@ void CMiniMap::Setting_FrontRoom()
 					++iter;
 					if (*iter != 0)
 						m_vecRoomParts[*iter - 1]->Set_FrontRoom(false);
-				} 
+				}
+				else
+					Resetting_FrontRoom();
 			}
 			else if (0.5f <= vPlayerLook.x && 1.f >= vPlayerLook.x &&
 				-1.f <= vPlayerLook.z && 1.f >= vPlayerLook.z)			// RIGHT
@@ -273,6 +275,8 @@ void CMiniMap::Setting_FrontRoom()
 					if (*iter != 0)
 						m_vecRoomParts[*iter - 1]->Set_FrontRoom(false);
 				}
+				else
+					Resetting_FrontRoom();
 			}
 			else if (-0.5f <= vPlayerLook.x && 0.5f >= vPlayerLook.x &&
 				-1.f <= vPlayerLook.z && 0.f >= vPlayerLook.z)			// BOTTOM
@@ -295,6 +299,8 @@ void CMiniMap::Setting_FrontRoom()
 					if (*iter != 0)
 						m_vecRoomParts[*iter - 1]->Set_FrontRoom(false);
 				}
+				else
+					Resetting_FrontRoom();
 			}
 			else if (-1.f <= vPlayerLook.x && -0.5f >= vPlayerLook.x &&
 				-1.f <= vPlayerLook.z && 1.f >= vPlayerLook.z)			// LEFT
@@ -315,18 +321,30 @@ void CMiniMap::Setting_FrontRoom()
 					if (*iter != 0)
 						m_vecRoomParts[*iter - 1]->Set_FrontRoom(false);
 				}
+				else
+					Resetting_FrontRoom();
 			}
 		}
 	}
+}
 
+void CMiniMap::Resetting_FrontRoom()
+{
+	// 바라본 방향에 방이 없는 경우 전부 false
+	auto vecDoorTheme = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iNowRoomNum).m_vecConnectRoom; // 현재 방의 연결 관계
+	vector<int>::iterator iter = vecDoorTheme.begin();
 
-
-
-	
-
-
-
-	//vPlayerLook = 
+	if (*iter != 0)
+		m_vecRoomParts[*iter - 1]->Set_FrontRoom(false);
+	++iter;
+	if (*iter != 0)
+		m_vecRoomParts[*iter - 1]->Set_FrontRoom(false);
+	++iter;
+	if (*iter != 0)
+		m_vecRoomParts[*iter - 1]->Set_FrontRoom(false);
+	++iter;
+	if (*iter != 0)
+		m_vecRoomParts[*iter - 1]->Set_FrontRoom(false);
 }
 
 CMiniMap* CMiniMap::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _int iAnimFrameCount, _int iMaxFrameCount, _float fWinCX, _float fWinCY)
