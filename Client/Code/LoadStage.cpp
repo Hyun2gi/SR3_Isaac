@@ -1648,15 +1648,19 @@ void CLoadStage::Player_Collision_With_Monster()
 	// 모닥불 피 닳기
 	CGameObject* pObj_Fire = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
 
-	if (pObj_Fire)
+	if (m_mapLayer.at(L"MapObj") != nullptr)
 	{
-		if (CAMPFIRE == dynamic_cast<CMapObj*>(pObj_Fire)->Get_Type())
+		auto& mapObj = m_mapLayer.at(L"MapObj")->Get_ObjectMap();
+
+		for (auto& iter : mapObj)
 		{
-			// 플레이어 피 감소
-			CPlayer::GetInstance()->Set_Attacked();
+			if (CAMPFIRE == dynamic_cast<CMapObj*>(iter.second)->Get_Type())
+			{
+				// 플레이어 피 감소
+				CPlayer::GetInstance()->Set_Attacked();
+			}
 		}
 	}
-
 }
 
 void CLoadStage::Drop_ITem()
