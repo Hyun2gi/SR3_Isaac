@@ -3,8 +3,6 @@
 #include "Base.h"
 #include "UI.h"
 
-#include "MapParts.h"
-
 BEGIN(Engine)
 
 class CRcTex;
@@ -13,18 +11,18 @@ class CTransform;
 
 END
 
-class CMiniMap : public Engine::CUI
+class CMapIcon : public Engine::CUI
 {
 private:
-	explicit CMiniMap(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CMiniMap(const CMiniMap& rhs);
-	virtual ~CMiniMap();
+	explicit CMapIcon(LPDIRECT3DDEVICE9 pGraphicDev);
+	explicit CMapIcon(const CMapIcon& rhs);
+	virtual ~CMapIcon();
+
+	enum ICONTYPE { ICON_GOLD, ICON_ARCADE, ICON_DEVIL, ICON_MOM, ICON_MONSTRO, ICON_NONE };
 
 public:
-	void			Set_RoomTypeNow(string strRoomType) { m_strRoomTypeNow = strRoomType; }
-	void			Set_NowRoom(_int iStageKey) { m_iNowRoomNum = iStageKey; }
-	void			Set_CheckRoom();
-	CMapParts*		Get_MapParts(_int iIndex);
+	void			Set_IconType(_int iTypeNum);
+	void			Set_Render() { m_bRender = true; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -34,10 +32,6 @@ public:
 
 private:
 	HRESULT			Add_Component();
-
-	void			Create_RoomParts();
-	void			Setting_NowRoom(); // 현재 방
-	void			Setting_CheckRoom(); // 가본 방
 
 private:
 	Engine::CRcTex* m_pBufferCom;
@@ -55,14 +49,10 @@ private:
 	_int				m_iAnimFrameCount;
 	_int				m_iMaxFrameCount;
 
-	_int				m_iNowRoomNum; // 현재 방 번호
-
-	string				m_strRoomTypeNow; // 현재 방 정보
-
-	vector<CMapParts*>	m_vecRoomParts;
+	ICONTYPE			m_eIconType;
 
 public:
-	static CMiniMap* Create(LPDIRECT3DDEVICE9	pGraphicDev,
+	static CMapIcon* Create(LPDIRECT3DDEVICE9	pGraphicDev,
 		_float fSizeX, _float fSizeY,
 		_float fPosX, _float fPosY,
 		_int iAnimFrameCount, _int iMaxFrameCount,
@@ -70,6 +60,5 @@ public:
 
 private:
 	virtual void Free() override;
-
 };
 
