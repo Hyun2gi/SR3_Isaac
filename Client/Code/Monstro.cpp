@@ -332,7 +332,7 @@ void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 		}
 		else
 		{
-			CPlayer::GetInstance()->Set_CameraShaking();
+			CPlayer::GetInstance()->Set_CameraShaking(0.8,1.0f);
 			vPos.y = CENTERY;
 			m_bJump = false;
 			m_bBullet = true;
