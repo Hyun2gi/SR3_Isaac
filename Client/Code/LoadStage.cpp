@@ -1203,7 +1203,8 @@ void CLoadStage::Player_Collision_With_Monster()
 
 	if (pObj_Fire)
 	{
-		if (CAMPFIRE == dynamic_cast<CMapObj*>(pObj_Fire)->Get_Type())
+		if (CAMPFIRE == dynamic_cast<CMapObj*>(pObj_Fire)->Get_Type() &&
+			!dynamic_cast<CMapObj*>(pObj_Fire)->Get_Dead())
 		{
 			// 플레이어 피 감소
 			CPlayer::GetInstance()->Set_Attacked();

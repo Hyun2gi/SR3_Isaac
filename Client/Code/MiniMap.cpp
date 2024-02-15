@@ -70,6 +70,8 @@ _int CMiniMap::Update_GameObject(const _float& fTimeDelta)
 		// 씬 전환을 하고 나서도 해당 객체의 bool 값들이 그대로여야 함
 		Setting_CheckRoom();
 
+		// 플레이어의 Look벡터를 받아와서 해당 벡터를 길게 늘렸을 때 벽의 값을 받아오기?
+
 		for (auto& iter : m_vecRoomParts)
 			iter->Update_GameObject(fTimeDelta);
 
