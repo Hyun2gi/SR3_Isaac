@@ -301,26 +301,26 @@
     <Filter Include="02. GameObject\12. UI\06. FightScene\Back">
       <UniqueIdentifier>{3c4bffc2-b8e7-43f7-b263-951cb0bc249d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\12. UI\06. FightScene\Name">
-      <UniqueIdentifier>{bbe16999-37e5-4434-8c9b-ce70a29424c3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02. GameObject\12. UI\06. FightScene\Thumbnail">
-      <UniqueIdentifier>{5e48a80a-f976-4afb-b12a-affd48988295}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02. GameObject\12. UI\06. FightScene\Vs">
       <UniqueIdentifier>{2637d5e0-c056-43e0-97b8-22f4499f0d5b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\12. UI\06. FightScene\Thumbnail\Player">
-      <UniqueIdentifier>{ad45728a-0478-4d27-847b-e0302a99dfa5}</UniqueIdentifier>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Boss">
+      <UniqueIdentifier>{2e3bb091-2a66-4989-942e-bb76bf4533ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\12. UI\06. FightScene\Thumbnail\Boss">
-      <UniqueIdentifier>{3f5470b5-ef79-48c7-9840-dba152f3fb51}</UniqueIdentifier>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Boss\Name">
+      <UniqueIdentifier>{7796997a-a28f-498d-aac8-cdeef2a40785}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\12. UI\06. FightScene\Name\Player">
-      <UniqueIdentifier>{9b0e2914-c7f9-45cd-aace-7e74a3927379}</UniqueIdentifier>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Boss\Thumbnail">
+      <UniqueIdentifier>{c03f942f-c270-4341-b8d2-e746ac448117}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02. GameObject\12. UI\06. FightScene\Name\Boss">
-      <UniqueIdentifier>{9e7d9bd3-3a6f-49a5-a9b0-50563c1b6586}</UniqueIdentifier>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Player">
+      <UniqueIdentifier>{10da310a-c122-4eb5-9895-3ef9dc0888cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Player\Name">
+      <UniqueIdentifier>{5acd322a-23a8-42e3-9733-839b8df5d5c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02. GameObject\12. UI\06. FightScene\Player\Thumbnail">
+      <UniqueIdentifier>{13170e22-6eaa-4e3d-af6a-1654f5665421}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -588,20 +588,20 @@
     <ClInclude Include="..\Header\BlackBackground.h">
       <Filter>02. GameObject\12. UI\06. FightScene\Back</Filter>
     </ClInclude>
-    <ClInclude Include="..\Header\FightPlayerThumbnail.h">
-      <Filter>02. GameObject\12. UI\06. FightScene\Thumbnail\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\FightPlayerName.h">
-      <Filter>02. GameObject\12. UI\06. FightScene\Name\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Header\FightBossName.h">
-      <Filter>02. GameObject\12. UI\06. FightScene\Name\Boss</Filter>
-    </ClInclude>
     <ClInclude Include="..\Header\FightVs.h">
       <Filter>02. GameObject\12. UI\06. FightScene\Vs</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\FightBossName.h">
+      <Filter>02. GameObject\12. UI\06. FightScene\Boss\Name</Filter>
+    </ClInclude>
     <ClInclude Include="..\Header\FightBossThumbnail.h">
-      <Filter>02. GameObject\12. UI\06. FightScene\Thumbnail\Boss</Filter>
+      <Filter>02. GameObject\12. UI\06. FightScene\Boss\Thumbnail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\FightPlayerThumbnail.h">
+      <Filter>02. GameObject\12. UI\06. FightScene\Player\Thumbnail</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Header\FightPlayerName.h">
+      <Filter>02. GameObject\12. UI\06. FightScene\Player\Name</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -860,20 +860,20 @@
     <ClCompile Include="..\Code\BlackBackground.cpp">
       <Filter>02. GameObject\12. UI\06. FightScene\Back</Filter>
     </ClCompile>
-    <ClCompile Include="..\Code\FightPlayerThumbnail.cpp">
-      <Filter>02. GameObject\12. UI\06. FightScene\Thumbnail\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\FightPlayerName.cpp">
-      <Filter>02. GameObject\12. UI\06. FightScene\Name\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Code\FightBossName.cpp">
-      <Filter>02. GameObject\12. UI\06. FightScene\Name\Boss</Filter>
-    </ClCompile>
     <ClCompile Include="..\Code\FightVs.cpp">
       <Filter>02. GameObject\12. UI\06. FightScene\Vs</Filter>
     </ClCompile>
+    <ClCompile Include="..\Code\FightBossName.cpp">
+      <Filter>02. GameObject\12. UI\06. FightScene\Boss\Name</Filter>
+    </ClCompile>
     <ClCompile Include="..\Code\FightBossThumbnail.cpp">
-      <Filter>02. GameObject\12. UI\06. FightScene\Thumbnail\Boss</Filter>
+      <Filter>02. GameObject\12. UI\06. FightScene\Boss\Thumbnail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FightPlayerThumbnail.cpp">
+      <Filter>02. GameObject\12. UI\06. FightScene\Player\Thumbnail</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\FightPlayerName.cpp">
+      <Filter>02. GameObject\12. UI\06. FightScene\Player\Name</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

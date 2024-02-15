@@ -35,7 +35,13 @@ Engine::_int CBossFight::Update_Scene(const _float& fTimeDelta)
 
 	m_fSceneChangeTimer += fTimeDelta;
 
+	// 5초 이후가 되면 다시 화면 바깥으로 빠져나가는 연출을 실행해준다.
 	if (5.f < m_fSceneChangeTimer)
+	{
+
+	}
+	//6초가 되면 씬 전환
+	else if (6.f < m_fSceneChangeTimer)
 	{
 		// 스테이지 변경
 		Engine::CScene* pScene = nullptr;
@@ -79,25 +85,26 @@ HRESULT CBossFight::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BlackBackground", pGameObject), E_FAIL);
 
-	pGameObject = pPlayerName = CFightPlayerName::Create(m_pGraphicDev, 192.f * 1.5, 64.f * 1.5, -220.f, 200.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerName", pGameObject), E_FAIL);
-	
-	pGameObject = pPlayerThumbnail = CFightPlayerThumbnail::Create(m_pGraphicDev, 256.f * 2, 256.f * 2, -200.f, -125.f);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerThumbnail", pGameObject), E_FAIL);
-
 	pGameObject = pBossName = CFightBossName::Create(m_pGraphicDev, 192.f * 1.5, 64.f * 1.5, 220.f, 200.f, m_iStageKey);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BossName", pGameObject), E_FAIL);
 
-	pGameObject = pBossThumbnail = CFightBossThumbnail::Create(m_pGraphicDev, 256.f * 2, 256.f * 2, 200.f, -100.f, m_iStageKey);
+	pGameObject = pBossThumbnail = CFightBossThumbnail::Create(m_pGraphicDev, 256.f * 2, 256.f * 2, 150.f, -100.f, m_iStageKey);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BossThumbnail", pGameObject), E_FAIL);
 
 	pGameObject = pVs = CFightVs::Create(m_pGraphicDev, 128.f * 1.5, 64.f * 1.5, -10.f, 200.f);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Vs", pGameObject), E_FAIL);
+
+	pGameObject = pPlayerName = CFightPlayerName::Create(m_pGraphicDev, 192.f * 1.5, 64.f * 1.5, -220.f, 200.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerName", pGameObject), E_FAIL);
+
+	pGameObject = pPlayerThumbnail = CFightPlayerThumbnail::Create(m_pGraphicDev, 256.f * 2, 256.f * 2, -150.f, -125.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerThumbnail", pGameObject), E_FAIL);
+
 
 	//pGameObject = CStageToolFly::Create(m_pGraphicDev, 100.f, 100.f, 120.f, -100.f, 2, 4);
 	//NULL_CHECK_RETURN(pGameObject, E_FAIL);

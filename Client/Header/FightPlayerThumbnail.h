@@ -34,7 +34,13 @@ private:
 
 	_bool		m_bIsaac = false;
 	_float		m_fMoveTimer = 0.f;
-	_float		m_fMoveSpeed = 3.f;
+	_float		m_fMoveSpeed = 100.f;
+	_float		m_fIncreaseSpeed = 70.f;
+
+	_vec3		m_vDestPos;
+	_vec3		m_vSecondDestPos;
+
+	_bool		m_bArrivedFirst = false;
 
 public:
 	static CFightPlayerThumbnail*		Create(LPDIRECT3DDEVICE9	pGraphicDev, 

@@ -31,11 +31,18 @@ private:
 	Engine::CRcTex*		m_pBufferCom;
 	Engine::CTransform*	m_pTransformCom;
 	Engine::CTexture*	m_pTextureCom;
+	
+	_int		m_iStageKey = 0;
 
 	_float		m_fMoveTimer = 0.f;
-	_float		m_fMoveSpeed = 3.f;
+	_float		m_fMoveSpeed = 100.f;
+	_float		m_fIncreaseSpeed = 70.f;
 
-	_int		m_iStageKey = 0;
+	_vec3		m_vDestPos;
+	_vec3		m_vSecondDestPos;
+
+	_bool		m_bArrivedFirst = false;
+
 
 public:
 	static CFightBossThumbnail*		Create(LPDIRECT3DDEVICE9	pGraphicDev, 
