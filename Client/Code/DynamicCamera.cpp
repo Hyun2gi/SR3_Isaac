@@ -77,14 +77,14 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 	_int iExit = Engine::CCamera::Update_GameObject(fTimeDelta);
 
 
-	if (m_eCurState == C_CINEMACHINE_02)
+	/*if (m_eCurState == C_CINEMACHINE_02)
 	{
 		m_vEye = _vec3(-5, 25, -5);
 
 		m_vAt = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 
 		return iExit;
-	}
+	}*/
 
 	Key_Input(fTimeDelta);
 
@@ -548,6 +548,20 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 		}
 		else
 		{
+			// 큐브연출 후
+			if (m_eAfterState == C_MOVE_TO_TARGET)
+			{
+				//원상복구
+				m_fShakeTime = 0;
+				m_eAfterState = C_END;
+				m_bFix = false; //잠금 풀어주기
+				m_eCurState = C_MOVE_TO_TARGET;
+				m_bChaseInit = true;
+				m_bShakeCamera = false;
+				Cinemachine_02_GoToIsaac();
+				return;
+			}
+
 			m_vEye = m_vStartEyePosition;
 			//m_vAt = m_vStartAtPosition;
 
@@ -652,7 +666,7 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 			if (m_eAfterState == C_CINEMACHINE_02)
 			{
 				// 시네머신하면 고정돼야한다
-				m_vAt = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
+				//m_vAt = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 			}
 			else
 			{
@@ -719,13 +733,14 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 				m_eCurState = C_MOVE_TO_TARGET;
 				m_bFix = true;
 			}
-			else if (m_eAfterState == C_CINEMACHINE_02)
-			{
-				m_eCurState = C_CINEMACHINE_02;
-				m_bChaseInit = true;
-				m_bFix = false;
-				return;
-			}
+			//else if (m_eAfterState == C_CINEMACHINE_02)
+			//{
+			//	//OnShakeCameraPos(6, 1);
+			//	m_eCurState = C_CINEMACHINE_02;
+			//	m_bChaseInit = true;
+			//	m_bFix = false;
+			//	return;
+			//}
 
 			// goalposition에 고정안하고 원래 position으로 돌아가는 경우
 			if (m_bFixedPos == true)
@@ -1117,10 +1132,11 @@ void CDynamicCamera::Cinemachine_00_Start()
 
 void CDynamicCamera::Cinemachine_01_TotalLand()
 {
-	m_eAfterState = C_CINEMACHINE_02;
+	m_eAfterState = C_MOVE_TO_TARGET;
 	m_bChaseInit = true;
-	m_eCurState = C_MOVE_TO_TARGET;
+	//m_eCurState = C_MOVE_TO_TARGET;
 	m_fAngleY = 0;
+	m_bShakeCamera = true;
 
 	m_bFix = true;
 
@@ -1133,8 +1149,11 @@ void CDynamicCamera::Cinemachine_01_TotalLand()
 
 	startpos = m_vEye;
 
+	m_vEye = _vec3(-5, 25, -5);
+	m_vAt = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 	// 5 : CINEMACHINE_01
-	OnMoveTargetCamera(_vec3(VTXCNTX / 2, 0, VTXCNTZ / 2), 8.f, 2.f, goalPos, startpos, true, 5);
+	//OnMoveTargetCamera(_vec3(VTXCNTX / 2, 0, VTXCNTZ / 2), 8.f, 1.f, goalPos, startpos, true, 5);
+	OnShakeCameraPos(7.3, 1);
 }
 
 void CDynamicCamera::Cinemachine_02_GoToIsaac()
