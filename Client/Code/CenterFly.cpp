@@ -26,6 +26,8 @@ HRESULT CCenterFly::Ready_GameObject()
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	//m_pTransformCom->Set_Pos(0.f, 10.f, 30.f); // 추후 필요 X
 
+	Engine::PlayEffectLoop(L"Fly.wav", SOUND_EFFECT_MON_STOPSUDDEN_SUB, 0.8f);
+
 	m_fSpeed = 1.f;
 	m_bDead = true;
 
