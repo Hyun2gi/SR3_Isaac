@@ -90,6 +90,8 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	{
 		Check_TargetPos();
 		m_bSliding = true;
+		//squirt_run.wav
+		Engine::PlayEffect(L"squirt_run.wav", SOUND_EFFECT_MON_STOPSUDDEN, 0.8f);
 	}
 
 	if (m_bSliding)
@@ -111,6 +113,23 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 		_vec3 vPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
 		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		int soundrand = rand() % 4;
+		if (soundrand == 0)
+		{
+			Engine::PlayEffect(L"blood fire 3.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+		}
+		else if (soundrand == 1)
+		{
+			Engine::PlayEffect(L"blood fire 2.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+		}
+		else if (soundrand == 2)
+		{
+			Engine::PlayEffect(L"blood fire 1.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+		}
+		else if (soundrand == 3)
+		{
+			Engine::PlayEffect(L"blood fire.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+		}
 		return 1;
 	}
 

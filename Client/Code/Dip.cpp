@@ -130,6 +130,7 @@ void CDip::LateUpdate_GameObject()
 		if (0 >= m_iHp)
 		{
 			m_bDead = true;
+			Engine::PlayEffect(L"dip_dead.wav", SOUND_EFFECT_MON_STOPSUDDEN_SUB, 0.8f);
 		}
 	}
 

@@ -38,6 +38,9 @@ HRESULT CLeaper::Ready_GameObject()
 	m_fPower = 1.8f;
 	m_fAccelTime = 0.f;
 
+	int timerrand = rand() % 3;
+	m_fSoundTimer = timerrand;
+
 	m_ePreState = LEAPER_END;
 
 	m_eMstType = LEAPER;
@@ -51,6 +54,13 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 	{
 		if (Check_Time(fTimeDelta))
 			Create_Start_Particle((rand() % 6) + 3);
+	}
+
+	m_fSoundTimer += fTimeDelta;
+	if (m_fSoundTimer < 4)
+	{
+		m_fSoundTimer = 0;
+		Engine::PlayEffect(L"pacer_walking.wav", SOUND_EFFECT_MON_STOPSUDDEN, 1.3f);
 	}
 
 	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
@@ -106,6 +116,23 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 		_vec3 vPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
 		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		int soundrand = rand() % 4;
+		if (soundrand == 0)
+		{
+			Engine::PlayEffect(L"blood fire 3.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+		}
+		else if (soundrand == 1)
+		{
+			Engine::PlayEffect(L"blood fire 2.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+		}
+		else if (soundrand == 2)
+		{
+			Engine::PlayEffect(L"blood fire 1.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+		}
+		else if (soundrand == 3)
+		{
+			Engine::PlayEffect(L"blood fire.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+		}
 		return 1;
 	}
 
