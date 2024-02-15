@@ -185,6 +185,11 @@
     <ClInclude Include="..\Header\Epic.h" />
     <ClInclude Include="..\Header\EpicBullet.h" />
     <ClInclude Include="..\Header\EpicBulletMark.h" />
+    <ClInclude Include="..\Header\FightBossName.h" />
+    <ClInclude Include="..\Header\FightBossThumbnail.h" />
+    <ClInclude Include="..\Header\FightPlayerName.h" />
+    <ClInclude Include="..\Header\FightPlayerThumbnail.h" />
+    <ClInclude Include="..\Header\FightVs.h" />
     <ClInclude Include="..\Header\Fire.h" />
     <ClInclude Include="..\Header\GameEnd.h" />
     <ClInclude Include="..\Header\HeartUI.h" />
@@ -276,6 +281,11 @@
     <ClCompile Include="..\Code\Epic.cpp" />
     <ClCompile Include="..\Code\EpicBullet.cpp" />
     <ClCompile Include="..\Code\EpicBulletMark.cpp" />
+    <ClCompile Include="..\Code\FightBossName.cpp" />
+    <ClCompile Include="..\Code\FightBossThumbnail.cpp" />
+    <ClCompile Include="..\Code\FightPlayerName.cpp" />
+    <ClCompile Include="..\Code\FightPlayerThumbnail.cpp" />
+    <ClCompile Include="..\Code\FightVs.cpp" />
     <ClCompile Include="..\Code\Fire.cpp" />
     <ClCompile Include="..\Code\GameEnd.cpp" />
     <ClCompile Include="..\Code\HeartUI.cpp" />
