@@ -162,4 +162,7 @@ CMapParts* CMapParts::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _floa
 void CMapParts::Free()
 {
 	__super::Free();
+
+	Safe_Release<CMapIcon*>(m_pMapIcon);
+	m_pMapIcon = nullptr;
 }

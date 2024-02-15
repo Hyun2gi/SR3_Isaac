@@ -235,4 +235,6 @@ CMiniMap* CMiniMap::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float 
 void CMiniMap::Free()
 {
 	__super::Free();
+
+	for_each(m_vecRoomParts.begin(), m_vecRoomParts.end(), CDeleteObj());
 }
