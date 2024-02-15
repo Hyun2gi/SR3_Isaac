@@ -4,6 +4,9 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
+#include "StageLoadMgr.h"
+
+
 CMiniMap::CMiniMap(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CUI(pGraphicDev)
 {
@@ -16,6 +19,18 @@ CMiniMap::CMiniMap(const CMiniMap& rhs)
 
 CMiniMap::~CMiniMap()
 {
+}
+
+CMapParts* CMiniMap::Get_MapParts(_int iIndex)
+{
+	vector<CMapParts*>::iterator iter = m_vecRoomParts.begin();
+
+	for (int i = 0; i < iIndex; ++i)
+	{
+		++iter;
+	}
+
+	return (*iter); // 해당 인덱스의 MapParts 반환
 }
 
 HRESULT CMiniMap::Ready_GameObject()
@@ -47,20 +62,19 @@ _int CMiniMap::Update_GameObject(const _float& fTimeDelta)
 
 	// 현재 방 정보 string strType = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_strType;
 	// 를 받아온 후 값에 따라서 현재 방 설정
-	Setting_RoomType();
 
 	if (!m_vecRoomParts.empty())
 	{
+		Setting_NowRoom();
+		// 씬 전환을 하고 나서도 해당 객체의 bool 값들이 그대로여야 함
+		Setting_CheckRoom();
+
 		for (auto& iter : m_vecRoomParts)
 			iter->Update_GameObject(fTimeDelta);
 
-		//Setting_RoomType();
-		Setting_NowRoom();
 	}
 	else
-	{
 		Create_RoomParts();
-	}
 
 	return 0;
 }
@@ -90,7 +104,6 @@ void CMiniMap::Render_GameObject()
 		for (auto& iter : m_vecRoomParts)
 			iter->Render_GameObject();
 	}
-
 }
 
 HRESULT CMiniMap::Add_Component()
@@ -199,35 +212,6 @@ void CMiniMap::Create_RoomParts()
 	}
 }
 
-void CMiniMap::Setting_RoomType()
-{
-	// m_strRoomTypeNow : 플레이어가 위치한 방
-	if (m_strRoomTypeNow == "Normal")
-	{
-		m_iNowRoomNum = 1; // 임시로
-	}
-	else if (m_strRoomTypeNow == "Boss")
-	{
-		m_iNowRoomNum = 10;
-	}
-	else if (m_strRoomTypeNow == "Arcade")
-	{
-		m_iNowRoomNum = 3;
-	}
-	else if (m_strRoomTypeNow == "Devil")
-	{
-		m_iNowRoomNum = 9;
-	}
-	else if (m_strRoomTypeNow == "Basement") // Treasure
-	{
-		m_iNowRoomNum = 5;
-	}
-	else if (m_strRoomTypeNow == "Challenge")
-	{
-
-	}
-}
-
 void CMiniMap::Setting_NowRoom()
 {
 	// 현재 있는 방의 텍스쳐를 밝게 변화시키기
@@ -236,10 +220,33 @@ void CMiniMap::Setting_NowRoom()
 		if (m_iNowRoomNum == iter->Get_RoomNumber())
 		{
 			iter->Set_NowRoom(true);
+			//iter->Set_CheckRoom(); // 가본 방으로 변경 (이건 됨. 그러나 그 값이 유지가 안 되는?)
+			// 현재 방에 대해서 받아올 것이 아니라 다른 조건문에서 처리해야 할듯함
 		}
 		else
 		{
-			iter->Set_NowRoom(false);
+			//iter->Set_NowRoom(false); // 이걸 해주지 않아도 알아서 초기화되네...
+		}
+
+	}
+}
+
+void CMiniMap::Setting_CheckRoom()
+{
+	//CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_bClear = true;
+
+	int iStageKey(1);
+
+	if (!CStageLoadMgr::GetInstance()->Get_StageInfo_Map().empty())
+	{
+
+		for (auto& iter : m_vecRoomParts)
+		{
+			if (CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(iStageKey).m_bClear)
+			{
+				iter->Set_CheckRoom();
+			}
+			++iStageKey;
 		}
 	}
 }

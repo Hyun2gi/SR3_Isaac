@@ -1372,11 +1372,9 @@ void CLoadStage::Update_MiniMap()
 	{
 		if (m_mapLayer.at(L"UI")->Get_GameObject(L"MiniMap"))
 		{
-			/*string strType = CStageLoadMgr::GetInstance()->Get_StageInfo_Map().at(m_iCurStageKey).m_strType;
-			dynamic_cast<CMiniMap*>(m_mapLayer.at(L"UI")->Get_GameObject(L"MiniMap"))->Set_RoomTypeNow(strType);*/
-
 			// m_iCurStageKey
 			dynamic_cast<CMiniMap*>(m_mapLayer.at(L"UI")->Get_GameObject(L"MiniMap"))->Set_NowRoom(m_iCurStageKey);
+			
 		}
 	}
 }

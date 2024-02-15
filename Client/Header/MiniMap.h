@@ -23,6 +23,8 @@ private:
 public:
 	void			Set_RoomTypeNow(string strRoomType) { m_strRoomTypeNow = strRoomType; }
 	void			Set_NowRoom(_int iStageKey) { m_iNowRoomNum = iStageKey; }
+	void			Set_CheckRoom();
+	CMapParts*		Get_MapParts(_int iIndex);
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -34,8 +36,8 @@ private:
 	HRESULT			Add_Component();
 
 	void			Create_RoomParts();
-	void			Setting_RoomType();
 	void			Setting_NowRoom(); // 현재 방
+	void			Setting_CheckRoom(); // 가본 방
 
 private:
 	Engine::CRcTex* m_pBufferCom;

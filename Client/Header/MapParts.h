@@ -25,6 +25,7 @@ public:
 	_int			Get_RoomNumber() { return m_iRoomNumber; }
 	void			Set_RoomNumber(_int iNum) { m_iRoomNumber = iNum; }
 	void			Set_NowRoom(_bool IsNowRoom) { m_bNowRoom = IsNowRoom; }
+	void			Set_CheckRoom() { m_bCheckRoom = true; } // 가본 방으로 체크
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -40,8 +41,9 @@ private:
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
-	_bool				m_bFrontRoom;
-	_bool				m_bNowRoom;
+	_bool				m_bFrontRoom; // 바라봐지는 방
+	_bool				m_bNowRoom; // 현재 방
+	_bool				m_bCheckRoom; // 가본 방
 
 	_float				m_fAnimSpeed = 1.f;
 	_float				m_fCurFrame = 0.f;

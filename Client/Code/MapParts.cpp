@@ -30,6 +30,7 @@ HRESULT CMapParts::Ready_GameObject()
 
 	m_bFrontRoom = false; // 눈앞의 방인지 여부
 	m_bNowRoom = false;
+	m_bCheckRoom = false;
 
 	m_iRoomNumber = 0; // 방 번호
 
@@ -45,19 +46,23 @@ _int CMapParts::Update_GameObject(const _float& fTimeDelta)
 {
 	//m_fCurFrame = 2.3f; // 방 상태에 따라 다르게 표기
 
-	m_fCurFrame += 3 * fTimeDelta * 2.f;
+	/*m_fCurFrame += 3 * fTimeDelta * 2.f;
 
 	if (3.f < m_fCurFrame)
 	{
 		m_fCurFrame = 0.f;
-	}
+	}*/
+	CUI::Update_GameObject(fTimeDelta);
 
 	if (m_bNowRoom)
 		m_fCurFrame = 2.f;
-	else
-		m_fCurFrame = 0.f;
-
-	CUI::Update_GameObject(fTimeDelta);
+	else // 현재 방이 아닐 때
+	{
+		if (m_bCheckRoom) // 가본 방이면 // 이거 유지 자체가 안 됨
+			m_fCurFrame = 1.f;
+		else
+			m_fCurFrame = 0.f;
+	}
 
 	return 0;
 }
