@@ -28,6 +28,8 @@ public:
 	void			Set_RoomNumber(_int iNum) { m_iRoomNumber = iNum; }
 	void			Set_NowRoom(_bool IsNowRoom) { m_bNowRoom = IsNowRoom; }
 	void			Set_CheckRoom() { m_bCheckRoom = true; } // 가본 방으로 체크
+	void			Set_FrontRoom(_bool bISFront) { m_bFrontRoom = bISFront; }
+
 	CMapIcon*		Get_Icon() { return m_pMapIcon; }
 
 public:
