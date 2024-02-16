@@ -3,10 +3,13 @@
 #include "Monster.h"
 #include "GameObject.h"
 
+#include "Shadow.h"
+
 class CLeaper : public CMonster
 {
 	const _float HEIGHT_Y = 0.4f;
 	const _float INTERVAL = 3.f;
+	const _float SHADOW_SCALE = 0.4f;
 private:
 	explicit CLeaper(LPDIRECT3DDEVICE9 pGraphicDev, int iID);
 	explicit CLeaper(const CLeaper& rhs);
@@ -30,6 +33,8 @@ private:
 	void				MoveTo_Random(const _float& fTimeDelta);
 	void				JumpTo_Player(const _float& fTimeDelta);
 
+	void				Create_Shadow();
+
 private:
 	_bool				m_bMove;
 	_bool				m_bJump;
@@ -45,6 +50,8 @@ private:
 
 	LEAPERSTATE			m_ePreState;
 	LEAPERSTATE			m_eCurState;
+
+	CShadow*			m_pShadow;
 
 public:
 	static CLeaper* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID);

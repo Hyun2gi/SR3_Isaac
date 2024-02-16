@@ -21,7 +21,9 @@ HRESULT CShadow::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->Set_Pos(0.f, 0.1f, 0.f);
-	m_pTransformCom->m_vAngle.x = 70.f;
+	m_pTransformCom->m_vAngle.x = D3DXToRadian(90.f); // 70
+
+	m_bRender = true; // false
 
 	return S_OK;
 }
@@ -51,11 +53,30 @@ void CShadow::Render_GameObject()
 
 	m_pTextureCom->Set_Texture((_uint)m_fFrame);
 
-	m_pBufferCom->Render_Buffer();
+	if(m_bRender)
+		m_pBufferCom->Render_Buffer();
 }
 
 HRESULT CShadow::Add_Component()
 {
+	CComponent* pComponent = nullptr;
+
+	pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(Engine::Clone_Proto(L"Proto_RcTex"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
+
+	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ShadowTexture"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_ShadowTexture", pComponent });
+
+	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
+
+	pComponent = m_pCalculator = dynamic_cast<CCalculator*>(Engine::Clone_Proto(L"Proto_Calculator"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_Calculator", pComponent });
+
 	return S_OK;
 }
 
@@ -66,12 +87,11 @@ CShadow* CShadow::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
 		Safe_Release(pInstance);
-		MSG_BOX("Spike Create Failed");
+		MSG_BOX("Shadow Create Failed");
 		return nullptr;
 	}
 
 	return pInstance;
-
 }
 
 void CShadow::Free()

@@ -20,7 +20,9 @@ private:
 	virtual HRESULT		Add_Component()						override;
 
 private:
-	// º¯¼ö
+	_bool				m_bRender;
+
+	
 
 public:
 	static CShadow*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
