@@ -1426,12 +1426,19 @@ void CLoadStage::Moster_Collision()
 					else
 						++iter;
 				}
-				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포 (엄마/엄마파츠만)
+				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1)
 				{
-					if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType() || //MOM Parts이거나
-						MOM == dynamic_cast<CMonster*>(pMonster)->Get_BossType())		// MOM인 경우
+					if (!dynamic_cast<CMonster*>(pMonster)->Get_Dead())
 					{
 						dynamic_cast<CMonster*>(pMonster)->Hit();
+						// Squirt 인 경우 Dip 두 마리 생성 
+						if (SQUIRT == dynamic_cast<CMonster*>(pMonster)->Get_MstType()) // Squirt인 경우
+						{
+							if (1 >= dynamic_cast<CMonster*>(pMonster)->Get_HP())
+							{
+								dynamic_cast<CSquirt*>(pMonster)->Create_Dip(m_mapLayer.at(L"GameMst"));
+							}
+						}
 						break;
 					}
 					else
