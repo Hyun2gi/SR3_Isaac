@@ -1649,6 +1649,30 @@ void CLoadStage::Obstacle_Collsion()
 			}
 		}
 	}
+
+	// Dople <-> 장애물 충돌
+	if (m_mapLayer.at(L"GameMst") != nullptr)
+	{
+		if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Dople") != nullptr)
+		{
+			CTransform* pDopleTrans = dynamic_cast<CTransform*>(dynamic_cast<CDople*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Dople"))->Get_Transform());
+			
+			if (m_mapLayer.at(L"MapObj") != nullptr)
+			{
+				auto& mapObj = m_mapLayer.at(L"MapObj")->Get_ObjectMap();
+
+				for (auto& iter : mapObj)
+				{
+					if (OBSTACLE <= dynamic_cast<CMapObj*>(iter.second)->Get_Type() && dynamic_cast<CMapObj*>(iter.second)->Get_Type() <= OBSTACLE_Z)
+					{
+						CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+						Engine::Check_Collision(pDopleTrans, pTrans);
+					}
+				}
+			}
+		}
+	}
+
 }
 
 void CLoadStage::Player_Collision_With_Monster()
