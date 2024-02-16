@@ -88,6 +88,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 
 		// 아자젤때를 위해 다리만들기
 		m_pLeg = CPlayerLeg::Create(m_pGraphicDev);
+		m_bCameraShaking = false;
 	}
 	else
 	{
@@ -779,6 +780,13 @@ void CPlayer::Set_CameraShaking(float shakeTime, float shakeIntensity)
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnShakeCameraPos(shakeTime, shakeIntensity);
 }
 
+void CPlayer::Set_CameraShaking_Sub(float shakeTime, float shakeIntensity)
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnShakeCameraPos_Sub(shakeTime, shakeIntensity);
+}
+
+
+
 void CPlayer::Bullet_Change_To_Brim()
 {
 	if (!m_PlayerBulletList.empty())
@@ -1125,22 +1133,25 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_eCurState = P_SHOOTIDLE;
 	}
 
-
-	//마우스 회전으로 플레이어 각도 바꾸기
-	_long	dwMouseMove(0);
-
-	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_X))
+	if (m_bCameraShaking == false)
 	{
-		//m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(dwMouseMove / 10.f));
-	}
+		//마우스 회전으로 플레이어 각도 바꾸기
+		_long	dwMouseMove(0);
 
-	if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_Y))
-	{
-		if (m_bMouseYRotataion)
+		if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_X))
 		{
-			//m_pTransformCom->Rotation(ROT_X, D3DXToRadian(dwMouseMove / 20.f));
+			//m_pTransformCom->Rotation(ROT_Y, D3DXToRadian(dwMouseMove / 10.f));
+		}
+
+		if (dwMouseMove = Engine::Get_DIMouseMove(DIMS_Y))
+		{
+			if (m_bMouseYRotataion)
+			{
+				//m_pTransformCom->Rotation(ROT_X, D3DXToRadian(dwMouseMove / 20.f));
+			}
 		}
 	}
+	
 }
 
 void CPlayer::Height_OnTerrain()
