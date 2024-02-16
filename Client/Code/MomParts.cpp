@@ -4,10 +4,9 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
-#include "Fly.h"
 #include "Squirt.h"
 #include "Leaper.h"
-#include "Charger.h"
+#include "Pacer.h"
 
 CMomParts::CMomParts(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex)
 	: CMonster(pGraphicDev),
@@ -101,20 +100,19 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 		m_fCallLimit = (_float)m_iRandNum;
 
 		Change_State();
-		m_bCheckCreate = true; // 상태가 변환되는 일정 시간마다 잡몹 생성 여부 판단 true
-		// true가 계속되는 거 같움
-		++m_iTestCount; // 테스트용 정수
+		m_bCheckCreate = true;
+
+		Check_CreateMst(); // 잡몹 생성 여부 판단
 	}
 
-	if (m_bCheckCreate) // 잡몹 생성 여부 판단 가능할 때
-	{
-		Check_CreateMst(); // 잡몹 생성 여부 판단
-		m_bCheckCreate = false;
-	}
+	//if (m_bCheckCreate) // 잡몹 생성 여부 판단 가능할 때
+	//{
+	//	Check_CreateMst(); // 잡몹 생성 여부 판단
+	//	m_bCheckCreate = false;
+	//}
 
 	if (m_bMstCreate) // 잡몹 생성 패턴
 	{
-		m_pTransformCom->Get_Info(INFO_POS, &m_vecCreatePos);
 		Create_Mst(m_vecCreatePos);
 		m_bMstCreate = false;
 	}
@@ -130,7 +128,7 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
 	return 0;
-}
+	}
 
 void CMomParts::LateUpdate_GameObject()
 {
@@ -252,28 +250,28 @@ void CMomParts::Set_RandNum()
 {
 	DWORD dwSeed = (m_iIndex << 16) | (time(NULL) % 1000);
 	srand(dwSeed);
-	m_iRandNum = rand() % 10;
-	m_iRandNumMstCreate = rand() % 5; // 이 값이 이상한가
+	m_iRandNum = rand() % 6; // 10
+	m_iRandNumMstCreate = rand() % 3; // 이 값이 이상한가
 }
 
 void CMomParts::Change_State()
 {
-	if (0 == (m_iRandNum % 4))
+	if (0 == m_iRandNum)
 	{
 		m_eCurState = MOM_EYE;
 		m_bScaleChange = true;
 	}
-	else if (1 == (m_iRandNum % 4))
+	else if (1 == m_iRandNum)
 	{
 		m_eCurState = MOM_SKIN;
 		m_bScaleChange = true;
 	}
-	else if (2 == (m_iRandNum % 4))
+	else if (2 == m_iRandNum)
 	{
 		m_eCurState = MOM_HAND;
 		m_bScaleChange = true;
 	}
-	else if (3 == (m_iRandNum % 4))
+	else
 		m_eCurState = MOM_DOOR;
 }
 
@@ -314,12 +312,15 @@ void CMomParts::Animation_Change()
 	m_pTransformCom->m_vScale = vScale;
 }
 
-void CMomParts::Check_CreateMst	()
+void CMomParts::Check_CreateMst()
 {
 	if (MOM_DOOR != m_eCurState && MOM_END != m_eCurState) // Parts 상태가 hand, skin, eye중 하나 일 때
 	{
-		if (0 == m_iRandNumMstCreate) // 3분의 1 확률로 몬스터 생성
+		if (1 == m_iRandNumMstCreate) // 3분의 1 확률로 몬스터 생성 (0)
 		{
+			m_pTransformCom->Get_Info(INFO_POS, &m_vecCreatePos);
+			m_bMstCreate = true; // 몬스터 생성 가능할 때만 true //////
+
 			// 동서남북에 따라 생성 위치 바꿔주기
 			switch (m_iIndex)
 			{
@@ -336,29 +337,21 @@ void CMomParts::Check_CreateMst	()
 				m_vecCreatePos.x += 5.f;
 				break;
 			}
-			m_bMstCreate = true; // 몬스터 생성 가능할 때만 true //////
 		}
 		else
-			m_bMstCreate = false;
+			m_bMstCreate = false; //  해줄 필요 없을 텐데
 	}
+	m_bCheckCreate = false;
 }	
 
 void CMomParts::Create_Mst(_vec3 vPos)
 {
-	m_iRandNumMstCreate = rand() % 4;
+	int iCreateMst = rand() % 3;
+	++m_iTestCount; // 함수가 몇 번 호출되는가
 
-	switch (m_iRandNumMstCreate)
+	switch (iCreateMst)
 	{
-	case 0: // Fly
-	{
-		CFly* pFly = CFly::Create(m_pGraphicDev, 0);
-		pFly->Get_Transform()->Set_Pos(vPos.x, 3.f, vPos.z);
-		pFly->Set_MyLayer(m_vecMyLayer[0]);
-		m_pLayer->Add_GameObject(L"Fly", pFly);
-		m_bMstCreate = false;
-		break;
-	}
-	case 1: // Squirt
+	case 0: // Squirt
 	{
 		CSquirt* pSquirt = CSquirt::Create(m_pGraphicDev, 0);
 		pSquirt->Get_Transform()->Set_Pos(vPos.x, 1.2f, vPos.z);
@@ -367,7 +360,7 @@ void CMomParts::Create_Mst(_vec3 vPos)
 		m_bMstCreate = false;
 		break;
 	}
-	case 2: // Leaper
+	case 1: // Leaper
 	{
 		CLeaper* pLeaper = CLeaper::Create(m_pGraphicDev, 0);
 		pLeaper->Get_Transform()->Set_Pos(vPos.x, 0.4f, vPos.z);
@@ -376,12 +369,12 @@ void CMomParts::Create_Mst(_vec3 vPos)
 		m_bMstCreate = false;
 		break;
 	}
-	case 3: // Charger
+	case 2: // Pacer
 	{
-		CCharger* pCharger = CCharger::Create(m_pGraphicDev);
-		pCharger->Get_Transform()->Set_Pos(vPos.x, 0.5f, vPos.z);
-		pCharger->Set_MyLayer(m_vecMyLayer[0]);
-		m_pLayer->Add_GameObject(L"Charger", pCharger);
+		CPacer* pPacer = CPacer::Create(m_pGraphicDev, 0);
+		pPacer->Get_Transform()->Set_Pos(vPos.x, 0.4f, vPos.z);
+		pPacer->Set_MyLayer(m_vecMyLayer[0]);
+		m_pLayer->Add_GameObject(L"Pacer", pPacer);
 		m_bMstCreate = false;
 		break;
 	}
