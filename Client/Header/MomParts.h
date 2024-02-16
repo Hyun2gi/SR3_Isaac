@@ -3,6 +3,8 @@
 #include "Monster.h"
 #include "GameObject.h"
 
+#include "Layer.h"
+
 #include "Mom.h"
 
 class CMomParts : public CMonster
@@ -20,6 +22,7 @@ private:
 public:
 	CMom*			Get_Mom() { return m_pMom; }
 	void			Set_Mom(CMom* pMom) { m_pMom = pMom; }
+	void			Set_Layer(CLayer* pLayer) { m_pLayer = pLayer; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
@@ -37,12 +40,17 @@ private:
 	void				Change_State();
 	void				Animation_Change();
 
+	void				Attack_CreateMst();
+	void				Check_CreateMst();
+	void				Create_Mst(_vec3 vPos);
+
 private:
 	_bool				m_bScaleReduce;
 	_bool				m_bScaleChange;
 	_int				m_iScaleCount;
 
 	_int				m_iRandNum;
+	_int				m_iRandNumMstCreate; // 몬스터 생성 난수
 	_int				m_iIndex;
 	_int				m_iPicNum;
 	_float				m_fFrameSpeed = 1.f;
@@ -51,6 +59,7 @@ private:
 	PARTSSTATE			m_eCurState;
 
 	CMom*				m_pMom;
+	CLayer*				m_pLayer;
 
 public:
 	static CMomParts* Create(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex);

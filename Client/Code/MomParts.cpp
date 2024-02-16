@@ -4,16 +4,21 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
+#include "Fly.h"
+#include "Squirt.h"
+#include "Leaper.h"
+#include "Charger.h"
+
 CMomParts::CMomParts(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex)
 	: CMonster(pGraphicDev),
-	m_pMom(nullptr)
+	m_pMom(nullptr), m_pLayer(nullptr)
 {
 	m_iIndex = iIndex;
 }
 
 CMomParts::CMomParts(const CMomParts& rhs)
 	: CMonster(rhs),
-	m_pMom(rhs.m_pMom)
+	m_pMom(rhs.m_pMom), m_pLayer(rhs.m_pLayer)
 {
 }
 
@@ -27,6 +32,7 @@ HRESULT CMomParts::Ready_GameObject()
 	m_pTransformCom->m_vScale = { 7.f, 12.f, 1.f };
 
 	m_iRandNum = 0;
+	m_iRandNumMstCreate = 0;
 
 	m_fCallLimit = 0.1f;
 	m_fSpeed = 10.f;
@@ -228,6 +234,7 @@ void CMomParts::Set_RandNum()
 	DWORD dwSeed = (m_iIndex << 16) | (time(NULL) % 1000);
 	srand(dwSeed);
 	m_iRandNum = rand() % 10;
+	m_iRandNumMstCreate = rand() % 3;
 }
 
 void CMomParts::Change_State()
@@ -236,16 +243,19 @@ void CMomParts::Change_State()
 	{
 		m_eCurState = MOM_EYE;
 		m_bScaleChange = true;
+		Check_CreateMst();
 	}
 	else if (1 == (m_iRandNum % 4))
 	{
 		m_eCurState = MOM_SKIN;
 		m_bScaleChange = true;
+		Check_CreateMst();
 	}
 	else if (2 == (m_iRandNum % 4))
 	{
 		m_eCurState = MOM_HAND;
 		m_bScaleChange = true;
+		Check_CreateMst();
 	}
 	else if (3 == (m_iRandNum % 4))
 		m_eCurState = MOM_DOOR;
@@ -286,6 +296,70 @@ void CMomParts::Animation_Change()
 		}
 	}
 	m_pTransformCom->m_vScale = vScale;
+}
+
+void CMomParts::Attack_CreateMst()
+{
+}
+
+void CMomParts::Check_CreateMst()
+{
+	if (0 == m_iRandNumMstCreate) // 3분의 1 확률로 몬스터 생성
+	{
+		_vec3 vCreatePos;
+
+		// 동서남북에 따라 생성 위치 바꿔주기
+		switch (m_iIndex)
+		{
+		case 0: // 상
+			m_pTransformCom->Get_Info(INFO_POS, &vCreatePos);
+			vCreatePos.z -= 10.f;
+			Create_Mst(vCreatePos);
+			break;
+		case 1: // 우
+
+			break;
+		case 2: // 하
+
+			break;
+		case 3: // 좌
+
+			break;
+		}
+
+
+	}
+	else
+	{
+		// 생성 X
+	}
+}
+
+void CMomParts::Create_Mst(_vec3 vPos)
+{
+	m_iRandNumMstCreate = rand() % 4;
+
+	switch (m_iRandNumMstCreate)
+	{
+	case 0: // Fly
+		for (int i = 0; i < 3; ++i)
+		{
+			CFly* pFly = CFly::Create(m_pGraphicDev, i);
+			pFly->Get_Transform()->Set_Pos(vPos.x, vPos.y, vPos.z);
+			// 레이어에도 넣어줘야함
+			m_pLayer->Add_GameObject(L"Fly", pFly);
+		}
+
+		break;
+	case 1: // Squirt
+		break;
+	case 2: // Leaper
+		break;
+	case 3: // Charger
+		break;
+	default:
+		break;
+	}
 }
 
 void CMomParts::Setting_Value()

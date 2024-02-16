@@ -135,9 +135,11 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		// 아이템 드랍
 		Drop_ITem();
 
-		// MiniMap을 매번 업데이트?
+		// MiniMap 업데이트
 		Update_MiniMap();
-
+		// Mom 스테이지 몬스터 생성 기믹
+		if(10 == m_iCurStageKey)
+			Mom_CreateMst();
 	}
 
 	_int	iExit = __super::Update_Scene(fTimeDelta);
@@ -1837,6 +1839,10 @@ void CLoadStage::Update_MiniMap()
 
 		}
 	}
+}
+
+void CLoadStage::Mom_CreateMst()
+{
 }
 
 
