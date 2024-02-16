@@ -47,6 +47,7 @@ private:
 private:
 	_bool				m_bScaleReduce;
 	_bool				m_bScaleChange;
+	_bool				m_bMstCreate;
 	_int				m_iScaleCount;
 
 	_int				m_iRandNum;
