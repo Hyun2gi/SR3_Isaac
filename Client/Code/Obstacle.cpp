@@ -61,6 +61,7 @@ HRESULT CObstacle::Set_Cute_Texture(const _tchar* pTextureTag)
 
 void CObstacle::Set_Pos(_vec3 vPos)
 {
+	//m_vDestPos = vPos;
 	m_pTransformCom->Set_Pos(vPos);
 }
 

@@ -17,7 +17,9 @@ public:
 	void		Kill_All();
 
 public:
-	static CParticleScatter* Create(IDirect3DDevice9* pDevice, _vec3 vMin, _vec3 vMax, _float fSize = 0.25f, _int iCount = 30);
+	static CParticleScatter* Create(IDirect3DDevice9* pDevice, 
+		_vec3 vMin, _vec3 vMax, 
+		_float fSize = 0.25f, _int iCount = 30);
 
 private:
 	virtual void	Free() override;

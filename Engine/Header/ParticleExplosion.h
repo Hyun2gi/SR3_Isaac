@@ -21,7 +21,10 @@ public:
 	}
 
 public:
-	static CParticleExplosion* Create(IDirect3DDevice9* pDevice, _matrix matWorld, _float fSize = 0.25f, _int iCount = 10);
+	static CParticleExplosion* Create(IDirect3DDevice9* pDevice, 
+		_matrix matWorld, 
+		_float fSize = 0.25f, _int iCount = 10,
+		const _tchar* pTextruePath = L"../Bin/Resource/Texture/Particle/explosion.png");
 
 private:
 	virtual void	Free() override;
@@ -29,5 +32,7 @@ private:
 private:
 	_vec3 m_vMinVelocity, m_vMaxVelocity;
 	_matrix m_matWorld;
+
+	wstring m_wstrTexturePath;
 };
 END

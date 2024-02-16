@@ -17,7 +17,7 @@ private:
 public:
 	void	Create_Scatter(LPDIRECT3DDEVICE9 pGraphicDev, _vec3 vMin, _vec3 vMax, _float fSize = 0.25f, _int iCount = 30);
 	void	Kill_Scatter();
-	void	Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize = 0.7f, _int iCount = 10);
+	void	Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize = 0.7f, _int iCount = 10, const _tchar* pTexturePath = L"../Bin/Resource/Texture/Particle/explosion.png");
 	void	Create_Dust(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize = 0.7f, _int iCount = 10);
 	void	Create_Splash(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, const _tchar* pTexturePath, _int iMaxFrame, _float fSize = 0.5f, _int iCount = 10);
 	void	Create_Splash_Left(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, const _tchar* pTexturePath, _int iMaxFrame, _float fSize = 0.5f, _int iCount = 10);
