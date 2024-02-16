@@ -25,6 +25,7 @@ public:
 	_bool			Get_Dead() { return m_bDead; }
 	void			Set_Dead() { m_bDead = true; }
 	_int			Get_HP() { return m_iHp; }
+	_bool			Get_Hit() { return m_bHit; }
 	void			Hit() { m_bHit = true; }
 	void			Hit_False() { m_bHit = false; }
 	_bool			Get_IsBoss() { return m_bBoss; }
