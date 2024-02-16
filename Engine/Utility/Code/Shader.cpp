@@ -66,6 +66,14 @@ HRESULT CShader::Bind_Float(D3DXHANDLE hParameter, _float fValue)
 	return m_pEffect->SetFloat(hParameter, fValue);
 }
 
+HRESULT CShader::Bind_Vector(D3DXHANDLE hParameter, const _vec4* vVector)
+{
+	if (nullptr == m_pEffect)
+		return E_FAIL;
+
+	return m_pEffect->SetVector(hParameter, vVector);
+}
+
 CShader * CShader::Create(LPDIRECT3DDEVICE9 pGraphic_Device, const wstring & strShaderFilePath)
 {
 	CShader *	pInstance = new CShader(pGraphic_Device);
