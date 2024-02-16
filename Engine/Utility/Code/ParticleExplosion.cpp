@@ -3,9 +3,10 @@
 
 #include "Export_Utility.h"
 
-CParticleExplosion::CParticleExplosion(int numParticles, _float fSize)
+CParticleExplosion::CParticleExplosion(int numParticles, _float fSize, _float fSpeed)
 {
 	m_fSize = fSize;
+	m_fSpeed = fSpeed;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
 	m_VbBatchSize = 512;
@@ -44,11 +45,9 @@ bool CParticleExplosion::Ready_Particle(IDirect3DDevice9* pDevice)
 
 	FAILED_CHECK_RETURN(hr, E_FAIL);
 
-	wstring wstr = L"../Bin/Resource/Texture/Particle/explosion.png";
-
 	hr = D3DXCreateTextureFromFile(
 		pDevice,
-		wstr.c_str(),
+		m_wstrTexturePath.c_str(),
 		&m_pTex);
 
 	FAILED_CHECK_RETURN(hr, E_FAIL);
@@ -71,7 +70,7 @@ void CParticleExplosion::Reset_Partice(Attribute* attribute)
 		&attribute->_vVelocity,
 		&attribute->_vVelocity);
 
-	attribute->_vVelocity *= 2.f;
+	attribute->_vVelocity *= m_fSpeed;
 
 	attribute->_color = D3DXCOLOR(
 		1.f,
@@ -107,16 +106,21 @@ void CParticleExplosion::Update_Particle(_float fTimeDelat)
 		}
 	}
 
-	
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matWorld);
 
 	__super::Update_Particle(fTimeDelat);
 }
 
-CParticleExplosion* CParticleExplosion::Create(IDirect3DDevice9* pDevice, _matrix matWorld, _float fSize, _int iCount)
+CParticleExplosion* CParticleExplosion::Create(IDirect3DDevice9* pDevice, 
+	_matrix matWorld, 
+	_float fSize, 
+	_int iCount, _float fSpeed,
+	const _tchar* pTextruePath)
 {
-	CParticleExplosion* pInstance = new CParticleExplosion(iCount, fSize);
+	CParticleExplosion* pInstance = new CParticleExplosion(iCount, fSize, fSpeed);
 	pInstance->Set_World_Matrix(matWorld);
+	pInstance->m_wstrTexturePath = pTextruePath;
+	pInstance->m_fSpeed = fSpeed;
 
 	if (FAILED(pInstance->Ready_Particle(pDevice)))
 	{

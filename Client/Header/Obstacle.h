@@ -1,4 +1,4 @@
-#pragma once
+//#pragma once
 
 #include "Base.h"
 #include "MapObj.h"
@@ -37,6 +37,12 @@ private:
 	Engine::CCubeTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
+
+	_float m_fDestY = 1.f;
+
+	_float		m_fMoveSpeed = 60.f;
+
+	_bool		m_bArrived = false;
 
 public:
 	static CObstacle*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
