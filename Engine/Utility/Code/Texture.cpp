@@ -52,10 +52,8 @@ HRESULT CTexture::Ready_Texture(TEXTUREID eType, const _tchar * pPath, const _ui
 
 void CTexture::Set_Texture(const _uint & iIndex)
 {
-
 	if (m_vecTexture.size() < iIndex)
 		return;
-
 
 	m_pGraphicDev->SetTexture(0, m_vecTexture[iIndex]);
 }
