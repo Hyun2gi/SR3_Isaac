@@ -152,8 +152,11 @@ public:
 	int			Get_Azazel_Anim() { return m_iAzaelStateSet; }
 
 	void		Set_CameraShaking(float shakeTime = 0.6f, float shakeIntensity = 1.0f);
+	void		Set_CameraShaking_Sub(float shakeTime = 1.0f, float shakeIntensity = 1.0f);
+	void		Set_To_OriginAngle();
 
 	bool		Get_AzazelMode() { if (m_eCurPlayerVer == P_AZAZEL) { return true; } else { return false; } }
+	void		Set_CameraShakingBlock(bool block) { m_bCameraShaking = block; }
 
 public:
 	void		Bullet_Change_To_Brim();
@@ -257,6 +260,7 @@ private:
 	CGameObject*		m_pLeg;
 
 	int					m_iAzaelStateSet;
+	bool				m_bCameraShaking;
 
 private:
 	list<CGameObject*>	m_PlayerBulletList;
