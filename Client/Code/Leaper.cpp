@@ -36,6 +36,7 @@ HRESULT CLeaper::Ready_GameObject()
 
 	m_bMove = false;
 	m_bJump = false;
+	m_bEpicTime = false;
 
 	m_fPower = 1.8f;
 	m_fAccelTime = 0.f;
@@ -81,7 +82,17 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 
 	Check_Outof_Map();
 
-	Face_Camera();
+	// Epic
+	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
+		m_bEpicTime = true;
+
+	if (m_bEpicTime)
+		Epic_Time();
+	else
+	{
+		m_vOriginAngle = m_pTransformCom->m_vAngle;
+		Face_Camera();
+	}
 
 	if (Check_Time(m_fSlowDelta))
 	{
@@ -362,6 +373,17 @@ void CLeaper::Create_Shadow()
 {
 	m_pShadow = CShadow::Create(m_pGraphicDev);
 	m_pShadow->Get_TransformCom()->m_vScale = { SHADOW_SCALE, SHADOW_SCALE, SHADOW_SCALE };
+}
+
+void CLeaper::Epic_Time()
+{
+	Rotation_Epic();
+
+	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
+	{
+		m_pTransformCom->m_vAngle = m_vOriginAngle;
+		m_bEpicTime = false;
+	}
 }
 
 CLeaper* CLeaper::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID)

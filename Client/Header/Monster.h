@@ -54,6 +54,7 @@ protected:
 	void			Change_Color(const _float& fTimeDelta);
 	void			Check_Outof_Map();
 	void			Create_Start_Particle(_float fCallLimit);
+	void			Rotation_Epic();
 
 protected:
 	Engine::CRcTex* m_pBufferCom;

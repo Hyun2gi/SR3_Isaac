@@ -34,10 +34,12 @@ private:
 	void				JumpTo_Player(const _float& fTimeDelta);
 
 	void				Create_Shadow();
+	void				Epic_Time();
 
 private:
 	_bool				m_bMove;
 	_bool				m_bJump;
+	_bool				m_bEpicTime;
 	_int				m_iRandNum;
 	_int				m_iPicNum;
 	_float				m_fFrameSpeed = 1.f;
@@ -47,6 +49,7 @@ private:
 	_float				m_fAccelTime;
 
 	_vec3				m_vTargetPos;
+	_vec3				m_vOriginAngle;
 
 	LEAPERSTATE			m_ePreState;
 	LEAPERSTATE			m_eCurState;
