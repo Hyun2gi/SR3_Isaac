@@ -44,11 +44,9 @@ bool CParticleExplosion::Ready_Particle(IDirect3DDevice9* pDevice)
 
 	FAILED_CHECK_RETURN(hr, E_FAIL);
 
-	wstring wstr = L"../Bin/Resource/Texture/Particle/explosion.png";
-
 	hr = D3DXCreateTextureFromFile(
 		pDevice,
-		wstr.c_str(),
+		m_wstrTexturePath.c_str(),
 		&m_pTex);
 
 	FAILED_CHECK_RETURN(hr, E_FAIL);
@@ -107,16 +105,19 @@ void CParticleExplosion::Update_Particle(_float fTimeDelat)
 		}
 	}
 
-	
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, &m_matWorld);
 
 	__super::Update_Particle(fTimeDelat);
 }
 
-CParticleExplosion* CParticleExplosion::Create(IDirect3DDevice9* pDevice, _matrix matWorld, _float fSize, _int iCount)
+CParticleExplosion* CParticleExplosion::Create(IDirect3DDevice9* pDevice, 
+	_matrix matWorld, 
+	_float fSize, _int iCount,
+	const _tchar* pTextruePath)
 {
 	CParticleExplosion* pInstance = new CParticleExplosion(iCount, fSize);
 	pInstance->Set_World_Matrix(matWorld);
+	pInstance->m_wstrTexturePath = pTextruePath;
 
 	if (FAILED(pInstance->Ready_Particle(pDevice)))
 	{
