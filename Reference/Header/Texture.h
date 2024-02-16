@@ -13,6 +13,7 @@ protected:
 public:
 	HRESULT		Ready_Texture(TEXTUREID eType, const _tchar* pPath, const _uint& iCnt);
 	void		Set_Texture(const _uint& iIndex = 0);
+	void		Set_Texture(class CShader* pShader, D3DXHANDLE hParameter, const _uint& iIndex = 0);
 
 private:
 	vector<IDirect3DBaseTexture9*>		m_vecTexture;
