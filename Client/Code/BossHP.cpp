@@ -43,6 +43,7 @@ HRESULT CBossHP::Ready_GameObject()
 
 _int CBossHP::Update_GameObject(const _float& fTimeDelta)
 {
+	//알파값 변경된 것이 쉐이더에 잘 적용되는지 테스트용으로 작성해둠
 	if (GetAsyncKeyState(VK_UP))
 	{
 		m_fTest -= 1.f * fTimeDelta;
@@ -90,7 +91,7 @@ void CBossHP::Render_GameObject()
 	if (FAILED(m_pShaderCom->Bind_Float("g_fAlpahScale", m_fTest)))
 		return;
 
-	if (FAILED(m_pShaderCom->Begin_Shader(2)))
+	if (FAILED(m_pShaderCom->Begin_Shader(SHADER_ALPHA)))
 		return;
 
 	if(0 < m_iTargetHP)
