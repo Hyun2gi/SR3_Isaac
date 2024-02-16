@@ -54,6 +54,7 @@ protected:
 	virtual void			Set_Item_Value() {};
 
 	bool					Check_Time(const _float& fTimeDelta);
+	bool					Check_Time(const _float& fTimeDelta, float fLimit);
 	void					Setting_ItemTag();
 
 protected:
@@ -72,6 +73,7 @@ protected:
 
 	_float					m_fCallLimit;
 	_float					m_fAccTimeDelta;
+	_float					m_fSecAccTimeDelta;
 
 	_int					m_iPicNum;
 	_float					m_fFrame = 0.f;

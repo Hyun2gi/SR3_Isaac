@@ -28,8 +28,10 @@ void CSlotMC::Set_Machine_ToStage(CLayer* pLayer)
 
 void CSlotMC::Set_Game()
 {
-	m_bGame = true; 
-	Engine::PlayEffect(L"SlotMC.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.0f);
+	// 쿨타임 추가
+	m_bStartCoolTime = true;
+	//m_bGame = true; 
+	//Engine::PlayEffect(L"SlotMC.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.0f);
 }
 
 void CSlotMC::Set_Reward()
@@ -51,6 +53,7 @@ HRESULT CSlotMC::Ready_GameObject()
 	m_bGame = false;
 	m_bReward = false;
 	m_bMachineSet = false;
+	m_bStartCoolTime = false;
 
 	return S_OK;
 }
@@ -74,6 +77,17 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 		for (auto& iter : m_pCardList)
 		{
 			iter->Update_GameObject(fTimeDelta);
+		}
+	}
+
+	// 시작 쿨타임 주기
+	if (m_bStartCoolTime)
+	{
+		if (Check_Time(fTimeDelta, 3.f))
+		{
+			m_bStartCoolTime = false;
+			m_bGame = true;
+			Engine::PlayEffect(L"SlotMC.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.0f);
 		}
 	}
 
