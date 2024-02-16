@@ -7,7 +7,7 @@ class CDevil : public CMapObj
 {
 private:
 	explicit CDevil(LPDIRECT3DDEVICE9 pGraphicDev);
-	explicit CDevil(const CMapObj& rhs);
+	explicit CDevil(const CDevil& rhs);
 	virtual ~CDevil();
 
 public:

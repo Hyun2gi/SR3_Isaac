@@ -33,6 +33,7 @@ public:
 private:
 	HRESULT			Add_Component();
 	void			Update_Scale();
+	void			Change_Color(const _float& fTimeDelta);
 
 private:
 	Engine::CRcTex* m_pBufferCom;
@@ -40,6 +41,7 @@ private:
 	Engine::CTexture* m_pTextureCom;
 
 	_bool				m_bIsMom;
+	_bool				m_bHitColor;
 
 	_float				m_fAnimSpeed = 1.f;
 	_float				m_fCurFrame = 0.f;
@@ -51,6 +53,8 @@ private:
 	_int				m_iMaxFrameCount;
 
 	_int				m_iTargetHP;
+	_int				m_iColorCount;
+	_float				m_fColorTimeDelta;
 
 	CMonster*			m_pMonster;
 

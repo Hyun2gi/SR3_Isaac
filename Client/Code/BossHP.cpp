@@ -24,6 +24,8 @@ HRESULT CBossHP::Ready_GameObject()
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 
 	m_iStartFrame = 0;
+	m_iColorCount = 0;
+	m_fColorTimeDelta = 0.f;
 
 	m_pTransformCom->m_vScale.x = m_fSizeX;
 	m_pTransformCom->m_vScale.y = m_fSizeY;
@@ -31,6 +33,7 @@ HRESULT CBossHP::Ready_GameObject()
 	m_pTransformCom->Set_Pos(_vec3(m_fPosX, m_fPosY, 0.0f));
 
 	m_bIsMom = false;
+	m_bHitColor = false;
 
 	__super::Ready_GameObject();
 	Compute_ProjectionMatrix();
@@ -45,6 +48,12 @@ _int CBossHP::Update_GameObject(const _float& fTimeDelta)
 	m_fCurFrame = 0.f;
 
 	Update_Scale();
+
+	if (m_pMonster->Get_Hit())
+		m_bHitColor = true;
+
+	if(m_bHitColor)
+		Change_Color(fTimeDelta);
 	
 	CUI::Update_GameObject(fTimeDelta);
 
@@ -113,6 +122,35 @@ void CBossHP::Update_Scale()
 			m_pTransformCom->m_vScale.x = m_iTargetHP * fItvX;
 			m_pTransformCom->m_vInfo[INFO_POS].x = -fItvX * (645 - m_iTargetHP) * 0.6f;
 		}
+	}
+}
+
+void CBossHP::Change_Color(const _float& fTimeDelta)
+{
+	m_fColorTimeDelta += fTimeDelta;
+
+	if (m_fColorTimeDelta >= 0.1f)
+	{
+		D3DXCOLOR temp = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
+		m_pBufferCom->Set_Color(temp);
+
+		m_fColorTimeDelta = 0.f;
+
+		++m_iColorCount;
+		//m_bHitColor = false;
+
+		//return;
+	}
+	else
+	{
+		D3DXCOLOR temp = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+		m_pBufferCom->Set_Color(temp);
+	}
+
+	if (5 == m_iColorCount)
+	{
+		m_bHitColor = false;
+		return;
 	}
 }
 
