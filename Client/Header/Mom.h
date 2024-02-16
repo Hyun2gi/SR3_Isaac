@@ -4,11 +4,13 @@
 #include "GameObject.h"
 
 #include "Layer.h"
+#include "Shadow.h"
 
 class CMom : public CMonster
 {
 	const _float LIMIT_Y = 6.f; // 6.3
 	const _float ORIGIN_SCALE = 10.f;
+	const _float SHADOW_SCALE = 3.f;
 private:
 	explicit CMom(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CMom(const CMom& rhs);
@@ -35,6 +37,8 @@ private:
 	void				Attack(const _float& fTimeDelta);
 	void				Mom_Default();
 
+	void				Create_Shadow();
+
 	void				Animation_Attack();
 
 private:
@@ -50,6 +54,8 @@ private:
 	_float				m_fFrameSpeed = 1.f;
 
 	MOMSTATE			m_eState;
+
+	CShadow*			m_pShadow;
 
 public:
 	static CMom*	Create(LPDIRECT3DDEVICE9 pGraphicDev);

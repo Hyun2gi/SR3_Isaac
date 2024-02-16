@@ -104,7 +104,7 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 		_vec3 vMonstroPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vMonstroPos);
 		m_pShadow->Get_TransformCom()->Set_Pos(vMonstroPos.x, 0.1f, vMonstroPos.z);
-		m_pShadow->Update_GameObject(fTimeDelta);
+		m_pShadow->Update_GameObject(m_fSlowDelta);
 	}
 
 	// Bullet Update
