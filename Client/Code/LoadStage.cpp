@@ -1348,21 +1348,22 @@ void CLoadStage::Item_Collision()
 	if (pObj)
 	{
 		//충돌됨
-		dynamic_cast<CItem*>(pObj)->Run_Item_Effect();
-
-		// 아이템 습득 UI
-		ITEM_TYPE temp = dynamic_cast<CItem*>(pObj)->Get_Item_Type();
-		if (PILL == temp || BRIM == temp || EPIC == temp || SAD_ONION == temp || TRINKET == temp)
+		if (dynamic_cast<CItem*>(pObj)->Run_Item_Effect())
 		{
-			dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))->Set_Render();
-		}
-		dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))
-			->Set_ItemType(dynamic_cast<CItem*>(pObj)->Get_Item_Type());
+			// 아이템 습득 UI
+			ITEM_TYPE temp = dynamic_cast<CItem*>(pObj)->Get_Item_Type();
+			if (PILL == temp || BRIM == temp || EPIC == temp || SAD_ONION == temp || TRINKET == temp)
+			{
+				dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))->Set_Render();
+			}
+			dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))
+				->Set_ItemType(dynamic_cast<CItem*>(pObj)->Get_Item_Type());
 
-		if (PILL == temp) // 알약인 경우
-		{
-			dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))->Set_PillState(
-				dynamic_cast<CPill*>(pObj)->Get_Pill_Num());
+			if (PILL == temp) // 알약인 경우
+			{
+				dynamic_cast<CItemFontUI*>(m_mapLayer.at(L"UI")->Get_GameObject(L"ItemFontUI"))->Set_PillState(
+					dynamic_cast<CPill*>(pObj)->Get_Pill_Num());
+			}
 		}
 	}
 }

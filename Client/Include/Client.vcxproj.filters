@@ -322,6 +322,9 @@
     <Filter Include="02. GameObject\12. UI\06. FightScene\Player\Thumbnail">
       <UniqueIdentifier>{13170e22-6eaa-4e3d-af6a-1654f5665421}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\09. MapObject\08. Devil">
+      <UniqueIdentifier>{dc9fe435-f91b-4b11-ad85-26bb58bfb1ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -609,6 +612,9 @@
     <ClInclude Include="..\Header\MapIcon.h">
       <Filter>02. GameObject\12. UI\05. MiniMap\01. MiniMapIcon</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\Devil.h">
+      <Filter>02. GameObject\09. MapObject\08. Devil</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -886,6 +892,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\MapIcon.cpp">
       <Filter>02. GameObject\12. UI\05. MiniMap\01. MiniMapIcon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Devil.cpp">
+      <Filter>02. GameObject\09. MapObject\08. Devil</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -171,6 +171,7 @@
     <ClInclude Include="..\Header\Coin.h" />
     <ClInclude Include="..\Header\CoinFont.h" />
     <ClInclude Include="..\Header\CubeObject.h" />
+    <ClInclude Include="..\Header\Devil.h" />
     <ClInclude Include="..\Header\Dip.h" />
     <ClInclude Include="..\Header\Door.h" />
     <ClInclude Include="..\Header\Dople.h" />
@@ -267,6 +268,7 @@
     <ClCompile Include="..\Code\Coin.cpp" />
     <ClCompile Include="..\Code\CoinFont.cpp" />
     <ClCompile Include="..\Code\CubeObject.cpp" />
+    <ClCompile Include="..\Code\Devil.cpp" />
     <ClCompile Include="..\Code\Dip.cpp" />
     <ClCompile Include="..\Code\Door.cpp" />
     <ClCompile Include="..\Code\Dople.cpp" />
