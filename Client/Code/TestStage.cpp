@@ -124,15 +124,17 @@ Engine::_int CTestStage::Update_Scene(const _float& fTimeDelta)
 	{
 		CTransform* pTest = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
 
-		_matrix* mat = pTest->Get_WorldMatrix();
+		_matrix mat = *(pTest->Get_WorldMatrix());
+		mat._42 += 3.f;
 
 		//함수 사용 예
-		Engine::Create_Explosion(m_pGraphicDev, *mat);
-		Engine::Create_Dust(m_pGraphicDev, *mat);
-		Engine::Create_Splash(m_pGraphicDev, *mat);
-		Engine::Create_Splash_Left(m_pGraphicDev, *mat);
-		Engine::Create_Splash_Right(m_pGraphicDev, *mat);
-		Engine::Create_Burst(m_pGraphicDev, *mat);
+		Engine::Create_Explosion(m_pGraphicDev, mat);
+		Engine::Create_Dust(m_pGraphicDev, mat);
+		Engine::Create_Splash(m_pGraphicDev, mat);
+		Engine::Create_Splash_Left(m_pGraphicDev, mat);
+		Engine::Create_Splash_Right(m_pGraphicDev, mat);
+		mat._41 += 3.f;
+		Engine::Create_Burst(m_pGraphicDev, mat);
 
 		temp += D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.01f);
 		if (CPlayer::GetInstance()->Get_Component_Player_TexBuffer())

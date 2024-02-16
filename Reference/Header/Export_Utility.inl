@@ -79,9 +79,9 @@ inline void Kill_Scatter()
 	CParticleMgr::GetInstance()->Kill_Scatter();
 }
 
-inline void Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount)
+inline void Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount, const _tchar* pTexturePath)
 {
-	CParticleMgr::GetInstance()->Create_Explosion(pGraphicDev, matWorld, fSize, iCount);
+	CParticleMgr::GetInstance()->Create_Explosion(pGraphicDev, matWorld, fSize, iCount, pTexturePath);
 }
 
 inline void Create_Dust(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount)
