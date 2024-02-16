@@ -23,7 +23,7 @@ HRESULT CShadow::Ready_GameObject()
 	m_pTransformCom->Set_Pos(0.f, 0.1f, 0.f);
 	m_pTransformCom->m_vAngle.x = D3DXToRadian(90.f); // 70
 
-	m_bRender = true; // false
+	m_bRender = false; // false
 
 	return S_OK;
 }
@@ -52,6 +52,9 @@ void CShadow::Render_GameObject()
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
 	m_pTextureCom->Set_Texture((_uint)m_fFrame);
+
+	D3DXCOLOR temp = D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.f);
+	m_pBufferCom->Set_Color(temp);
 
 	if(m_bRender)
 		m_pBufferCom->Render_Buffer();

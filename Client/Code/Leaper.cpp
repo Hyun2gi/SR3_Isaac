@@ -345,12 +345,14 @@ void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 		{
 			//vPos.y -= 1.f;
 			vPos.y -= m_fSpeed * fTimeDelta * 5.f;
+			m_pShadow->Set_Render(true);
 		}
 		else
 		{
 			vPos.y = HEIGHT_Y;
 			m_eCurState = LEAPER_IDLE;
 			m_bJump = false;
+			m_pShadow->Set_Render(false);
 		}
 	}
 	m_pTransformCom->Set_Pos(vPos);

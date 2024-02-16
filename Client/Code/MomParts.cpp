@@ -102,14 +102,14 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 		Change_State();
 		m_bCheckCreate = true;
 
-		Check_CreateMst(); // 잡몹 생성 여부 판단
+		//Check_CreateMst(); // 잡몹 생성 여부 판단
 	}
 
-	//if (m_bCheckCreate) // 잡몹 생성 여부 판단 가능할 때
-	//{
-	//	Check_CreateMst(); // 잡몹 생성 여부 판단
-	//	m_bCheckCreate = false;
-	//}
+	if (m_bCheckCreate) // 잡몹 생성 여부 판단 가능할 때
+	{
+		Check_CreateMst(); // 잡몹 생성 여부 판단
+		m_bCheckCreate = false;
+	}
 
 	if (m_bMstCreate) // 잡몹 생성 패턴
 	{
