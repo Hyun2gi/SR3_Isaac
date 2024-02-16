@@ -31,6 +31,29 @@ HRESULT CObstacle::Ready_GameObject()
 
 Engine::_int CObstacle::Update_GameObject(const _float& fTimeDelta)
 {
+	_vec3 vDir = _vec3(0.f, -1.f, 0.f);
+
+	if (!m_bArrived && 1 < m_pTransformCom->m_vInfo[INFO_POS].y)
+	{
+		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+	}
+	else if(!m_bArrived)
+	{
+		m_bArrived = true;
+		m_pTransformCom->m_vInfo[INFO_POS].y = 1;
+
+		_matrix	mat = *(m_pTransformCom->Get_WorldMatrix());
+
+		mat._42 -= 1.f;
+
+		_float fRandNumX = (rand() % 5 + 1) * 0.1f;
+		_float fRandNumZ = (rand() % 5 + 1) * 0.1f;
+		mat._41 += fRandNumX;
+		mat._43 += fRandNumZ;
+
+		CParticleMgr::GetInstance()->Create_Explosion(m_pGraphicDev, mat, 1.f, 30, 4.f);
+	}
+
 	__super::Compute_ViewZ(&m_pTransformCom->m_vInfo[INFO_POS]);
 	
 	CGameObject::Update_GameObject(fTimeDelta);
@@ -61,8 +84,9 @@ HRESULT CObstacle::Set_Cute_Texture(const _tchar* pTextureTag)
 
 void CObstacle::Set_Pos(_vec3 vPos)
 {
-	//m_vDestPos = vPos;
-	m_pTransformCom->Set_Pos(vPos);
+	//m_fDestY = vPos.y;
+	//m_pTransformCom->Set_Pos(vPos);
+	//m_pTransformCom->m_vInfo[INFO_POS].y += 100.f;
 }
 
 HRESULT CObstacle::Add_Component()
@@ -76,7 +100,7 @@ HRESULT CObstacle::Add_Component()
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
-	m_pTransformCom->m_vInfo[INFO_POS] = { 10, 1, 10 };
+	m_pTransformCom->m_vInfo[INFO_POS] = { 10, 50, 10 };
 
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ObstacleTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
