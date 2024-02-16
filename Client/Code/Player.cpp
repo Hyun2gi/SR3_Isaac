@@ -481,6 +481,16 @@ void CPlayer::Set_MouseRotation(float xRad, float yRad)
 
 void CPlayer::Set_BulletType(int _bullet)
 {
+	if (!m_PlayerBulletList.empty())
+	{
+		for (auto& iter = m_PlayerBulletList.begin();
+			iter != m_PlayerBulletList.end(); )
+		{
+			Engine::Safe_Release(*iter);
+			iter = m_PlayerBulletList.erase(iter);
+		}
+	}
+
 	switch (_bullet)
 	{
 	case 1:

@@ -38,10 +38,14 @@ private:
 	void			Create_RoomParts();
 	void			Setting_NowRoom(); // 현재 방
 	void			Setting_CheckRoom(); // 가본 방
+	void			Setting_FrontRoom();
+
+	void			Resetting_FrontRoom();
 
 private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
+	Engine::CTransform* m_pPlayerTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
 	_bool				m_bRender;
@@ -58,6 +62,8 @@ private:
 	_int				m_iNowRoomNum; // 현재 방 번호
 
 	string				m_strRoomTypeNow; // 현재 방 정보
+
+	_vec3				m_vecOriginLook;
 
 	vector<CMapParts*>	m_vecRoomParts;
 

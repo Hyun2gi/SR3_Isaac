@@ -46,23 +46,30 @@ _int CMapParts::Update_GameObject(const _float& fTimeDelta)
 {
 	//m_fCurFrame = 2.3f; // 방 상태에 따라 다르게 표기
 
-	/*m_fCurFrame += 3 * fTimeDelta * 2.f;
-
-	if (3.f < m_fCurFrame)
-	{
-		m_fCurFrame = 0.f;
-	}*/
 	CUI::Update_GameObject(fTimeDelta);
 
-	if (m_bNowRoom)
-		m_fCurFrame = 2.f;
-	else // 현재 방이 아닐 때
+	if (m_bFrontRoom)
 	{
-		if (m_bCheckRoom)
-			m_fCurFrame = 1.f;
-		else
+		m_fCurFrame += 3 * fTimeDelta * 2.f;
+
+		if (3.f < m_fCurFrame)
+		{
 			m_fCurFrame = 0.f;
+		}
 	}
+	else
+	{
+		if (m_bNowRoom)
+			m_fCurFrame = 2.f;
+		else // 현재 방이 아닐 때
+		{
+			if (m_bCheckRoom)
+				m_fCurFrame = 1.f;
+			else
+				m_fCurFrame = 0.f;
+		}
+	}
+
 
 	if (m_pMapIcon != nullptr)
 	{
