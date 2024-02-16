@@ -1851,7 +1851,7 @@ void CLoadStage::Link_MomParts_ToLayer()
 		{
 			if (MOM_PARTS == dynamic_cast<CMonster*>(iter.second)->Get_BossType())
 			{
-				dynamic_cast<CMomParts*>(iter.second)->Set_Layer(m_mapLayer.at(L"UI"));
+				dynamic_cast<CMomParts*>(iter.second)->Set_Layer(m_mapLayer.at(L"GameMst"));
 			}
 		}
 	}

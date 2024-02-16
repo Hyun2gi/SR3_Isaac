@@ -42,6 +42,7 @@ HRESULT CMomParts::Ready_GameObject()
 	m_bScaleReduce = false;
 	m_bScaleChange = false;
 	m_bMstCreate = false;
+	m_bCheckCreate = false;
 	m_iScaleCount = 0;
 
 	m_bBoss = true;
@@ -66,11 +67,6 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 		return 1;
 	}
 
-	if (!m_bCreate)
-	{
-		if (Check_Time(fTimeDelta))
-			Create_Start_Particle(3.f);
-	}
 
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
@@ -92,6 +88,12 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 			m_fFrame = 0.f;
 	}
 
+	if (!m_bCreate)
+	{
+		if (Check_Time(m_fSlowDelta))
+			Create_Start_Particle(3.f);
+	}
+
 	Set_RandNum();
 
 	if (Check_Time(m_fSlowDelta))
@@ -99,16 +101,28 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 		m_fCallLimit = (_float)m_iRandNum;
 
 		Change_State();
-		m_bMstCreate = true;
+		m_bCheckCreate = true; // 상태가 변환되는 일정 시간마다 잡몹 생성 여부 판단 true
+		// true가 계속되는 거 같움
+		++m_iTestCount; // 테스트용 정수
 	}
 
-	if(m_bMstCreate)
-		Check_CreateMst();
+	if (m_bCheckCreate) // 잡몹 생성 여부 판단 가능할 때
+	{
+		Check_CreateMst(); // 잡몹 생성 여부 판단
+		m_bCheckCreate = false;
+	}
 
-	if (m_bScaleChange)
+	if (m_bMstCreate) // 잡몹 생성 패턴
+	{
+		m_pTransformCom->Get_Info(INFO_POS, &m_vecCreatePos);
+		Create_Mst(m_vecCreatePos);
+		m_bMstCreate = false;
+	}
+
+	if (m_bScaleChange) // 상태 변환 시 애니메이션
 		Animation_Change();
 
-	if (m_pMom->Get_Dead())
+	if (m_pMom->Get_Dead()) // Mom 사망 시 Parts도 Dead 처리
 		m_bDead = true;
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
@@ -239,7 +253,7 @@ void CMomParts::Set_RandNum()
 	DWORD dwSeed = (m_iIndex << 16) | (time(NULL) % 1000);
 	srand(dwSeed);
 	m_iRandNum = rand() % 10;
-	m_iRandNumMstCreate = rand() % 3;
+	m_iRandNumMstCreate = rand() % 5; // 이 값이 이상한가
 }
 
 void CMomParts::Change_State()
@@ -300,43 +314,34 @@ void CMomParts::Animation_Change()
 	m_pTransformCom->m_vScale = vScale;
 }
 
-void CMomParts::Attack_CreateMst()
+void CMomParts::Check_CreateMst	()
 {
-}
-
-void CMomParts::Check_CreateMst()
-{
-	if (MOM_DOOR != m_eCurState && MOM_END != m_eCurState)
+	if (MOM_DOOR != m_eCurState && MOM_END != m_eCurState) // Parts 상태가 hand, skin, eye중 하나 일 때
 	{
 		if (0 == m_iRandNumMstCreate) // 3분의 1 확률로 몬스터 생성
 		{
-			_vec3 vCreatePos;
-			m_pTransformCom->Get_Info(INFO_POS, &vCreatePos);
-
 			// 동서남북에 따라 생성 위치 바꿔주기
 			switch (m_iIndex)
 			{
 			case 0: // 상
-				vCreatePos.z -= 10.f;
-				Create_Mst(vCreatePos);
+				m_vecCreatePos.z -= 5.f;
 				break;
 			case 1: // 우
-				vCreatePos.x -= 10.f;
-				Create_Mst(vCreatePos);
+				m_vecCreatePos.x -= 5.f;
 				break;
 			case 2: // 하
-				vCreatePos.z += 10.f;
-				Create_Mst(vCreatePos);
+				m_vecCreatePos.z += 5.f;
 				break;
 			case 3: // 좌
-				vCreatePos.x += 10.f;
-				Create_Mst(vCreatePos);
+				m_vecCreatePos.x += 5.f;
 				break;
 			}
+			m_bMstCreate = true; // 몬스터 생성 가능할 때만 true //////
 		}
-		m_bMstCreate = false;
+		else
+			m_bMstCreate = false;
 	}
-}
+}	
 
 void CMomParts::Create_Mst(_vec3 vPos)
 {
@@ -345,36 +350,41 @@ void CMomParts::Create_Mst(_vec3 vPos)
 	switch (m_iRandNumMstCreate)
 	{
 	case 0: // Fly
-		for (int i = 0; i < 3; ++i)
-		{
-			CFly* pFly = CFly::Create(m_pGraphicDev, i);
-			pFly->Get_Transform()->Set_Pos(vPos.x, vPos.y, vPos.z);
-			m_pLayer->Add_GameObject(L"Fly", pFly);
-		}
+	{
+		CFly* pFly = CFly::Create(m_pGraphicDev, 0);
+		pFly->Get_Transform()->Set_Pos(vPos.x, 3.f, vPos.z);
+		pFly->Set_MyLayer(m_vecMyLayer[0]);
+		m_pLayer->Add_GameObject(L"Fly", pFly);
+		m_bMstCreate = false;
 		break;
+	}
 	case 1: // Squirt
 	{
 		CSquirt* pSquirt = CSquirt::Create(m_pGraphicDev, 0);
 		pSquirt->Get_Transform()->Set_Pos(vPos.x, 1.2f, vPos.z);
+		pSquirt->Set_MyLayer(m_vecMyLayer[0]);
 		m_pLayer->Add_GameObject(L"Squirt", pSquirt);
+		m_bMstCreate = false;
 		break;
 	}
 	case 2: // Leaper
 	{
 		CLeaper* pLeaper = CLeaper::Create(m_pGraphicDev, 0);
 		pLeaper->Get_Transform()->Set_Pos(vPos.x, 0.4f, vPos.z);
+		pLeaper->Set_MyLayer(m_vecMyLayer[0]);
 		m_pLayer->Add_GameObject(L"Leaper", pLeaper);
+		m_bMstCreate = false;
 		break;
 	}
 	case 3: // Charger
 	{
 		CCharger* pCharger = CCharger::Create(m_pGraphicDev);
-		pCharger->Get_Transform()->Set_Pos(vPos.x, 0.5f, vPos.z); // y값 이슈 있을 수도
+		pCharger->Get_Transform()->Set_Pos(vPos.x, 0.5f, vPos.z);
+		pCharger->Set_MyLayer(m_vecMyLayer[0]);
 		m_pLayer->Add_GameObject(L"Charger", pCharger);
+		m_bMstCreate = false;
 		break;
 	}
-	default:
-		break;
 	}
 }
 
