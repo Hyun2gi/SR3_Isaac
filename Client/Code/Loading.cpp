@@ -144,6 +144,9 @@ _uint CLoading::Loading_ForStage_Load(int iType)
 
 	// Shadow
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_ShadowTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Shadow.png")), E_FAIL);
+	
+	// Devil
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_DevilTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Devil.png")), E_FAIL);
 
 #pragma endregion MapObject
 
