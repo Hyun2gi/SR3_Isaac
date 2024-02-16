@@ -51,6 +51,10 @@ _int CBossHP::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_pMonster->Get_Hit())
 		m_bHitColor = true;
+	if (m_bIsMom)
+	{
+		
+	}
 
 	if(m_bHitColor)
 		Change_Color(fTimeDelta);
@@ -143,13 +147,14 @@ void CBossHP::Change_Color(const _float& fTimeDelta)
 	}
 	else
 	{
-		D3DXCOLOR temp = D3DXCOLOR(0.f, 0.f, 0.f, 1.f);
+		D3DXCOLOR temp = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.f);
 		m_pBufferCom->Set_Color(temp);
 	}
 
-	if (5 == m_iColorCount)
+	if (3 == m_iColorCount)
 	{
 		m_bHitColor = false;
+		m_iColorCount = 0;
 		return;
 	}
 }

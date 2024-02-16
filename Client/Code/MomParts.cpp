@@ -117,7 +117,8 @@ void CMomParts::LateUpdate_GameObject()
 		{
 			m_bHit = false;
 			m_bHitColor = true;
-			m_pMom->Set_Hp_Minus();
+			//m_pMom->Set_Hp_Minus();
+			m_pMom->Hit();
 		}
 	}
 
