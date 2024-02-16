@@ -135,9 +135,13 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		// 아이템 드랍
 		Drop_ITem();
 
-		// MiniMap을 매번 업데이트?
+		// MiniMap 업데이트
 		Update_MiniMap();
-
+		// Mom 스테이지 몬스터 생성 기믹
+		if (10 == m_iCurStageKey)
+		{
+			Link_MomParts_ToLayer();
+		}
 	}
 
 	_int	iExit = __super::Update_Scene(fTimeDelta);
@@ -1839,6 +1843,19 @@ void CLoadStage::Update_MiniMap()
 	}
 }
 
+void CLoadStage::Link_MomParts_ToLayer()
+{
+	if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"MomParts") != nullptr)
+	{
+		for (auto& iter : m_mapLayer.at(L"GameMst")->Get_ObjectMap())
+		{
+			if (MOM_PARTS == dynamic_cast<CMonster*>(iter.second)->Get_BossType())
+			{
+				dynamic_cast<CMomParts*>(iter.second)->Set_Layer(m_mapLayer.at(L"GameMst"));
+			}
+		}
+	}
+}
 
 void CLoadStage::Play_Ending(const _float& fTimeDelta)
 {
