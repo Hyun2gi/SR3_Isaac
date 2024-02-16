@@ -10,6 +10,7 @@ BEGIN(Engine)
 class CRcTex;
 class CTexture;
 class CTransform;
+class CShader;
 
 END
 
@@ -39,6 +40,7 @@ private:
 	Engine::CRcTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
+	Engine::CShader* m_pShaderCom = { nullptr };
 
 	_bool				m_bIsMom;
 	_bool				m_bHitColor;
@@ -57,6 +59,8 @@ private:
 	_float				m_fColorTimeDelta;
 
 	CMonster*			m_pMonster;
+
+	_float				m_fTest = 1.f;
 
 public:
 	static CBossHP* Create(LPDIRECT3DDEVICE9	pGraphicDev,
