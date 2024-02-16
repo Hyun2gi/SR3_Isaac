@@ -113,7 +113,7 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bMstCreate) // 잡몹 생성 패턴
 	{
-		Create_Mst(m_vecCreatePos);
+		Create_Mst(m_vecCreatePos); // 이 함수가 엄청 많이 실행되는 경우가 있음
 		m_bMstCreate = false;
 	}
 
@@ -326,17 +326,22 @@ void CMomParts::Check_CreateMst()
 			{
 			case 0: // 상
 				m_vecCreatePos.z -= 5.f;
+				m_bCheckCreate = false;
 				break;
 			case 1: // 우
-				m_vecCreatePos.x -= 5.f;
+				m_vecCreatePos.x -= 5.f;		
+				m_bCheckCreate = false;
 				break;
 			case 2: // 하
 				m_vecCreatePos.z += 5.f;
+				m_bCheckCreate = false;
 				break;
 			case 3: // 좌
 				m_vecCreatePos.x += 5.f;
+				m_bCheckCreate = false;
 				break;
 			}
+			m_bCheckCreate = false;
 		}
 		else
 			m_bMstCreate = false; //  해줄 필요 없을 텐데
@@ -377,7 +382,9 @@ void CMomParts::Create_Mst(_vec3 vPos)
 		m_pLayer->Add_GameObject(L"Pacer", pPacer);
 		m_bMstCreate = false;
 		break;
-	}
+	}default:
+		m_bMstCreate = false;
+		break;
 	}
 }
 

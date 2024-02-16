@@ -50,6 +50,7 @@ HRESULT CSlotMC::Ready_GameObject()
 	m_bCreate = false;
 	m_bGame = false;
 	m_bReward = false;
+	m_bMachineSet = false;
 
 	return S_OK;
 }
@@ -78,8 +79,15 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bGame) // 플레이어와 충돌 시 
 	{
+		if (!m_bMachineSet) // 머신 게임 상태 Set
+		{
+			if (m_pMachine != nullptr)
+				m_pMachine->Set_Game();
+
+			m_bMachineSet = true;
+		}
+
 		// 슬롯카드에게 휘리릭 상태를 부여
-		
 		for (auto& iter : m_pCardList)
 		{
 			iter->Set_Random(); // 슬롯 카드들 휘리릭~ true
@@ -108,6 +116,8 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 			}
 		}
 	}
+	else
+		m_bMachineSet = false;
 
 	return 0;
 }

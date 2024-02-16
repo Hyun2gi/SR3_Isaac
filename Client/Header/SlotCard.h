@@ -47,7 +47,6 @@ private:
 	_bool				m_bReward;
 	_bool				m_bResult; // 랜덤 휘리릭 끝났고 게임 결과를 보여주는 중
 
-
 	_int				m_iIndex;
 	_int				m_iNoLuckNum; // 꽝 카드
 	_int				m_iReward;
