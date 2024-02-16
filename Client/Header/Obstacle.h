@@ -38,6 +38,8 @@ private:
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
+	_vec3 m_vDestPos;
+
 public:
 	static CObstacle*		Create(LPDIRECT3DDEVICE9	pGraphicDev);
 
