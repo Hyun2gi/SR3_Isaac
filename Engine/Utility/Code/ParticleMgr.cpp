@@ -25,9 +25,9 @@ void CParticleMgr::Kill_Scatter()
 	dynamic_cast<CParticleScatter*>(m_pParticleList.front())->Kill_All();
 }
 
-void CParticleMgr::Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount, const _tchar* pTexturePath)
+void CParticleMgr::Create_Explosion(LPDIRECT3DDEVICE9 pGraphicDev, _matrix matWorld, _float fSize, _int iCount, _float fSpeed, const _tchar* pTexturePath)
 {
-	CParticleExplosion* pParticle = CParticleExplosion::Create(pGraphicDev, matWorld, fSize, iCount, pTexturePath);
+	CParticleExplosion* pParticle = CParticleExplosion::Create(pGraphicDev, matWorld, fSize, iCount, fSpeed, pTexturePath);
 	pParticle->Set_World_Matrix(matWorld);
 	m_pParticleList.emplace_back(pParticle);
 }
