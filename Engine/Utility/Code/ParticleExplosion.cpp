@@ -3,9 +3,10 @@
 
 #include "Export_Utility.h"
 
-CParticleExplosion::CParticleExplosion(int numParticles, _float fSize)
+CParticleExplosion::CParticleExplosion(int numParticles, _float fSize, _float fSpeed)
 {
 	m_fSize = fSize;
+	m_fSpeed = fSpeed;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
 	m_VbBatchSize = 512;
@@ -69,7 +70,7 @@ void CParticleExplosion::Reset_Partice(Attribute* attribute)
 		&attribute->_vVelocity,
 		&attribute->_vVelocity);
 
-	attribute->_vVelocity *= 2.f;
+	attribute->_vVelocity *= m_fSpeed;
 
 	attribute->_color = D3DXCOLOR(
 		1.f,
@@ -112,12 +113,14 @@ void CParticleExplosion::Update_Particle(_float fTimeDelat)
 
 CParticleExplosion* CParticleExplosion::Create(IDirect3DDevice9* pDevice, 
 	_matrix matWorld, 
-	_float fSize, _int iCount,
+	_float fSize, 
+	_int iCount, _float fSpeed,
 	const _tchar* pTextruePath)
 {
-	CParticleExplosion* pInstance = new CParticleExplosion(iCount, fSize);
+	CParticleExplosion* pInstance = new CParticleExplosion(iCount, fSize, fSpeed);
 	pInstance->Set_World_Matrix(matWorld);
 	pInstance->m_wstrTexturePath = pTextruePath;
+	pInstance->m_fSpeed = fSpeed;
 
 	if (FAILED(pInstance->Ready_Particle(pDevice)))
 	{
