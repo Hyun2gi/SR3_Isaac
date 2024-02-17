@@ -4,7 +4,7 @@
 
 CParticleBurst::CParticleBurst(int numParticles, _float fSize)
 {
-	m_fSize = 0.5f;
+	m_fSize = fSize;
 	m_VbSize = 2048;
 	m_VbOffset = 0;
 	m_VbBatchSize = 512;

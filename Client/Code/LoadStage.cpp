@@ -47,6 +47,7 @@
 #include "Obstacle.h"
 #include "MoveXObstacle.h"
 #include "MoveZObstacle.h"
+#include "Devil.h"
 
 // 총알
 #include "EpicBullet.h"
@@ -389,7 +390,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 					int randNum1 = rand() % 10 + 5;
 					int randNum2 = rand() % 10 + 5;
-					int randNumSpeed = rand() % 30 + 10;
+					int randNumSpeed = rand() % 15 + 10;
 
 					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Left(randNum1);
 					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Right(randNum2);
@@ -409,12 +410,23 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 					int randNum1 = rand() % 10 + 5;
 					int randNum2 = rand() % 10 + 5;
-					int randNumSpeed = rand() % 30 + 10;
+					int randNumSpeed = rand() % 15 + 10;
 
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Up(randNum1);
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Down(randNum2);
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Speed(randNumSpeed);
 					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle_Z", pGameObject), E_FAIL);
+
+					break;
+				}
+				case DEVIL:
+				{
+					pGameObject = CDevil::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Devil", pGameObject), E_FAIL);
 
 					break;
 				}
@@ -1696,6 +1708,33 @@ void CLoadStage::Obstacle_Collsion()
 				CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
 				Engine::Check_Collision(pPlayerTrans, pTrans);
 			}
+		}
+
+		for (auto& iter : mapObj)
+		{
+			if (OBSTACLE_X <= dynamic_cast<CMapObj*>(iter.second)->Get_Type() && dynamic_cast<CMapObj*>(iter.second)->Get_Type() <= OBSTACLE_Z)
+			{
+				for (auto& iter2 : mapObj)
+				{
+					if (iter == iter2) continue;
+
+					if (OBSTACLE == dynamic_cast<CMapObj*>(iter2.second)->Get_Type())
+					{
+						CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+						CTransform* pTrans2 = dynamic_cast<CTransform*>(iter2.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+
+					
+						if (Engine::Check_Intersect(pTrans, pTrans2))
+						{
+							//Engine::Check_Collision(pPlayerTrans, pTrans);
+
+							dynamic_cast<CMoveZObstacle*>(iter.second)->Set_Turn();
+						}
+					}
+				}
+			}
+			
+			
 		}
 	}
 
