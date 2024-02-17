@@ -52,7 +52,6 @@ private:
 
 	_int				m_iRandNum;
 	_int				m_iRandNumMstCreate; // 몬스터 생성 난수
-	_int				m_iTestCount = 0;
 	_int				m_iIndex;
 	_int				m_iPicNum;
 	_float				m_fFrameSpeed = 1.f;

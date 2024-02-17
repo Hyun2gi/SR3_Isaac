@@ -261,10 +261,8 @@ void CMomParts::Motion_Change()
 
 void CMomParts::Set_RandNum()
 {
-	/*DWORD dwSeed = (m_iIndex << 16) | (time(NULL) % 1000);
-	srand(dwSeed);*/
-	m_iRandNum = rand() % 6; // 10 // 얘를 줄이면 엄청 많이 나오던데?
-	m_iRandNumMstCreate = rand() % 3; // 이 값이 이상한가
+	m_iRandNum = rand() % 6;
+	m_iRandNumMstCreate = rand() % 3;
 }
 
 void CMomParts::Change_State()
@@ -332,7 +330,7 @@ void CMomParts::Check_CreateMst()
 		if (0 == m_iRandNumMstCreate) // 3분의 1 확률로 몬스터 생성
 		{
 			m_pTransformCom->Get_Info(INFO_POS, &m_vecCreatePos);
-			m_bMstCreate = true; // 몬스터 생성 가능할 때만 true //////
+			m_bMstCreate = true; // 몬스터 생성 가능할 때만 true
 
 			// 동서남북에 따라 생성 위치 바꿔주기
 			switch (m_iIndex)
@@ -356,7 +354,7 @@ void CMomParts::Check_CreateMst()
 			}
 		}
 		else
-			m_bMstCreate = false; //  해줄 필요 없을 텐데
+			m_bMstCreate = false;
 	}
 	m_bCheckCreate = false;
 }	
@@ -364,7 +362,6 @@ void CMomParts::Check_CreateMst()
 void CMomParts::Create_Mst(_vec3 vPos)
 {
 	int iCreateMst = rand() % 3;
-	++m_iTestCount; // 함수가 몇 번 호출되는가
 
 	switch (iCreateMst)
 	{
