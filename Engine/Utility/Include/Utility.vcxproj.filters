@@ -97,6 +97,9 @@
     <Filter Include="09. Particle\ParticleSplashForward">
       <UniqueIdentifier>{dfe53683-cbf2-4747-a350-85348062db27}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04. Component\04. Shader">
+      <UniqueIdentifier>{1cf4a242-8b2a-45a4-9387-c8b15c601f3c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Header\Management.h">
@@ -195,6 +198,9 @@
     <ClInclude Include="..\..\Header\ParticleSplashForward.h">
       <Filter>09. Particle\ParticleSplashForward</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Header\Shader.h">
+      <Filter>04. Component\04. Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Code\Management.cpp">
@@ -289,6 +295,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\ParticleSplashForward.cpp">
       <Filter>09. Particle\ParticleSplashForward</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\Shader.cpp">
+      <Filter>04. Component\04. Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

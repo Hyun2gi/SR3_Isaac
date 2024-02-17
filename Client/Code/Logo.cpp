@@ -215,9 +215,8 @@ HRESULT CLogo::Ready_Prototype()
 {
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_RcTex", CRcTex::Create(m_pGraphicDev)), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_LogoTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Intro/intro_bg.png")), E_FAIL);
-	// ·Î°í ÅØ½ºÃÄ ¹Ù²åÀ½ _ º¸¹Î
-
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_TitleTexture", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Ui/Intro/Title_%d.png", 2)), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Shader_Rect", CShader::Create(m_pGraphicDev, L"../Bin/ShaderFiles/Shader_Rect.hlsl")), E_FAIL);
 
 	return S_OK;
 }

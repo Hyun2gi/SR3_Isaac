@@ -354,7 +354,7 @@ void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 		else
 		{
 			Engine::PlayEffect(L"hellboss ground pound 2.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
-			CPlayer::GetInstance()->Set_CameraShaking(0.8,1.0f);
+			CPlayer::GetInstance()->Set_CameraShaking_Sub(0.8,1.0f);
 			vPos.y = CENTERY;
 			m_bJump = false;
 			m_bBullet = true;

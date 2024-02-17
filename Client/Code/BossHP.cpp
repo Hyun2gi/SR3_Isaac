@@ -43,6 +43,13 @@ HRESULT CBossHP::Ready_GameObject()
 
 _int CBossHP::Update_GameObject(const _float& fTimeDelta)
 {
+	//알파값 변경된 것이 쉐이더에 잘 적용되는지 테스트용으로 작성해둠
+	if (GetAsyncKeyState(VK_UP))
+	{
+		m_fTest -= 1.f * fTimeDelta;
+	}
+
+
 	// Boss의 HP를 받아와서 상태 변경
 
 	m_fCurFrame = 0.f;
@@ -73,10 +80,25 @@ void CBossHP::Render_GameObject()
 {
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 
-	m_pTextureCom->Set_Texture((_int)m_fCurFrame);
+	m_pTextureCom->Set_Texture(m_pShaderCom, "g_Texture", (_int)m_fCurFrame);
+
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_WorldMatrix", m_pTransformCom->Get_WorldMatrix())))
+		return;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ViewMatrix", &m_matView)))
+		return;
+	if (FAILED(m_pShaderCom->Bind_Matrix("g_ProjMatrix", &m_matProj)))
+		return;
+	if (FAILED(m_pShaderCom->Bind_Float("g_fAlpahScale", m_fTest)))
+		return;
+
+	if (FAILED(m_pShaderCom->Begin_Shader(SHADER_ALPHA)))
+		return;
 
 	if(0 < m_iTargetHP)
 		m_pBufferCom->Render_Buffer();
+
+	if (FAILED(m_pShaderCom->End_Shader()))
+		return;
 }
 
 HRESULT CBossHP::Add_Component()
@@ -95,6 +117,10 @@ HRESULT CBossHP::Add_Component()
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
+
+	pComponent = m_pShaderCom = dynamic_cast<CShader*>(Engine::Clone_Proto(L"Proto_Shader_Rect"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_Shader_Rect", pComponent });
 
 	return S_OK;
 }

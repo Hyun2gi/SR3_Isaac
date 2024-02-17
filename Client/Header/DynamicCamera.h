@@ -53,6 +53,7 @@ public:
 public:
 	// 카메라 움직임 설정 (흔들림 시작이나 움직임 시작할때 해당함수 불러주기)
 	void	OnShakeCameraPos(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
+	void	OnShakeCameraPos_Sub(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
 	void	OnShakeCameraRot(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
 
 	void	OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 target, bool fixedPosition, int afterstate);
@@ -94,6 +95,8 @@ public:
 	// 카메라 움직임 등 카메라 자체 움직임을 시작
 	void				Set_TotalCameraStart() { m_bMouseCameraStart = true; }
 
+	bool				Get_ShakingCamera() { if (m_bShakeCamera || m_bShakeCamera_Sub) { return true; } else { return false; } }
+
 private:
 	virtual void Free();
 	void		Key_Input(const _float& fTimeDelta);
@@ -105,6 +108,7 @@ private:
 	// 직접 사용하지 않고 On~ 함수를 통해 설정하면 자동으로 실행되는 함수들
 	// 카메라 흔들림 실행하는 함수
 	void	ShakeByPosition(const _float& fTimeDelta);
+	void	ShakeByPosition_Sub(const _float& fTimeDelta);
 	void	ShakeByRotation(const _float& fTimeDelta);
 	// 움직이는 함수 실행
 	void	MoveToTarget(const _float& fTimeDelta);
@@ -130,6 +134,7 @@ private:
 	_vec3		m_vStartAtPosition;
 	_vec3		m_vGoalPosition;
 
+	_vec3		m_vShakeBoundary;
 
 	// X,Y,Z 회전각
 	float		m_fAngleX;
@@ -143,11 +148,12 @@ private:
 	// 흔들림
 	float		m_fShakeTime;
 	float		m_fShakeIntensity;
-	int			m_iShakeNum; // -, + 조절
+	bool		m_bChangeShakeDir; // -, + 조절
 
 	float		m_fMoveTime;
 
 	_bool		m_bShakeCamera;
+	_bool		m_bShakeCamera_Sub;
 	_bool		m_bMove;
 	_bool		m_bFirstPerson;
 	_bool		m_bPreFirstPerson;
