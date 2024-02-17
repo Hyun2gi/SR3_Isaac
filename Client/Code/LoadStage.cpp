@@ -1481,13 +1481,23 @@ void CLoadStage::Moster_Collision()
 	}
 
 	// Dople <-> Spike 충돌
-	if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr)
+	if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr) // Dople과 Spike가 생성된 경우
 	{
-		CGameObject* pDople = m_mapLayer.at(L"GameMst")->Collision_GameObject(Get_GameObject(L"MapObj", L"Spike"));
-		if (pDople)
+		for (auto& iter : m_mapLayer.at(L"MapObj")->Get_ObjectMap())
 		{
-			if (DOPLE == dynamic_cast<CMonster*>(pDople)->Get_MstType())
-				dynamic_cast<CDople*>(pDople)->Hit();
+			if (SPIKE == dynamic_cast<CMapObj*>(iter.second)->Get_Type()) // Spike의 경우
+			{
+				//CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(*iter);
+				CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(iter.second); ////////////////////////
+
+				if (pMonster) // 충돌한 몬스터가 존재하고
+				{
+					if (DOPLE == dynamic_cast<CMonster*>(pMonster)->Get_MstType()) // Dople인 경우
+					{
+						dynamic_cast<CDople*>(pMonster)->Hit();
+					}
+				}
+			}
 		}
 	}
 }
