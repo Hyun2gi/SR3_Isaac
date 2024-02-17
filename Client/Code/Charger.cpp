@@ -74,7 +74,8 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 	{
 		_vec3 vPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.1f, 20);
+
 		int soundrand = rand() % 4;
 		if (soundrand == 0)
 		{

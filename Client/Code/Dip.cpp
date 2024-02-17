@@ -106,7 +106,7 @@ _int CDip::Update_GameObject(const _float& fTimeDelta)
 	{
 		_vec3 vPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.3f, 30, 2.f);
 
 		return 1;
 	}
@@ -123,6 +123,7 @@ void CDip::LateUpdate_GameObject()
 		m_iHp -= 1;
 
 		Hit_PushBack(m_fSlowDelta);
+		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.3f, 7, 2.f);
 
 		m_bHit = false;
 		m_bHitColor = true;
