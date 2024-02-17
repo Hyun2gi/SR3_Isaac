@@ -278,6 +278,8 @@ void CMom::Mom_Default()
 			m_pTransformCom->Set_Pos(iX, 50.f, iZ);
 
 			m_eState = MOM_ATTACK;
+			Engine::PlayEffect(L"Mom_Attack.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+
 		}
 	}
 	else if (MOM_WAIT == m_eState)
