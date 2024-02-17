@@ -20,6 +20,7 @@
 #include "Camera.h"
 #include "Pipeline.h"
 #include "Calculator.h"
+#include "Shader.h"
 
 #include "UI.h"
 

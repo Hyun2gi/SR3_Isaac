@@ -325,6 +325,9 @@
     <Filter Include="02. GameObject\09. MapObject\08. Devil">
       <UniqueIdentifier>{dc9fe435-f91b-4b11-ad85-26bb58bfb1ad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03. ShaderFiles">
+      <UniqueIdentifier>{0db68fdd-0ede-4e75-9c42-b37ae3cbfa46}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -909,5 +912,10 @@
     <Image Include="Client.ico">
       <Filter>리소스 파일</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\Bin\ShaderFiles\Shader_Rect.hlsl">
+      <Filter>03. ShaderFiles</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -40,5 +40,10 @@ namespace Engine
 		COIN, HEART, HEART_HALF, PILL, ITEM_NONE
 	};
 
+	enum SHADER_PASS_ID
+	{
+		SHADER_DEFAULT, SHADER_WHITE, SHADER_ALPHA, SHADER_COLOR
+	};
+
 }
 #endif // Engine_Enum_h__
