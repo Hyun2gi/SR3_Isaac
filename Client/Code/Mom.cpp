@@ -213,7 +213,7 @@ void CMom::Attack(const _float& fTimeDelta)
 	{
 		if (vPos.y <= LIMIT_Y)
 		{
-			CPlayer::GetInstance()->Set_CameraShaking_Sub(0.7f,1.0f);
+			CPlayer::GetInstance()->Set_CameraShaking_Rot();
 			vPos.y = LIMIT_Y;
 			m_eState = MOM_WAIT;
 			m_bScaleChange = true; // 애니메이션 조정
