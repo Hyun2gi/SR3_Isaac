@@ -1575,16 +1575,16 @@ void CLoadStage::MapObj_Collision()
 	// 야바위 충돌
 	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr) // Shell Game이 생성되었을 때
 	{
-		if (dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc() != nullptr && // Shell Npc가 있고
-			!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellVec().empty())	// Shell이 있을 때
+		if (!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellVec().empty())	// Shell이 있을 때
 		{
 			CGameObject* pShellObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance()); // Player와 충돌한 객체
 
 			if (pShellObj) // Player와 충돌한 객체가 존재할 때
 			{
-				if (!dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Get_Game()) // 게임 중이 아닐 때
+				if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // 충돌 대상이 Shell일때
 				{
-					if (2 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // 충돌 대상이 Npc라면
+					if (!dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Get_Game() && // 게임 중이 아닐 때
+						!dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Get_CheckCoolTime())
 					{
 						if (0 < CPlayer::GetInstance()->Get_Coin())
 						{
@@ -1592,17 +1592,12 @@ void CLoadStage::MapObj_Collision()
 							dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Set_Game(true); // Game True
 						}
 					}
-				}
-				else  // 게임 중이 아닐 때
-				{
-					if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // 충돌 대상이 Shell이라면
+					else if(dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Get_Game() && // 게임 중이고 
+							dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Get_Game_Reward())// Shell Game이 보상 여부가 True인 상태일 때
 					{
-						// 게임을 False로
-						dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Set_Game(false);
-
 						dynamic_cast<CShell*>(pShellObj)->Set_StartUp(); // 선택한 Shell 위로 오픈
 
-						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward()) // 보상이 있으면
+						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward()) // 당첨이면 (m_bReward = true)
 						{
 							Engine::CGameObject* pGameObject = nullptr;
 
@@ -1614,23 +1609,27 @@ void CLoadStage::MapObj_Collision()
 								pGameObject = dynamic_cast<CShell*>(pShellObj)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), i);
 								m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
 							}
-							dynamic_cast<CShell*>(pShellObj)->Setting_Reward_False();
+							dynamic_cast<CShell*>(pShellObj)->Set_Reward(false); // 보상을 줬으니 m_bReward 상태 False로 변환
 						}
-						else if (dynamic_cast<CShell*>(pShellObj)->Get_Lose()) // 보상이 없으면 파리 생성
+						else if (dynamic_cast<CShell*>(pShellObj)->Get_Lose()) // 꽝이면 (m_bReward = false)
 						{
 							Engine::CGameObject* pFly = nullptr;
 
 							_vec3 vPos;
 							dynamic_cast<CShell*>(pShellObj)->Get_TransformCom()->Get_Info(INFO_POS, &vPos);
-							for (int i = 0; i < 2; ++i)
+
+							for (int i = 0; i < 2; ++i) // 파리 두 마리 생성
 							{
 								pFly = CFly::Create(m_pGraphicDev, i * 2);
 								dynamic_cast<CFly*>(pFly)->Get_Transform()->Set_Pos(vPos);
 								pFly->Set_MyLayer(L"GameMst");
 								m_mapLayer.at(L"GameMst")->Add_GameObject(L"Fly", pFly);
 							}
-							//dynamic_cast<CShell*>(pShellObj)->Set_Lose_False();
 						}
+
+						dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Set_Game(false); // 게임을 False로
+						dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Set_Game_Reward(false); // 게임 보상 여부도 False로
+						dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Set_CheckCoolTime(); // 체크 쿨타임 true로 만듦
 					}
 				}
 			}

@@ -704,63 +704,63 @@ void CStage::MapObj_Collision()
 
 	// Shop Npc 는 Epic 과 충돌
 
-	// 야바위 충돌
-	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
-	{
-		if (dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc() != nullptr)
-		{
-			if (!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc()->Get_NPC_Game())
-			{
-				CGameObject* pShellObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
+	//// 야바위 충돌
+	//if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
+	//{
+	//	if (dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc() != nullptr)
+	//	{
+	//		if (!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc()->Get_NPC_Game())
+	//		{
+	//			CGameObject* pShellObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
 
-				if (pShellObj)
-				{
-					if (2 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Npc <-> Player 충돌
-					{
-						if (0 < CPlayer::GetInstance()->Get_Coin())
-						{
-							CPlayer::GetInstance()->Set_Coin(-1);
-							dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game(true);
-						}
-					}
-					else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Shell <-> Player 충돌
-					{
-						dynamic_cast<CShell*>(pShellObj)->Set_StartUp(); // 선택한 Shell 위로 오픈
+	//			if (pShellObj)
+	//			{
+	//				if (2 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Npc <-> Player 충돌
+	//				{
+	//					if (0 < CPlayer::GetInstance()->Get_Coin())
+	//					{
+	//						CPlayer::GetInstance()->Set_Coin(-1);
+	//						dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game(true);
+	//					}
+	//				}
+	//				else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Shell <-> Player 충돌
+	//				{
+	//					dynamic_cast<CShell*>(pShellObj)->Set_StartUp(); // 선택한 Shell 위로 오픈
 
-						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward())
-						{
-							Engine::CGameObject* pGameObject = nullptr;
+	//					if (dynamic_cast<CShell*>(pShellObj)->Get_Reward())
+	//					{
+	//						Engine::CGameObject* pGameObject = nullptr;
 
-							ITEM_TYPE eType = dynamic_cast<CShell*>(pShellObj)->Get_ItemType();
-							wstring wstrObjTag = dynamic_cast<CShell*>(pShellObj)->Get_DropItemTag();
+	//						ITEM_TYPE eType = dynamic_cast<CShell*>(pShellObj)->Get_ItemType();
+	//						wstring wstrObjTag = dynamic_cast<CShell*>(pShellObj)->Get_DropItemTag();
 
-							for (int i = 0; i < 3; ++i)
-							{
-								pGameObject = dynamic_cast<CShell*>(pShellObj)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), i);
-								m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
-							}
-							dynamic_cast<CShell*>(pShellObj)->Setting_Reward_False();
-						}
-						else if(dynamic_cast<CShell*>(pShellObj)->Get_Lose())
-						{
-							Engine::CGameObject* pFly = nullptr;
+	//						for (int i = 0; i < 3; ++i)
+	//						{
+	//							pGameObject = dynamic_cast<CShell*>(pShellObj)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), i);
+	//							m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
+	//						}
+	//						dynamic_cast<CShell*>(pShellObj)->Setting_Reward_False();
+	//					}
+	//					else if(dynamic_cast<CShell*>(pShellObj)->Get_Lose())
+	//					{
+	//						Engine::CGameObject* pFly = nullptr;
 
-							_vec3 vPos;
-							dynamic_cast<CShell*>(pShellObj)->Get_TransformCom()->Get_Info(INFO_POS, &vPos);
-							for (int i = 0; i < 2; ++i)
-							{
-								pFly = CFly::Create(m_pGraphicDev, i * 2);
-								dynamic_cast<CFly*>(pFly)->Get_Transform()->Set_Pos(vPos);
-								pFly->Set_MyLayer(L"GameMst");
-								m_mapLayer.at(L"GameMst")->Add_GameObject(L"Fly", pFly);
-							}
-							dynamic_cast<CShell*>(pShellObj)->Set_Lose_False();
-						}
-					}
-				}
-			}
-		}
-	}
+	//						_vec3 vPos;
+	//						dynamic_cast<CShell*>(pShellObj)->Get_TransformCom()->Get_Info(INFO_POS, &vPos);
+	//						for (int i = 0; i < 2; ++i)
+	//						{
+	//							pFly = CFly::Create(m_pGraphicDev, i * 2);
+	//							dynamic_cast<CFly*>(pFly)->Get_Transform()->Set_Pos(vPos);
+	//							pFly->Set_MyLayer(L"GameMst");
+	//							m_mapLayer.at(L"GameMst")->Add_GameObject(L"Fly", pFly);
+	//						}
+	//						dynamic_cast<CShell*>(pShellObj)->Set_Lose_False();
+	//					}
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)

@@ -21,9 +21,12 @@ private:
 	virtual ~CShellGame();
 
 public:
-	void				Set_Game(_bool bIsGame) { m_bGame = bIsGame; }
+	void				Set_Game(_bool bIsGame){ m_bGame = bIsGame; };
 	_bool				Get_Game() { return m_bGame; }
 	_bool				Get_Game_Reward() { return m_bReward; } // 보상 받을 수 있는지
+	void				Set_Game_Reward(_bool bIsReward) { m_bReward = bIsReward; }
+	void				Set_CheckCoolTime() { m_bCheckCoolTime = true; }
+	_bool				Get_CheckCoolTime() { return m_bCheckCoolTime; }
 	vector<CShell*>		Get_ShellVec() { return m_vecShell; }
 	CShellNpc*			Get_ShellNpc() { return m_pShellNpc; }
 	void				Set_ShellObj_ToStage(CLayer* pLayer);
@@ -49,6 +52,7 @@ private:
 	_bool				m_bGame;
 	_bool				m_bShellShaking;
 	_bool				m_bReward;
+	_bool				m_bCheckCoolTime;
 	_int				m_iShake_Lev;
 	_float				m_fSpeed;
 

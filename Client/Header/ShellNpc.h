@@ -14,7 +14,7 @@ private:
 
 public:
 	void			Set_NpC_Game(_bool bIsGame) { m_bGame = bIsGame; }
-	_bool			Get_NPC_Game() { return m_bGame; }
+	//_bool			Get_NPC_Game() { return m_bGame; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;
