@@ -151,6 +151,8 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	// 맨 처음 방에서는 player에서 bgm 나와야해서 player update보다 순서 뒤로
 	// 비지엠 인트로 먼저 재생
 	BGM_INTRO_START();
+	
+	
 
 	// 비지엠
 	BGM_START();
@@ -160,12 +162,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		// m_bStartScene : 한번 왔다간 방인지 아닌지 확인해주는 변수
 		if (!m_bStartScene)
 		{
-			Engine::StopSound(SOUND_BGM);
-			// 한번 왔다간 방이 아닐경우처리
-			CPlayer::GetInstance()->Set_IssacRender(true);
-			// 올라간 시네머신이 진행 후 내려오는 시네머신 필요
-			CPlayer::GetInstance()->Set_Camera_Cinemachine_02();
-
+			//CPlayer::GetInstance()->Set_Camera_Cinemachine_02();
 			if (m_iLoadDataSize <= m_iCreatedCnt)
 			{
 				m_bIsCreated = true;
@@ -189,10 +186,17 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		if (m_iCreatedCnt >= m_iLoadDataSize)
 		{
 			m_bIsLoadDataCreated = true;
+			
+			// 플레이어 무적 시간 종료 및 플레이어로 돌아가기
+			CPlayer::GetInstance()->Set_MapCinemachine(false);
+			CPlayer::GetInstance()->Set_Camera_Cinemachine_03();
 		}
 
 		if (Check_Cube_Arrived() && m_iCreatedCnt < m_iLoadDataSize && !m_bIsLoadDataCreated)
 		{
+			// 카메라가 맵 안에 나오고 플레이어 랜더는 꺼짐
+			
+
 			m_fSpawnTimer += fTimeDelta;
 
 			//0.2초마다 맵툴로 설치해둔 몬스터/오브젝트를 스폰한다.
@@ -2061,7 +2065,7 @@ HRESULT CLoadStage::Door_Collision()
 
 CLoadStage* CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bStratScene)
 {
-	Engine::StopSound(SOUND_BGM);
+	//Engine::StopSound(SOUND_BGM);
 	CLoadStage* pInstance = new CLoadStage(pGraphicDev);
 	pInstance->m_bStartScene = bStratScene;
 	CPlayer::GetInstance()->Set_Bool_StartScene(true);
@@ -2069,8 +2073,10 @@ CLoadStage* CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bS
 	if (!bStratScene)
 	{
 		//Engine::StopAll();
-		Engine::StopSound(SOUND_EFFECT_ETC_ALLPLAY);
+		//Engine::StopSound(SOUND_EFFECT_ETC_ALLPLAY);
 		Engine::PlayEffect(L"earthquake4.wav", SOUND_EFFECT_ETC_ALLPLAY, 2.6f);
+		// 큐브연출있으면 무적시간 두기
+		CPlayer::GetInstance()->Set_MapCinemachine(true);
 	}
 
 	if (FAILED(pInstance->Ready_Scene(iType)))

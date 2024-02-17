@@ -83,6 +83,8 @@ _int CPlayerLeg::Update_GameObject(const _float& fTimeDelta)
 	playerInfo->Get_Info(INFO_LOOK, &playerLookDir);
 	playerInfo->Get_Info(INFO_LOOK, &playerRightDir);
 	
+	_vec3		legRightDir;
+	m_pTransformCom->Get_Info(INFO_RIGHT, &legRightDir);
 
 	if (m_eCurLegState == P_LEG_FRONT)
 	{
@@ -94,7 +96,8 @@ _int CPlayerLeg::Update_GameObject(const _float& fTimeDelta)
 	}
 	else if (m_eCurLegState == P_LEG_LEFT) 
 	{
-		playerPos += (playerLookDir *0.02);
+		playerPos += (playerLookDir * 0.02);
+		playerPos += (legRightDir *0.02);
 		//playerPos += (-playerRightDir * 0.2);
 	}
 	else if (m_eCurLegState == P_LEG_RIGHT)
@@ -102,6 +105,7 @@ _int CPlayerLeg::Update_GameObject(const _float& fTimeDelta)
 		/*playerPos += (playerLookDir * 0.01);
 		playerPos += (playerRightDir * 0.1);*/
 		playerPos += (playerLookDir * 0.02);
+		playerPos += (legRightDir * 0.02);
 	}
 	else if (m_eCurLegState == P_LEG_FRONT_IDLE)
 	{

@@ -120,7 +120,7 @@ bool CBrimStone::Run_Item_Effect()
 	if (m_eCurItemPlace != SP_SLOT && m_eCurItemPlace != SP_OBJECT)
 	{
 		CPlayer::GetInstance()->Set_BulletType(2);
-		CPlayer::GetInstance()->Set_Item_Get_Anim();
+		CPlayer::GetInstance()->Set_Item_Get_Anim_Brim();
 		Engine::PlayEffect(L"Get_Brimstone.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
 		m_bDead = true;
 

@@ -86,9 +86,13 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		// 0일때는 가만히
 		m_iAzaelStateSet = 0;
 
+		// 아자젤인지
+		m_bAzazelType = false;
+
 		// 아자젤때를 위해 다리만들기
 		m_pLeg = CPlayerLeg::Create(m_pGraphicDev);
 		m_bCameraShaking = false;
+		m_fUnbeatableTimeFix = 1.5f;
 	}
 	else
 	{
@@ -465,7 +469,12 @@ void CPlayer::Set_Camera_Cinemachine_01()
 
 void CPlayer::Set_Camera_Cinemachine_02()
 {
-	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_02_GoToIsaac();
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_02_MiddleTotalLand();
+}
+
+void CPlayer::Set_Camera_Cinemachine_03()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_03_GoToIsaac();
 }
 
 void CPlayer::Set_Player_Pos(_vec3 pos)
@@ -500,7 +509,6 @@ void CPlayer::Set_BulletType(int _bullet)
 		break;
 	case 2:
 		m_eCurBulletState = P_BULLET_BRIMSTONE;
-		m_eCurPlayerVer = P_AZAZEL;
 		m_fAttackSpeed = 200;
 		break;
 	case 3:
@@ -532,6 +540,40 @@ void CPlayer::Set_Item_Get_Anim()
 	m_eCurState = P_THUMBS_UP;
 	m_fDelayTime = 0;
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToPlayerFront();
+}
+
+void CPlayer::Set_Item_Get_Anim_Brim()
+{
+	m_bKeyBlock = true;
+	m_bAzazelType = true;
+	m_eCurState = P_THUMBS_UP;
+	m_fDelayTime = 0;
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToPlayerFront();
+}
+
+void CPlayer::Set_Brim_Cinemachine()
+{
+	CTransform* pTest = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
+
+	_matrix mat = *(pTest->Get_WorldMatrix());
+	//mat._42 += 3.f;
+
+	//함수 사용 예
+	Engine::Create_Explosion(m_pGraphicDev, mat);
+	Engine::Create_Explosion(m_pGraphicDev, mat);
+	Engine::Create_Explosion(m_pGraphicDev, mat);
+	Engine::Create_Explosion(m_pGraphicDev, mat);
+	Engine::Create_Dust(m_pGraphicDev, mat);
+	Engine::Create_Dust(m_pGraphicDev, mat);
+	Engine::Create_Dust(m_pGraphicDev, mat);
+	Engine::Create_Dust(m_pGraphicDev, mat);
+	//mat._41 += 3.f;
+
+
+	/*D3DXCOLOR temp;
+	temp += D3DXCOLOR(0.01f, 0.01f, 0.01f, 0.01f);
+	if (CPlayer::GetInstance()->Get_Component_Player_TexBuffer())
+		CPlayer::GetInstance()->Get_Component_Player_TexBuffer()->Set_Color(temp);*/
 }
 
 void CPlayer::Set_Item_Get_Anim_Bad()
@@ -784,7 +826,6 @@ void CPlayer::Set_CameraShaking_Sub(float shakeTime, float shakeIntensity)
 {
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnShakeCameraPos_Sub(shakeTime, shakeIntensity);
 }
-
 
 
 void CPlayer::Bullet_Change_To_Brim()
@@ -1459,7 +1500,7 @@ void CPlayer::Specific_Motion(const _float& fTimeDelta)
 		}
 	}
 
-	if (m_eCurState == P_THUMBS_UP)
+	if (m_eCurState == P_THUMBS_UP && !m_bAzazelType)
 	{
 		m_fDelayTime += fTimeDelta;
 
@@ -1469,7 +1510,7 @@ void CPlayer::Specific_Motion(const _float& fTimeDelta)
 			Engine::PlayEffect(L"thumbs up.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
 		}
 
-		if (m_fDelayTime > 2)
+		if (m_fDelayTime > 2 )
 		{
 			m_fFrame += m_fPicNum * fTimeDelta * m_fSpriteSpeed;
 		}
@@ -1489,6 +1530,37 @@ void CPlayer::Specific_Motion(const _float& fTimeDelta)
 			dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToOriginPos();
 		}
 	}
+
+
+	if (m_eCurState == P_THUMBS_UP && m_bAzazelType)
+	{
+		m_fDelayTime += fTimeDelta;
+
+		if (m_fDelayTime < 2.6 && m_fDelayTime >2.5)
+		{
+			// 사운드
+			Engine::PlayEffect(L"파워업2.wav", SOUND_EFFECT_ITEM_STOPSUDDEN, 1.f);
+			Set_Brim_Cinemachine();
+			m_iAzaelStateSet = 0;
+			m_fFrame = 0.f;
+			m_bRender = false;
+		}
+	
+		// 2초 동안 따봉
+		if (m_fDelayTime > 4)
+		{
+			m_bRender = true;
+			m_eCurPlayerVer = P_AZAZEL;
+			m_eCurState = P_IDLE;
+			m_fDelayTime = 0; // 딜레이 시간 초기화
+			m_fFrame = 0.f;
+			m_bKeyBlock = false; // key 입력 활성화
+			dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToOriginPos();
+			m_bAzazelType = false;
+		}
+	}
+
+
 }
 
 void CPlayer::Check_UnBeatable_Time(const _float& fTimeDelta)
@@ -1498,7 +1570,8 @@ void CPlayer::Check_UnBeatable_Time(const _float& fTimeDelta)
 		m_fUnbeatableTime += fTimeDelta;
 
 		// 무적시간 조절
-		if (m_fUnbeatableTime >= 1.5)
+		// cinemachine이 아니라 그냥 hurt
+		if (m_fUnbeatableTime >= m_fUnbeatableTimeFix && !m_bMapCinemachine)
 		{
 			m_bUnbeatable = false;
 			m_fUnbeatableTime = 0;

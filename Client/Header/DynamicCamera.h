@@ -82,8 +82,11 @@ public:
 	void				Cinemachine_00_Start();
 	// 큐브연출 있을 때 전체 화면으로 보기
 	void				Cinemachine_01_TotalLand();
+	// 조금내려가서 보게끔
+	void				Cinemachine_02_MiddleTotalLand();
 	// 다시 플레이어로 돌아가는 연출
-	void				Cinemachine_02_GoToIsaac();
+	void				Cinemachine_03_GoToIsaac();
+	
 
 	void				Set_ChaseInit(bool _init) { m_bChaseInit = _init; }
 	void				Set_FirstPerson(bool first) { m_bFirstPerson = first; m_bCollisionWall = true; m_bChaseInit = false; }
@@ -95,7 +98,7 @@ public:
 	// 카메라 움직임 등 카메라 자체 움직임을 시작
 	void				Set_TotalCameraStart() { m_bMouseCameraStart = true; }
 
-	bool				Get_ShakingCamera() { if (m_bShakeCamera || m_bShakeCamera_Sub) { return true; } else { return false; } }
+	bool				Get_ShakingCamera() { if (m_bShakeCamera || m_bShakeCamera_Sub || m_bShakeCamera_Rot) { return true; } else { return false; } }
 
 private:
 	virtual void Free();
@@ -154,6 +157,8 @@ private:
 
 	_bool		m_bShakeCamera;
 	_bool		m_bShakeCamera_Sub;
+	_bool		m_bShakeCamera_Rot = false; // 회전으로 쉐이킹
+
 	_bool		m_bMove;
 	_bool		m_bFirstPerson;
 	_bool		m_bPreFirstPerson;
@@ -161,6 +166,7 @@ private:
 
 	// 이동 후에 goalposition에서 fixed 할건지 아니면 시작 position으로 갈건지
 	_bool		m_bFixedPos;
+	_bool		m_bResetChaseInit; // 다시 chaseinit true할것인지 말건지
 
 
 	//플레이어와 카메라의 사이 거리와 방향
