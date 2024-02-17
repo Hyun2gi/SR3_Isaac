@@ -223,7 +223,7 @@ void CPacer::Move(const _float& fTimeDelta)
 
 void CPacer::Epic_Time()
 {
-	m_pTransformCom->m_vAngle = { 0.f, 0.f, D3DXToRadian(95) };
+	Rotation_Epic();
 
 	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
 	{

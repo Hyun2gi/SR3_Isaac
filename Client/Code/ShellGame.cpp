@@ -23,7 +23,7 @@ CShellGame::~CShellGame()
 
 void CShellGame::Set_ShellObj_ToStage(CLayer* pLayer)
 {
-	pLayer->Add_GameObject(L"ShellNpc", m_pShellNpc);
+	//pLayer->Add_GameObject(L"ShellNpc", m_pShellNpc);
 
 	for (auto& iter : m_vecShell)
 	{
@@ -38,13 +38,16 @@ HRESULT CShellGame::Ready_GameObject()
 
 	m_fSpeed = 0.1f;
 
-	m_fCallLimit = 2.f;
+	m_fCallLimit = 3.f;
 
 	m_iShake_Lev = 0; // Shaking 단계
 
 	m_bGame = false;
 	m_bShellShaking = false;
 	m_bReward = false;
+	m_bCheckCoolTime = false; // 시작 쿨타임이 돌았는지 체크
+
+	m_eObjType = SHELL_GAME;
 
 	return S_OK;
 }
@@ -68,13 +71,18 @@ _int CShellGame::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	if (dynamic_cast<CShellNpc*>(m_pShellNpc)->Get_NPC_Game())
+	// SlotMC과 달리 ShellGame에서는 게임 끝난 후 쿨타임이 지나야 다시 시작 가능
+	if (m_bCheckCoolTime)
 	{
-		m_bGame = true;
+		if (Check_Time(fTimeDelta)) // 일정 시간 지나야 쿨타임 해제
+		{
+			m_bCheckCoolTime = false;
+		}
 	}
 
-	if (m_bGame)
+	if (m_bGame && !m_bReward) // 게임 상태(npc와 충돌)이고 shell과 충돌하지 않았다면
 	{
+		m_pShellNpc->Set_NpC_Game(true); // Npc Game 상태 true
 		Game(fTimeDelta);
 	}
 
@@ -258,7 +266,7 @@ void CShellGame::Shaking_Shell(const _float& fTimeDelta)
 		}
 	}
 
-
+#pragma region Sound
 	m_iSoundTimer++;
 	int randnum = rand() % 2;
 
@@ -290,9 +298,7 @@ void CShellGame::Shaking_Shell(const _float& fTimeDelta)
 			}
 		}
 	}
-	
-	
-
+#pragma endregion Sound
 
 	if (0.5 <= m_fSpeed) // 게임 종료
 	{
@@ -301,10 +307,10 @@ void CShellGame::Shaking_Shell(const _float& fTimeDelta)
 		m_fSpeed = 0.1f;
 		m_iShake_Lev = 0;
 		m_bShellShaking = false;
-		m_bGame = false;
+		//m_bGame = false;
 		m_bReward = true;
 
-		m_pShellNpc->Set_NpC_Game(); // Npc의 상태를 다시 false 로
+		m_pShellNpc->Set_NpC_Game(false); // Npc의 상태를 다시 false 로
 
 		Setting_RewardShell(); // 3개 중 하나의 Shell 을 당첨으로 설정
 	}
@@ -341,7 +347,7 @@ void CShellGame::Setting_RewardShell()
 	{
 	case 0:
 	{
-		m_vecShell.front()->Setting_Reward();
+		m_vecShell.front()->Set_Reward(true);
 		vector<CShell*>::iterator iter = m_vecShell.begin();
 		iter++;
 		(*iter)->Set_Lose(); // 2번 Shell Lose 설정
@@ -354,9 +360,9 @@ void CShellGame::Setting_RewardShell()
 		m_vecShell.front()->Set_Lose(); // 1번 Shell Lose 설정
 		vector<CShell*>::iterator iter = m_vecShell.begin();
 		iter++;
-		(*iter)->Setting_Reward();
-		//iter++;
-		//(*iter)->Set_Lose(); // 3번 Shell Lose 설정
+		(*iter)->Set_Reward(true);
+		iter++;
+		(*iter)->Set_Lose(); // 3번 Shell Lose 설정 // 왜 주석?
 		break;
 	}
 	case 2:
@@ -365,7 +371,7 @@ void CShellGame::Setting_RewardShell()
 		(*iter)->Set_Lose(); // 1번 Shell Lose 설정
 		iter++;
 		(*iter)->Set_Lose(); // 2번 Shell Lose 설정
-		m_vecShell.back()->Setting_Reward();
+		m_vecShell.back()->Set_Reward(true);
 		break;
 	}
 	default:

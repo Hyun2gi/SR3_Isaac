@@ -28,8 +28,10 @@ void CSlotMC::Set_Machine_ToStage(CLayer* pLayer)
 
 void CSlotMC::Set_Game()
 {
-	m_bGame = true; 
-	Engine::PlayEffect(L"SlotMC.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.0f);
+	// 쿨타임 추가
+	m_bStartCoolTime = true;
+	//m_bGame = true; 
+	//Engine::PlayEffect(L"SlotMC.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.0f);
 }
 
 void CSlotMC::Set_Reward()
@@ -50,6 +52,8 @@ HRESULT CSlotMC::Ready_GameObject()
 	m_bCreate = false;
 	m_bGame = false;
 	m_bReward = false;
+	m_bMachineSet = false;
+	m_bStartCoolTime = false;
 
 	return S_OK;
 }
@@ -76,10 +80,28 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
+	// 시작 쿨타임 주기
+	if (m_bStartCoolTime)
+	{
+		if (Check_Time(fTimeDelta, 3.f))
+		{
+			m_bStartCoolTime = false;
+			m_bGame = true;
+			Engine::PlayEffect(L"SlotMC.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.0f);
+		}
+	}
+
 	if (m_bGame) // 플레이어와 충돌 시 
 	{
+		if (!m_bMachineSet) // 머신 게임 상태 Set
+		{
+			if (m_pMachine != nullptr)
+				m_pMachine->Set_Game();
+
+			m_bMachineSet = true;
+		}
+
 		// 슬롯카드에게 휘리릭 상태를 부여
-		
 		for (auto& iter : m_pCardList)
 		{
 			iter->Set_Random(); // 슬롯 카드들 휘리릭~ true
@@ -108,6 +130,8 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 			}
 		}
 	}
+	else
+		m_bMachineSet = false;
 
 	return 0;
 }

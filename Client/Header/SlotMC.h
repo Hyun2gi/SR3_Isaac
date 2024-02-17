@@ -41,6 +41,8 @@ private:
 	_bool				m_bCreate;
 	_bool				m_bGame;
 	_bool				m_bReward;
+	_bool				m_bMachineSet;
+	_bool				m_bStartCoolTime;
 
 	CMachine*			m_pMachine;
 	vector<CSlotCard*>	m_pCardList;

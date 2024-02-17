@@ -10,12 +10,14 @@
 #include "BossHPTool.h"
 
 CMonstro::CMonstro(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CMonster(pGraphicDev)
+	: CMonster(pGraphicDev),
+	m_pShadow(nullptr)
 {
 }
 
 CMonstro::CMonstro(const CMonstro& rhs)
-	: CMonster(rhs)
+	: CMonster(rhs),
+	m_pShadow(rhs.m_pShadow)
 {
 }
 
@@ -94,7 +96,16 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 	{
 		Animation_Dead(); // 사망 시 애니메이션
 	}
-		
+
+	if (m_pShadow == nullptr)
+		Create_Shadow();
+	else
+	{
+		_vec3 vMonstroPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vMonstroPos);
+		m_pShadow->Get_TransformCom()->Set_Pos(vMonstroPos.x, 0.1f, vMonstroPos.z);
+		m_pShadow->Update_GameObject(m_fSlowDelta);
+	}
 
 	// Bullet Update
 	Bullet_Update();
@@ -142,6 +153,9 @@ void CMonstro::LateUpdate_GameObject()
 	if (m_bHitColor)
 		Change_Color(m_fSlowDelta);
 
+	if (m_pShadow != nullptr)
+		m_pShadow->LateUpdate_GameObject();
+
 	Motion_Change();
 
 	// Bullet LateUpdate
@@ -160,6 +174,9 @@ void CMonstro::LateUpdate_GameObject()
 
 void CMonstro::Render_GameObject()
 {
+	if (m_pShadow != nullptr)
+		m_pShadow->Render_GameObject();
+
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);//
 
@@ -332,6 +349,7 @@ void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 		if (vPos.y > CENTERY)
 		{
 			vPos.y -= 0.9f;
+			m_pShadow->Set_Render(true);
 		}
 		else
 		{
@@ -340,6 +358,7 @@ void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 			vPos.y = CENTERY;
 			m_bJump = false;
 			m_bBullet = true;
+			m_pShadow->Set_Render(false);
 			m_eCurState = MONSTRO_ATTACK; 
 			Check_TargetPos(); // 이걸로 될지?
 		}
@@ -496,6 +515,12 @@ void CMonstro::Monstro_Default()
 		JumpTo_Player(m_fSlowDelta);
 }
 
+void CMonstro::Create_Shadow()
+{
+	m_pShadow = CShadow::Create(m_pGraphicDev);
+	m_pShadow->Get_TransformCom()->m_vScale = { SHADOW_SCALE, SHADOW_SCALE, SHADOW_SCALE };
+}
+
 void CMonstro::Animation_Attack()
 {
 	_vec3 vScale, vPos;
@@ -619,6 +644,9 @@ void CMonstro::Free()
 			iter = m_BulletList.erase(iter);
 		}
 	}
+
+	Safe_Release<CShadow*>(m_pShadow);
+	m_pShadow = nullptr;
 
 	__super::Free();
 }

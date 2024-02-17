@@ -256,8 +256,8 @@ void CDip::Epic_Time()
 {
 	//CPlayer::GetInstance()->Get_EpicLieTiming(); // ¿¡ÇÈ ÄÑÁü
 	//CPlayer::GetInstance()->Get_EpicTargetRun(); // ´À·ÁÁü
-	
-	m_pTransformCom->m_vAngle = { 0.f, 0.f, D3DXToRadian(95) };
+
+	Rotation_Epic();
 
 	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
 	{

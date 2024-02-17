@@ -16,11 +16,12 @@ public:
 	void			Set_Shaking_Ready() { m_bShaking_Ready = !m_bShaking_Ready; }
 
 	_bool			Get_Reward() { return m_bReward; }
+	void			Set_Reward(_bool bISReward) { m_bReward = bISReward; }
 	_bool			Get_Lose() { return m_bLose; }
 	void			Set_Lose() { m_bLose = true; }
 	void			Set_Lose_False() { m_bLose = false; }
-	void			Setting_Reward() { m_bReward = true;}
-	void			Setting_Reward_False() { m_bReward = false; }
+	//void			Setting_Reward() { m_bReward = true;}
+	//void			Setting_Reward_False() { m_bReward = false; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;

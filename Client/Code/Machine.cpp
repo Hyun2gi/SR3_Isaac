@@ -38,6 +38,8 @@ _int CMachine::Update_GameObject(const _float& fTimeDelta)
 		m_eCurState = MC_BROKEN;
 	else
 	{
+		m_eCurState = MC_IDLE;
+
 		// 충돌 했을 때 bool 값 true 만들면서 Motion Change() 호출
 		if (m_bGame)
 		{
@@ -53,20 +55,9 @@ _int CMachine::Update_GameObject(const _float& fTimeDelta)
 		{
 			m_fFrame = 0.f;
 		}
-
-		m_eCurState = MC_IDLE;
 	}
-
-	/*if (m_bBroken)
-	{
-		m_eCurState = MC_BROKEN;
-	}
-	else
-		m_eCurState = MC_IDLE;*/
 
 	CGameObject::Update_GameObject(fTimeDelta);
-
-	//m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -133,7 +124,7 @@ void CMachine::Motion_Change()
 		{
 		case CMachine::MC_IDLE:
 			m_iPicNum = 3;
-			m_fFrameSpeed = 1.5f;
+			m_fFrameSpeed = 1.f;
 			m_pTextureCom = dynamic_cast<CTexture*>(m_mapComponent[ID_STATIC].at(L"Proto_SlotMCTexture"));
 			break;
 

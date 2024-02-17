@@ -8,14 +8,16 @@
 #include "BossHPTool.h"
 
 CMom::CMom(LPDIRECT3DDEVICE9 pGraphicDev)
-	: CMonster(pGraphicDev)
+	: CMonster(pGraphicDev),
+	m_pShadow(nullptr)
 {
 	DWORD dwSeed = time(NULL) % 1000;
 	srand(dwSeed);
 }
 
 CMom::CMom(const CMom& rhs)
-	: CMonster(rhs)
+	: CMonster(rhs),
+	m_pShadow(rhs.m_pShadow)
 {
 }
 
@@ -95,6 +97,16 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 	if (m_iPicNum < m_fFrame)
 		m_fFrame = 0.f;
 
+	if (m_pShadow == nullptr)
+		Create_Shadow();
+	else
+	{
+		_vec3 vMomPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vMomPos);
+		m_pShadow->Get_TransformCom()->Set_Pos(vMomPos.x, 0.1f, vMomPos.z);
+		m_pShadow->Update_GameObject(m_fSlowDelta);
+	}
+
 	Face_Camera();
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
@@ -129,6 +141,9 @@ void CMom::LateUpdate_GameObject()
 	if (m_bHitColor)
 		Change_Color(m_fSlowDelta);
 
+	if (m_pShadow != nullptr)
+		m_pShadow->LateUpdate_GameObject();
+
 	Motion_Change();
 
 	__super::LateUpdate_GameObject();
@@ -140,6 +155,9 @@ void CMom::LateUpdate_GameObject()
 
 void CMom::Render_GameObject()
 {
+	if (m_pShadow != nullptr)
+		m_pShadow->Render_GameObject();
+
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
@@ -199,18 +217,22 @@ void CMom::Attack(const _float& fTimeDelta)
 			vPos.y = LIMIT_Y;
 			m_eState = MOM_WAIT;
 			m_bScaleChange = true; // 애니메이션 조정
+			m_pShadow->Set_Render(false);
 		}
 		else
-			vPos.y -= m_fSpeed;
+		{
+			vPos.y -= m_fSpeed * 0.3f;
+			m_pShadow->Set_Render(true);
+		}
 	}
 	else if(MOM_UP)
 	{
 		Scale_Change();
 
-		if (vPos.y >= 50.f)
+		if (vPos.y >= 50.f) // 50
 		{
 			m_eState = MOM_IDLE;
-			vPos.y = 50.f;
+			vPos.y = 200.f;
 		}
 		else
 			vPos.y += m_fSpeed;
@@ -264,6 +286,12 @@ void CMom::Mom_Default()
 	else if (MOM_ATTACK == m_eState || MOM_UP == m_eState) // 
 		Attack(m_fSlowDelta);
 
+}
+
+void CMom::Create_Shadow()
+{
+	m_pShadow = CShadow::Create(m_pGraphicDev);
+	m_pShadow->Get_TransformCom()->m_vScale = { SHADOW_SCALE, SHADOW_SCALE, SHADOW_SCALE };
 }
 
 void CMom::Animation_Attack()

@@ -4,11 +4,13 @@
 #include "GameObject.h"
 
 #include "Layer.h"
+#include "Shadow.h"
 
 class CMonstro : public CMonster
 {
 	const _float CENTERY = 2.5f;
 	const _float ORIGIN_SCALE = 4.f;
+	const _float SHADOW_SCALE = 3.f;
 private:
 	explicit CMonstro(LPDIRECT3DDEVICE9 pGraphicDev);
 	explicit CMonstro(const CMonstro& rhs);
@@ -37,6 +39,8 @@ private:
 	void			Bullet_Update();
 	void			Monstro_Default();
 
+	void			Create_Shadow();
+
 	void			Animation_Attack();
 	void			Animation_Dead();
 
@@ -63,6 +67,8 @@ private:
 	MONSTROSTATE	m_eCurState;
 
 	list<CGameObject*> m_BulletList;
+
+	CShadow*			m_pShadow;
 
 public:
 	static CMonster*	Create(LPDIRECT3DDEVICE9 pGraphicDev);

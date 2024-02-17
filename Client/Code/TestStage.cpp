@@ -237,29 +237,29 @@ void CTestStage::Drop_ITem()
 
 	// 슬롯머신
 
-	// 야바위
-	// npc 와의 충돌   ----> 야바위 객체가 아니어도 해당 함수가 호출됨 (이것까지 레이어를 나누어야 하는...? 먼가 이상함 아닌가?)
-	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
-	{
-		if (dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc() != nullptr)
-		{
-			if (!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc()->Get_NPC_Game())
-			{
-				CGameObject* pShellNpc = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
-				if (pShellNpc)
-				{
-					dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
-				}
-			}
-		}
+	//// 야바위
+	//// npc 와의 충돌   ----> 야바위 객체가 아니어도 해당 함수가 호출됨 (이것까지 레이어를 나누어야 하는...? 먼가 이상함 아닌가?)
+	//if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
+	//{
+	//	if (dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc() != nullptr)
+	//	{
+	//		if (!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc()->Get_NPC_Game())
+	//		{
+	//			CGameObject* pShellNpc = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
+	//			if (pShellNpc)
+	//			{
+	//				dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
+	//			}
+	//		}
+	//	}
 
-	}
+	//}
 
-	// shell 과의 충돌
-	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
-	{
-		//if(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame")))
-	}
+	//// shell 과의 충돌
+	//if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
+	//{
+	//	//if(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame")))
+	//}
 }
 
 void CTestStage::Insert_Child()
