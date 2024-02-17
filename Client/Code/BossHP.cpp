@@ -140,7 +140,7 @@ void CBossHP::Update_Scale()
 	}
 	else
 	{
-		_float fHpSize = 645 * 0.3f;
+		_float fHpSize = 198.f; //645 * 0.3f
 		_float fItvX = fHpSize / 645;
 
 		if (1 > m_iTargetHP * fItvX)

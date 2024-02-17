@@ -1431,12 +1431,19 @@ void CLoadStage::Moster_Collision()
 					else
 						++iter;
 				}
-				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포 (엄마/엄마파츠만)
+				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1)
 				{
-					if (MOM_PARTS == dynamic_cast<CMonster*>(pMonster)->Get_BossType() || //MOM Parts이거나
-						MOM == dynamic_cast<CMonster*>(pMonster)->Get_BossType())		// MOM인 경우
+					if (!dynamic_cast<CMonster*>(pMonster)->Get_Dead())
 					{
 						dynamic_cast<CMonster*>(pMonster)->Hit();
+						// Squirt 인 경우 Dip 두 마리 생성 
+						if (SQUIRT == dynamic_cast<CMonster*>(pMonster)->Get_MstType()) // Squirt인 경우
+						{
+							if (1 >= dynamic_cast<CMonster*>(pMonster)->Get_HP())
+							{
+								dynamic_cast<CSquirt*>(pMonster)->Create_Dip(m_mapLayer.at(L"GameMst"));
+							}
+						}
 						break;
 					}
 					else
@@ -1479,13 +1486,23 @@ void CLoadStage::Moster_Collision()
 	}
 
 	// Dople <-> Spike 충돌
-	if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr)
+	if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr) // Dople과 Spike가 생성된 경우
 	{
-		CGameObject* pDople = m_mapLayer.at(L"GameMst")->Collision_GameObject(Get_GameObject(L"MapObj", L"Spike"));
-		if (pDople)
+		for (auto& iter : m_mapLayer.at(L"MapObj")->Get_ObjectMap())
 		{
-			if (DOPLE == dynamic_cast<CMonster*>(pDople)->Get_MstType())
-				dynamic_cast<CDople*>(pDople)->Hit();
+			if (SPIKE == dynamic_cast<CMapObj*>(iter.second)->Get_Type()) // Spike의 경우
+			{
+				//CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(*iter);
+				CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(iter.second); ////////////////////////
+
+				if (pMonster) // 충돌한 몬스터가 존재하고
+				{
+					if (DOPLE == dynamic_cast<CMonster*>(pMonster)->Get_MstType()) // Dople인 경우
+					{
+						dynamic_cast<CDople*>(pMonster)->Hit();
+					}
+				}
+			}
 		}
 	}
 }
@@ -1571,29 +1588,31 @@ void CLoadStage::MapObj_Collision()
 	}
 
 	// 야바위 충돌
-	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
+	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr) // Shell Game이 생성되었을 때
 	{
-		if (dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc() != nullptr)
+		if (!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellVec().empty())	// Shell이 있을 때
 		{
-			if (!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc()->Get_NPC_Game())
-			{
-				CGameObject* pShellObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
+			CGameObject* pShellObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance()); // Player와 충돌한 객체
 
-				if (pShellObj)
+			if (pShellObj) // Player와 충돌한 객체가 존재할 때
+			{
+				if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // 충돌 대상이 Shell일때
 				{
-					if (2 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Npc <-> Player 충돌
+					if (!dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Get_Game() && // 게임 중이 아닐 때
+						!dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Get_CheckCoolTime())
 					{
 						if (0 < CPlayer::GetInstance()->Get_Coin())
 						{
 							CPlayer::GetInstance()->Set_Coin(-1);
-							dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
+							dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Set_Game(true); // Game True
 						}
 					}
-					else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Shell <-> Player 충돌
+					else if(dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Get_Game() && // 게임 중이고 
+							dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Get_Game_Reward())// Shell Game이 보상 여부가 True인 상태일 때
 					{
 						dynamic_cast<CShell*>(pShellObj)->Set_StartUp(); // 선택한 Shell 위로 오픈
 
-						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward())
+						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward()) // 당첨이면 (m_bReward = true)
 						{
 							Engine::CGameObject* pGameObject = nullptr;
 
@@ -1605,23 +1624,27 @@ void CLoadStage::MapObj_Collision()
 								pGameObject = dynamic_cast<CShell*>(pShellObj)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), i);
 								m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
 							}
-							dynamic_cast<CShell*>(pShellObj)->Setting_Reward_False();
+							dynamic_cast<CShell*>(pShellObj)->Set_Reward(false); // 보상을 줬으니 m_bReward 상태 False로 변환
 						}
-						else if (dynamic_cast<CShell*>(pShellObj)->Get_Lose())
+						else if (dynamic_cast<CShell*>(pShellObj)->Get_Lose()) // 꽝이면 (m_bReward = false)
 						{
 							Engine::CGameObject* pFly = nullptr;
 
 							_vec3 vPos;
 							dynamic_cast<CShell*>(pShellObj)->Get_TransformCom()->Get_Info(INFO_POS, &vPos);
-							for (int i = 0; i < 2; ++i)
+
+							for (int i = 0; i < 2; ++i) // 파리 두 마리 생성
 							{
 								pFly = CFly::Create(m_pGraphicDev, i * 2);
 								dynamic_cast<CFly*>(pFly)->Get_Transform()->Set_Pos(vPos);
 								pFly->Set_MyLayer(L"GameMst");
 								m_mapLayer.at(L"GameMst")->Add_GameObject(L"Fly", pFly);
 							}
-							dynamic_cast<CShell*>(pShellObj)->Set_Lose_False();
 						}
+
+						dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Set_Game(false); // 게임을 False로
+						dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Set_Game_Reward(false); // 게임 보상 여부도 False로
+						dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Set_CheckCoolTime(); // 체크 쿨타임 true로 만듦
 					}
 				}
 			}
@@ -1647,6 +1670,30 @@ void CLoadStage::Obstacle_Collsion()
 			}
 		}
 	}
+
+	// Dople <-> 장애물 충돌
+	if (m_mapLayer.at(L"GameMst") != nullptr)
+	{
+		if (m_mapLayer.at(L"GameMst")->Get_GameObject(L"Dople") != nullptr)
+		{
+			CTransform* pDopleTrans = dynamic_cast<CTransform*>(dynamic_cast<CDople*>(m_mapLayer.at(L"GameMst")->Get_GameObject(L"Dople"))->Get_Transform());
+			
+			if (m_mapLayer.at(L"MapObj") != nullptr)
+			{
+				auto& mapObj = m_mapLayer.at(L"MapObj")->Get_ObjectMap();
+
+				for (auto& iter : mapObj)
+				{
+					if (OBSTACLE <= dynamic_cast<CMapObj*>(iter.second)->Get_Type() && dynamic_cast<CMapObj*>(iter.second)->Get_Type() <= OBSTACLE_Z)
+					{
+						CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+						Engine::Check_Collision(pDopleTrans, pTrans);
+					}
+				}
+			}
+		}
+	}
+
 }
 
 void CLoadStage::Player_Collision_With_Monster()
@@ -1795,7 +1842,7 @@ void CLoadStage::Insert_Child()
 		dynamic_cast<CShop*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shop"))->Set_Item_ToStage(m_mapLayer.at(L"GameItem"));
 	}
 
-	// Shell Game (Npc) 추가
+	// Shell Game 추가
 	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame") != nullptr &&
 		m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellNpc") == nullptr &&
 		m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shell") == nullptr)

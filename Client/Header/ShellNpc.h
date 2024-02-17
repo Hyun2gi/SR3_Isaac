@@ -13,8 +13,8 @@ private:
 	enum NPCSTATE { NPC_IDLE, NPC_GAMING, NPC_END };
 
 public:
-	void			Set_NpC_Game() { m_bGame = !m_bGame; }
-	_bool			Get_NPC_Game() { return m_bGame; }
+	void			Set_NpC_Game(_bool bIsGame) { m_bGame = bIsGame; }
+	//_bool			Get_NPC_Game() { return m_bGame; }
 
 public:
 	virtual HRESULT Ready_GameObject()						 override;

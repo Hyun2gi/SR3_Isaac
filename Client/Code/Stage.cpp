@@ -463,11 +463,19 @@ HRESULT CStage::Ready_Layer_MapObj(const _tchar* pLayerTag)
 	//pGameObject->Set_MyLayer(pLayerTag);
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Campfire", pGameObject), E_FAIL);
 
-	//// Spike
-	//pGameObject = CSpike::Create(m_pGraphicDev);
-	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	//pGameObject->Set_MyLayer(pLayerTag);
-	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
+	// Spike
+	pGameObject = CSpike::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	dynamic_cast<CTransform*>(dynamic_cast<CSpike*>(pGameObject)->Get_TransformCom())->Set_Pos(5.f, 0.1, 5.f);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
+
+	// Spike
+	pGameObject = CSpike::Create(m_pGraphicDev);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	pGameObject->Set_MyLayer(pLayerTag);
+	dynamic_cast<CTransform*>(dynamic_cast<CSpike*>(pGameObject)->Get_TransformCom())->Set_Pos(5.f, 0.1, 10.f);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Spike", pGameObject), E_FAIL);
 
 	//// SlotMC
 	//pGameObject = CSlotMC::Create(m_pGraphicDev);
@@ -482,10 +490,12 @@ HRESULT CStage::Ready_Layer_MapObj(const _tchar* pLayerTag)
 	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Shop", pGameObject), E_FAIL);
 
 	// Shell Game
-	pGameObject = CShellGame::Create(m_pGraphicDev);
-	NULL_CHECK_RETURN(pGameObject, E_FAIL);
-	pGameObject->Set_MyLayer(pLayerTag);
-	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
+	//pGameObject = CShellGame::Create(m_pGraphicDev);
+	//NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	//pGameObject->Set_MyLayer(pLayerTag);
+	//FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"ShellGame", pGameObject), E_FAIL);
+
+
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
@@ -630,16 +640,37 @@ void CStage::Moster_Collision()
 		}
 	}
 
-	// Dople <-> Spike 충돌
-	if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr)
-	{
-		CGameObject* pDople = m_mapLayer.at(L"GameMst")->Collision_GameObject(Get_GameObject(L"MapObj", L"Spike"));
-		if (pDople)
-		{
-			if(DOPLE == dynamic_cast<CMonster*>(pDople)->Get_MstType())
-				dynamic_cast<CDople*>(pDople)->Hit();
-		}
-	}
+	//// Dople <-> Spike 충돌
+	//if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr)
+	//{
+	//	CGameObject* pDople = m_mapLayer.at(L"GameMst")->Collision_GameObject(Get_GameObject(L"MapObj", L"Spike"));
+	//	if (pDople)
+	//	{
+	//		if(DOPLE == dynamic_cast<CMonster*>(pDople)->Get_MstType())
+	//			dynamic_cast<CDople*>(pDople)->Hit();
+	//	}
+	//}
+
+	//// Dople <-> Spike 충돌
+	//if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr) // Dople과 Spike가 생성된 경우
+	//{
+	//	for (auto& iter : m_mapLayer.at(L"MapObj")->Get_ObjectMap())
+	//	{
+	//		if (SPIKE == dynamic_cast<CMapObj*>(iter.second)->Get_Type()) // Spike의 경우
+	//		{
+	//			//CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(*iter);
+	//			CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(iter.second); ////////////////////////
+
+	//			if (pMonster) // 충돌한 몬스터가 존재하고
+	//			{
+	//				if (DOPLE == dynamic_cast<CMonster*>(pMonster)->Get_MstType()) // Dople인 경우
+	//				{
+	//					dynamic_cast<CDople*>(pMonster)->Hit();
+	//				}
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 void CStage::MapObj_Collision()
@@ -702,65 +733,31 @@ void CStage::MapObj_Collision()
 		}
 	}
 
-	// Shop Npc 는 Epic 과 충돌
+	//// Dople <-> Spike 충돌
+	//if (Get_GameObject(L"MapObj", L"Spike") != nullptr && Get_GameObject(L"GameMst", L"Dople") != nullptr) // Dople과 Spike가 생성된 경우
+	//{
+	//	for (auto& iter : m_mapLayer.at(L"MapObj")->Get_ObjectMap())
+	//	{
+	//		if (SPIKE == dynamic_cast<CMapObj*>(iter.second)->Get_Type()) // Spike의 경우
+	//		{
+	//			//CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(*iter);
+	//			CGameObject* pMonster = m_mapLayer.at(L"GameMst")->Collision_GameObject(iter.second); ////////////////////////
 
-	// 야바위 충돌
-	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
-	{
-		if (dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc() != nullptr)
-		{
-			if (!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc()->Get_NPC_Game())
-			{
-				CGameObject* pShellObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
-
-				if (pShellObj)
-				{
-					if (2 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Npc <-> Player 충돌
-					{
-						if (0 < CPlayer::GetInstance()->Get_Coin())
-						{
-							CPlayer::GetInstance()->Set_Coin(-1);
-							dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
-						}
-					}
-					else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Shell <-> Player 충돌
-					{
-						dynamic_cast<CShell*>(pShellObj)->Set_StartUp(); // 선택한 Shell 위로 오픈
-
-						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward())
-						{
-							Engine::CGameObject* pGameObject = nullptr;
-
-							ITEM_TYPE eType = dynamic_cast<CShell*>(pShellObj)->Get_ItemType();
-							wstring wstrObjTag = dynamic_cast<CShell*>(pShellObj)->Get_DropItemTag();
-
-							for (int i = 0; i < 3; ++i)
-							{
-								pGameObject = dynamic_cast<CShell*>(pShellObj)->Create_Item(eType, 1, m_mapLayer.at(L"GameItem"), i);
-								m_mapLayer.at(L"GameItem")->Add_GameObject(wstrObjTag.c_str(), pGameObject);
-							}
-							dynamic_cast<CShell*>(pShellObj)->Setting_Reward_False();
-						}
-						else if(dynamic_cast<CShell*>(pShellObj)->Get_Lose())
-						{
-							Engine::CGameObject* pFly = nullptr;
-
-							_vec3 vPos;
-							dynamic_cast<CShell*>(pShellObj)->Get_TransformCom()->Get_Info(INFO_POS, &vPos);
-							for (int i = 0; i < 2; ++i)
-							{
-								pFly = CFly::Create(m_pGraphicDev, i * 2);
-								dynamic_cast<CFly*>(pFly)->Get_Transform()->Set_Pos(vPos);
-								pFly->Set_MyLayer(L"GameMst");
-								m_mapLayer.at(L"GameMst")->Add_GameObject(L"Fly", pFly);
-							}
-							dynamic_cast<CShell*>(pShellObj)->Set_Lose_False();
-						}
-					}
-				}
-			}
-		}
-	}
+	//			if (pMonster) // 충돌한 몬스터가 존재하고
+	//			{
+	//				if (DOPLE == dynamic_cast<CMonster*>(pMonster)->Get_MstType()) // Dople인 경우
+	//				{
+	//					dynamic_cast<CDople*>(pMonster)->Hit();
+	//				}
+	//				else
+	//					++iter.second;
+	//			}
+	//			++iter.second;
+	//		}
+	//		else
+	//			++iter.second;
+	//	}
+	//}
 }
 
 CStage* CStage::Create(LPDIRECT3DDEVICE9 pGraphicDev)

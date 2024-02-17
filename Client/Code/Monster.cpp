@@ -117,6 +117,35 @@ void CMonster::Create_Start_Particle(_float fCallLimit)
 	m_bCreate = true;
 }
 
+void CMonster::Rotation_Epic()
+{
+	// Epic 활성화 시 회전
+	_vec3 vPlayerLook;
+	CTransform* pPlayerTransformCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
+	pPlayerTransformCom->Get_Info(INFO_LOOK, &vPlayerLook);
+
+	if (-0.5f <= vPlayerLook.x && 0.5f >= vPlayerLook.x &&
+		0.f <= vPlayerLook.z && 1.f >= vPlayerLook.z) // Top
+	{
+		m_pTransformCom->m_vAngle = { D3DXToRadian(90), 0.f, 0.f };
+	}
+	else if (0.5f <= vPlayerLook.x && 1.f >= vPlayerLook.x &&
+		-1.f <= vPlayerLook.z && 1.f >= vPlayerLook.z) // Right
+	{
+		m_pTransformCom->m_vAngle = { 0.f, 0.f, D3DXToRadian(-90) };
+	}
+	else if (-0.5f <= vPlayerLook.x && 0.5f >= vPlayerLook.x &&
+		-1.f <= vPlayerLook.z && 0.f >= vPlayerLook.z)			// BOTTOM
+	{
+		m_pTransformCom->m_vAngle = { D3DXToRadian(-90), 0.f, 0.f };
+	}
+	else if (-1.f <= vPlayerLook.x && -0.5f >= vPlayerLook.x &&
+		-1.f <= vPlayerLook.z && 1.f >= vPlayerLook.z)			// LEFT
+	{
+		m_pTransformCom->m_vAngle = { 0.f, 0.f, D3DXToRadian(90) };
+	}
+}
+
 bool CMonster::Check_Time(const _float& fTimeDelta)
 {
 	m_fAccTimeDelta += fTimeDelta;

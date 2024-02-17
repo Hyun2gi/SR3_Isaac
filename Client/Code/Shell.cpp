@@ -34,7 +34,7 @@ HRESULT CShell::Ready_GameObject()
 	m_bMoveDown = false;
 	m_bShaking_Ready = false;
 	m_bReward = false;
-	m_bLose = false;
+	m_bLose = false; // 별로 필요 없는..?
 
 	m_eObjID = MOBJID_SHELL;
 

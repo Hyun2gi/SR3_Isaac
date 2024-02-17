@@ -280,10 +280,12 @@ void CSquirt::Check_TargetPos()
 
 void CSquirt::Epic_Time()
 {
-	m_pTransformCom->m_vAngle = { 0.f, 0.f, D3DXToRadian(95) };
+	//m_pTransformCom->m_vAngle = { 0.f, 0.f, D3DXToRadian(90) };
+	Rotation_Epic();
 
 	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
 	{
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.01f);
 		m_pTransformCom->m_vAngle = m_vOriginAngle;
 		m_bEpicTime = false;
 	}

@@ -5,7 +5,8 @@
 #include "Export_Utility.h"
 
 CLeaper::CLeaper(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
-	: CMonster(pGraphicDev)
+	: CMonster(pGraphicDev),
+	m_pShadow(nullptr)
 {
 	int iSeed = iID * 5;
 	DWORD dwSeed = (iSeed << 16) | (time(NULL) % 1000);
@@ -13,7 +14,8 @@ CLeaper::CLeaper(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
 }
 
 CLeaper::CLeaper(const CLeaper& rhs)
-	: CMonster(rhs)
+	: CMonster(rhs),
+	m_pShadow(rhs.m_pShadow)
 {
 }
 
@@ -34,6 +36,7 @@ HRESULT CLeaper::Ready_GameObject()
 
 	m_bMove = false;
 	m_bJump = false;
+	m_bEpicTime = false;
 
 	m_fPower = 1.8f;
 	m_fAccelTime = 0.f;
@@ -79,7 +82,17 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 
 	Check_Outof_Map();
 
-	Face_Camera();
+	// Epic
+	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
+		m_bEpicTime = true;
+
+	if (m_bEpicTime)
+		Epic_Time();
+	else
+	{
+		m_vOriginAngle = m_pTransformCom->m_vAngle;
+		Face_Camera();
+	}
 
 	if (Check_Time(m_fSlowDelta))
 	{
@@ -106,6 +119,17 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 		}
 		m_eCurState = LEAPER_IDLE;
 	}
+
+	if (m_pShadow == nullptr) // 아직 그림자가 없으면 생성
+		Create_Shadow();
+	else
+	{
+		_vec3 vLeaperPos;
+		m_pTransformCom->Get_Info(INFO_POS, &vLeaperPos);
+		m_pShadow->Get_TransformCom()->Set_Pos(vLeaperPos.x, 0.1f, vLeaperPos.z);
+		m_pShadow->Update_GameObject(m_fSlowDelta);
+	}
+
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
@@ -158,6 +182,9 @@ void CLeaper::LateUpdate_GameObject()
 	if (m_bHitColor)
 		Change_Color(m_fSlowDelta);
 
+	if (m_pShadow != nullptr)
+		m_pShadow->LateUpdate_GameObject();
+
 	Motion_Change();
 
 	__super::LateUpdate_GameObject();
@@ -169,6 +196,9 @@ void CLeaper::LateUpdate_GameObject()
 
 void CLeaper::Render_GameObject()
 {
+	if (m_pShadow != nullptr)
+		m_pShadow->Render_GameObject();
+
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
@@ -291,21 +321,6 @@ void CLeaper::MoveTo_Random(const _float& fTimeDelta)
 
 	D3DXVec3Normalize(&vDir, &vDir);
 
-	/*if (vPos.x < VTXCNTX - m_pTransformCom->m_vScale.x - 5.f &&
-		vPos.z < VTXCNTZ - m_pTransformCom->m_vScale.z  - 5.f &&
-		vPos.x > m_pTransformCom->m_vScale.x + 5.f &&
-		vPos.z > m_pTransformCom->m_vScale.z + 5.f)
-	{
-		
-		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
-	}
-	else
-	{
-
-		m_pTransformCom->Move_Pos(&-vDir, m_fSpeed, fTimeDelta);
-	}*/
-	//m_pTransformCom->Get_Info(INFO_POS, &vPos);
-
 	if (vPos.x >= VTXCNTX - m_pTransformCom->m_vScale.x - INTERVAL ||
 		vPos.z >= VTXCNTZ - m_pTransformCom->m_vScale.z - INTERVAL ||
 		vPos.x <= m_pTransformCom->m_vScale.x + INTERVAL ||
@@ -341,15 +356,34 @@ void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 		{
 			//vPos.y -= 1.f;
 			vPos.y -= m_fSpeed * fTimeDelta * 5.f;
+			m_pShadow->Set_Render(true);
 		}
 		else
 		{
 			vPos.y = HEIGHT_Y;
 			m_eCurState = LEAPER_IDLE;
 			m_bJump = false;
+			m_pShadow->Set_Render(false);
 		}
 	}
 	m_pTransformCom->Set_Pos(vPos);
+}
+
+void CLeaper::Create_Shadow()
+{
+	m_pShadow = CShadow::Create(m_pGraphicDev);
+	m_pShadow->Get_TransformCom()->m_vScale = { SHADOW_SCALE, SHADOW_SCALE, SHADOW_SCALE };
+}
+
+void CLeaper::Epic_Time()
+{
+	Rotation_Epic();
+
+	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
+	{
+		m_pTransformCom->m_vAngle = m_vOriginAngle;
+		m_bEpicTime = false;
+	}
 }
 
 CLeaper* CLeaper::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
@@ -369,4 +403,7 @@ CLeaper* CLeaper::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iID)
 void CLeaper::Free()
 {
 	__super::Free();
+
+	Safe_Release<CShadow*>(m_pShadow);
+	m_pShadow = nullptr;
 }

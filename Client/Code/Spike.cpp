@@ -23,6 +23,8 @@ HRESULT CSpike::Ready_GameObject()
 	m_pTransformCom->Set_Pos(5.f, 0.5f, 15.f);
 	m_pTransformCom->m_vAngle.x = 70.f;
 
+	m_eObjType = SPIKE;
+
 	return S_OK;
 }
 

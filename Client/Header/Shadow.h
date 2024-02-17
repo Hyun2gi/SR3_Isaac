@@ -11,6 +11,9 @@ private:
 	virtual ~CShadow();
 
 public:
+	void			Set_Render(_bool bIsRender) { m_bRender = bIsRender; }
+
+public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int	Update_GameObject(const _float& fTimeDelta) override;
 	virtual void	LateUpdate_GameObject()					 override;
@@ -20,7 +23,9 @@ private:
 	virtual HRESULT		Add_Component()						override;
 
 private:
-	// º¯¼ö
+	_bool				m_bRender;
+
+	
 
 public:
 	static CShadow*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
