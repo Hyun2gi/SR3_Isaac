@@ -104,7 +104,7 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 		Check_TargetPos();
 	}
 
-	if (m_bJump)
+	if (m_bJump && !m_bEpicTime)
 	{
 		JumpTo_Player(m_fSlowDelta);
 	}
@@ -393,6 +393,7 @@ void CLeaper::Epic_Time()
 
 	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
 	{
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.01f);
 		m_pTransformCom->m_vAngle = m_vOriginAngle;
 		m_bEpicTime = false;
 	}

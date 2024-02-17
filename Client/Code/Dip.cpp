@@ -271,6 +271,7 @@ void CDip::Epic_Time()
 
 	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
 	{
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.01f);
 		m_pTransformCom->m_vAngle = m_vOriginAngle;
 		m_bEpicTime = false;
 	}
