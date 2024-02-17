@@ -1905,32 +1905,34 @@ void CLoadStage::BGM_INTRO_START()
 	// 첫번째 방 인트로 bgm은 dynamic camera에서 시작
 	if (m_bBGMIntro)
 	{
-		
 		StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
 		string roomtype = info.m_strTheme;
 
 		if (roomtype == "Normal")
 		{
-			if (Engine::PlayEffect(L"diptera sonata intro.ogg", SOUND_BGM, 0.8f))
+			/*Engine::StopSound(SOUND_BGM);
+			if (Engine::PlayEffect(L"diptera sonata intro.ogg", SOUND_BGM_INTRO, 0.8f))
 			{
 				m_bBGMIntro = false;
-			}
+			}*/
+			Engine::StopSound(SOUND_BGM);
+			Engine::PlayEffect(L"diptera sonata intro.ogg", SOUND_BGM_INTRO, 0.8f);
 		}
 		else if (roomtype == "Treasure")
 		{
-			if (Engine::PlayEffect(L"TreasureRoom.ogg", SOUND_BGM, 0.8f))
-			{
-				m_bBGMIntro = false;
-			}
+			Engine::StopSound(SOUND_BGM);
+			Engine::PlayEffect(L"TreasureRoom.ogg", SOUND_BGM_INTRO, 0.8f);
+			m_bBGMIntro = false;
 		}
 		else if (roomtype == "Devil")
 		{
-			Engine::PlayEffect(L"DevilRoom.wav", SOUND_BGM, 0.8f);
+			Engine::PlayEffect(L"DevilRoom.wav", SOUND_BGM_INTRO, 0.8f);
 			m_bBGMIntro = false;
 		}
 		else if (roomtype == "Arcade")
 		{
-			// intro가 없음
+			Engine::StopSound(SOUND_BGM);
+			Engine::PlayEffect(L"ArcadeRoom.ogg", SOUND_BGM_INTRO, 0.8f);
 			m_bBGMIntro = false;
 		}
 		else if (roomtype == "Boss")
@@ -1950,31 +1952,49 @@ void CLoadStage::BGM_START()
 {
 	if (!m_bBGMIntro)
 	{
-		if (!Engine::CheckIsPlaying(SOUND_BGM))
+		
+		StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
+		string roomtype = info.m_strTheme;
+		if (roomtype == "Normal")
 		{
-			StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
-			string roomtype = info.m_strTheme;
-			if (roomtype == "Normal")
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
 			{
 				Engine::PlayBGM(L"diptera sonata(basement).ogg", 0.8f);
 			}
-			else if (roomtype == "Treasure")
+		}
+		else if (roomtype == "Treasure")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
 			{
-				Engine::PlayBGM(L"TreasureRoom.ogg", 0.8f);
+				Engine::PlayBGM(L"diptera sonata(basement).ogg", 0.8f);
 			}
-			else if (roomtype == "Devil")
+		}
+		else if (roomtype == "Devil")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
 			{
 				Engine::PlayBGM(L"the calm.ogg", 0.8f);
 			}
-			else if (roomtype == "Arcade")
+				
+		}
+		else if (roomtype == "Arcade")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
 			{
-				Engine::PlayBGM(L"ArcadeRoom.ogg", 0.8f);
+				Engine::PlayBGM(L"arcaderoom_loop.ogg", 0.8f);
 			}
-			else if (roomtype == "Boss")
+				
+			//arcaderoom_loop.ogg
+		}
+		else if (roomtype == "Boss")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
 			{
 				Engine::PlayEffect(L"basic boss fight.ogg", SOUND_BGM, 0.8f);
 			}
+			
 		}
+		
 	}
 }
 
@@ -2074,7 +2094,7 @@ CLoadStage* CLoadStage::Create(LPDIRECT3DDEVICE9 pGraphicDev, int iType, bool bS
 	{
 		//Engine::StopAll();
 		//Engine::StopSound(SOUND_EFFECT_ETC_ALLPLAY);
-		Engine::PlayEffect(L"earthquake4.wav", SOUND_EFFECT_ETC_ALLPLAY, 2.6f);
+		Engine::PlayEffect(L"earthquake4.wav", SOUND_BGM_EARTHQUAKE, 2.6f);
 		// 큐브연출있으면 무적시간 두기
 		CPlayer::GetInstance()->Set_MapCinemachine(true);
 	}

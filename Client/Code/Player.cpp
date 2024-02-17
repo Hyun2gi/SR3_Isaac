@@ -827,6 +827,11 @@ void CPlayer::Set_CameraShaking_Sub(float shakeTime, float shakeIntensity)
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnShakeCameraPos_Sub(shakeTime, shakeIntensity);
 }
 
+void CPlayer::Set_CameraShaking_Rot(float shakeTime, float shakeIntensity)
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnShakeCameraRot(shakeTime, shakeIntensity);
+}
+
 
 void CPlayer::Bullet_Change_To_Brim()
 {

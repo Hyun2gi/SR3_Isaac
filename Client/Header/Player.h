@@ -157,6 +157,8 @@ public:
 
 	void		Set_CameraShaking(float shakeTime = 0.6f, float shakeIntensity = 1.0f);
 	void		Set_CameraShaking_Sub(float shakeTime = 1.0f, float shakeIntensity = 1.0f);
+	void		Set_CameraShaking_Rot(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
+		
 
 	bool		Get_AzazelMode() { if (m_eCurPlayerVer == P_AZAZEL) { return true; } else { return false; } }
 	void		Set_CameraShakingBlock(bool block) { m_bCameraShaking = block; }

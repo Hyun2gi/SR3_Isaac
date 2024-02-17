@@ -152,7 +152,11 @@ void CDynamicCamera::Key_Input(const _float& fTimeDelta)
 			//OnShakeCameraPos(float shakeTime, float shakeIntensity)
 			//OnShakeCameraPos(1.0, 1);
 			//OnShakeCameraPos_Sub(1.0, 0.7);
-			OnShakeCameraRot(1.0, 0.1);
+			if (m_bShakeCamera_Rot == false)
+			{
+				OnShakeCameraRot(1.0, 0.1);
+			}
+			
 		}
 	}
 
@@ -726,10 +730,38 @@ void CDynamicCamera::ShakeByRotation(const _float& fTimeDelta)
 			camright = _vec3(matCamWorld._11, matCamWorld._12, matCamWorld._13);
 			camup = _vec3(matCamWorld._21, matCamWorld._22, matCamWorld._23);
 
-			if (abs(m_fAngleY) > 5)
+			if (abs(m_bTotalShakingAngle) >= 2)
 			{
-				m_fAngleY = 0;
+				if (m_bChangeShakeDir)
+				{
+					//음수
+					m_bChangeShakeDir = false;
+					m_bTotalShakingAngle++;
+				}
+				else
+				{
+					//음수
+					m_bChangeShakeDir = true;
+					m_bTotalShakingAngle--;
+				}
 			}
+		
+			// m_bChangeShakeDir = true; 초기화값
+			if (m_bChangeShakeDir)
+			{
+				// true 면 음수
+				m_bTotalShakingAngle--;
+				m_fAngleY = -1;
+			}
+			else
+			{
+				// false면 더하기
+				m_bTotalShakingAngle++;
+				m_fAngleY = 1;
+			}
+
+			
+
 			//랜덤각도 움직이고 싶을때
 
 			float randx = (float)(rand() % 30);
@@ -737,19 +769,9 @@ void CDynamicCamera::ShakeByRotation(const _float& fTimeDelta)
 			float randz = (float)(rand() % 30);
 
 			// 같은 회전으로 움직일때 사용
-			float randy = 5;
+			float randy = 3;
 
-			if (m_bChangeShakeDir)
-			{
-				randx *= -1;
-				randy *= -1;
-				randz *= -1;
-				m_bChangeShakeDir = false;
-			}
-			else
-			{
-				m_bChangeShakeDir = true;
-			}
+			
 
 
 			D3DXQUATERNION qRot;
@@ -764,7 +786,7 @@ void CDynamicCamera::ShakeByRotation(const _float& fTimeDelta)
 			/*D3DXQuaternionRotationYawPitchRoll(&qRot, 0, D3DXToRadian(randx), 0);
 			D3DXMatrixRotationQuaternion(&matRotX, &qRot);*/
 
-			D3DXQuaternionRotationYawPitchRoll(&qRot, D3DXToRadian(randy), 0, 0);
+			D3DXQuaternionRotationYawPitchRoll(&qRot, D3DXToRadian(m_fAngleY), 0, 0);
 			D3DXMatrixRotationQuaternion(&matRotY, &qRot);
 
 			/*D3DXQuaternionRotationYawPitchRoll(&qRot, 0, 0, D3DXToRadian(randz));
@@ -987,7 +1009,7 @@ void CDynamicCamera::OnShakeCameraRot(float shakeTime, float shakeIntensity)
 	m_fShakeTime = shakeTime;
 	m_fShakeIntensity = shakeIntensity;
 	//m_iShakeNum = 0;
-
+	
 	//m_eCurState = C_SHAKING_ROT;
 
 	/*m_vStartEyePosition = m_vEye;
@@ -999,7 +1021,9 @@ void CDynamicCamera::OnShakeCameraRot(float shakeTime, float shakeIntensity)
 	m_fAngleX = 0;
 	m_fAngleY = 0;
 	m_fAngleZ = 0;
+	m_bTotalShakingAngle = 0;
 
+	m_bChangeShakeDir = true; // 방향 바꿀떄 사용
 	m_bShakeCamera_Rot = true;
 	m_bFix = true; // 사용자 움직임 잠금 
 }

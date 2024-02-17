@@ -158,6 +158,7 @@ private:
 	_bool		m_bShakeCamera;
 	_bool		m_bShakeCamera_Sub;
 	_bool		m_bShakeCamera_Rot = false; // 회전으로 쉐이킹
+	float		m_bTotalShakingAngle = 0;
 
 	_bool		m_bMove;
 	_bool		m_bFirstPerson;
