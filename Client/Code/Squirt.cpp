@@ -48,6 +48,9 @@ HRESULT CSquirt::Ready_GameObject()
 
 _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsLoadCreatEnd)
+		return 0;
+
 	if (!m_bCreate)
 	{
 		if (Check_Time(fTimeDelta))
@@ -112,7 +115,8 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 	{
 		_vec3 vPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.7f, 30, 2.f);
+
 		int soundrand = rand() % 4;
 		if (soundrand == 0)
 		{
@@ -140,11 +144,15 @@ _int CSquirt::Update_GameObject(const _float& fTimeDelta)
 
 void CSquirt::LateUpdate_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	if (m_bHit)
 	{
 		m_iHp -= 1;
 
 		Hit_PushBack(m_fSlowDelta);
+		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.7f, 10, 2.f);
 
 		m_bHit = false;
 		m_bHitColor = true;
@@ -167,6 +175,9 @@ void CSquirt::LateUpdate_GameObject()
 
 void CSquirt::Render_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 

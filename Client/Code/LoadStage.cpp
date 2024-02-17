@@ -47,6 +47,7 @@
 #include "Obstacle.h"
 #include "MoveXObstacle.h"
 #include "MoveZObstacle.h"
+#include "Devil.h"
 
 // 총알
 #include "EpicBullet.h"
@@ -254,6 +255,14 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		}
 	}
 
+	if (m_bIsLoadDataCreated) // 연출이 끝난 경우
+	{
+		for (auto& iter : m_mapLayer.at(L"GameMst")->Get_ObjectMap()) // 몬스터 움직임 활성화
+		{
+			dynamic_cast<CMonster*>(iter.second)->Set_LoadCreateEnd();
+		}
+	}
+
 	//타임 델타 스케일 조절 예시 _ 사용
 	if (Engine::Key_Down(DIK_P))
 	{
@@ -408,7 +417,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 					int randNum1 = rand() % 10 + 5;
 					int randNum2 = rand() % 10 + 5;
-					int randNumSpeed = rand() % 30 + 10;
+					int randNumSpeed = rand() % 15 + 10;
 
 					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Left(randNum1);
 					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Right(randNum2);
@@ -428,12 +437,23 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 					int randNum1 = rand() % 10 + 5;
 					int randNum2 = rand() % 10 + 5;
-					int randNumSpeed = rand() % 30 + 10;
+					int randNumSpeed = rand() % 15 + 10;
 
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Up(randNum1);
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Down(randNum2);
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Speed(randNumSpeed);
 					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle_Z", pGameObject), E_FAIL);
+
+					break;
+				}
+				case DEVIL:
+				{
+					pGameObject = CDevil::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Devil", pGameObject), E_FAIL);
 
 					break;
 				}
@@ -1573,7 +1593,7 @@ void CLoadStage::MapObj_Collision()
 						}
 						else
 						{
-							break; // 머야
+							break;
 						}
 					}
 					++iter;
@@ -1588,8 +1608,27 @@ void CLoadStage::MapObj_Collision()
 					else
 						++iter;
 				}
-				else
+				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포
+				{
+					if (!dynamic_cast<CMapObj*>(pMapObj)->Get_Dead())			// MapObj가 Dead가 아닐 때
+					{
+						if (POOP == dynamic_cast<CMapObj*>(pMapObj)->Get_Type())
+						{
+							dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
+							break;
+						}
+						else if (0 == dynamic_cast<CMapObj*>(pMapObj)->Get_ObjID())
+						{
+							dynamic_cast<CFire*>(pMapObj)->Set_Hit();
+							break;
+						}
+						else
+						{
+							break;
+						}
+					}
 					++iter;
+				}
 			}
 			else
 				++iter;
@@ -1604,7 +1643,7 @@ void CLoadStage::MapObj_Collision()
 		if (pMachine)
 		{
 			if (1 == dynamic_cast<CMapObj*>(pMachine)->Get_ObjID() &&
-				!dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_Game()) // 게임중이 아닐 때
+				!dynamic_cast<CSlotMC*>(Get_GameObject(L"MapObj", L"SlotMC"))->Get_CoolTime()) // 쿨타임 돌지 않을때
 			{
 				if (0 < CPlayer::GetInstance()->Get_Coin())
 				{
@@ -1696,6 +1735,33 @@ void CLoadStage::Obstacle_Collsion()
 				CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
 				Engine::Check_Collision(pPlayerTrans, pTrans);
 			}
+		}
+
+		for (auto& iter : mapObj)
+		{
+			if (OBSTACLE_X <= dynamic_cast<CMapObj*>(iter.second)->Get_Type() && dynamic_cast<CMapObj*>(iter.second)->Get_Type() <= OBSTACLE_Z)
+			{
+				for (auto& iter2 : mapObj)
+				{
+					if (iter == iter2) continue;
+
+					if (OBSTACLE == dynamic_cast<CMapObj*>(iter2.second)->Get_Type())
+					{
+						CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+						CTransform* pTrans2 = dynamic_cast<CTransform*>(iter2.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+
+					
+						if (Engine::Check_Intersect(pTrans, pTrans2))
+						{
+							//Engine::Check_Collision(pPlayerTrans, pTrans);
+
+							dynamic_cast<CMoveZObstacle*>(iter.second)->Set_Turn();
+						}
+					}
+				}
+			}
+			
+			
 		}
 	}
 

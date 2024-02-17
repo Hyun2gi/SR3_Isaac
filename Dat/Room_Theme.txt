@@ -1,1 +1,1 @@
-Basement,Arcade,Sheol,
+Basement,Arcade,Sheol,Treasure,Blue,Womb,

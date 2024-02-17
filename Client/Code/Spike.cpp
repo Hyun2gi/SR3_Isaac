@@ -20,8 +20,8 @@ CSpike::~CSpike()
 HRESULT CSpike::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(5.f, 0.5f, 15.f);
-	m_pTransformCom->m_vAngle.x = 70.f;
+	m_pTransformCom->Set_Pos(5.f, 0.1f, 15.f);
+	m_pTransformCom->m_vAngle.x = D3DXToRadian(90.f); // 70.f
 
 	m_eObjType = SPIKE;
 

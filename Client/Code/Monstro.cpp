@@ -72,6 +72,9 @@ HRESULT CMonstro::Ready_GameObject()
 
 _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsLoadCreatEnd)
+		return 0;
+
 	if (!m_bCreate)
 	{
 		if (Check_Time(fTimeDelta))
@@ -129,6 +132,9 @@ _int CMonstro::Update_GameObject(const _float& fTimeDelta)
 
 void CMonstro::LateUpdate_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -174,6 +180,9 @@ void CMonstro::LateUpdate_GameObject()
 
 void CMonstro::Render_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	if (m_pShadow != nullptr)
 		m_pShadow->Render_GameObject();
 

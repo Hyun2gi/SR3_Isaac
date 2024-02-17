@@ -42,6 +42,9 @@ HRESULT CPacer::Ready_GameObject()
 
 _int CPacer::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsLoadCreatEnd)
+		return 0;
+
 	if (!m_bCreate)
 	{
 		if (Check_Time(fTimeDelta))
@@ -69,7 +72,8 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 	{
 		_vec3 vPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.1f, 20);
+
 		int soundrand = rand() % 4;
 		if (soundrand == 0)
 		{
@@ -122,13 +126,18 @@ _int CPacer::Update_GameObject(const _float& fTimeDelta)
 
 void CPacer::LateUpdate_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	if (m_bHit)
 	{
 		m_iHp -= 1;
 
 		Hit_PushBack(m_fSlowDelta);
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.05f, 5);
 
 		m_bHit = false;
+		m_bHitColor = true;
 
 		if (0 >= m_iHp)
 		{
@@ -148,6 +157,9 @@ void CPacer::LateUpdate_GameObject()
 
 void CPacer::Render_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
@@ -227,6 +239,7 @@ void CPacer::Epic_Time()
 
 	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
 	{
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.01f);
 		m_pTransformCom->m_vAngle = m_vOriginAngle;
 		m_bEpicTime = false;
 	}

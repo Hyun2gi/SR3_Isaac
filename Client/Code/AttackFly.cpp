@@ -47,6 +47,9 @@ HRESULT CAttackFly::Ready_GameObject()
 
 _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsLoadCreatEnd)
+		return 0;
+
 	_float fSecondDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
 	if (!m_bTimeScale)
@@ -98,6 +101,9 @@ _int CAttackFly::Update_GameObject(const _float& fTimeDelta)
 
 void CAttackFly::LateUpdate_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	__super::LateUpdate_GameObject();
 
 	if (m_CenterFly != nullptr)
@@ -114,6 +120,9 @@ void CAttackFly::LateUpdate_GameObject()
 
 void CAttackFly::Render_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	for (auto& iter : m_NormalFlyList)
 	{
 		iter->Render_GameObject();

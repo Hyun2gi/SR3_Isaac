@@ -62,6 +62,7 @@ _uint CLoading::Loading_ForStage()
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Object_6", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Object_6.png")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Object_7", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Object_7.png")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Object_8", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Object_8.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Object_9", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Object/Object_9.png")), E_FAIL);
 
 	//몬스터
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Monster_0", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/Monster/Monster_0.png")), E_FAIL);
@@ -98,6 +99,9 @@ _uint CLoading::Loading_ForStage()
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Normal", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Normal.png")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Arcade", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Arcade.png")), E_FAIL);
 	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Sheol", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Sheol.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Treasure", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Sheol.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Blue", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Sheol.png")), E_FAIL);
+	FAILED_CHECK_RETURN(Engine::Ready_Proto(L"Proto_Theme_Womb", CTexture::Create(m_pGraphicDev, TEX_NORMAL, L"../Bin/Resource/Texture/StageTheme/Sheol.png")), E_FAIL);
 
 
 	//텍스처 프로토 추가

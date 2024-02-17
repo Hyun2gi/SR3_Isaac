@@ -77,6 +77,8 @@ _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 
 	if(!m_bDeadWait)
 		Revolve_Center();
+	else
+		m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 

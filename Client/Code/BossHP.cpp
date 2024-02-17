@@ -35,6 +35,8 @@ HRESULT CBossHP::Ready_GameObject()
 	m_bIsMom = false;
 	m_bHitColor = false;
 
+	m_eShaderID = SHADER_DEFAULT;
+
 	__super::Ready_GameObject();
 	Compute_ProjectionMatrix();
 
@@ -49,19 +51,13 @@ _int CBossHP::Update_GameObject(const _float& fTimeDelta)
 		m_fTest -= 1.f * fTimeDelta;
 	}
 
-
-	// Boss의 HP를 받아와서 상태 변경
-
 	m_fCurFrame = 0.f;
 
 	Update_Scale();
 
 	if (m_pMonster->Get_Hit())
 		m_bHitColor = true;
-	if (m_bIsMom)
-	{
-		
-	}
+
 
 	if(m_bHitColor)
 		Change_Color(fTimeDelta);
@@ -91,7 +87,7 @@ void CBossHP::Render_GameObject()
 	if (FAILED(m_pShaderCom->Bind_Float("g_fAlpahScale", m_fTest)))
 		return;
 
-	if (FAILED(m_pShaderCom->Begin_Shader(SHADER_ALPHA)))
+	if (FAILED(m_pShaderCom->Begin_Shader(m_eShaderID))) // SHADER_WHITE SHADER_ALPHA
 		return;
 
 	if(0 < m_iTargetHP)
@@ -161,24 +157,21 @@ void CBossHP::Change_Color(const _float& fTimeDelta)
 
 	if (m_fColorTimeDelta >= 0.1f)
 	{
-		D3DXCOLOR temp = D3DXCOLOR(1.f, 1.f, 1.f, 1.f);
-		m_pBufferCom->Set_Color(temp);
+		m_eShaderID = SHADER_WHITE;
+		
 
 		m_fColorTimeDelta = 0.f;
 
 		++m_iColorCount;
-		//m_bHitColor = false;
-
-		//return;
 	}
 	else
 	{
-		D3DXCOLOR temp = D3DXCOLOR(0.5f, 0.5f, 0.5f, 1.f);
-		m_pBufferCom->Set_Color(temp);
+		m_eShaderID = SHADER_DEFAULT;
 	}
 
-	if (3 == m_iColorCount)
+	if (5 == m_iColorCount)
 	{
+		m_eShaderID = SHADER_DEFAULT;
 		m_bHitColor = false;
 		m_iColorCount = 0;
 		return;

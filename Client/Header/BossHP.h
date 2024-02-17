@@ -62,6 +62,8 @@ private:
 
 	_float				m_fTest = 1.f;
 
+	SHADER_PASS_ID		m_eShaderID;
+
 public:
 	static CBossHP* Create(LPDIRECT3DDEVICE9	pGraphicDev,
 		_float fSizeX, _float fSizeY,
