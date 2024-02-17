@@ -47,6 +47,7 @@
 #include "Obstacle.h"
 #include "MoveXObstacle.h"
 #include "MoveZObstacle.h"
+#include "Devil.h"
 
 // 총알
 #include "EpicBullet.h"
@@ -164,6 +165,13 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		if (!m_bStartScene)
 		{
 			CPlayer::GetInstance()->Set_StopShaking();
+
+			if (m_iCurStageKey == 8)
+			{
+				// 도플방일때
+				CPlayer::GetInstance()->Set_Camera_Cinemachine_04();
+			}
+
 			//CPlayer::GetInstance()->Set_Camera_Cinemachine_02();
 			if (m_iLoadDataSize <= m_iCreatedCnt)
 			{
@@ -177,7 +185,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 			m_bIsCreated = true;
 		}
 
-
+		
 		//Setting_UI(); // UI 생성
 	}
 	
@@ -191,7 +199,16 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 			
 			// 플레이어 무적 시간 종료 및 플레이어로 돌아가기
 			CPlayer::GetInstance()->Set_MapCinemachine(false);
-			CPlayer::GetInstance()->Set_Camera_Cinemachine_03();
+
+			if (m_iCurStageKey == 8)
+			{
+				// 도플방일때
+			}
+			else
+			{
+				// 도플방아닐때
+				CPlayer::GetInstance()->Set_Camera_Cinemachine_03();
+			}
 		}
 
 		if (Check_Cube_Arrived() && m_iCreatedCnt < m_iLoadDataSize && !m_bIsLoadDataCreated)
@@ -225,6 +242,17 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
 		m_bIsLoadDataCreated = true;
+
+
+		if (m_iCurStageKey == 8)
+		{
+			//도플방일때
+			CPlayer::GetInstance()->Set_OnDople();
+		}
+		else
+		{
+
+		}
 	}
 
 	if (m_bIsLoadDataCreated) // 연출이 끝난 경우
@@ -389,7 +417,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 					int randNum1 = rand() % 10 + 5;
 					int randNum2 = rand() % 10 + 5;
-					int randNumSpeed = rand() % 30 + 10;
+					int randNumSpeed = rand() % 15 + 10;
 
 					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Left(randNum1);
 					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Right(randNum2);
@@ -409,12 +437,23 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 					int randNum1 = rand() % 10 + 5;
 					int randNum2 = rand() % 10 + 5;
-					int randNumSpeed = rand() % 30 + 10;
+					int randNumSpeed = rand() % 15 + 10;
 
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Up(randNum1);
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Down(randNum2);
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Speed(randNumSpeed);
 					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle_Z", pGameObject), E_FAIL);
+
+					break;
+				}
+				case DEVIL:
+				{
+					pGameObject = CDevil::Create(m_pGraphicDev);
+					NULL_CHECK_RETURN(pGameObject, E_FAIL);
+					pGameObject->Set_MyLayer(pLayerTag);
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.second.iX;
+					dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.second.iZ;
+					FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Devil", pGameObject), E_FAIL);
 
 					break;
 				}
@@ -1697,6 +1736,33 @@ void CLoadStage::Obstacle_Collsion()
 				Engine::Check_Collision(pPlayerTrans, pTrans);
 			}
 		}
+
+		for (auto& iter : mapObj)
+		{
+			if (OBSTACLE_X <= dynamic_cast<CMapObj*>(iter.second)->Get_Type() && dynamic_cast<CMapObj*>(iter.second)->Get_Type() <= OBSTACLE_Z)
+			{
+				for (auto& iter2 : mapObj)
+				{
+					if (iter == iter2) continue;
+
+					if (OBSTACLE == dynamic_cast<CMapObj*>(iter2.second)->Get_Type())
+					{
+						CTransform* pTrans = dynamic_cast<CTransform*>(iter.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+						CTransform* pTrans2 = dynamic_cast<CTransform*>(iter2.second->Get_Component(ID_DYNAMIC, L"Proto_Transform"));
+
+					
+						if (Engine::Check_Intersect(pTrans, pTrans2))
+						{
+							//Engine::Check_Collision(pPlayerTrans, pTrans);
+
+							dynamic_cast<CMoveZObstacle*>(iter.second)->Set_Turn();
+						}
+					}
+				}
+			}
+			
+			
+		}
 	}
 
 	// Dople <-> 장애물 충돌
@@ -1984,7 +2050,8 @@ void CLoadStage::BGM_INTRO_START()
 		StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
 		string roomtype = info.m_strTheme;
 
-		if (roomtype == "Normal")
+		// 울고 있으면 비지엠으로 안들어감
+		if (roomtype == "Normal" && !CPlayer::GetInstance()->Get_Cry_Anim())
 		{
 			/*Engine::StopSound(SOUND_BGM);
 			if (Engine::PlayEffect(L"diptera sonata intro.ogg", SOUND_BGM_INTRO, 0.8f))
@@ -2088,6 +2155,12 @@ HRESULT CLoadStage::Door_Collision()
 
 			if (pObj) // 충돌된 문 존재
 			{
+				if (m_iCurStageKey == 8)
+				{
+					// 도플방이었을때
+					CPlayer::GetInstance()->Set_OffDople();
+				}
+
 				//_vec3 playerpos;
 				//dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &playerpos);
 				//CPlayer::GetInstance()->Set_StartPosition(playerpos);
@@ -2153,6 +2226,7 @@ HRESULT CLoadStage::Door_Collision()
 				{
 					CPlayer::GetInstance()->Set_StartPos(startpos);
 				}
+
 
 				NULL_CHECK_RETURN(pScene, -1);
 
