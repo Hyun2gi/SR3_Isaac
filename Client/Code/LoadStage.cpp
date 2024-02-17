@@ -165,6 +165,13 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		if (!m_bStartScene)
 		{
 			CPlayer::GetInstance()->Set_StopShaking();
+
+			if (m_iCurStageKey == 8)
+			{
+				// 도플방일때
+				CPlayer::GetInstance()->Set_Camera_Cinemachine_04();
+			}
+
 			//CPlayer::GetInstance()->Set_Camera_Cinemachine_02();
 			if (m_iLoadDataSize <= m_iCreatedCnt)
 			{
@@ -178,7 +185,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 			m_bIsCreated = true;
 		}
 
-
+		
 		//Setting_UI(); // UI 생성
 	}
 	
@@ -192,7 +199,16 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 			
 			// 플레이어 무적 시간 종료 및 플레이어로 돌아가기
 			CPlayer::GetInstance()->Set_MapCinemachine(false);
-			CPlayer::GetInstance()->Set_Camera_Cinemachine_03();
+
+			if (m_iCurStageKey == 8)
+			{
+				// 도플방일때
+			}
+			else
+			{
+				// 도플방아닐때
+				CPlayer::GetInstance()->Set_Camera_Cinemachine_03();
+			}
 		}
 
 		if (Check_Cube_Arrived() && m_iCreatedCnt < m_iLoadDataSize && !m_bIsLoadDataCreated)
@@ -226,6 +242,17 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
 		m_bIsLoadDataCreated = true;
+
+
+		if (m_iCurStageKey == 8)
+		{
+			//도플방일때
+			CPlayer::GetInstance()->Set_OnDople();
+		}
+		else
+		{
+
+		}
 	}
 
 	if (m_bIsLoadDataCreated) // 연출이 끝난 경우
@@ -2023,7 +2050,8 @@ void CLoadStage::BGM_INTRO_START()
 		StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
 		string roomtype = info.m_strTheme;
 
-		if (roomtype == "Normal")
+		// 울고 있으면 비지엠으로 안들어감
+		if (roomtype == "Normal" && !CPlayer::GetInstance()->Get_Cry_Anim())
 		{
 			/*Engine::StopSound(SOUND_BGM);
 			if (Engine::PlayEffect(L"diptera sonata intro.ogg", SOUND_BGM_INTRO, 0.8f))
@@ -2127,6 +2155,12 @@ HRESULT CLoadStage::Door_Collision()
 
 			if (pObj) // 충돌된 문 존재
 			{
+				if (m_iCurStageKey == 8)
+				{
+					// 도플방이었을때
+					CPlayer::GetInstance()->Set_OffDople();
+				}
+
 				//_vec3 playerpos;
 				//dynamic_cast<CDoor*>(pObj)->Get_TransformCom()->Get_Info(INFO_POS, &playerpos);
 				//CPlayer::GetInstance()->Set_StartPosition(playerpos);
@@ -2192,6 +2226,7 @@ HRESULT CLoadStage::Door_Collision()
 				{
 					CPlayer::GetInstance()->Set_StartPos(startpos);
 				}
+
 
 				NULL_CHECK_RETURN(pScene, -1);
 

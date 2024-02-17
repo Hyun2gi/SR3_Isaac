@@ -38,7 +38,6 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 
 	m_bShakeCamera = false;
 	m_bShakeCamera_Sub = false;
-	m_bMove = false;
 	m_bCollisionWall = false;
 	m_bPreCollisionWall = false;
 	m_bCollisionWall = false;
@@ -82,14 +81,14 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 	_int iExit = Engine::CCamera::Update_GameObject(fTimeDelta);
 
 
-	/*if (m_eCurState == C_CINEMACHINE_02)
+	if (m_eCurState == C_DOPLE)
 	{
-		m_vEye = _vec3(-5, 25, -5);
+		m_vEye = _vec3(VTXCNTX / 2, 29, VTXCNTZ / 2-1);
 
 		m_vAt = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 
 		return iExit;
-	}*/
+	}
 
 	Key_Input(fTimeDelta);
 
@@ -817,7 +816,7 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 				// 시네머신하면 고정돼야한다
 				//m_vAt = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 			}
-			else
+			else if(m_bFixAtPos == false)
 			{
 				m_vAt = playerPos + playerDir * 2;
 			}
@@ -825,7 +824,7 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 		}
 		else
 		{
-			
+			m_bFixAtPos = false;
 			//m_fAngleY = 0;
 
 			if (m_bStart)
@@ -862,16 +861,16 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 				return;
 			}
 
+			if (m_eAfterState == C_DOPLE)
+			{
+				m_eCurState = C_DOPLE;
+				// 마우스 움직임 막기
+				m_bFix = true;
+				//플레이어 잠금풀기
+				CPlayer::GetInstance()->Set_KeyBlock(false);
+			}
 
-			//if (m_eAfterState == C_PLAYERCHASE && m_bFix == false)
-			//{
-			//	/*m_eCurState = C_PLAYERCHASE;
-			//	m_bChaseInit = true;
-			//	m_bFix = false;*/
-			//}
-			//else 
 
-			m_bMove = false;
 			m_bFix = false; //잠금 풀어주기
 
 			// m_bFixedPos == true 그자리에 고정
@@ -1037,6 +1036,9 @@ void CDynamicCamera::OnMoveTargetCamera(float moveTime, float moveSpeed, _vec3 t
 	case 5:
 		m_eAfterState = C_CINEMACHINE_02;
 		break;
+	case 6:
+		m_eAfterState = C_DOPLE;
+		break;
 	}
 }
 
@@ -1083,6 +1085,9 @@ void CDynamicCamera::OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveS
 		break;
 	case 5:
 		m_eAfterState = C_CINEMACHINE_02;
+		break;
+	case 6:
+		m_eAfterState = C_DOPLE;
 		break;
 	}
 }
@@ -1133,13 +1138,15 @@ void CDynamicCamera::OnMoveTargetCamera(_vec3 atPos, float moveTime, float moveS
 	case 5:
 		m_eAfterState = C_CINEMACHINE_02;
 		break;
+	case 6:
+		m_eAfterState = C_DOPLE;
+		break;
 	}
 }
 
 void CDynamicCamera::OnMoveToPlayerFront()
 {
 	CPlayer::GetInstance()->Set_KeyBlock(true);
-	m_bMove = true;
 	m_eCurState = C_MOVE_TO_TARGET;
 	CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
 
@@ -1311,7 +1318,7 @@ void CDynamicCamera::Cinemachine_00_Start()
 
 	m_bChaseInit = true;
 	// false하면 chaseInit이 true
-	OnMoveTargetCamera(m_vAt, 32.f, 0.5f, goalPos, startPos, false, 0);
+	OnMoveTargetCamera(m_vAt, 30.f, 0.5f, goalPos, startPos, false, 0);
 }
 
 void CDynamicCamera::Cinemachine_01_TotalLand()
@@ -1420,6 +1427,103 @@ void CDynamicCamera::Cinemachine_03_GoToIsaac()
 	OnMoveTargetCamera(m_vAt, 2.f, 3.f, goalPos, startpos, true, 0);
 }
 
+void CDynamicCamera::Cinemachine_04_Dople_GoToIsaac()
+{
+	m_bShakeCamera = false;
+	m_eAfterState = C_DOPLE;
+	m_bChaseInit = true;
+	m_eCurState = C_MOVE_TO_TARGET;
+	m_fAngleY = 0;
+	m_bResetChaseInit = true;
+
+	m_bMouseCameraStart = false;
+	m_bFix = true;
+
+	// 플레이어 키 막기
+	CPlayer::GetInstance()->Set_KeyBlock(true);
+
+	_vec3	goalPos, startpos;
+
+	
+
+	m_bFixAtPos = true;
+	
+	goalPos = _vec3(VTXCNTX / 2, 29, VTXCNTZ / 2 - 1);
+
+	m_vAt = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
+
+	// case 6: dople
+	OnMoveTargetCamera(m_vAt, 2.f, 3.f, goalPos, m_vEye, true, 6);
+}
+
+
+void CDynamicCamera::Set_OnSlotCamera(CTransform* slotTransform)
+{
+	m_eAfterState = C_PLAYERCHASE;
+	m_eCurState = C_MOVE_TO_TARGET;
+	m_fAngleY = 0;
+	m_bFix = true;
+
+	// 임의로 각도 조정
+	m_vStartEyePosition = m_vCameraPosDir;
+
+	// atpos 직접 정해준 곳에 나둬야함
+	m_bFixAtPos = true;
+
+	_vec3 slotPos, slotDir, camPos, atPos;
+	slotTransform->Get_Info(INFO_POS, &slotPos);
+	slotTransform->Get_Info(INFO_LOOK, &slotDir);
+
+	camPos = slotPos + (-slotDir * 4.5) + _vec3(0, 0.4f, 0);
+	atPos = slotPos + _vec3(0, 0.4f, 0);
+
+	OnMoveTargetCamera(atPos, 11.f, 3.f, camPos, m_vEye, true, 0);
+}
+
+void CDynamicCamera::Set_OffSlotCamera()
+{
+	// 임의로 각도 조정
+	m_vCameraPosDir = m_vStartEyePosition;
+
+	// atpos 직접 정해준 고셍 나둬야함
+	m_bFixAtPos = true;
+
+	CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
+
+	_vec3		playerPos;
+	_vec3		playerDir;
+
+	playerInfo->Get_Info(INFO_POS, &playerPos);
+	playerInfo->Get_Info(INFO_LOOK, &playerDir);
+
+	D3DXVec3Normalize(&playerDir, &playerDir);
+	// 바라보는 대상은 플레이어
+	//m_vAt = playerPos + playerDir * 2;
+
+	//m_vCameraPosDir = -(playerDir);
+
+	_vec3 goalPos;
+	m_vAt = playerPos + playerDir * 2;
+
+	//goalPos = m_vAt + m_vCameraPosDir * m_fCameraDistance + _vec3(0, m_fCameraHeight, 0);
+
+	m_fAngleY = 0;
+	goalPos = m_vAt + m_vCameraPosDir * m_fFlexibleDistanceWithPlayer;
+
+
+	OnMoveTargetCamera(m_vAt, 2.f, 5.f, goalPos, m_vEye, true, 0);
+}
+
+void CDynamicCamera::Set_OnDople()
+{
+	m_eCurState = C_DOPLE;
+}
+
+void CDynamicCamera::Set_OffDople()
+{
+	//m_eCurState = C_PLAYERCHASE;
+	m_fAngleY = 0;
+}
 
 void CDynamicCamera::Free()
 {

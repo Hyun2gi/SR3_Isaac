@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "SlotMC.h"
 
+#include "Player.h"
+
 #include "Export_System.h"
 #include "Export_Utility.h"
 
@@ -32,6 +34,10 @@ void CSlotMC::Set_Game()
 	m_bStartCoolTime = true;
 	//m_bGame = true; 
 	//Engine::PlayEffect(L"SlotMC.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.0f);
+
+	// slot 머신과 닿자마자
+	// 플레이어 Render 끄고 카메라 전환
+	CPlayer::GetInstance()->Set_OnSlotMode(this->m_pTransformCom);
 }
 
 void CSlotMC::Set_Reward()
@@ -99,6 +105,7 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 				m_pMachine->Set_Game();
 
 			m_bMachineSet = true;
+
 		}
 
 		// 슬롯카드에게 휘리릭 상태를 부여
@@ -112,6 +119,9 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 			// 랜덤 값 받아와서 보상 결정
 			Set_Item_Value();
 			Setting_ItemTag();
+
+			// 플레이어 랜더 켜기
+			CPlayer::GetInstance()->Set_OffSlotMode();
 
 			m_bGame = false; // 게임 한판 끝
 

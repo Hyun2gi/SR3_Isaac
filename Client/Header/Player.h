@@ -90,6 +90,7 @@ public:
 	void		Set_Camera_Cinemachine_01(); 
 	void		Set_Camera_Cinemachine_02();
 	void		Set_Camera_Cinemachine_03();
+	void		Set_Camera_Cinemachine_04();
 
 	void		Set_To_MaxHp() { m_fHp = m_fMaxHp; }
 	void		Set_Coin(int _coin) { m_iCoin += _coin; }
@@ -141,6 +142,7 @@ public:
 
 	// 우는 애니메이션
 	void		Set_Cry_Anim();
+	bool		Get_Cry_Anim() {if (m_eCurState == P_CRY_LIE || m_eCurState == P_CRY_OPEN_EYE) { return true; } else { return false; }}
 
 	// 피격처리 애니메이션
 	void		Set_Attacked();
@@ -157,7 +159,14 @@ public:
 
 	void		Set_CameraShaking(float shakeTime = 0.6f, float shakeIntensity = 1.0f);
 	void		Set_CameraShaking_Sub(float shakeTime = 1.0f, float shakeIntensity = 1.0f);
-	void		Set_CameraShaking_Rot(float shakeTime = 0.6f, float shakeIntensity = 0.1f);
+	void		Set_CameraShaking_Rot(float shakeTime = 1.0f, float shakeIntensity = 0.1f);
+
+	void		Set_OnSlotMode(CTransform* slotTransform);
+	void		Set_OffSlotMode();
+
+	void		Set_OnDople();
+	void		Set_OffDople();
+
 		
 	// 맵연출 쉐이킹 멈추기
 	void		Set_StopShaking();
