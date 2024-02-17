@@ -37,6 +37,9 @@ HRESULT CCharger::Ready_GameObject()
 
 _int CCharger::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsLoadCreatEnd)
+		return 0;
+
 	if (!m_bCreate)
 	{
 		if (Check_Time(fTimeDelta))
@@ -103,6 +106,9 @@ _int CCharger::Update_GameObject(const _float& fTimeDelta)
 
 void CCharger::LateUpdate_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -129,6 +135,9 @@ void CCharger::LateUpdate_GameObject()
 
 void CCharger::Render_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 

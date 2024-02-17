@@ -22,18 +22,24 @@ protected:
 	virtual ~CMonster();
 
 public:
+	void			Set_LoadCreateEnd() { m_bIsLoadCreatEnd = true; }
+
 	_bool			Get_Dead() { return m_bDead; }
 	void			Set_Dead() { m_bDead = true; }
+
 	_int			Get_HP() { return m_iHp; }
 	_bool			Get_Hit() { return m_bHit; }
 	void			Hit() { m_bHit = true; }
 	void			Hit_False() { m_bHit = false; }
+
 	_bool			Get_IsBoss() { return m_bBoss; }
 	MONSTER_TYPE	Get_MstType() { return m_eMstType; }
 	BOSS_TYPE		Get_BossType() { return m_eBossType; }
+
 	Engine::CTransform* Get_Transform() { return m_pTransformCom; }
 
 	void			Set_Time_Scale() { m_bTimeScale = !m_bTimeScale; }
+
 public:
 	virtual HRESULT Ready_GameObject()						 override;
 	virtual _int Update_GameObject(const _float& fTimeDelta) override;
@@ -62,6 +68,8 @@ protected:
 	Engine::CTransform* m_pTargetTransCom;	// 플레이어 COM 객체 (Mom's Parts 의 경우 Mom)
 	Engine::CTexture* m_pTextureCom;
 	Engine::CCalculator* m_pCalculCom;
+
+	_bool					m_bIsLoadCreatEnd; // 맵 연출 끝났는지 체크
 
 	_bool					m_bCreate;
 	_bool					m_bBoss;

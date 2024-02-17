@@ -71,6 +71,9 @@ HRESULT CMom::Ready_GameObject()
 
 _int CMom::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsLoadCreatEnd)
+		return 0;
+
 	if (m_bDead)
 	{
 		_vec3 vPos;
@@ -123,6 +126,9 @@ _int CMom::Update_GameObject(const _float& fTimeDelta)
 
 void CMom::LateUpdate_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -155,6 +161,9 @@ void CMom::LateUpdate_GameObject()
 
 void CMom::Render_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	if (m_pShadow != nullptr)
 		m_pShadow->Render_GameObject();
 

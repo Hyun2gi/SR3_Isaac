@@ -52,6 +52,9 @@ HRESULT CMomParts::Ready_GameObject()
 
 _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsLoadCreatEnd)
+		return 0;
+
 	if (!m_pMom) return 0;
 
 	if (m_bDead)
@@ -134,6 +137,9 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 
 void CMomParts::LateUpdate_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	if (!m_pMom) return;
 
 	if (m_bHit) // 피격 시 Mom 의 HP 를 깎아야 함
@@ -161,6 +167,9 @@ void CMomParts::LateUpdate_GameObject()
 
 void CMomParts::Render_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 

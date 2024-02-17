@@ -221,6 +221,14 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		m_bIsLoadDataCreated = true;
 	}
 
+	if (m_bIsLoadDataCreated) // 연출이 끝난 경우
+	{
+		for (auto& iter : m_mapLayer.at(L"GameMst")->Get_ObjectMap()) // 몬스터 움직임 활성화
+		{
+			dynamic_cast<CMonster*>(iter.second)->Set_LoadCreateEnd();
+		}
+	}
+
 	//타임 델타 스케일 조절 예시 _ 사용
 	if (Engine::Key_Down(DIK_P))
 	{
