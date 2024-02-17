@@ -29,6 +29,7 @@ private:
 
 private:
 	_bool					m_bEpicTime;
+	_bool					m_bDeadWait;
 	_int					m_iRandNum;
 	_int					m_iPicNum;
 	_float					m_fFrameSpeed = 1.f;

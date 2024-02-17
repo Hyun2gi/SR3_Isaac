@@ -34,6 +34,7 @@ HRESULT CFly::Ready_GameObject()
 
 	m_ePreState = FLY_END;
 	m_bEpicTime = false;
+	m_bDeadWait = false;
 	
 	m_eMstType = FLY;
 
@@ -42,6 +43,9 @@ HRESULT CFly::Ready_GameObject()
 
 _int CFly::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsLoadCreatEnd)
+		return 0;
+
 	if (!m_bCreate)
 	{
 		if (Check_Time(fTimeDelta))
@@ -65,8 +69,8 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_iPicNum < m_fFrame)
 	{
-		if (m_bDead)
-			return 1;
+		if (m_bDeadWait)
+			m_bDead = true;
 		else
 			m_fFrame = 0.f;
 	}
@@ -78,21 +82,25 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 
 	Check_Outof_Map();
 
-	// Epic
-	if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
-		m_bEpicTime = true;
-
-	if (m_bEpicTime)
-		Epic_Time();
-	else
+	if (!m_bDeadWait)
 	{
-		m_vOriginScale = m_pTransformCom->m_vAngle;
-		Face_Camera();
-	}
+		// Epic
+		if (CPlayer::GetInstance()->Get_EpicLieTiming() && CPlayer::GetInstance()->Get_EpicTargetRun())
+			m_bEpicTime = true;
+
+		if (m_bEpicTime)
+			Epic_Time();
+		else
+		{
+			m_vOriginScale = m_pTransformCom->m_vAngle;
+			Face_Camera();
+		}
+	}else
+		m_pTransformCom->m_vScale = { 1.f, 1.f, 1.f };
 
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
-	if (!m_bDead)
+	if (!m_bDeadWait)
 	{
 		Face_Camera();
 
@@ -111,6 +119,9 @@ _int CFly::Update_GameObject(const _float& fTimeDelta)
 
 void CFly::LateUpdate_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	if (m_bHit)
 	{
 		m_iHp -= 1;
@@ -123,7 +134,8 @@ void CFly::LateUpdate_GameObject()
 		if (0 >= m_iHp)
 		{
 			m_eCurState = FLY_DEAD;
-			m_bDead = true;
+			m_bDeadWait = true;
+			//m_bDead = true;
 		}
 	}
 
@@ -141,6 +153,9 @@ void CFly::LateUpdate_GameObject()
 
 void CFly::Render_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
@@ -240,7 +255,7 @@ void CFly::Move(const _float& fTimeDelta)
 
 void CFly::Epic_Time()
 {
-	m_pTransformCom->m_vAngle = { 0.f, 0.f, D3DXToRadian(95)};
+	Rotation_Epic();
 
 	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
 	{

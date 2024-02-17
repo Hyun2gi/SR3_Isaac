@@ -53,6 +53,9 @@ HRESULT CLeaper::Ready_GameObject()
 
 _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsLoadCreatEnd)
+		return 0;
+
 	if (!m_bCreate)
 	{
 		if (Check_Time(fTimeDelta))
@@ -101,7 +104,7 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 		Check_TargetPos();
 	}
 
-	if (m_bJump)
+	if (m_bJump && !m_bEpicTime)
 	{
 		JumpTo_Player(m_fSlowDelta);
 	}
@@ -139,7 +142,8 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 	{
 		_vec3 vPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
-		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()));
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.1f, 20);
+
 		int soundrand = rand() % 4;
 		if (soundrand == 0)
 		{
@@ -167,13 +171,18 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 
 void CLeaper::LateUpdate_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	if (m_bHit)
 	{
 		m_iHp -= 1;
 
 		Hit_PushBack(m_fSlowDelta);
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.05f, 5);
 
 		m_bHit = false;
+		m_bHitColor = true;
 
 		if (0 >= m_iHp)
 			m_bDead = true;
@@ -196,6 +205,9 @@ void CLeaper::LateUpdate_GameObject()
 
 void CLeaper::Render_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	if (m_pShadow != nullptr)
 		m_pShadow->Render_GameObject();
 
@@ -381,6 +393,7 @@ void CLeaper::Epic_Time()
 
 	if (!CPlayer::GetInstance()->Get_EpicLieTiming())
 	{
+		Engine::Set_TimeDeltaScale(L"Timer_Second", 0.01f);
 		m_pTransformCom->m_vAngle = m_vOriginAngle;
 		m_bEpicTime = false;
 	}

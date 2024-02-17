@@ -13,6 +13,9 @@ CMomParts::CMomParts(LPDIRECT3DDEVICE9 pGraphicDev, int iIndex)
 	m_pMom(nullptr), m_pLayer(nullptr)
 {
 	m_iIndex = iIndex;
+
+	DWORD dwSeed = (m_iIndex << 16) | (time(NULL) % 1000);
+	srand(dwSeed);
 }
 
 CMomParts::CMomParts(const CMomParts& rhs)
@@ -52,6 +55,9 @@ HRESULT CMomParts::Ready_GameObject()
 
 _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 {
+	if (!m_bIsLoadCreatEnd)
+		return 0;
+
 	if (!m_pMom) return 0;
 
 	if (m_bDead)
@@ -59,13 +65,12 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 		_vec3 vPos;
 		m_pTransformCom->Get_Info(INFO_POS, &vPos);
 
-		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), L"../Bin/Resource/Texture/Particle/BloodExp_Left/BloodExp_%d.png", 2, 2.f, 15);
-		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), L"../Bin/Resource/Texture/Particle/BloodExp_Right/BloodExp_%d.png", 2, 2.f, 15);
+		Engine::Create_Splash_Left(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), L"../Bin/Resource/Texture/Particle/BloodExp_Left/BloodExp_%d.png", 2, 2.f, 20);
+		Engine::Create_Splash_Right(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), L"../Bin/Resource/Texture/Particle/BloodExp_Right/BloodExp_%d.png", 2, 2.f, 20);
 		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 10.f, 30);
 
 		return 1;
 	}
-
 
 	m_fSlowDelta = Engine::Get_TimeDelta(L"Timer_Second");
 
@@ -100,6 +105,8 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 		m_fCallLimit = (_float)m_iRandNum;
 
 		Change_State();
+		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 10.f, 20);
+
 		m_bCheckCreate = true;
 
 		//Check_CreateMst(); // 잡몹 생성 여부 판단
@@ -132,6 +139,9 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 
 void CMomParts::LateUpdate_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	if (!m_pMom) return;
 
 	if (m_bHit) // 피격 시 Mom 의 HP 를 깎아야 함
@@ -159,6 +169,9 @@ void CMomParts::LateUpdate_GameObject()
 
 void CMomParts::Render_GameObject()
 {
+	if (!m_bIsLoadCreatEnd)
+		return;
+
 	m_pGraphicDev->SetTransform(D3DTS_WORLD, m_pTransformCom->Get_WorldMatrix());
 	m_pGraphicDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
 
@@ -248,10 +261,8 @@ void CMomParts::Motion_Change()
 
 void CMomParts::Set_RandNum()
 {
-	DWORD dwSeed = (m_iIndex << 16) | (time(NULL) % 1000);
-	srand(dwSeed);
-	m_iRandNum = rand() % 6; // 10
-	m_iRandNumMstCreate = rand() % 3; // 이 값이 이상한가
+	m_iRandNum = rand() % 6;
+	m_iRandNumMstCreate = rand() % 3;
 }
 
 void CMomParts::Change_State()
@@ -271,7 +282,7 @@ void CMomParts::Change_State()
 		m_eCurState = MOM_HAND;
 		m_bScaleChange = true;
 	}
-	else
+	else if(3 == m_iRandNum)
 		m_eCurState = MOM_DOOR;
 }
 
@@ -316,10 +327,10 @@ void CMomParts::Check_CreateMst()
 {
 	if (MOM_DOOR != m_eCurState && MOM_END != m_eCurState) // Parts 상태가 hand, skin, eye중 하나 일 때
 	{
-		if (1 == m_iRandNumMstCreate) // 3분의 1 확률로 몬스터 생성 (0)
+		if (0 == m_iRandNumMstCreate) // 3분의 1 확률로 몬스터 생성
 		{
 			m_pTransformCom->Get_Info(INFO_POS, &m_vecCreatePos);
-			m_bMstCreate = true; // 몬스터 생성 가능할 때만 true //////
+			m_bMstCreate = true; // 몬스터 생성 가능할 때만 true
 
 			// 동서남북에 따라 생성 위치 바꿔주기
 			switch (m_iIndex)
@@ -329,22 +340,21 @@ void CMomParts::Check_CreateMst()
 				m_bCheckCreate = false;
 				break;
 			case 1: // 우
-				m_vecCreatePos.x -= 5.f;		
+				m_vecCreatePos.x -= 5.f;			
 				m_bCheckCreate = false;
 				break;
 			case 2: // 하
 				m_vecCreatePos.z += 5.f;
-				m_bCheckCreate = false;
+				m_bCheckCreate = false;		
 				break;
 			case 3: // 좌
 				m_vecCreatePos.x += 5.f;
 				m_bCheckCreate = false;
 				break;
 			}
-			m_bCheckCreate = false;
 		}
 		else
-			m_bMstCreate = false; //  해줄 필요 없을 텐데
+			m_bMstCreate = false;
 	}
 	m_bCheckCreate = false;
 }	
@@ -352,7 +362,6 @@ void CMomParts::Check_CreateMst()
 void CMomParts::Create_Mst(_vec3 vPos)
 {
 	int iCreateMst = rand() % 3;
-	++m_iTestCount; // 함수가 몇 번 호출되는가
 
 	switch (iCreateMst)
 	{
