@@ -35,6 +35,8 @@ public:
 	void	Set_Distance_Up(_float fLeft) { m_fDistanceUp = fLeft; }
 	void	Set_Distance_Down(_float fRight) { m_fDistanceDown = fRight; }
 
+	void	Set_Turn() { m_bTurn = !m_bTurn; }
+
 private:
 	HRESULT			Add_Component();
 
@@ -46,9 +48,12 @@ private:
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
+	_bool	m_bTurn;
+	_bool	m_bArrived = false;
+
 	_float  m_fDistanceUp, m_fDistanceDown;
-	_float	m_fSpeed;
-	bool	m_bTurn;
+	_float	m_fSpeed, m_fDropSpeed;
+
 	_vec3	m_vPos;
 
 public:

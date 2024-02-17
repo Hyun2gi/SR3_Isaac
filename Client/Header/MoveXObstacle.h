@@ -41,14 +41,19 @@ private:
 	void			Move(const _float& fTimeDelta);
 	void			Check_Wall_Collision();
 
+	
+
 private:
 	Engine::CCubeTex* m_pBufferCom;
 	Engine::CTransform* m_pTransformCom;
 	Engine::CTexture* m_pTextureCom;
 
+	_bool	m_bTurn;
+	_bool	m_bArrived = false;
+
 	_float  m_fDistanceLeft, m_fDistanceRight;
-	_float	m_fSpeed;
-	bool	m_bTurn;
+	_float	m_fSpeed, m_fDropSpeed;
+
 	_vec3	m_vPos;
 
 public:

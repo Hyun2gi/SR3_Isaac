@@ -31,11 +31,16 @@ HRESULT CObstacle::Ready_GameObject()
 
 Engine::_int CObstacle::Update_GameObject(const _float& fTimeDelta)
 {
+	__super::Compute_ViewZ(&m_pTransformCom->m_vInfo[INFO_POS]);
+
+	CGameObject::Update_GameObject(fTimeDelta);
+
+
 	_vec3 vDir = _vec3(0.f, -1.f, 0.f);
 
 	if (!m_bArrived && 1 < m_pTransformCom->m_vInfo[INFO_POS].y)
 	{
-		m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+		m_pTransformCom->Move_Pos(&vDir, m_fDropSpeed, fTimeDelta);
 	}
 	else if(!m_bArrived)
 	{
@@ -53,10 +58,6 @@ Engine::_int CObstacle::Update_GameObject(const _float& fTimeDelta)
 
 		CParticleMgr::GetInstance()->Create_Explosion(m_pGraphicDev, mat, 1.f, 30, 4.f);
 	}
-
-	__super::Compute_ViewZ(&m_pTransformCom->m_vInfo[INFO_POS]);
-	
-	CGameObject::Update_GameObject(fTimeDelta);
 
 	return 0;
 }
