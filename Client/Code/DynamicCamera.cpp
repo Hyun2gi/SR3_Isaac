@@ -48,6 +48,8 @@ HRESULT CDynamicCamera::Ready_GameObject(const _vec3* pEye,
 	m_bMouseCameraStart = false;
 	m_bResetChaseInit = false;
 
+
+	m_bStopShakingWorld = false;
 	m_bStart = false;
 
 	m_fAngleX = 0;
@@ -109,11 +111,11 @@ Engine::_int CDynamicCamera::Update_GameObject(const _float& fTimeDelta)
 	{
 		if (m_bMouseCameraStart)
 		{
-			Mouse_Move();
-		}
-		else
-		{
-			CPlayer::GetInstance()->Set_CameraShakingBlock(true);
+			if (Get_ShakingCamera() == false)
+			{
+				Mouse_Move();
+			}
+			
 		}
 			
 		Chase_Character(fTimeDelta);
@@ -260,6 +262,7 @@ void CDynamicCamera::Chase_Character(const _float& fTimeDelta)
 		{
 			if (m_bShakeCamera_Rot)
 			{
+				// 플레이어 카메라 쉐이킹
 				ShakeByRotation(fTimeDelta);
 			}
 
@@ -445,8 +448,6 @@ void CDynamicCamera::Mouse_Fix()
 
 void CDynamicCamera::Mouse_Move()
 {
-	CPlayer::GetInstance()->Set_CameraShakingBlock(false);
-
 	_matrix			matCamWorld;
 	D3DXMatrixInverse(&matCamWorld, NULL, &m_matView);
 
@@ -508,8 +509,7 @@ void CDynamicCamera::Mouse_Move()
 	}
 }
 
-// position 변화로 움직이기..
-// 흔들림 짧게 줄때 쓰기 적당하지만 계속적인 쉐이킹에는 사용x
+// 전체 맵 쉐이킹
 void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 {
 	if (m_bShakeCamera == true)
@@ -518,62 +518,55 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 
 		if (m_fShakeTime > 0.0f)
 		{
-			if (m_vGoalPosition == m_vEye)
+			// 쉐이킹 멈추기
+			if (m_bStopShakingWorld == false)
 			{
-				float FLOAT_MAX = 1;
-				float FLOAT_MIN = 0;
-
-				srand((unsigned)time(NULL));
-
-				CTransform* playerInfo = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
-
-				_vec3		playerPos;
-				_vec3		playerRightDir;
-				_vec3		cameraDir;
-				_vec3		cameraPos;
-
-				playerInfo->Get_Info(INFO_POS, &playerPos);
-				playerInfo->Get_Info(INFO_RIGHT, &playerRightDir);
-
-				/*_vec3 templook;
-				templook = _vec3(m_vAt.x, 0, m_vAt.z) - _vec3(m_vStartAtPosition.x, 0, m_vStartAtPosition.x);
-				templook = m_vAt - m_vStartAtPosition;
-
-				D3DXVec3Normalize(&templook, &templook);
-				_vec3 moveDir;
-				D3DXVec3Cross(&moveDir, &(_vec3(0, 1, 0)), &templook);*/
-
-				//D3DXVec3Normalize(&moveDir, &moveDir);
-				D3DXVec3Normalize(&playerRightDir, &playerRightDir);
-
-
-				if (m_bChangeShakeDir == false)
+				if (m_vGoalPosition == m_vEye)
 				{
-					//moveDir *= -1;
-					m_vGoalPosition *= -1;
-					m_bChangeShakeDir = true;
+					float FLOAT_MAX = 1;
+					float FLOAT_MIN = 0;
+
+					_matrix			matCamWorld;
+					D3DXMatrixInverse(&matCamWorld, NULL, &m_matView);
+					_vec3 camright, camup;
+					camright = _vec3(matCamWorld._11, matCamWorld._12, matCamWorld._13);
+					camup = _vec3(matCamWorld._21, matCamWorld._22, matCamWorld._23);
+
+
+
+					if (m_bChangeShakeDir == false)
+					{
+						//moveDir *= -1;
+						camright *= -1;
+						m_bChangeShakeDir = true;
+					}
+					else
+					{
+						m_bChangeShakeDir = false;
+					}
+
+					camright *= m_fShakeIntensity;
+
+					// 목표위치
+					// moveDir과 곱해주는 값은 작아야함!!
+					//m_vGoalPosition = m_vStartEyePosition + moveDir*0.2;
+					// m_vGoalPosition = m_vStartEyePosition + moveDir * 0.2;
+
+
+					m_vGoalPosition = m_vStartEyePosition + camright * 0.3;
 				}
 				else
 				{
-					m_bChangeShakeDir = false;
+					D3DXVECTOR3 _movevec;
+					// fTimeDelta에 50 곱하면 느림..
+					D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, 1);
+
+					m_vEye = _movevec;
+					m_vAt = m_vEye + m_vWorldAtDir;
+					//m_vAt = _movevec;
 				}
-
-				playerRightDir *= m_fShakeIntensity;
-
-				// 목표위치
-				// moveDir과 곱해주는 값은 작아야함!!
-				//m_vGoalPosition = m_vStartEyePosition + moveDir*0.2;
-				// m_vGoalPosition = m_vStartEyePosition + moveDir * 0.2;
-				m_vGoalPosition = m_vStartEyePosition + playerRightDir*0.5;
 			}
-			else
-			{
-				D3DXVECTOR3 _movevec;
-				// fTimeDelta에 50 곱하면 느림..
-				D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition,1);
-
-				m_vEye = _movevec;
-			}
+			
 
 			m_fShakeTime -= fTimeDelta;
 		}
@@ -595,7 +588,7 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 
 			m_vEye = m_vStartEyePosition;
 			//m_vAt = m_vStartAtPosition;
-
+			m_bStopShakingWorld = false;
 			//다시 플레이어 향하게
 			m_eCurState = C_PLAYERCHASE;
 			m_fShakeTime = 0;
@@ -660,7 +653,7 @@ void CDynamicCamera::ShakeByPosition_Sub(const _float& fTimeDelta)
 
 
 				DWORD dwSeed = time(NULL) % 1000;
-				srand(dwSeed);
+				std::srand(dwSeed);
 				float fMax = 32767;
 				float fY = rand() / fMax;
 				m_vGoalPosition = camright;
@@ -722,7 +715,7 @@ void CDynamicCamera::ShakeByRotation(const _float& fTimeDelta)
 		if (m_fShakeTime > 0.0f)
 		{
 			//m_vEye = m_vStartPosition;
-			srand((unsigned)time(NULL));
+			std::srand((unsigned)time(NULL));
 
 			_matrix			matCamWorld;
 			D3DXMatrixInverse(&matCamWorld, NULL, &m_matView);
@@ -730,19 +723,19 @@ void CDynamicCamera::ShakeByRotation(const _float& fTimeDelta)
 			camright = _vec3(matCamWorld._11, matCamWorld._12, matCamWorld._13);
 			camup = _vec3(matCamWorld._21, matCamWorld._22, matCamWorld._23);
 
-			if (abs(m_bTotalShakingAngle) >= 2)
+			if (abs(m_fTotalShakingAngle) >= 2)
 			{
 				if (m_bChangeShakeDir)
 				{
 					//음수
 					m_bChangeShakeDir = false;
-					m_bTotalShakingAngle++;
+					m_fTotalShakingAngle++;
 				}
 				else
 				{
 					//음수
 					m_bChangeShakeDir = true;
-					m_bTotalShakingAngle--;
+					m_fTotalShakingAngle--;
 				}
 			}
 		
@@ -750,49 +743,25 @@ void CDynamicCamera::ShakeByRotation(const _float& fTimeDelta)
 			if (m_bChangeShakeDir)
 			{
 				// true 면 음수
-				m_bTotalShakingAngle--;
+				m_fTotalShakingAngle--;
 				m_fAngleY = -1;
 			}
 			else
 			{
 				// false면 더하기
-				m_bTotalShakingAngle++;
+				m_fTotalShakingAngle++;
 				m_fAngleY = 1;
 			}
-
-			
-
-			//랜덤각도 움직이고 싶을때
-
-			float randx = (float)(rand() % 30);
-			//float randy = (float)(rand() % 30);
-			float randz = (float)(rand() % 30);
-
-			// 같은 회전으로 움직일때 사용
-			float randy = 3;
-
-			
-
 
 			D3DXQUATERNION qRot;
 
 			_matrix		matRotX, matRotY, matRotZ, matTotalRot;
-	/*		D3DXQuaternionRotationMatrix(&qRot, &matRotY);
-			D3DXQuaternionRotationAxis(&qRot, &camright, D3DXToRadian(randy));
-			D3DXMatrixRotationQuaternion(&matRotY, &qRot);*/
 
-			// yaw, pitch, roll 순서
-			// yaw : y축, pitch : x축, roll : z축
-			/*D3DXQuaternionRotationYawPitchRoll(&qRot, 0, D3DXToRadian(randx), 0);
-			D3DXMatrixRotationQuaternion(&matRotX, &qRot);*/
 
 			D3DXQuaternionRotationYawPitchRoll(&qRot, D3DXToRadian(m_fAngleY), 0, 0);
 			D3DXMatrixRotationQuaternion(&matRotY, &qRot);
 
-			/*D3DXQuaternionRotationYawPitchRoll(&qRot, 0, 0, D3DXToRadian(randz));
-			D3DXMatrixRotationQuaternion(&matRotZ, &qRot);*/
-
-			//matTotalRot = matRotX * matRotY * matRotZ;
+			
 			matTotalRot = matRotY;
 
 			D3DXVec3TransformCoord(&m_vCameraPosDir, &m_vCameraPosDir, &matTotalRot);
@@ -802,6 +771,7 @@ void CDynamicCamera::ShakeByRotation(const _float& fTimeDelta)
 		}
 		else
 		{
+			m_fTotalShakingAngle = 0;
 			m_fAngleX = 0;
 			m_fAngleY = 0;
 			m_bShakeCamera_Rot = false;
@@ -967,9 +937,7 @@ void CDynamicCamera::OnShakeCameraPos(float shakeTime, float shakeIntensity)
 	m_fShakeIntensity = shakeIntensity;
 	m_bChangeShakeDir = false;
 
-	m_eCurState = C_SHAKING_POS;
-
-	
+	//m_eCurState = C_SHAKING_POS;
 
 	m_bShakeCamera = true;
 	m_bFix = true; // 사용자 움직임 잠금 
@@ -1021,7 +989,7 @@ void CDynamicCamera::OnShakeCameraRot(float shakeTime, float shakeIntensity)
 	m_fAngleX = 0;
 	m_fAngleY = 0;
 	m_fAngleZ = 0;
-	m_bTotalShakingAngle = 0;
+	m_fTotalShakingAngle = 0;
 
 	m_bChangeShakeDir = true; // 방향 바꿀떄 사용
 	m_bShakeCamera_Rot = true;
@@ -1369,6 +1337,10 @@ void CDynamicCamera::Cinemachine_01_TotalLand()
 	m_vAt = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
 	// 5 : CINEMACHINE_01
 	//OnMoveTargetCamera(_vec3(VTXCNTX / 2, 0, VTXCNTZ / 2), 8.f, 1.f, goalPos, startpos, true, 5);
+
+	m_bStopShakingWorld = false;
+
+	m_vWorldAtDir = m_vAt - m_vEye;
 	OnShakeCameraPos(19, 1);
 }
 

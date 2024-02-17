@@ -832,6 +832,11 @@ void CPlayer::Set_CameraShaking_Rot(float shakeTime, float shakeIntensity)
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnShakeCameraRot(shakeTime, shakeIntensity);
 }
 
+void CPlayer::Set_StopShaking()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_StopShaking();
+}
+
 
 void CPlayer::Bullet_Change_To_Brim()
 {
@@ -1179,7 +1184,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		m_eCurState = P_SHOOTIDLE;
 	}
 
-	if (m_bCameraShaking == false)
+	if (dynamic_cast<CDynamicCamera*>(m_pCamera)->Get_ShakingCamera() == false)
 	{
 		//마우스 회전으로 플레이어 각도 바꾸기
 		_long	dwMouseMove(0);

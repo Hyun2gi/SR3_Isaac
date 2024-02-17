@@ -162,6 +162,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		// m_bStartScene : 한번 왔다간 방인지 아닌지 확인해주는 변수
 		if (!m_bStartScene)
 		{
+			CPlayer::GetInstance()->Set_StopShaking();
 			//CPlayer::GetInstance()->Set_Camera_Cinemachine_02();
 			if (m_iLoadDataSize <= m_iCreatedCnt)
 			{

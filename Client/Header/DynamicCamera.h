@@ -100,6 +100,8 @@ public:
 
 	bool				Get_ShakingCamera() { if (m_bShakeCamera || m_bShakeCamera_Sub || m_bShakeCamera_Rot) { return true; } else { return false; } }
 
+	void				Set_StopShaking() { m_bStopShakingWorld = true; }
+
 private:
 	virtual void Free();
 	void		Key_Input(const _float& fTimeDelta);
@@ -158,7 +160,11 @@ private:
 	_bool		m_bShakeCamera;
 	_bool		m_bShakeCamera_Sub;
 	_bool		m_bShakeCamera_Rot = false; // 회전으로 쉐이킹
-	float		m_bTotalShakingAngle = 0;
+	float		m_fTotalShakingAngle = 0;
+
+	_vec3		m_vWorldAtDir; // shake 연출 있을때 at 포지션을 위해
+	_bool		m_bStopShakingWorld = false;
+
 
 	_bool		m_bMove;
 	_bool		m_bFirstPerson;
