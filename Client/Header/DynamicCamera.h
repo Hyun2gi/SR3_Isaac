@@ -21,6 +21,8 @@ private:
 		C_MOVE_TO_TARGET,
 		C_EPIC,
 		C_CINEMACHINE_02,
+		C_SLOTCLOSE,
+		C_DOPLE,
 		C_END
 	};
 
@@ -82,10 +84,11 @@ public:
 	void				Cinemachine_00_Start();
 	// 큐브연출 있을 때 전체 화면으로 보기
 	void				Cinemachine_01_TotalLand();
-	// 조금내려가서 보게끔
+	// 조금내려가서 보게끔(안씀)
 	void				Cinemachine_02_MiddleTotalLand();
 	// 다시 플레이어로 돌아가는 연출
 	void				Cinemachine_03_GoToIsaac();
+	void				Cinemachine_04_Dople_GoToIsaac();
 	
 
 	void				Set_ChaseInit(bool _init) { m_bChaseInit = _init; }
@@ -101,6 +104,14 @@ public:
 	bool				Get_ShakingCamera() { if (m_bShakeCamera || m_bShakeCamera_Sub || m_bShakeCamera_Rot) { return true; } else { return false; } }
 
 	void				Set_StopShaking() { m_bStopShakingWorld = true; }
+
+	// 슬롯모드 켜기
+	void				Set_OnSlotCamera(CTransform* slotTransform);
+	// 슬롯모드 끄기
+	void				Set_OffSlotCamera();
+
+	void				Set_OnDople();
+	void				Set_OffDople();
 
 private:
 	virtual void Free();
@@ -125,6 +136,9 @@ private:
 	_bool		m_bFix = false;
 	_bool		m_bCheck = false;
 	_bool		m_bChaseInit = true;
+
+	// 슬롯머신때 설정된 atpos에 고정
+	_bool		m_bFixAtPos = false;
 
 	// 사운드위해 만든 스타트한지 안한지
 	_bool		m_bStart;
@@ -165,8 +179,6 @@ private:
 	_vec3		m_vWorldAtDir; // shake 연출 있을때 at 포지션을 위해
 	_bool		m_bStopShakingWorld = false;
 
-
-	_bool		m_bMove;
 	_bool		m_bFirstPerson;
 	_bool		m_bPreFirstPerson;
 

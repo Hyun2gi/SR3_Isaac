@@ -477,6 +477,11 @@ void CPlayer::Set_Camera_Cinemachine_03()
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_03_GoToIsaac();
 }
 
+void CPlayer::Set_Camera_Cinemachine_04()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Cinemachine_04_Dople_GoToIsaac();
+}
+
 void CPlayer::Set_Player_Pos(_vec3 pos)
 {
 	m_pTransformCom->Set_Pos(pos); 
@@ -830,6 +835,47 @@ void CPlayer::Set_CameraShaking_Sub(float shakeTime, float shakeIntensity)
 void CPlayer::Set_CameraShaking_Rot(float shakeTime, float shakeIntensity)
 {
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->OnShakeCameraRot(shakeTime, shakeIntensity);
+}
+
+void CPlayer::Set_OnSlotMode(CTransform* slotTransform)
+{
+	// 슬롯일때 player render 끄기
+	m_bRender = false;
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_OnSlotCamera(slotTransform);
+
+	_vec3 slotPos, slotDir;
+	slotTransform->Get_Info(INFO_POS, &slotPos);
+	slotTransform->Get_Info(INFO_LOOK, &slotDir);
+
+	slotPos += -slotDir*4;
+
+	// 플레이어 움직임 막기
+	m_bKeyBlock = true;
+
+	m_pTransformCom->Set_Pos(slotPos);
+}
+
+void CPlayer::Set_OffSlotMode()
+{
+	// 플레이어 움직임 켜기
+	m_bKeyBlock = false;
+	m_eCurState = P_BACKIDLE;
+	m_fFrame = 0.f;
+	// 슬롯일때 player render 켜기
+	m_bRender = true;
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_OffSlotCamera();
+}
+
+void CPlayer::Set_OnDople()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_OnDople();
+	m_pTransformCom->m_vAngle = { 90,0,0 };
+}
+
+void CPlayer::Set_OffDople()
+{
+	dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_OffDople();
+	m_pTransformCom->m_vAngle = { 0,0,0 };
 }
 
 void CPlayer::Set_StopShaking()
