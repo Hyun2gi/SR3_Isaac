@@ -174,6 +174,7 @@ void CLeaper::LateUpdate_GameObject()
 		Hit_PushBack(m_fSlowDelta);
 
 		m_bHit = false;
+		m_bHitColor = true;
 
 		if (0 >= m_iHp)
 			m_bDead = true;

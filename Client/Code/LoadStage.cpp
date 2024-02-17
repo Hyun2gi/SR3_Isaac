@@ -1540,7 +1540,7 @@ void CLoadStage::MapObj_Collision()
 						}
 						else
 						{
-							break; // 머야
+							break;
 						}
 					}
 					++iter;
@@ -1555,8 +1555,27 @@ void CLoadStage::MapObj_Collision()
 					else
 						++iter;
 				}
-				else
+				else if (CPlayer::GetInstance()->Get_PlayerBulletState() == 1) // 혈사포
+				{
+					if (!dynamic_cast<CMapObj*>(pMapObj)->Get_Dead())			// MapObj가 Dead가 아닐 때
+					{
+						if (POOP == dynamic_cast<CMapObj*>(pMapObj)->Get_Type())
+						{
+							dynamic_cast<CMapObj*>(pMapObj)->Set_Hit();
+							break;
+						}
+						else if (0 == dynamic_cast<CMapObj*>(pMapObj)->Get_ObjID())
+						{
+							dynamic_cast<CFire*>(pMapObj)->Set_Hit();
+							break;
+						}
+						else
+						{
+							break;
+						}
+					}
 					++iter;
+				}
 			}
 			else
 				++iter;
