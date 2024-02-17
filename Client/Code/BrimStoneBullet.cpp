@@ -74,6 +74,10 @@ _int CBrimStoneBullet::Update_GameObject(const _float& fTimeDelta)
 
     bulletPos = playerPos + ((m_iBulletIndex + 1) * m_pTransformCom->m_vScale.x) * playerDir;
     bulletPos += _vec3(0, 0, 0);
+
+    _vec3 bulletright, bulletlook;
+    m_pTransformCom->Get_Info(INFO_RIGHT, &bulletright);
+
     
     int legstate = CPlayer::GetInstance()->Get_Azazel_Anim();
     switch (legstate)
@@ -90,11 +94,11 @@ _int CBrimStoneBullet::Update_GameObject(const _float& fTimeDelta)
         break;
     case 3:
         //left
-        bulletPos += (-playerDirRight * 0.5);
+        bulletPos += (-bulletright * 0.6);
         break;
     case 4:
         //right
-        bulletPos += (playerDirRight * 0.6);
+        bulletPos += (bulletright * 0.6);
         break;
     case 5:
         //no show

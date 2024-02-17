@@ -89,6 +89,8 @@ public:
 
 	void		Set_Camera_Cinemachine_01(); 
 	void		Set_Camera_Cinemachine_02();
+	void		Set_Camera_Cinemachine_03();
+
 	void		Set_To_MaxHp() { m_fHp = m_fMaxHp; }
 	void		Set_Coin(int _coin) { m_iCoin += _coin; }
 	void		Set_LayerTag(_tchar* pLayerTag) { m_pLayerTag = pLayerTag; }
@@ -108,6 +110,8 @@ public:
 	// W(0) : 전진, S(1) : 후진, A(2) : 왼쪽, D(3) : 오른쪽
 	int			Get_ShootWalkDir() { return m_iShootWalkDir; }
 
+	void		Set_Item_Get_Anim_Brim();
+	void		Set_Brim_Cinemachine();
 
 	void		Set_Item_Get_Anim();
 	void		Set_Item_Get_Anim_Bad();
@@ -153,10 +157,29 @@ public:
 
 	void		Set_CameraShaking(float shakeTime = 0.6f, float shakeIntensity = 1.0f);
 	void		Set_CameraShaking_Sub(float shakeTime = 1.0f, float shakeIntensity = 1.0f);
-	void		Set_To_OriginAngle();
-
+	void		Set_CameraShaking_Rot(float shakeTime = 0.6f, float shakeIntensity = 0.1f);
+		
+	// 맵연출 쉐이킹 멈추기
+	void		Set_StopShaking();
 	bool		Get_AzazelMode() { if (m_eCurPlayerVer == P_AZAZEL) { return true; } else { return false; } }
 	void		Set_CameraShakingBlock(bool block) { m_bCameraShaking = block; }
+	void		Set_MapCinemachine(bool cinemachine)
+	{ 
+		if (cinemachine == true)
+		{
+			m_bMapCinemachine = cinemachine;
+			m_bUnbeatable = true;
+			m_bRender = false;
+		}
+		else
+		{
+			m_bMapCinemachine = cinemachine;
+			m_bUnbeatable = false;
+			m_fUnbeatableTime = 0;
+			m_bRender = true;
+		}
+	}
+
 
 public:
 	void		Bullet_Change_To_Brim();
@@ -178,6 +201,7 @@ private:
 
 	bool				m_bUnbeatable;
 	_float				m_fUnbeatableTime;
+	_float				m_fUnbeatableTimeFix; // 비교군
 
 	//bullet을 위한 layer 저장해놓는 변수
 	_tchar*					m_pLayerTag;
@@ -205,7 +229,7 @@ private:
 
 	// 아이작인지 아자젤인지 파악
 	PLAYER_VER_ID		m_eCurPlayerVer;
-
+	bool				m_bAzazelType = false;
 
 	//움직이는 속도
 	_float				m_fMoveSpeed;
@@ -261,6 +285,10 @@ private:
 
 	int					m_iAzaelStateSet;
 	bool				m_bCameraShaking;
+
+	bool				m_bMapCinemachine;
+
+	
 
 private:
 	list<CGameObject*>	m_PlayerBulletList;
