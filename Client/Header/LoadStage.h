@@ -142,6 +142,7 @@ private:
 
   /* 사운드 관련 */
 	_bool	m_bBGMIntro; //intro 나온지 안나온지 체크
+	_bool	m_bBGM;
 
 
 	// 맵에 배치한 몬스터의 개수를 카운트해주는 벡터

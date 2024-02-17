@@ -85,6 +85,7 @@ HRESULT CLoadStage::Ready_Scene(int iType)
 	m_vecMonsterCount.resize(MONSTER_TYPE_END);
 	m_bIsCreated = false;
 	m_bMenu = false;
+	m_bBGM = true;
 
 	//Engine::Create_Scatter(m_pGraphicDev);
 
@@ -1998,9 +1999,8 @@ void CLoadStage::BGM_INTRO_START()
 
 void CLoadStage::BGM_START()
 {
-	if (!m_bBGMIntro)
+	if (!m_bBGMIntro && m_bBGM)
 	{
-		
 		StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
 		string roomtype = info.m_strTheme;
 		if (roomtype == "Normal")
@@ -2008,6 +2008,7 @@ void CLoadStage::BGM_START()
 			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
 			{
 				Engine::PlayBGM(L"diptera sonata(basement).ogg", 0.8f);
+				m_bBGM = false;
 			}
 		}
 		else if (roomtype == "Treasure")
@@ -2015,6 +2016,7 @@ void CLoadStage::BGM_START()
 			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
 			{
 				Engine::PlayBGM(L"diptera sonata(basement).ogg", 0.8f);
+				m_bBGM = false;
 			}
 		}
 		else if (roomtype == "Devil")
@@ -2022,6 +2024,7 @@ void CLoadStage::BGM_START()
 			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
 			{
 				Engine::PlayBGM(L"the calm.ogg", 0.8f);
+				m_bBGM = false;
 			}
 				
 		}
@@ -2030,6 +2033,7 @@ void CLoadStage::BGM_START()
 			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
 			{
 				Engine::PlayBGM(L"arcaderoom_loop.ogg", 0.8f);
+				m_bBGM = false;
 			}
 				
 			//arcaderoom_loop.ogg
@@ -2039,6 +2043,7 @@ void CLoadStage::BGM_START()
 			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
 			{
 				Engine::PlayEffect(L"basic boss fight.ogg", SOUND_BGM, 0.8f);
+				m_bBGM = false;
 			}
 			
 		}
