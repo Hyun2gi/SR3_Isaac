@@ -68,13 +68,9 @@ _int CShellGame::Update_GameObject(const _float& fTimeDelta)
 		}
 	}
 
-	if (dynamic_cast<CShellNpc*>(m_pShellNpc)->Get_NPC_Game())
+	if (m_bGame && !m_bReward) // 게임 상태(npc와 충돌)이고 shell과 충돌하지 않았다면
 	{
-		m_bGame = true;
-	}
-
-	if (m_bGame)
-	{
+		m_pShellNpc->Set_NpC_Game(true); // Npc Game 상태 true
 		Game(fTimeDelta);
 	}
 
@@ -258,7 +254,7 @@ void CShellGame::Shaking_Shell(const _float& fTimeDelta)
 		}
 	}
 
-
+#pragma region Sound
 	m_iSoundTimer++;
 	int randnum = rand() % 2;
 
@@ -290,9 +286,7 @@ void CShellGame::Shaking_Shell(const _float& fTimeDelta)
 			}
 		}
 	}
-	
-	
-
+#pragma endregion Sound
 
 	if (0.5 <= m_fSpeed) // 게임 종료
 	{
@@ -304,7 +298,7 @@ void CShellGame::Shaking_Shell(const _float& fTimeDelta)
 		m_bGame = false;
 		m_bReward = true;
 
-		m_pShellNpc->Set_NpC_Game(); // Npc의 상태를 다시 false 로
+		m_pShellNpc->Set_NpC_Game(false); // Npc의 상태를 다시 false 로
 
 		Setting_RewardShell(); // 3개 중 하나의 Shell 을 당첨으로 설정
 	}

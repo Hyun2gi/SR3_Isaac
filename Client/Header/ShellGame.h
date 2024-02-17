@@ -21,6 +21,8 @@ private:
 	virtual ~CShellGame();
 
 public:
+	void				Set_Game(_bool bIsGame) { m_bGame = bIsGame; }
+	_bool				Get_Game() { return m_bGame; }
 	_bool				Get_Game_Reward() { return m_bReward; } // 보상 받을 수 있는지
 	vector<CShell*>		Get_ShellVec() { return m_vecShell; }
 	CShellNpc*			Get_ShellNpc() { return m_pShellNpc; }

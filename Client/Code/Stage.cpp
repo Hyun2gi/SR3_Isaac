@@ -720,7 +720,7 @@ void CStage::MapObj_Collision()
 						if (0 < CPlayer::GetInstance()->Get_Coin())
 						{
 							CPlayer::GetInstance()->Set_Coin(-1);
-							dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
+							dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game(true);
 						}
 					}
 					else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Shell <-> Player Ãæµ¹

@@ -1573,29 +1573,36 @@ void CLoadStage::MapObj_Collision()
 	}
 
 	// 야바위 충돌
-	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr)
+	if (Get_GameObject(L"MapObj", L"ShellGame") != nullptr) // Shell Game이 생성되었을 때
 	{
-		if (dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc() != nullptr)
+		if (dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc() != nullptr && // Shell Npc가 있고
+			!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellVec().empty())	// Shell이 있을 때
 		{
-			if (!dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc()->Get_NPC_Game())
-			{
-				CGameObject* pShellObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance());
+			CGameObject* pShellObj = m_mapLayer.at(L"MapObj")->Collision_GameObject(CPlayer::GetInstance()); // Player와 충돌한 객체
 
-				if (pShellObj)
+			if (pShellObj) // Player와 충돌한 객체가 존재할 때
+			{
+				if (!dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Get_Game()) // 게임 중이 아닐 때
 				{
-					if (2 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Npc <-> Player 충돌
+					if (2 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // 충돌 대상이 Npc라면
 					{
 						if (0 < CPlayer::GetInstance()->Get_Coin())
 						{
 							CPlayer::GetInstance()->Set_Coin(-1);
-							dynamic_cast<CShellNpc*>(dynamic_cast<CShellGame*>(Get_GameObject(L"MapObj", L"ShellGame"))->Get_ShellNpc())->Set_NpC_Game();
+							dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Set_Game(true); // Game True
 						}
 					}
-					else if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // Shell <-> Player 충돌
+				}
+				else  // 게임 중이 아닐 때
+				{
+					if (3 == dynamic_cast<CMapObj*>(pShellObj)->Get_ObjID()) // 충돌 대상이 Shell이라면
 					{
+						// 게임을 False로
+						dynamic_cast<CShellGame*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame"))->Set_Game(false);
+
 						dynamic_cast<CShell*>(pShellObj)->Set_StartUp(); // 선택한 Shell 위로 오픈
 
-						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward())
+						if (dynamic_cast<CShell*>(pShellObj)->Get_Reward()) // 보상이 있으면
 						{
 							Engine::CGameObject* pGameObject = nullptr;
 
@@ -1609,7 +1616,7 @@ void CLoadStage::MapObj_Collision()
 							}
 							dynamic_cast<CShell*>(pShellObj)->Setting_Reward_False();
 						}
-						else if (dynamic_cast<CShell*>(pShellObj)->Get_Lose())
+						else if (dynamic_cast<CShell*>(pShellObj)->Get_Lose()) // 보상이 없으면 파리 생성
 						{
 							Engine::CGameObject* pFly = nullptr;
 
@@ -1622,7 +1629,7 @@ void CLoadStage::MapObj_Collision()
 								pFly->Set_MyLayer(L"GameMst");
 								m_mapLayer.at(L"GameMst")->Add_GameObject(L"Fly", pFly);
 							}
-							dynamic_cast<CShell*>(pShellObj)->Set_Lose_False();
+							//dynamic_cast<CShell*>(pShellObj)->Set_Lose_False();
 						}
 					}
 				}
@@ -1821,7 +1828,7 @@ void CLoadStage::Insert_Child()
 		dynamic_cast<CShop*>(m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shop"))->Set_Item_ToStage(m_mapLayer.at(L"GameItem"));
 	}
 
-	// Shell Game (Npc) 추가
+	// Shell Game 추가
 	if (m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellGame") != nullptr &&
 		m_mapLayer.at(L"MapObj")->Get_GameObject(L"ShellNpc") == nullptr &&
 		m_mapLayer.at(L"MapObj")->Get_GameObject(L"Shell") == nullptr)
