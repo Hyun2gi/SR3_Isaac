@@ -261,7 +261,7 @@ CHeart* CHeart::Create(LPDIRECT3DDEVICE9 pGraphicDev, int spawnspot, _vec3 pos, 
         D3DXVec3TransformCoord(&templook, &templook, &mat);
         D3DXVec3Normalize(&templook, &templook);
         templook *= 1.2;
-        pInstance->Set_LookDir(-templook);
+        pInstance->Set_LookDir(templook);
     }
 
     pInstance->Set_Item_SpawnSpot(spawnspot);
