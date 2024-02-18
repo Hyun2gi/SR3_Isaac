@@ -13,6 +13,12 @@ class CEndingHJ;
 class CEnding : public Engine::CScene
 {
 private:
+	enum ENDING_IMG
+	{
+		GAME_END, HW, BM, HJ
+	};
+
+private:
 	explicit CEnding(LPDIRECT3DDEVICE9 pGraphicDev);
 	virtual ~CEnding();
 
@@ -37,6 +43,8 @@ public:
 	CEndingHW* pHW = nullptr;
 	CEndingBM* pBM = nullptr;
 	CEndingHJ* pHJ = nullptr;
+
+	_int	m_iIndex = 0;
 
 private:
 	virtual void Free() override;
