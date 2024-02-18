@@ -220,8 +220,8 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 			m_fSpawnTimer += fTimeDelta;
 
-			//0.2초마다 맵툴로 설치해둔 몬스터/오브젝트를 스폰한다.
-			if (0.2f < m_fSpawnTimer)
+			//0.1초마다 맵툴로 설치해둔 몬스터/오브젝트를 스폰한다.
+			if (0.1f < m_fSpawnTimer)
 			{
 				m_fSpawnTimer = 0.f;
 
@@ -419,7 +419,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 					int randNum1 = rand() % 10 + 5;
 					int randNum2 = rand() % 10 + 5;
-					int randNumSpeed = rand() % 15 + 10;
+					int randNumSpeed = rand() % 5 + 3;				//속도가 최소 3에서 최대 8까지
 
 					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Left(randNum1);
 					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Right(randNum2);
@@ -439,7 +439,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 					int randNum1 = rand() % 10 + 5;
 					int randNum2 = rand() % 10 + 5;
-					int randNumSpeed = rand() % 15 + 10;
+					int randNumSpeed = rand() % 5 + 3;			//속도가 최소 3에서 최대 8까지
 
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Up(randNum1);
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Down(randNum2);
