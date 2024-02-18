@@ -144,7 +144,7 @@ void CMonstro::LateUpdate_GameObject()
 
 		if (m_iHp % 80 == 0) // hp 감소 시 주기적으로 피격 소리
 		{
-			Engine::PlayEffect(L"Monster_cry1.mp3", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f);
+			Engine::PlayEffect(L"Monster_cry1.mp3", SOUND_EFFECT_BOSS_STOPSUDDEN_SUB, 1.f);
 		}
 
 		if (0 >= m_iHp)
