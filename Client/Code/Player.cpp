@@ -932,14 +932,13 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
 			vPos += vDir * (m_fMoveSpeed)*fTimeDelta;
 			
-			if (m_eCurState == m_ePreState)
+			
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
 			{
-				if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-					&& vPos.x > vScale.x && vPos.z > vScale.z)
-				{
-					m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
-				}
+				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
 			}
+			
 			
 
 			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
@@ -968,14 +967,15 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
 			vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
 			
-			if (m_eCurState == m_ePreState)
+			
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
 			{
-				if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-					&& vPos.x > vScale.x && vPos.z > vScale.z)
-				{
-					m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
-				}
+				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
 			}
+			
+
+
 
 			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
 			{
@@ -1003,15 +1003,12 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
 			vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
 
-			if (m_eCurState == m_ePreState)
+			
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
 			{
-				if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-					&& vPos.x > vScale.x && vPos.z > vScale.z)
-				{
-					m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
-				}
+				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
 			}
-
 			
 
 			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
@@ -1041,14 +1038,14 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
 			vPos += vDir * (m_fMoveSpeed)*fTimeDelta;
 			
-			if (m_eCurState == m_ePreState)
+			
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
 			{
-				if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-					&& vPos.x > vScale.x && vPos.z > vScale.z)
-				{
-					m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
-				}
+				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
 			}
+			
+
 
 			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
 			{
