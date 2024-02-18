@@ -25,8 +25,12 @@ HRESULT CPoop::Ready_GameObject()
 
 	m_iLimitHit = 4;
 
+	m_fCallLimit = 0.1f;
+
 	m_bAni = false;
 	m_bReduce = true;
+
+	m_fCallLimit = 0.1f;
 
 	m_eDropItem = COIN;
 	m_eObjType = POOP;
@@ -38,11 +42,20 @@ _int CPoop::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
+
+	if (!m_bCreate)
+	{
+		Create_Start_Particle(m_iRandNum % 5 + 2);
+		m_bCreate = true;
+	}
+
+
 	if (m_bHit)
 		Hit();
 
 	if (m_bAni)
 		Change_Scale();
+
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 

@@ -57,6 +57,8 @@ protected:
 	bool					Check_Time(const _float& fTimeDelta, float fLimit);
 	void					Setting_ItemTag();
 
+	void					Create_Start_Particle(_float fCallLimit);
+
 protected:
 	Engine::CRcTex*			m_pBufferCom;
 	Engine::CTransform*		m_pTransformCom;
@@ -67,11 +69,13 @@ protected:
 	_bool					m_bHit;
 	_bool					m_bDead;
 	_bool					m_bItemDrop;
+	_bool					m_bCreate;
 	
 	_int					m_iHitCount;
 	_int					m_iLimitHit;
+	_int					m_iRandNum = 0;
 
-	_float					m_fCallLimit;
+	_float					m_fCallLimit = 0.3f;
 	_float					m_fAccTimeDelta;
 	_float					m_fSecAccTimeDelta;
 

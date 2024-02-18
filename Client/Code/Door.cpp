@@ -48,6 +48,8 @@ void CDoor::Set_Open()
 	{
 		m_bOpen = true; // 방 문 열리는 사운드
 		Engine::PlayEffect(L"DoorOpen.wav", SOUND_EFFECT_ETC_ALLPLAY, 1.f);
+
+		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 3.f, 20);
 	}
 }
 
@@ -59,6 +61,8 @@ HRESULT CDoor::Ready_GameObject()
 
 	m_bOpen = false;
 	m_bCollision = false;
+
+	m_fCallLimit = 1.f;
 
 	m_bScaleChange = false;
 	m_bScaleReduce = true;
@@ -72,6 +76,13 @@ HRESULT CDoor::Ready_GameObject()
 _int CDoor::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
+
+	if (!m_bCreate)
+	{
+		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 3.f, 20);
+
+		m_bCreate = true;
+	}
 
 	if (m_bOpen)
 	{

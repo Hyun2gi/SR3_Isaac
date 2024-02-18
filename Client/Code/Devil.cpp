@@ -33,6 +33,12 @@ _int CDevil::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
+	if (!m_bCreate)
+	{
+		Create_Start_Particle(m_iRandNum % 5 + 2);
+
+		m_bCreate = true;
+	}
 
 	m_pCalculator->Compute_Vill_Matrix(m_pTransformCom);
 

@@ -19,8 +19,8 @@
 CMapObj::CMapObj(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CGameObject(pGraphicDev),
 	m_pBufferCom(nullptr), m_pTransformCom(nullptr), m_pTargetTransCom(nullptr), m_pTextureCom(nullptr), m_pCalculator(nullptr),
-	m_iHitCount(0), m_iLimitHit(0), m_iPicNum(1), m_fFrameSpeed(0.f), m_fCallLimit(0.f), m_fAccTimeDelta(0.f), m_fSecAccTimeDelta(0.f),
-	m_bDead(false), m_bItemDrop(false), m_bHit(false), m_eDropItem(COIN), m_eObjType(OBJECT_TYPE_END), m_eObjID(MOBJID_NONE)
+	m_iHitCount(0), m_iLimitHit(0), m_iPicNum(1), m_fFrameSpeed(0.f), m_fCallLimit(1.f), m_fAccTimeDelta(0.f), m_fSecAccTimeDelta(0.f),
+	m_bDead(false), m_bItemDrop(false), m_bHit(false), m_eDropItem(COIN), m_eObjType(OBJECT_TYPE_END), m_eObjID(MOBJID_NONE), m_bCreate(false)
 {
 }
 
@@ -29,7 +29,7 @@ CMapObj::CMapObj(const CMapObj& rhs)
 	m_pBufferCom(rhs.m_pBufferCom), m_pTransformCom(rhs.m_pTransformCom), m_pTargetTransCom(rhs.m_pTargetTransCom),
 	m_pTextureCom(rhs.m_pTextureCom), m_pCalculator(rhs.m_pCalculator),
 	m_iHitCount(rhs.m_iHitCount), m_iLimitHit(rhs.m_iLimitHit), m_iPicNum(rhs.m_iPicNum), m_fFrameSpeed(rhs.m_fFrameSpeed),
-	m_fCallLimit(rhs.m_fCallLimit), m_fAccTimeDelta(rhs.m_fAccTimeDelta), m_fSecAccTimeDelta(rhs.m_fSecAccTimeDelta),
+	m_fCallLimit(rhs.m_fCallLimit), m_fAccTimeDelta(rhs.m_fAccTimeDelta), m_fSecAccTimeDelta(rhs.m_fSecAccTimeDelta), m_bCreate(rhs.m_bCreate),
 	m_bDead(rhs.m_bDead), m_bItemDrop(rhs.m_bItemDrop), m_bHit(rhs.m_bHit), m_eDropItem(rhs.m_eDropItem), m_eObjType(rhs.m_eObjType), m_eObjID(rhs.m_eObjID)
 {
 }
@@ -121,6 +121,15 @@ void CMapObj::Setting_ItemTag()
 	default:
 		break;
 	}
+}
+
+void CMapObj::Create_Start_Particle(_float fCallLimit)
+{
+	_vec3 vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.7f, 15);
+	m_fCallLimit = fCallLimit;
+	m_bCreate = true;
 }
 
 CItem* CMapObj::Create_Item(ITEM_TYPE eItemType, _int iSpawnPos, CLayer* pLayer, _int iIndex)

@@ -34,8 +34,6 @@ private:
 
 private:
 	// º¯¼ö
-	_bool				m_bCreate;
-
 	CWood*				m_pWood;
 	CFire*				m_pFire;
 
