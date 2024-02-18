@@ -29,25 +29,32 @@ HRESULT CEnding::Ready_Scene()
 
 Engine::_int CEnding::Update_Scene(const _float& fTimeDelta)
 {
-	m_pBlackBack->Update_GameObject(fTimeDelta);
-
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
-	if (GetAsyncKeyState('1'))
+	m_pBlackBack->Update_GameObject(fTimeDelta);
+
+	// 검은 배경이 투명해지면 다음 행동을 한다.
+	if (m_pBlackBack->Get_Alpha() <= 0.f)
 	{
-		pBack->Set_Visible(false);
-		pHW->Set_Visible(true);
+		pBack->Set_Off();
+		pBack->Set_Visible(true);
 	}
-	if (GetAsyncKeyState('2'))
-	{
-		pHW->Set_Visible(false);
-		pBM->Set_Visible(true);
-	}
-	if (GetAsyncKeyState('3'))
-	{
-		pBM->Set_Visible(false);
-		pHJ->Set_Visible(true);
-	}
+
+	//if (GetAsyncKeyState('1'))
+	//{
+	//	pBack->Set_Visible(false);
+	//	pHW->Set_Visible(true);
+	//}
+	//if (GetAsyncKeyState('2'))
+	//{
+	//	pHW->Set_Visible(false);
+	//	pBM->Set_Visible(true);
+	//}
+	//if (GetAsyncKeyState('3'))
+	//{
+	//	pBM->Set_Visible(false);
+	//	pHJ->Set_Visible(true);
+	//}
 
 	Engine::Update_Particles(fTimeDelta);
 
