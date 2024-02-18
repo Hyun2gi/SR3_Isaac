@@ -1522,7 +1522,6 @@ void CDynamicCamera::Set_OnDople()
 void CDynamicCamera::Set_OffDople()
 {
 	//m_eCurState = C_PLAYERCHASE;
-	m_fAngleY = 0;
 }
 
 void CDynamicCamera::Free()

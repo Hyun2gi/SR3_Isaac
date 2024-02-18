@@ -94,6 +94,8 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_bCameraShaking = false;
 		m_fUnbeatableTimeFix = 1.5f;
 		m_bAlreadyDead = false;
+
+		m_bDople = false;
 	}
 	else
 	{
@@ -900,14 +902,16 @@ void CPlayer::Set_OffSlotMode()
 void CPlayer::Set_OnDople()
 {
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_OnDople();
-	m_pTransformCom->m_vAngle = { 90,0,0 };
+	m_pTransformCom->m_vAngle = { D3DXToRadian(90),0,0 };
 	m_bKeyBlock = false;
+	m_bDople = true;
 }
 
 void CPlayer::Set_OffDople()
 {
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_OffDople();
 	m_pTransformCom->m_vAngle = { 0,0,0 };
+	m_bDople = false;
 }
 
 void CPlayer::Set_StopShaking()
@@ -944,7 +948,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 
 	// epictarget 쓰는 상태일때는 block됨
-	if (m_bEpicTargetRun == false)
+	if (m_bEpicTargetRun == false && m_bDople == false)
 	{
 		//vDir = _vec3(vDir.x, 0, vDir.z);
 
@@ -998,9 +1002,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
 			}
 			
-
-
-
 			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
 			{
 				m_eCurState = P_SHOOTWALK;
@@ -1087,11 +1088,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			// 아자젤 anim 설정
 			m_iAzaelStateSet = 4;
 		}
-		else if (Engine::Get_DIKeyState(DIK_B) & 0x80)
-		{
-			//Set_Attacked();
-			Set_Cry_Anim();
-		}
 		else
 		{
 			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
@@ -1114,6 +1110,97 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			
 			// 아자젤 anim 설정
 			m_iAzaelStateSet = 0;
+		}
+	}
+	else if (m_bEpicTargetRun == false && m_bDople == true)
+	{
+		_vec3		vDir;
+		m_pTransformCom->Get_Info(INFO_UP, &vDir);
+		
+		if (Engine::Get_DIKeyState(DIK_W) & 0x80)
+		{
+			m_eCurState = P_IDLEWALK;
+			D3DXVec3Normalize(&vDir, &vDir);
+
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos += vDir * (m_fMoveSpeed)*fTimeDelta;
+
+
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			{
+				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed - 2, fTimeDelta);
+			}
+
+
+			// 아자젤 anim 설정
+			m_iAzaelStateSet = 1;
+		}
+		else if (Engine::Get_DIKeyState(DIK_S) & 0x80)
+		{
+			m_eCurState = P_IDLEWALK;
+			vDir = _vec3(vDir.x, 0, vDir.z);
+			D3DXVec3Normalize(&vDir, &vDir);
+
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
+
+
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			{
+				m_pTransformCom->Move_Pos(&vDir, -(m_fMoveSpeed - 2), fTimeDelta);
+			}
+
+			// 아자젤 anim 설정
+			m_iAzaelStateSet = 2;
+		}
+		else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
+		{
+			m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
+			//vDir = _vec3(vDir.x, 0, vDir.z);
+			m_eCurState = P_LEFTWALK;
+			D3DXVec3Normalize(&vDir, &vDir);
+
+
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
+
+
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			{
+				m_pTransformCom->Move_Pos(&vDir, -(m_fMoveSpeed - 2), fTimeDelta);
+			}
+
+			// 아자젤 anim 설정
+			m_iAzaelStateSet = 3;
+		}
+		else if (Engine::Get_DIKeyState(DIK_D) & 0x80)
+		{
+			m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
+			//vDir = _vec3(vDir.x, 0, vDir.z);
+			m_eCurState = P_RIGHTWALK;
+			D3DXVec3Normalize(&vDir, &vDir);
+
+
+			m_pTransformCom->Get_Info(INFO_POS, &vPos);
+			vPos += vDir * (m_fMoveSpeed)*fTimeDelta;
+
+
+			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			{
+				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed-2, fTimeDelta);
+			}
+
+
+			// 아자젤 anim 설정
+			m_iAzaelStateSet = 4;
+		}
+		else
+		{
+			m_eCurState = P_IDLE;
 		}
 	}
 	

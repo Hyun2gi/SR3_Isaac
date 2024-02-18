@@ -8,6 +8,7 @@ BEGIN(Engine)
 class CRcTex;
 class CTexture;
 class CTransform;
+class CShader;
 
 END
 
@@ -25,6 +26,12 @@ public:
 	virtual void Render_GameObject()						 override;
 
 	void	Set_Visible(bool bVisible = false) { m_bVisible = bVisible; }
+	void	Set_On() { m_bOn = true; }
+	void	Set_Off() { m_bOn = false; }
+
+	const _float& Get_WaitTimer() { return m_fWaitTimer; }
+	const _bool& Get_Visible() { return m_bVisible; }
+	const _bool& Get_On() { return m_bOn; }
 
 private:
 	HRESULT			Add_Component();
@@ -33,6 +40,7 @@ private:
 	Engine::CRcTex*		m_pBufferCom;
 	Engine::CTransform*	m_pTransformCom;
 	Engine::CTexture*	m_pTextureCom;
+	Engine::CShader* m_pShaderCom = { nullptr };
 
 	_float				m_fAnimSpeed = 2.f;
 	_float				m_fCurFrame = 0.f;
@@ -43,7 +51,12 @@ private:
 	_int				m_iAnimFrameCount;
 	_int				m_iMaxFrameCount;
 
-	bool				m_bVisible = false;
+	_float				m_fAlpha = 0.f;
+
+	_float				m_fWaitTimer = 3.5f;
+
+	_bool				m_bVisible = false;
+	_bool				m_bOn = false;
 
 public:
 	static CEndingBM*		Create(LPDIRECT3DDEVICE9	pGraphicDev, 
