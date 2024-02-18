@@ -31,7 +31,6 @@ public:
 
 private:
 	HRESULT			Add_Component();
-	void			Change_Color(const _float& fTimeDelta);
 
 private:
 	Engine::CRcTex* m_pBufferCom;
@@ -46,6 +45,7 @@ public:
 	static CEndingBlackBack* Create(LPDIRECT3DDEVICE9	pGraphicDev,
 		_float fSizeX, _float fSizeY,
 		_float fPosX, _float fPosY,
+		_bool bOff = false,
 		_float fWinCX = WINCX, _float fWinCY = WINCY);
 
 private:

@@ -107,17 +107,18 @@ HRESULT CEndingBlackBack::Add_Component()
 	return S_OK;
 }
 
-void CEndingBlackBack::Change_Color(const _float& fTimeDelta)
-{
-}
-
-CEndingBlackBack* CEndingBlackBack::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _float fWinCX, _float fWinCY)
+CEndingBlackBack* CEndingBlackBack::Create(LPDIRECT3DDEVICE9 pGraphicDev, _float fSizeX, _float fSizeY, _float fPosX, _float fPosY, _bool bOff, _float fWinCX, _float fWinCY)
 {
 	CEndingBlackBack* pInstance = new CEndingBlackBack(pGraphicDev);
 
 	pInstance->Set_WindowSize(fWinCX, fWinCY);
 	pInstance->Set_Size(fSizeX, fSizeY);
 	pInstance->Set_Pos(fPosX, fPosY, fWinCX, fWinCY);
+	pInstance->m_bOff = bOff;
+	if (bOff)
+	{
+		pInstance->m_fAlpha = 1.f;
+	}
 
 	if (FAILED(pInstance->Ready_GameObject()))
 	{
