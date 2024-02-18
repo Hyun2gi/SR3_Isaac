@@ -69,6 +69,7 @@
 #include "PlayerHP.h"
 #include "ItemFontUI.h"
 #include "MiniMap.h"
+#include "EndingBlackBack.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev),
@@ -118,6 +119,14 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	{
 		Create_Map_Particles();
 	}
+	if (GetAsyncKeyState('K'))
+	{
+		m_pBlackBack->Set_On();
+	}
+	if (GetAsyncKeyState('L'))
+	{
+		m_pBlackBack->Set_Off();
+	}
 
 	if (m_bIsCreated)
 	{
@@ -153,7 +162,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 	// 맨 처음 방에서는 player에서 bgm 나와야해서 player update보다 순서 뒤로
 	// 비지엠 인트로 먼저 재생
-	BGM_INTRO_START();
+	//BGM_INTRO_START();
 	
 	
 
@@ -239,12 +248,15 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	//연출이 필요 없고 생성되지 않은 상황이면 한번에 생성시켜준다.
 	else if (!m_bIsLoadDataCreated)
 	{
+
 		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
 		m_bIsLoadDataCreated = true;
 
+		// 플레이어 무적 시간 종료 및 플레이어로 돌아가기
+		CPlayer::GetInstance()->Set_MapCinemachine(false);
 
 		if (m_iCurStageKey == 8)
 		{
@@ -615,6 +627,17 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Down(randNum2);
 				dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Speed(randNumSpeed);
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle_Z", pGameObject), E_FAIL);
+
+				break;
+			}
+			case DEVIL:
+			{
+				pGameObject = CDevil::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Devil", pGameObject), E_FAIL);
 
 				break;
 			}
@@ -1332,11 +1355,15 @@ HRESULT CLoadStage::Ready_Layer_UI(const _tchar* pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerHP", pGameObject), E_FAIL);
 
-
 	// MiniMap
 	pGameObject = CMiniMap::Create(m_pGraphicDev, 140, 140, 330.f, 230.f, 1, 1);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MiniMap", pGameObject), E_FAIL);
+
+	// 검은 배경
+	pGameObject = m_pBlackBack = CEndingBlackBack::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BlackBackground", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
@@ -1396,6 +1423,12 @@ void CLoadStage::Check_All_Dead()
 	{
 		for (auto& iter : m_mapLayer.at(L"GameDoor")->Get_ObjectMap())
 			dynamic_cast<CDoor*>(iter.second)->Set_Open();
+
+		//엄마방일때만 화면 까매지는 연출
+		if (m_iCurStageKey == 10)
+		{
+			m_bEndingPlay = true;
+		}
 	}
 }
 
@@ -2007,29 +2040,27 @@ void CLoadStage::Link_MomParts_ToLayer()
 
 void CLoadStage::Play_Ending(const _float& fTimeDelta)
 {
-	m_fEndingTimer -= fTimeDelta;
-
-	if (0 < m_fEndingTimer)
+	if (0 >= m_fEndingWaitTimer)
 	{
-		CTransform* pTest = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
+		m_pBlackBack->Set_Off();
 
-		_matrix mat = *(pTest->Get_WorldMatrix());
-		mat._41 = mat._41 + (rand() % 10 - 5);
-		mat._42 = mat._42 + (rand() % 10 - 5);
-		mat._43 = mat._43 + (rand() % 10 - 5);
+		m_fEndingTimer -= fTimeDelta;
+		
+		if (0 >= m_fEndingTimer)
+		{
+			Engine::Set_Ending();
 
-		Engine::Create_Dust(m_pGraphicDev, mat);
+			Engine::CScene* pScene = nullptr;
+			pScene = CEnding::Create(m_pGraphicDev);
+			Engine::Set_Scene(pScene);
+
+			return;
+		}
 	}
 	else
 	{
-		//Engine::Kill_Scatter();
-		Engine::Set_Ending();
-
-		Engine::CScene* pScene = nullptr;
-		pScene = CEnding::Create(m_pGraphicDev);
-		Engine::Set_Scene(pScene);
-
-		return;
+		// 엔딩 대기 타이머가 0초가 아닐때만 초를 줄인다
+		m_fEndingWaitTimer -= fTimeDelta;
 	}
 
 }
@@ -2095,7 +2126,7 @@ void CLoadStage::BGM_INTRO_START()
 
 void CLoadStage::BGM_START()
 {
-	if (!m_bBGMIntro && m_bBGM)
+	/*if (!m_bBGMIntro && m_bBGM)
 	{
 		StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
 		string roomtype = info.m_strTheme;
@@ -2132,7 +2163,7 @@ void CLoadStage::BGM_START()
 				m_bBGM = false;
 			}
 				
-			//arcaderoom_loop.ogg
+			arcaderoom_loop.ogg
 		}
 		else if (roomtype == "Boss")
 		{
@@ -2144,6 +2175,62 @@ void CLoadStage::BGM_START()
 			
 		}
 		
+	}*/
+
+	if (m_bBGM)
+	{
+		StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
+		string roomtype = info.m_strTheme;
+		if (roomtype == "Normal")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO) && !CPlayer::GetInstance()->Get_Cry_Anim())
+			{
+				Engine::StopSound(SOUND_BGM);
+				Engine::PlayBGM(L"diptera sonata(basement).ogg", 0.8f);
+				m_bBGM = false;
+			}
+		}
+		else if (roomtype == "Treasure")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
+			{
+				Engine::StopSound(SOUND_BGM);
+				Engine::PlayBGM(L"diptera sonata(basement).ogg", 0.8f);
+				m_bBGM = false;
+			}
+		}
+		else if (roomtype == "Devil")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
+			{
+				Engine::StopSound(SOUND_BGM);
+				Engine::PlayBGM(L"the calm.ogg", 0.8f);
+				m_bBGM = false;
+			}
+
+		}
+		else if (roomtype == "Arcade")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
+			{
+				Engine::StopSound(SOUND_BGM);
+				Engine::PlayBGM(L"arcaderoom_loop.ogg", 0.8f);
+				m_bBGM = false;
+			}
+
+			//arcaderoom_loop.ogg
+		}
+		else if (roomtype == "Boss")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
+			{
+				Engine::StopSound(SOUND_BGM);
+				Engine::PlayEffect(L"basic boss fight.ogg", SOUND_BGM, 0.8f);
+				m_bBGM = false;
+			}
+
+		}
+
 	}
 }
 

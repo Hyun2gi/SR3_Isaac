@@ -7,6 +7,7 @@
 class CFloor;
 class CWall;
 class CObstacle;
+class CEndingBlackBack;
 
 BEGIN(Engine)
 
@@ -112,7 +113,7 @@ private:
 	CWall*				m_pBottomWall;
 
 	//현재 스테이지의 방 번호를 저장하는 멤버변수
-	int					m_iCurStageKey;
+	_int				m_iCurStageKey;
 
 	/* 연출 관련 */
 	// 생성되었던 스테이지인지를 판단하는 불변수
@@ -133,14 +134,18 @@ private:
 
 	/* 엔딩 관련 */
 	// 엔딩 넘어가는 타이머
-	_float				m_fEndingTimer = 4.5f;
+	_float				m_fEndingWaitTimer = 3.f;
+	_float				m_fEndingTimer = 2.5f;
 	// 엔딩 타이머를 시작할 때 사용하는 불변수
 	_bool				m_bEndingPlay;
 
 	_int				m_iLoadDataSize = 0;
 	_int				m_iCreatedCnt = 0;
 
-  /* 사운드 관련 */
+	//화면 까매지는 연출을 위한 이미지 변수
+	CEndingBlackBack* m_pBlackBack;
+
+	/* 사운드 관련 */
 	_bool	m_bBGMIntro; //intro 나온지 안나온지 체크
 	_bool	m_bBGM;
 

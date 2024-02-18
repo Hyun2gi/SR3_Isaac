@@ -89,7 +89,7 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 	// 시작 쿨타임 주기
 	if (m_bStartCoolTime)
 	{
-		if (Check_Time(fTimeDelta, 3.f))
+		if (Check_Time(fTimeDelta, 2.f))
 		{
 			m_bStartCoolTime = false;
 			m_bGame = true;

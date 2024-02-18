@@ -4,6 +4,7 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
+#include "EndingBlackBack.h"
 #include "EndingBack.h"
 #include "GameEnd.h"
 #include "EndingHW.h"
@@ -30,21 +31,30 @@ Engine::_int CEnding::Update_Scene(const _float& fTimeDelta)
 {
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
-	if (GetAsyncKeyState('1'))
+	m_pBlackBack->Update_GameObject(fTimeDelta);
+
+	// 검은 배경이 투명해지면 다음 행동을 한다.
+	if (m_pBlackBack->Get_Alpha() <= 0.f)
 	{
-		pBack->Set_Visible(false);
-		pHW->Set_Visible(true);
+		pBack->Set_Off();
+		pBack->Set_Visible(true);
 	}
-	if (GetAsyncKeyState('2'))
-	{
-		pHW->Set_Visible(false);
-		pBM->Set_Visible(true);
-	}
-	if (GetAsyncKeyState('3'))
-	{
-		pBM->Set_Visible(false);
-		pHJ->Set_Visible(true);
-	}
+
+	//if (GetAsyncKeyState('1'))
+	//{
+	//	pBack->Set_Visible(false);
+	//	pHW->Set_Visible(true);
+	//}
+	//if (GetAsyncKeyState('2'))
+	//{
+	//	pHW->Set_Visible(false);
+	//	pBM->Set_Visible(true);
+	//}
+	//if (GetAsyncKeyState('3'))
+	//{
+	//	pBM->Set_Visible(false);
+	//	pHJ->Set_Visible(true);
+	//}
 
 	Engine::Update_Particles(fTimeDelta);
 
@@ -73,6 +83,11 @@ HRESULT CEnding::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
 	Engine::CGameObject*		pGameObject = nullptr;
+
+	pGameObject = m_pBlackBack = CEndingBlackBack::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f, true);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BlackBackground", pGameObject), E_FAIL);
+	m_pBlackBack->Set_On();
 
 	//디바이스, x크기, y크기, x좌표, y좌표, x전체 크기, y전체 크기 (전체크기는 default 잡혀있음)
 	pGameObject =  CEndingBack::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f);

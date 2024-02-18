@@ -325,6 +325,9 @@
     <Filter Include="03. ShaderFiles">
       <UniqueIdentifier>{0db68fdd-0ede-4e75-9c42-b37ae3cbfa46}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02. GameObject\12. UI\03. Ending\BlackBack">
+      <UniqueIdentifier>{af861f50-65ac-437c-925e-a453f96b204f}</UniqueIdentifier>
+    </Filter>
     <Filter Include="02. GameObject\02. BackGround">
       <UniqueIdentifier>{a33b9444-c987-423f-8b25-4958c5ea216b}</UniqueIdentifier>
     </Filter>
@@ -618,6 +621,9 @@
     <ClInclude Include="..\Header\Devil.h">
       <Filter>02. GameObject\09. MapObject\08. Devil</Filter>
     </ClInclude>
+    <ClInclude Include="..\Header\EndingBlackBack.h">
+      <Filter>02. GameObject\12. UI\03. Ending\BlackBack</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -898,6 +904,9 @@
     </ClCompile>
     <ClCompile Include="..\Code\Devil.cpp">
       <Filter>02. GameObject\09. MapObject\08. Devil</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Code\EndingBlackBack.cpp">
+      <Filter>02. GameObject\12. UI\03. Ending\BlackBack</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
