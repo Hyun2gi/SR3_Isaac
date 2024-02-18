@@ -53,6 +53,7 @@ private:
 
 	_float  m_fDistanceLeft, m_fDistanceRight;
 	_float	m_fSpeed, m_fDropSpeed;
+	_float m_fDorpTimer = 0.f;
 
 	_vec3	m_vPos;
 

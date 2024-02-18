@@ -4,6 +4,7 @@
 
 #include "Loading.h"
 
+class CEndingBlackBack;
 class CGameEnd;
 class CEndingHW;
 class CEndingBM;
@@ -31,10 +32,11 @@ private:
 public:
 	static CEnding*		Create(LPDIRECT3DDEVICE9 pGraphicDev);
 
-	CGameEnd* pBack;
-	CEndingHW* pHW;
-	CEndingBM* pBM;
-	CEndingHJ* pHJ;
+	CEndingBlackBack* m_pBlackBack = nullptr;
+	CGameEnd* pBack = nullptr;
+	CEndingHW* pHW = nullptr;
+	CEndingBM* pBM = nullptr;
+	CEndingHJ* pHJ = nullptr;
 
 private:
 	virtual void Free() override;

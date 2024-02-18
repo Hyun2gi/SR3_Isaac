@@ -23,6 +23,7 @@ HRESULT CDople::Ready_GameObject()
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
 	m_pTransformCom->Set_Pos(0.f, 1.5f, 0.f);
+	m_pTransformCom->m_vAngle = { 90,0,0 };
 
 	m_fCallLimit = 0.1f;
 	m_fSpeed = 10.f;

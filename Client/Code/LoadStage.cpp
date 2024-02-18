@@ -69,6 +69,7 @@
 #include "PlayerHP.h"
 #include "ItemFontUI.h"
 #include "MiniMap.h"
+#include "EndingBlackBack.h"
 
 CLoadStage::CLoadStage(LPDIRECT3DDEVICE9 pGraphicDev)
 	: Engine::CScene(pGraphicDev),
@@ -117,6 +118,14 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	if (GetAsyncKeyState(VK_DOWN))
 	{
 		Create_Map_Particles();
+	}
+	if (GetAsyncKeyState('K'))
+	{
+		m_pBlackBack->Set_On();
+	}
+	if (GetAsyncKeyState('L'))
+	{
+		m_pBlackBack->Set_Off();
 	}
 
 	if (m_bIsCreated)
@@ -220,8 +229,8 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 			m_fSpawnTimer += fTimeDelta;
 
-			//0.2초마다 맵툴로 설치해둔 몬스터/오브젝트를 스폰한다.
-			if (0.2f < m_fSpawnTimer)
+			//0.1초마다 맵툴로 설치해둔 몬스터/오브젝트를 스폰한다.
+			if (0.1f < m_fSpawnTimer)
 			{
 				m_fSpawnTimer = 0.f;
 
@@ -422,7 +431,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 					int randNum1 = rand() % 10 + 5;
 					int randNum2 = rand() % 10 + 5;
-					int randNumSpeed = rand() % 15 + 10;
+					int randNumSpeed = rand() % 5 + 3;				//속도가 최소 3에서 최대 8까지
 
 					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Left(randNum1);
 					dynamic_cast<CMoveXObstacle*>(pGameObject)->Set_Distance_Right(randNum2);
@@ -442,7 +451,7 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 
 					int randNum1 = rand() % 10 + 5;
 					int randNum2 = rand() % 10 + 5;
-					int randNumSpeed = rand() % 15 + 10;
+					int randNumSpeed = rand() % 5 + 3;			//속도가 최소 3에서 최대 8까지
 
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Up(randNum1);
 					dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Down(randNum2);
@@ -618,6 +627,17 @@ HRESULT CLoadStage::Ready_Layer_GameObject(const _tchar* pLayerTag)
 				dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Distance_Down(randNum2);
 				dynamic_cast<CMoveZObstacle*>(pGameObject)->Set_Speed(randNumSpeed);
 				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Obstacle_Z", pGameObject), E_FAIL);
+
+				break;
+			}
+			case DEVIL:
+			{
+				pGameObject = CDevil::Create(m_pGraphicDev);
+				NULL_CHECK_RETURN(pGameObject, E_FAIL);
+				pGameObject->Set_MyLayer(pLayerTag);
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].x = iter.iX;
+				dynamic_cast<CTransform*>(pGameObject->Get_Component(ID_DYNAMIC, L"Proto_Transform"))->m_vInfo[INFO_POS].z = iter.iZ;
+				FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"Devil", pGameObject), E_FAIL);
 
 				break;
 			}
@@ -1335,11 +1355,15 @@ HRESULT CLoadStage::Ready_Layer_UI(const _tchar* pLayerTag)
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"PlayerHP", pGameObject), E_FAIL);
 
-
 	// MiniMap
 	pGameObject = CMiniMap::Create(m_pGraphicDev, 140, 140, 330.f, 230.f, 1, 1);
 	NULL_CHECK_RETURN(pGameObject, E_FAIL);
 	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"MiniMap", pGameObject), E_FAIL);
+
+	// 검은 배경
+	pGameObject = m_pBlackBack = CEndingBlackBack::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BlackBackground", pGameObject), E_FAIL);
 
 	m_mapLayer.insert({ pLayerTag, pLayer });
 
@@ -1399,6 +1423,12 @@ void CLoadStage::Check_All_Dead()
 	{
 		for (auto& iter : m_mapLayer.at(L"GameDoor")->Get_ObjectMap())
 			dynamic_cast<CDoor*>(iter.second)->Set_Open();
+
+		//엄마방일때만 화면 까매지는 연출
+		if (m_iCurStageKey == 10)
+		{
+			m_bEndingPlay = true;
+		}
 	}
 }
 
@@ -2010,29 +2040,27 @@ void CLoadStage::Link_MomParts_ToLayer()
 
 void CLoadStage::Play_Ending(const _float& fTimeDelta)
 {
-	m_fEndingTimer -= fTimeDelta;
-
-	if (0 < m_fEndingTimer)
+	if (0 >= m_fEndingWaitTimer)
 	{
-		CTransform* pTest = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player_Transform());
+		m_pBlackBack->Set_Off();
 
-		_matrix mat = *(pTest->Get_WorldMatrix());
-		mat._41 = mat._41 + (rand() % 10 - 5);
-		mat._42 = mat._42 + (rand() % 10 - 5);
-		mat._43 = mat._43 + (rand() % 10 - 5);
+		m_fEndingTimer -= fTimeDelta;
+		
+		if (0 >= m_fEndingTimer)
+		{
+			Engine::Set_Ending();
 
-		Engine::Create_Dust(m_pGraphicDev, mat);
+			Engine::CScene* pScene = nullptr;
+			pScene = CEnding::Create(m_pGraphicDev);
+			Engine::Set_Scene(pScene);
+
+			return;
+		}
 	}
 	else
 	{
-		//Engine::Kill_Scatter();
-		Engine::Set_Ending();
-
-		Engine::CScene* pScene = nullptr;
-		pScene = CEnding::Create(m_pGraphicDev);
-		Engine::Set_Scene(pScene);
-
-		return;
+		// 엔딩 대기 타이머가 0초가 아닐때만 초를 줄인다
+		m_fEndingWaitTimer -= fTimeDelta;
 	}
 
 }

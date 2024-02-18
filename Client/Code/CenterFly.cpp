@@ -58,7 +58,7 @@ _int CCenterFly::Update_GameObject(const _float& fTimeDelta)
 
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-	m_pTransformCom->Set_Pos(vPos.x, 2.f, vPos.z);
+	m_pTransformCom->Set_Pos(vPos.x, 1.f, vPos.z); // 2.f
 
 	return 0;
 }

@@ -180,6 +180,7 @@
     <ClInclude Include="..\Header\Effect.h" />
     <ClInclude Include="..\Header\Ending.h" />
     <ClInclude Include="..\Header\EndingBack.h" />
+    <ClInclude Include="..\Header\EndingBlackBack.h" />
     <ClInclude Include="..\Header\EndingBM.h" />
     <ClInclude Include="..\Header\EndingHJ.h" />
     <ClInclude Include="..\Header\EndingHW.h" />
@@ -277,6 +278,7 @@
     <ClCompile Include="..\Code\Effect.cpp" />
     <ClCompile Include="..\Code\Ending.cpp" />
     <ClCompile Include="..\Code\EndingBack.cpp" />
+    <ClCompile Include="..\Code\EndingBlackBack.cpp" />
     <ClCompile Include="..\Code\EndingBM.cpp" />
     <ClCompile Include="..\Code\EndingHJ.cpp" />
     <ClCompile Include="..\Code\EndingHW.cpp" />

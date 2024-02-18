@@ -21,8 +21,8 @@ CDevil::~CDevil()
 HRESULT CDevil::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->Set_Pos(0.f, 1.f, 0.f);
-	m_pTransformCom->m_vScale = { 3.5f, 3.5f, 3.5f };
+	m_pTransformCom->Set_Pos(0.f, 2.5f, 0.f);
+	m_pTransformCom->m_vScale = { 2.5f, 2.5f, 2.5f };
 
 	m_eObjType = DEVIL;
 

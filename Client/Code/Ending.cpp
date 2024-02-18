@@ -4,6 +4,7 @@
 #include "Export_System.h"
 #include "Export_Utility.h"
 
+#include "EndingBlackBack.h"
 #include "EndingBack.h"
 #include "GameEnd.h"
 #include "EndingHW.h"
@@ -28,6 +29,8 @@ HRESULT CEnding::Ready_Scene()
 
 Engine::_int CEnding::Update_Scene(const _float& fTimeDelta)
 {
+	m_pBlackBack->Update_GameObject(fTimeDelta);
+
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
 	if (GetAsyncKeyState('1'))
@@ -73,6 +76,11 @@ HRESULT CEnding::Ready_Layer_Environment(const _tchar * pLayerTag)
 	NULL_CHECK_RETURN(pLayer, E_FAIL);
 
 	Engine::CGameObject*		pGameObject = nullptr;
+
+	pGameObject = m_pBlackBack = CEndingBlackBack::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f, true);
+	NULL_CHECK_RETURN(pGameObject, E_FAIL);
+	FAILED_CHECK_RETURN(pLayer->Add_GameObject(L"BlackBackground", pGameObject), E_FAIL);
+	m_pBlackBack->Set_On();
 
 	//디바이스, x크기, y크기, x좌표, y좌표, x전체 크기, y전체 크기 (전체크기는 default 잡혀있음)
 	pGameObject =  CEndingBack::Create(m_pGraphicDev, WINCX, WINCY, 0.f, 0.f);
