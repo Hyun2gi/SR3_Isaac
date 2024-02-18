@@ -8,6 +8,7 @@ BEGIN(Engine)
 class CRcTex;
 class CTexture;
 class CTransform;
+class CShader;
 
 END
 
@@ -31,6 +32,9 @@ private:
 	Engine::CRcTex*		m_pBufferCom;
 	Engine::CTransform*	m_pTransformCom;
 	Engine::CTexture*	m_pTextureCom;
+	Engine::CShader* m_pShaderCom = { nullptr };
+
+	_float m_fAlpha = 0.f;
 
 public:
 	static CBlackBackground*		Create(LPDIRECT3DDEVICE9	pGraphicDev, 
