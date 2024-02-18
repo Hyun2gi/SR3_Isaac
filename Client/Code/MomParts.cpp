@@ -108,6 +108,7 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 		m_fCallLimit = (_float)m_iRandNum;
 
 		Change_State();
+		
 		Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 10.f, 20);
 
 		m_bCheckCreate = true;
@@ -124,6 +125,9 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 	if (m_bMstCreate) // 잡몹 생성 패턴
 	{
 		Create_Mst(m_vecCreatePos); // 이 함수가 엄청 많이 실행되는 경우가 있음
+
+		Engine::PlayEffect(L"summonsound.wav", SOUND_EFFECT_BOSS_STOPSUDDEN_SUB, 1.f);
+
 		m_bMstCreate = false;
 	}
 
@@ -265,7 +269,7 @@ void CMomParts::Motion_Change()
 void CMomParts::Set_RandNum()
 {
 	m_iRandNum = rand() % 6;
-	m_iRandNumMstCreate = rand() % 3;
+	m_iRandNumMstCreate = rand() % 5; // 3
 }
 
 void CMomParts::Change_State()

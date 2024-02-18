@@ -51,6 +51,7 @@ private:
 	_bool				m_bReduce;
 	_int				m_iRandNum;
 	_int				m_iPicNum;
+	_int				m_iAttackCount;
 	_float				m_fFrameSpeed = 1.f;
 
 	MOMSTATE			m_eState;
