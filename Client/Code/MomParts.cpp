@@ -33,7 +33,7 @@ HRESULT CMomParts::Ready_GameObject()
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->m_vScale = { 7.f, 12.f, 1.f };
 
-	m_iRandNum = 0;
+	m_iRandNum = 5;
 	m_iRandNumMstCreate = 0;
 
 	m_fCallLimit = 0.1f;
@@ -95,7 +95,10 @@ _int CMomParts::Update_GameObject(const _float& fTimeDelta)
 	if (!m_bCreate)
 	{
 		if (Check_Time(m_fSlowDelta))
+		{
 			Create_Start_Particle(3.f);
+			m_eCurState = MOM_DOOR;
+		}
 	}
 
 	Set_RandNum();

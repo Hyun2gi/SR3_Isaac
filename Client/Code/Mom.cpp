@@ -278,6 +278,37 @@ void CMom::Mom_Default()
 			m_pTransformCom->Set_Pos(iX, 50.f, iZ);
 
 			m_eState = MOM_ATTACK;
+#pragma region Attack Sound
+			srand((unsigned)time(NULL));
+			int iNum = rand() % 6;
+
+			if (iNum == 0)
+			{
+				Engine::PlayEffect(L"Mom_Attack.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+			}
+			else if (iNum == 1)
+			{
+				Engine::PlayEffect(L"Mom_Attack2.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+			}
+			else if (iNum == 2)
+			{
+				Engine::PlayEffect(L"Mom_Attack3.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+			}
+			else if (iNum == 3)
+			{
+				Engine::PlayEffect(L"Mom_Attack4.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+			}
+			else if (iNum == 4)
+			{
+				Engine::PlayEffect(L"MOM_grunt 2.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+			}
+			else if (iNum == 5)
+			{
+				Engine::PlayEffect(L"MOM_grunt 3.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+			}
+#pragma endregion Attack Sound
+
+
 		}
 	}
 	else if (MOM_WAIT == m_eState)
@@ -427,4 +458,7 @@ CMom* CMom::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CMom::Free()
 {
 	__super::Free();
+
+	Safe_Release<CShadow*>(m_pShadow);
+	m_pShadow = nullptr;
 }

@@ -25,9 +25,9 @@ HRESULT CNormalFly::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
 	m_pTransformCom->Set_Pos(0.f, 5.f, 0.f);
-	m_pTransformCom->m_vScale = { 0.6f, 0.6f, 0.6f };
+	m_pTransformCom->m_vScale = { 0.6f, 0.6f, 0.6f }; // 0.6
 
-	m_iHp = 3;
+	m_iHp = 1;
 
 	m_fCallLimit = 0.1f;
 	m_fSpeed = 1.f;
@@ -40,7 +40,7 @@ HRESULT CNormalFly::Ready_GameObject()
 	m_iPicNum = 0;
 	m_bDeadWait = false;
 
-	m_eMstType = MONSTER_TYPE_END;
+	m_eMstType = MONSTER_TYPE_END; 
 
 	return S_OK;
 }
@@ -83,7 +83,6 @@ _int CNormalFly::Update_GameObject(const _float& fTimeDelta)
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
-	//m_pCalculCom->Compute_Vill_Matrix_X(m_pTransformCom);
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
