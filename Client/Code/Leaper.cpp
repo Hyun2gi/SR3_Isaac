@@ -102,6 +102,7 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 		m_eCurState = LEAPER_UP;
 		m_bJump = true;
 		Check_TargetPos();
+		Engine::PlayEffect(L"Fetus_Jump_0.mp3", SOUND_EFFECT_MON_STOPSUDDEN_SUB, 0.8f);
 	}
 
 	if (m_bJump && !m_bEpicTime)

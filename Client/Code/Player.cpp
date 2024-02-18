@@ -528,7 +528,7 @@ void CPlayer::Set_BulletType(int _bullet)
 		break;
 	case 2:
 		m_eCurBulletState = P_BULLET_BRIMSTONE;
-		m_fAttackSpeed = 120;
+		m_fAttackSpeed = 100;
 		break;
 	case 3:
 		m_eCurBulletState = P_BULLET_EPIC;
@@ -1578,7 +1578,7 @@ void CPlayer::Bullet_Change()
 			m_fAttackSpeed = 20;
 			break;
 		case P_BULLET_BRIMSTONE:
-			m_fAttackSpeed = 120;
+			m_fAttackSpeed = 100;
 			break;
 		case P_BULLET_EPIC:
 			m_fAttackSpeed = 80;

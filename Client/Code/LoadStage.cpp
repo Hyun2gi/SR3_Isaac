@@ -2315,6 +2315,16 @@ HRESULT CLoadStage::Door_Collision()
 						//도플방
 						CPlayer::GetInstance()->Set_StartPos(_vec3(27.8, 0, 3));
 					}
+					else if (iStageKey == 3)
+					{
+						// 아케이드방
+						CPlayer::GetInstance()->Set_StartPos(_vec3(VTXCNTX / 2, 0, 10));
+					}
+					else if (iStageKey == 9)
+					{
+						// 악마방
+						CPlayer::GetInstance()->Set_StartPos(_vec3(VTXCNTX / 2 + 1, 0, 10));
+					}
 					else
 					{
 						CPlayer::GetInstance()->Set_StartPos(startpos);

@@ -142,12 +142,18 @@ void CMonstro::LateUpdate_GameObject()
 		m_bHit = false;
 		m_bHitColor = true;
 
+		if (m_iHp % 80 == 0) // hp 감소 시 주기적으로 피격 소리
+		{
+			Engine::PlayEffect(L"Monster_cry1.mp3", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f);
+		}
+
 		if (0 >= m_iHp)
 		{
 			m_eCurState = MONSTRO_DEAD;
 			m_pTransformCom->m_vInfo->y = CENTERY;
 			m_bDeadWait = true;
 			Engine::StopSound(SOUND_BGM);
+			Engine::PlayEffect(L"Monster_cry1.mp3", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f);
 			Engine::PlayEffect(L"BossDead.ogg", SOUND_BGM, 1.0f);
 
 			m_pTransformCom->Get_Info(INFO_POS, &m_vDeadPos);

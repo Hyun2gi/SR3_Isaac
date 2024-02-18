@@ -88,7 +88,7 @@ _int CPlayerLeg::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_eCurLegState == P_LEG_FRONT)
 	{
-		playerPos += (playerLookDir *0.2);
+		playerPos += (playerLookDir *0.3);
 	}
 	else if (m_eCurLegState == P_LEG_BACK)
 	{
@@ -96,20 +96,33 @@ _int CPlayerLeg::Update_GameObject(const _float& fTimeDelta)
 	}
 	else if (m_eCurLegState == P_LEG_LEFT) 
 	{
-		playerPos += (playerLookDir * 0.02);
-		playerPos += (legRightDir *0.02);
+		playerPos += (playerLookDir * 0.04);
+		playerPos += (legRightDir *0.03);
 		//playerPos += (-playerRightDir * 0.2);
 	}
 	else if (m_eCurLegState == P_LEG_RIGHT)
 	{
 		/*playerPos += (playerLookDir * 0.01);
 		playerPos += (playerRightDir * 0.1);*/
-		playerPos += (playerLookDir * 0.02);
-		playerPos += (legRightDir * 0.02);
+		playerPos += (playerLookDir * 0.04);
+		playerPos += (legRightDir * 0.03);
 	}
 	else if (m_eCurLegState == P_LEG_FRONT_IDLE)
 	{
-		playerPos += (playerLookDir / 20);
+		playerPos += (playerLookDir * 0.3);
+	}
+	else if (m_eCurLegState == P_LEG_NO_SHOW)
+	{
+		// ATTACKED
+		_vec3 vDir, vPos;
+		vDir = _vec3(playerLookDir.x, 0, playerLookDir.z);
+		vDir *= -1;
+		D3DXVec3Normalize(&vDir, &vDir);
+
+		m_pTransformCom->Get_Info(INFO_POS, &vPos);
+
+		m_pTransformCom->Move_Pos(&vDir, 3, fTimeDelta * 3);
+
 	}
 	
 
