@@ -148,7 +148,13 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 
 void CSlotMC::LateUpdate_GameObject()
 {
+	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+
 	__super::LateUpdate_GameObject();
+
+	_vec3	vPos;
+	m_pTransformCom->Get_Info(INFO_POS, &vPos);
+	__super::Compute_ViewZ(&vPos);
 
 	if (m_bHit)
 	{
@@ -190,9 +196,9 @@ HRESULT CSlotMC::Add_Component()
 {
 	CComponent* pComponent = nullptr;
 
-	pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(Engine::Clone_Proto(L"Proto_RcTex"));
-	NULL_CHECK_RETURN(pComponent, E_FAIL);
-	m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
+	//pComponent = m_pBufferCom = dynamic_cast<CRcTex*>(Engine::Clone_Proto(L"Proto_RcTex"));
+	//NULL_CHECK_RETURN(pComponent, E_FAIL);
+	//m_mapComponent[ID_STATIC].insert({ L"Proto_RcTex", pComponent });
 
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
@@ -273,7 +279,7 @@ void CSlotMC::Create_Card()
 	{
 		CSlotCard* pCard = CSlotCard::Create(m_pGraphicDev);
 		pCard->Set_MyLayer(m_vecMyLayer[0]);
-		pCard->Get_TransformCom()->Set_Pos(vPos.x + fScalar, vPos.y - SCALAR_Y, vPos.z - 0.2f);
+		pCard->Get_TransformCom()->Set_Pos(vPos.x + fScalar, vPos.y - SCALAR_Y, vPos.z - 0.01f);
 		pCard->Set_Index(i);
 		m_pCardList.push_back(pCard);
 		fScalar += 0.73f;

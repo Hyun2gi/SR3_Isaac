@@ -70,13 +70,13 @@ _int CSlotCard::Update_GameObject(const _float& fTimeDelta)
 		Setting_Result();
 	}
 
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
-
 	return 0;
 }
 
 void CSlotCard::LateUpdate_GameObject()
 {
+	//Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+
 	if(CARD_RANDOM == m_eCurState)
 		Motion_Change();
 
