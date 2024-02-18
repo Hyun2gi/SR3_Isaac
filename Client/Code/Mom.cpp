@@ -458,4 +458,7 @@ CMom* CMom::Create(LPDIRECT3DDEVICE9 pGraphicDev)
 void CMom::Free()
 {
 	__super::Free();
+
+	Safe_Delete<CShadow*>(m_pShadow);
+	m_pShadow = nullptr;
 }
