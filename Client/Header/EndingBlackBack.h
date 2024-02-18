@@ -28,6 +28,7 @@ public:
 	void	Set_On() { m_bOff = false; }
 	void	Set_Off() { m_bOff = true; }
 
+	const _float& Get_Alpha() { return m_fAlpha; }
 
 private:
 	HRESULT			Add_Component();
