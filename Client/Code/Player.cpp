@@ -190,7 +190,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		{
 			if (m_PlayerBulletList.empty() && m_bBrimeStoneShoot)
 			{
-				Engine::PlayEffect(L"blood laser long.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 0.8f);
+				Engine::PlayEffect(L"blood laser long.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 0.4f);
 				// bullet 추가하기
 				for (int i = 0; i < 50; i++)
 				{

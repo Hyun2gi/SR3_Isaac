@@ -59,6 +59,8 @@ HRESULT CMom::Ready_GameObject()
 	m_iScaleCountX = 0;
 	m_iScaleCountY = 0;
 
+	m_iAttackCount = 0;
+
 	m_bReduce = true;
 	
 	m_eState = MOM_IDLE;
@@ -136,11 +138,17 @@ void CMom::LateUpdate_GameObject()
 		m_bHit = false;
 		m_bHitColor = true;
 
+		if (m_iHp % 80 == 0) // hp 감소 시 주기적으로 피격 소리
+		{
+			Engine::PlayEffect(L"Mom_Hit.wav", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f);
+		}
+
 		if (0 >= m_iHp)
 		{
-			// 아이작을 부르는 소리를 지르며 아예 사라짐
 			m_iHp = 0;
 			m_bDead = true;
+
+			Engine::PlayEffect(L"Mom_Dead.wav", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f); // 비명 소리
 		}
 	}
 
@@ -227,6 +235,8 @@ void CMom::Attack(const _float& fTimeDelta)
 			m_eState = MOM_WAIT;
 			m_bScaleChange = true; // 애니메이션 조정
 			m_pShadow->Set_Render(false);
+
+			Engine::PlayEffect(L"death burst.wav", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f); // 바닥 쿵
 		}
 		else
 		{
@@ -242,6 +252,13 @@ void CMom::Attack(const _float& fTimeDelta)
 		{
 			m_eState = MOM_IDLE;
 			vPos.y = 200.f;
+
+			++m_iAttackCount;
+
+			if (m_iAttackCount % 3 == 0) // 3번에 한 번씩 웃음 소리
+			{
+				Engine::PlayEffect(L"Mom_Laugh.wav", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f);
+			}
 		}
 		else
 			vPos.y += m_fSpeed;
@@ -284,31 +301,29 @@ void CMom::Mom_Default()
 
 			if (iNum == 0)
 			{
-				Engine::PlayEffect(L"Mom_Attack.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+				Engine::PlayEffect(L"Mom_Attack.wav", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f);
 			}
 			else if (iNum == 1)
 			{
-				Engine::PlayEffect(L"Mom_Attack2.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+				Engine::PlayEffect(L"Mom_Attack2.wav", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f);
 			}
 			else if (iNum == 2)
 			{
-				Engine::PlayEffect(L"Mom_Attack3.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+				Engine::PlayEffect(L"Mom_Attack3.wav", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f);
 			}
 			else if (iNum == 3)
 			{
-				Engine::PlayEffect(L"Mom_Attack4.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+				Engine::PlayEffect(L"Mom_Attack4.wav", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f);
 			}
 			else if (iNum == 4)
 			{
-				Engine::PlayEffect(L"MOM_grunt 2.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+				Engine::PlayEffect(L"MOM_grunt 2.wav", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f);
 			}
 			else if (iNum == 5)
 			{
-				Engine::PlayEffect(L"MOM_grunt 3.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
+				Engine::PlayEffect(L"MOM_grunt 3.wav", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f);
 			}
 #pragma endregion Attack Sound
-
-
 		}
 	}
 	else if (MOM_WAIT == m_eState)
