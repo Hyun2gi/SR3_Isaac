@@ -45,7 +45,7 @@ HRESULT CMom::Ready_GameObject()
 	m_pTransformCom->m_vScale = { ORIGIN_SCALE, ORIGIN_SCALE, ORIGIN_SCALE };
 	m_pTransformCom->Set_Pos(10.f, 50.f, 10.f);
 
-	m_iHp = 1; // 645
+	m_iHp = 645; // 645
 
 	m_iRandNum = 0;
 	m_iPicNum = 1;
