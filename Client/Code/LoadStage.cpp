@@ -146,6 +146,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 		}
 	}
 
+
 	_int	iExit = __super::Update_Scene(fTimeDelta);
 
 	CPlayer::GetInstance()->Update_GameObject(fTimeDelta);
@@ -203,6 +204,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 			if (m_iCurStageKey == 8)
 			{
 				// 도플방일때
+				CPlayer::GetInstance()->Set_OnDople();
 			}
 			else
 			{
