@@ -21,9 +21,9 @@ CDople::~CDople()
 HRESULT CDople::Ready_GameObject()
 {
 	FAILED_CHECK_RETURN(Add_Component(), E_FAIL);
-	m_pTransformCom->m_vScale = { 2.f, 2.f, 2.f };
+	m_pTransformCom->m_vScale = { 1.5f, 1.5f, 1.5f };
 	m_pTransformCom->Set_Pos(0.f, 1.5f, 0.f);
-	m_pTransformCom->m_vAngle = { 90,0,0 };
+	m_pTransformCom->m_vAngle = { D3DXToRadian(90.f), 0.f, 0.f };
 
 	m_fCallLimit = 0.1f;
 	m_fSpeed = 10.f;
@@ -52,6 +52,8 @@ _int CDople::Update_GameObject(const _float& fTimeDelta)
 
 	if (DP_DEAD == m_eCurState)
 	{
+		m_pTransformCom->m_vScale = { 1.2f, 1.2f, 1.2f };
+
 		if(1.f != m_fFrame)
 			m_fFrame += m_iPicNum * m_fSlowDelta * m_fFrameSpeed;
 
@@ -69,8 +71,6 @@ _int CDople::Update_GameObject(const _float& fTimeDelta)
 	if (m_bDead)
 		m_eCurState = DP_DEAD;
 
-	Face_Camera();
-
 	CGameObject::Update_GameObject(m_fSlowDelta);
 
 	if (!m_bDead)
@@ -78,8 +78,6 @@ _int CDople::Update_GameObject(const _float& fTimeDelta)
 		m_eCurState = DP_IDLE;
 		Follow_Player(fTimeDelta);
 	}
-
-	m_pCalculCom->Compute_Vill_Matrix(m_pTransformCom);
 
 	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
 
@@ -235,24 +233,40 @@ void CDople::Follow_Player(const _float& fTimeDelta)
 
 	if (DP_WALK == m_eCurState)
 	{
-		vDir = (vPlayerDir * -1.f);
-		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+		//vDir = (vPlayerDir * -1.f);
+		//m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+
+		vPos.z -= m_fSpeed * fTimeDelta;
+
+		m_pTransformCom->Set_Pos(vPos);
 	}
 	else if (DP_BACK == m_eCurState)
 	{
 		vDir = vPlayerDir;
 		//vDir = (vPlayerDir * -1.f); // Spike 충돌 테스트용
-		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+		//m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+
+		vPos.z += m_fSpeed * fTimeDelta;
+
+		m_pTransformCom->Set_Pos(vPos);
 	}
 	else if (DP_LEFT == m_eCurState)
 	{
-		vDir = -vPlayerRight;
-		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+		//vDir = -vPlayerRight;
+		//m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+
+		vPos.x -= m_fSpeed * fTimeDelta;
+
+		m_pTransformCom->Set_Pos(vPos);
 	}
 	else if (DP_RIGHT == m_eCurState)
 	{
-		vDir = vPlayerRight;
-		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);
+		/*vDir = vPlayerRight;
+		m_pTransformCom->Move_Pos(&vDir, m_fSpeed, fTimeDelta);*/
+
+		vPos.x += m_fSpeed * fTimeDelta;
+
+		m_pTransformCom->Set_Pos(vPos);
 	}
 }
 
