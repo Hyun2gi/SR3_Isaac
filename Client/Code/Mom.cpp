@@ -459,6 +459,6 @@ void CMom::Free()
 {
 	__super::Free();
 
-	Safe_Delete<CShadow*>(m_pShadow);
+	Safe_Release<CShadow*>(m_pShadow);
 	m_pShadow = nullptr;
 }
