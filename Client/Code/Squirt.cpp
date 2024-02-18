@@ -149,6 +149,7 @@ void CSquirt::LateUpdate_GameObject()
 
 	if (m_bHit)
 	{
+		Engine::PlayEffect(L"death burst small 3.wav", SOUND_EFFECT_MON_STOPSUDDEN, 0.8f);
 		m_iHp -= 1;
 
 		Hit_PushBack(m_fSlowDelta);
@@ -158,7 +159,10 @@ void CSquirt::LateUpdate_GameObject()
 		m_bHitColor = true;
 
 		if (0 >= m_iHp)
+		{
 			m_bDead = true;
+		}
+		
 	}
 
 	if (m_bHitColor)

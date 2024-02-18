@@ -66,7 +66,7 @@ _int CLeaper::Update_GameObject(const _float& fTimeDelta)
 	if (m_fSoundTimer < 4)
 	{
 		m_fSoundTimer = 0;
-		Engine::PlayEffect(L"pacer_walking.wav", SOUND_EFFECT_MON_STOPSUDDEN, 1.3f);
+		Engine::PlayEffect(L"pacer_walking.wav", SOUND_EFFECT_MON_STOPSUDDEN_SUB, 1.3f);
 	}
 
 	m_pTargetTransCom = dynamic_cast<CTransform*>(CPlayer::GetInstance()->Get_Component_Player(ID_DYNAMIC, L"Proto_Transform"));
@@ -180,7 +180,7 @@ void CLeaper::LateUpdate_GameObject()
 		m_iHp -= 1;
 
 		Hit_PushBack(m_fSlowDelta);
-		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.05f, 5);
+		Engine::Create_Burst(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.07f, 10);
 
 		m_bHit = false;
 		m_bHitColor = true;
@@ -377,6 +377,7 @@ void CLeaper::JumpTo_Player(const _float& fTimeDelta)
 			m_eCurState = LEAPER_IDLE;
 			m_bJump = false;
 			m_pShadow->Set_Render(false);
+			Engine::PlayEffect(L"Fetus_Land_1.mp3", SOUND_EFFECT_MON_STOPSUDDEN_SUB, 1.3f);
 		}
 	}
 	m_pTransformCom->Set_Pos(vPos);
