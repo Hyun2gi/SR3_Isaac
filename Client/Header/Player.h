@@ -299,6 +299,10 @@ private:
 
 	bool				m_bMapCinemachine;
 
+	// 도플일때
+	bool				m_bDople;
+
+
 	// 한번 죽은경우 체크
 	bool				m_bAlreadyDead;
 
