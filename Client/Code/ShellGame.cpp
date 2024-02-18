@@ -56,6 +56,14 @@ _int CShellGame::Update_GameObject(const _float& fTimeDelta)
 {
 	CGameObject::Update_GameObject(fTimeDelta);
 
+	if (!m_bCreate)
+	{
+		if (Check_Time(fTimeDelta))
+			Create_Start_Particle(m_iRandNum % 5 + 2);
+
+		m_bCreate = true;
+	}
+
 	if (m_pShellNpc == nullptr)
 		Create_NPC();
 	else

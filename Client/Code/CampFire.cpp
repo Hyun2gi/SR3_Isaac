@@ -55,7 +55,12 @@ _int CCampFire::Update_GameObject(const _float& fTimeDelta)
 	{
 		Create_Wood();
 		Create_Fire();
+
+		if (Check_Time(fTimeDelta))
+			Create_Start_Particle(m_iRandNum % 5 + 2);
+
 		m_bCreate = true;
+
 	}
 
 	if (m_pWood != nullptr)

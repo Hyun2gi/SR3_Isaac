@@ -72,6 +72,9 @@ _int CSlotMC::Update_GameObject(const _float& fTimeDelta)
 	{
 		Create_Machine();
 		Create_Card();
+
+		Create_Start_Particle(m_iRandNum % 5 + 2);
+
 		m_bCreate = true;
 	}
 

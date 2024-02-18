@@ -55,6 +55,13 @@ _int CShop::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
+	if (!m_bCreate)
+	{
+		Create_Start_Particle(m_iRandNum % 5 + 2);
+
+		m_bCreate = true;
+	}
+
 	Create_Obj();
 
 	Check_Sell();
