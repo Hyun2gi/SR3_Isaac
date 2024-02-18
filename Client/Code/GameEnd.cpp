@@ -39,22 +39,26 @@ Engine::_int CGameEnd::Update_GameObject(const _float& fTimeDelta)
 	if (!m_bVisible) return 0;
 
 	//점점 보이게
-	if (!m_bOff && 0 < m_fAlpha)
-	{
-		m_fAlpha -= 0.5f * fTimeDelta;
-	}
-	//점점 안보이게
-	else if (m_bOff && 1 > m_fAlpha)
+	if (m_bOn && 1 > m_fAlpha)
 	{
 		m_fAlpha += 0.5f * fTimeDelta;
+		
+	}
+	//점점 안보이게
+	else if (!m_bOn && 0 < m_fAlpha)
+	{
+		m_fAlpha -= 0.5f * fTimeDelta;
+
+		if (0 >= m_fAlpha)
+		{
+			m_bVisible = false;
+		}
 	}
 
 	// 알파가 1보다 크거나 같으면 대기 타이머를 시작한다
 	if (1 <= m_fAlpha)	m_fWaitTimer -= fTimeDelta;
 
 	if (0 >= m_fWaitTimer)	Set_Off();
-
-
 
 	m_fCurFrame += m_iEndFrame * fTimeDelta * m_fAnimSpeed;
 
