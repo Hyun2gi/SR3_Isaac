@@ -147,6 +147,7 @@ void CMonstro::LateUpdate_GameObject()
 			m_eCurState = MONSTRO_DEAD;
 			m_pTransformCom->m_vInfo->y = CENTERY;
 			m_bDeadWait = true;
+			Engine::StopSound(SOUND_BGM);
 			Engine::PlayEffect(L"BossDead.ogg", SOUND_BGM, 1.0f);
 
 			m_pTransformCom->Get_Info(INFO_POS, &m_vDeadPos);

@@ -26,7 +26,8 @@ private:
 	// BACKWALK : µÞÅë¼öº¸¸é¼­ ½ô
 	// SHOOTWALK : ½î´Â ÀÚ¼¼ (¸Ó¸®ÅëÀÌ ÀÛ¾ÆÁü)
 	// GOOD : µûºÀ
-	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_BACKIDLE, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_SHOOTIDLE,  P_THUMBS_UP, P_GET_BAD_ITEM, P_ATTACKED, P_CRY_LIE, P_CRY_OPEN_EYE, P_END  };
+	enum PLAYERID { P_IDLE, P_IDLEWALK, P_BACKWALK, P_BACKIDLE, P_LEFTWALK, P_RIGHTWALK, P_SHOOTWALK, P_SHOOTIDLE,  P_THUMBS_UP, P_GET_BAD_ITEM, P_ATTACKED, P_CRY_LIE, P_CRY_OPEN_EYE,
+		P_DIE, P_END  };
 	
 	enum BULLETID
 	{ P_BULLET_IDLE, P_BULLET_BRIMSTONE, P_BULLET_EPIC, P_BULLET_END };
@@ -150,6 +151,7 @@ public:
 	bool		Get_Attacked() { if (m_eCurState == P_ATTACKED) { return true; } else { return false; } }
 
 	void		Set_StartPos(_vec3 start) { m_vStartPos = start; m_bStartScene = true; }
+	void		Set_StartAngle();
 
 	void		Set_StartCameraMouse();
 
@@ -297,7 +299,8 @@ private:
 
 	bool				m_bMapCinemachine;
 
-	
+	// ÇÑ¹ø Á×Àº°æ¿ì Ã¼Å©
+	bool				m_bAlreadyDead;
 
 private:
 	list<CGameObject*>	m_PlayerBulletList;
