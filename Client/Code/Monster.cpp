@@ -112,7 +112,7 @@ void CMonster::Create_Start_Particle(_float fCallLimit)
 {
 	_vec3 vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
-	Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 0.7f, 5);
+	Engine::Create_Explosion(m_pGraphicDev, *(m_pTransformCom->Get_WorldMatrix()), 2.f, 2, 2.f, L"../Bin/Resource/Texture/Particle/dust.png");
 	m_fCallLimit = fCallLimit;
 	m_bCreate = true;
 }
