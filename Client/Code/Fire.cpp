@@ -122,6 +122,7 @@ void CFire::Hit()
 	}
 	else
 	{
+		Engine::PlayEffect(L"firedeath hiss.wav", SOUND_EFFECT_OBJ_STOPSUDDEN, 0.8f);
 		// 아이템 드랍
 		m_bDead = true;
 		Set_Item_Value();

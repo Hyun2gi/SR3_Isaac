@@ -162,7 +162,7 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 
 	// 맨 처음 방에서는 player에서 bgm 나와야해서 player update보다 순서 뒤로
 	// 비지엠 인트로 먼저 재생
-	BGM_INTRO_START();
+	//BGM_INTRO_START();
 	
 	
 
@@ -248,12 +248,15 @@ Engine::_int CLoadStage::Update_Scene(const _float& fTimeDelta)
 	//연출이 필요 없고 생성되지 않은 상황이면 한번에 생성시켜준다.
 	else if (!m_bIsLoadDataCreated)
 	{
+
 		FAILED_CHECK_RETURN(Ready_Layer_GameObject(L"MapObj"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameMonster(L"GameMst"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_GameItem(L"GameItem"), E_FAIL);
 		FAILED_CHECK_RETURN(Ready_Layer_Door(L"GameDoor"), E_FAIL);
 		m_bIsLoadDataCreated = true;
 
+		// 플레이어 무적 시간 종료 및 플레이어로 돌아가기
+		CPlayer::GetInstance()->Set_MapCinemachine(false);
 
 		if (m_iCurStageKey == 8)
 		{
@@ -2123,7 +2126,7 @@ void CLoadStage::BGM_INTRO_START()
 
 void CLoadStage::BGM_START()
 {
-	if (!m_bBGMIntro && m_bBGM)
+	/*if (!m_bBGMIntro && m_bBGM)
 	{
 		StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
 		string roomtype = info.m_strTheme;
@@ -2160,7 +2163,7 @@ void CLoadStage::BGM_START()
 				m_bBGM = false;
 			}
 				
-			//arcaderoom_loop.ogg
+			arcaderoom_loop.ogg
 		}
 		else if (roomtype == "Boss")
 		{
@@ -2172,6 +2175,62 @@ void CLoadStage::BGM_START()
 			
 		}
 		
+	}*/
+
+	if (m_bBGM)
+	{
+		StageInfo info = CStageLoadMgr::GetInstance()->Get_StageInfo(m_iCurStageKey);
+		string roomtype = info.m_strTheme;
+		if (roomtype == "Normal")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO) && !CPlayer::GetInstance()->Get_Cry_Anim())
+			{
+				Engine::StopSound(SOUND_BGM);
+				Engine::PlayBGM(L"diptera sonata(basement).ogg", 0.8f);
+				m_bBGM = false;
+			}
+		}
+		else if (roomtype == "Treasure")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
+			{
+				Engine::StopSound(SOUND_BGM);
+				Engine::PlayBGM(L"diptera sonata(basement).ogg", 0.8f);
+				m_bBGM = false;
+			}
+		}
+		else if (roomtype == "Devil")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
+			{
+				Engine::StopSound(SOUND_BGM);
+				Engine::PlayBGM(L"the calm.ogg", 0.8f);
+				m_bBGM = false;
+			}
+
+		}
+		else if (roomtype == "Arcade")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
+			{
+				Engine::StopSound(SOUND_BGM);
+				Engine::PlayBGM(L"arcaderoom_loop.ogg", 0.8f);
+				m_bBGM = false;
+			}
+
+			//arcaderoom_loop.ogg
+		}
+		else if (roomtype == "Boss")
+		{
+			if (!Engine::CheckIsPlaying(SOUND_BGM_INTRO))
+			{
+				Engine::StopSound(SOUND_BGM);
+				Engine::PlayEffect(L"basic boss fight.ogg", SOUND_BGM, 0.8f);
+				m_bBGM = false;
+			}
+
+		}
+
 	}
 }
 

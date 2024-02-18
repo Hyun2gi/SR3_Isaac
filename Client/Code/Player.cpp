@@ -93,6 +93,7 @@ HRESULT CPlayer::Ready_GameObject(LPDIRECT3DDEVICE9 pGraphicDev)
 		m_pLeg = CPlayerLeg::Create(m_pGraphicDev);
 		m_bCameraShaking = false;
 		m_fUnbeatableTimeFix = 1.5f;
+		m_bAlreadyDead = false;
 	}
 	else
 	{
@@ -417,6 +418,10 @@ HRESULT CPlayer::Add_Component()
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_LIE_CRY_OPEN_EYE", pComponent });
 
+	pComponent = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_DIE"));
+	NULL_CHECK_RETURN(pComponent, E_FAIL);
+	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_DIE", pComponent });
+
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_PlayerTexture_IDLE"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_STATIC].insert({ L"Proto_PlayerTexture_IDLE", pComponent });
@@ -521,7 +526,7 @@ void CPlayer::Set_BulletType(int _bullet)
 		break;
 	case 2:
 		m_eCurBulletState = P_BULLET_BRIMSTONE;
-		m_fAttackSpeed = 200;
+		m_fAttackSpeed = 120;
 		break;
 	case 3:
 		m_eCurBulletState = P_BULLET_EPIC;
@@ -773,11 +778,25 @@ void CPlayer::Set_Attacked()
 			Engine::PlayEffect(L"Hit_3.wav", SOUND_EFFECT_PLAYER_STOPSUDDEN, 1.f);
 		}
 		
-
+		
 		if (m_fHp >= 0.5)
 		{
 			m_fHp -= 0.5;
 		}
+
+		// 아이작일때만
+		if (m_fHp == 0 && m_eCurPlayerVer == P_ISAAC && m_bAlreadyDead == false)
+		{
+			m_eCurState = P_DIE;
+			m_bUnbeatable = true;
+			m_bKeyBlock = true;
+			m_fDelayTime = 0.f;
+			m_bAlreadyDead = true;
+			return;
+		}
+
+
+		m_fUnbeatableTime = 0;
 		m_bUnbeatable = true;
 		m_eCurState = P_ATTACKED;
 		// 키막기
@@ -787,6 +806,11 @@ void CPlayer::Set_Attacked()
 		// 아자젤은 피격당할때 다리 삭제되도록
 		m_iAzaelStateSet = 5;
 	}
+}
+
+void CPlayer::Set_StartAngle()
+{
+	m_pTransformCom->m_vAngle = { 0,0,0 };
 }
 
 void CPlayer::Set_StartCameraMouse()
@@ -1391,6 +1415,12 @@ void CPlayer::Motion_Change()
 				m_bKeyBlock = true; //key 막기
 				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_LIE_CRY_OPEN_EYE"));
 				break;
+			case P_DIE:
+				m_fPicNum = 1;
+				m_fSpriteSpeed = 1.f;
+				m_bKeyBlock = true; //key 막기
+				m_pTextureCom = dynamic_cast<CTexture*>(Get_Component_Player(ID_STATIC, L"Proto_PlayerTexture_DIE"));
+				break;
 			}
 		}
 		else if (m_eCurPlayerVer == P_AZAZEL)
@@ -1461,7 +1491,7 @@ void CPlayer::Bullet_Change()
 			m_fAttackSpeed = 20;
 			break;
 		case P_BULLET_BRIMSTONE:
-			m_fAttackSpeed = 200;
+			m_fAttackSpeed = 120;
 			break;
 		case P_BULLET_EPIC:
 			m_fAttackSpeed = 80;
@@ -1486,6 +1516,28 @@ bool CPlayer::Check_Time(const _float& fTimeDelta)
 
 void CPlayer::Specific_Motion(const _float& fTimeDelta)
 {
+	if (m_eCurState == P_DIE)
+	{
+		m_fDelayTime += fTimeDelta;
+
+		if (m_fDelayTime > 0.8)
+		{
+			m_fFrame = 1;
+		}
+
+		if (m_fDelayTime > 2)
+		{
+			m_eCurState = P_IDLE;
+			m_fDelayTime = 0; // 딜레이 시간 초기화
+			m_fFrame = 0.f;
+			m_bKeyBlock = false; // key 입력 활성화
+			m_bUnbeatable = false;
+			m_fHp = 3;
+			//dynamic_cast<CDynamicCamera*>(m_pCamera)->OnMoveToOriginPos();
+		}
+	}
+
+
 	if (m_eCurState == P_CRY_LIE)
 	{
 		m_fDelayTime += fTimeDelta;
@@ -1636,12 +1688,14 @@ void CPlayer::Specific_Motion(const _float& fTimeDelta)
 
 void CPlayer::Check_UnBeatable_Time(const _float& fTimeDelta)
 {
-	if (m_bUnbeatable)
+	// 죽을때는 무적시간 COUNT하지 않기
+	if (m_bUnbeatable && m_eCurState != P_DIE)
 	{
 		m_fUnbeatableTime += fTimeDelta;
 
 		// 무적시간 조절
 		// cinemachine이 아니라 그냥 hurt
+		// && !m_bMapCinemachine
 		if (m_fUnbeatableTime >= m_fUnbeatableTimeFix && !m_bMapCinemachine)
 		{
 			m_bUnbeatable = false;

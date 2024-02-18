@@ -556,13 +556,13 @@ void CDynamicCamera::ShakeByPosition(const _float& fTimeDelta)
 				}
 				else
 				{
-					D3DXVECTOR3 _movevec;
-					// fTimeDelta에 50 곱하면 느림..
-					D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, 1);
+					//D3DXVECTOR3 _movevec;
+					//// fTimeDelta에 50 곱하면 느림..
+					//D3DXVec3Lerp(&_movevec, &m_vEye, &m_vGoalPosition, 1);
 
-					m_vEye = _movevec;
-					m_vAt = m_vEye + m_vWorldAtDir;
-					//m_vAt = _movevec;
+					//m_vEye = _movevec;
+					//m_vAt = m_vEye + m_vWorldAtDir;
+					////m_vAt = _movevec;
 				}
 			}
 			
@@ -830,7 +830,7 @@ void CDynamicCamera::MoveToTarget(const _float& fTimeDelta)
 			if (m_bStart)
 			{
 				m_bStart = false;
-				Engine::StopSound(SOUND_BGM);
+				//Engine::StopSound(SOUND_BGM);
 			}
 
 
@@ -1421,7 +1421,7 @@ void CDynamicCamera::Cinemachine_03_GoToIsaac()
 
 	startpos = m_vEye;
 
-	m_vEye = goalPos;
+	//m_vEye = goalPos;
 
 	// 0 : playerchase
 	OnMoveTargetCamera(m_vAt, 2.f, 3.f, goalPos, startpos, true, 0);
