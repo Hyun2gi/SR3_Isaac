@@ -2313,7 +2313,7 @@ HRESULT CLoadStage::Door_Collision()
 					if (iStageKey == 8)
 					{
 						//도플방
-						CPlayer::GetInstance()->Set_StartPos(_vec3(28.5, 0, 3));
+						CPlayer::GetInstance()->Set_StartPos(_vec3(27.8, 0, 3));
 					}
 					else
 					{

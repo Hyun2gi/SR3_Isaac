@@ -150,7 +150,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 	{
 		m_bStartAnim = false;
 		// 주석 없애기
-		//Set_Cry_Anim();
+		Set_Cry_Anim();
 	}
 
 	// 특정 모션 처리
