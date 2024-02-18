@@ -53,7 +53,7 @@ private:
 
 	_float				m_fAlpha = 0.f;
 
-	_float				m_fWaitTimer = 2.f;
+	_float				m_fWaitTimer = 3.5f;
 
 	_bool				m_bVisible = false;
 	_bool				m_bOn = false;
