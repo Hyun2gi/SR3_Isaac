@@ -2309,7 +2309,16 @@ HRESULT CLoadStage::Door_Collision()
 					CPlayer::GetInstance()->Set_Camera_Cinemachine_01();
 					// 중간에 스폰
 					startpos = _vec3(VTXCNTX / 2, 0, VTXCNTZ / 2);
-					CPlayer::GetInstance()->Set_StartPos(startpos);
+					
+					if (iStageKey == 8)
+					{
+						//도플방
+						CPlayer::GetInstance()->Set_StartPos(_vec3(28.5, 0, 3));
+					}
+					else
+					{
+						CPlayer::GetInstance()->Set_StartPos(startpos);
+					}
 				}
 				else
 				{
