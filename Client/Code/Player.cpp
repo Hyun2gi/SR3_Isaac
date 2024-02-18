@@ -870,6 +870,7 @@ void CPlayer::Set_OnDople()
 {
 	dynamic_cast<CDynamicCamera*>(m_pCamera)->Set_OnDople();
 	m_pTransformCom->m_vAngle = { 90,0,0 };
+	m_bKeyBlock = false;
 }
 
 void CPlayer::Set_OffDople()
@@ -923,12 +924,17 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
 			vPos += vDir * (m_fMoveSpeed)*fTimeDelta;
-
-			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			
+			if (m_eCurState == m_ePreState)
 			{
-				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+				if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+					&& vPos.x > vScale.x && vPos.z > vScale.z)
+				{
+					m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+				}
 			}
+
+			
 
 			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
 			{
@@ -955,11 +961,14 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
 			vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
-
-			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			
+			if (m_eCurState == m_ePreState)
 			{
-				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+				if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+					&& vPos.x > vScale.x && vPos.z > vScale.z)
+				{
+					m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+				}
 			}
 
 			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
@@ -984,14 +993,20 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_eCurState = P_LEFTWALK;
 			D3DXVec3Normalize(&vDir, &vDir);
 
+			
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
 			vPos += vDir * (-m_fMoveSpeed) * fTimeDelta;
 
-			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			if (m_eCurState == m_ePreState)
 			{
-				m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+				if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+					&& vPos.x > vScale.x && vPos.z > vScale.z)
+				{
+					m_pTransformCom->Move_Pos(&vDir, -m_fMoveSpeed, fTimeDelta);
+				}
 			}
+
+			
 
 			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
 			{
@@ -1016,13 +1031,17 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 			m_eCurState = P_RIGHTWALK;
 			D3DXVec3Normalize(&vDir, &vDir);
 
+			
 			m_pTransformCom->Get_Info(INFO_POS, &vPos);
 			vPos += vDir * (m_fMoveSpeed)*fTimeDelta;
-
-			if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
-				&& vPos.x > vScale.x && vPos.z > vScale.z)
+			
+			if (m_eCurState == m_ePreState)
 			{
-				m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+				if (vPos.x < VTXCNTX - vScale.x && vPos.z < VTXCNTX - vScale.z
+					&& vPos.x > vScale.x && vPos.z > vScale.z)
+				{
+					m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
+				}
 			}
 
 			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
