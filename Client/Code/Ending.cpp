@@ -36,8 +36,37 @@ Engine::_int CEnding::Update_Scene(const _float& fTimeDelta)
 	// 검은 배경이 투명해지면 다음 행동을 한다.
 	if (m_pBlackBack->Get_Alpha() <= 0.f)
 	{
-		pBack->Set_Off();
-		pBack->Set_Visible(true);
+		switch (m_iIndex)
+		{
+		case GAME_END:
+			if (!pBack->Get_Visible() && !pBack->Get_On() && 0 < pBack->Get_WaitTimer())
+			{
+				pBack->Set_Visible(true);
+				pBack->Set_On();
+			}
+			else if (!pBack->Get_Visible() && 0 >= pBack->Get_WaitTimer())
+			{
+				++m_iIndex;
+			}
+			break;
+		case HW:
+			if (!pHW->Get_Visible() && !pHW->Get_On())
+			{
+				pHW->Set_Visible(true);
+				pHW->Set_On();
+			}
+			else if (!pHW->Get_Visible() && 0 >= pHW->Get_WaitTimer())
+			{
+				++m_iIndex;
+			}
+			break;
+		case BM:
+			break;
+		case HJ:
+			break;
+		}
+
+
 	}
 
 	//if (GetAsyncKeyState('1'))

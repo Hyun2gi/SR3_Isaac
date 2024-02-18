@@ -26,9 +26,12 @@ public:
 	virtual void Render_GameObject()						 override;
 
 	void	Set_Visible(bool bVisible = false) { m_bVisible = bVisible; }
+	void	Set_On() { m_bOn = true; }
+	void	Set_Off() { m_bOn = false; }
 
-	void	Set_On() { m_bOff = false; }
-	void	Set_Off() { m_bOff = true; }
+	const _float&	Get_WaitTimer() { return m_fWaitTimer; }
+	const _bool&	Get_Visible() { return m_bVisible; }
+	const _bool&	Get_On() { return m_bOn; }
 
 private:
 	HRESULT			Add_Component();
@@ -53,7 +56,7 @@ private:
 	_float				m_fWaitTimer = 2.f;
 
 	_bool				m_bVisible = false;
-	_bool				m_bOff = false;
+	_bool				m_bOn = false;
 
 public:
 	static CGameEnd*		Create(LPDIRECT3DDEVICE9	pGraphicDev, 
