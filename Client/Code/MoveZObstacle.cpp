@@ -68,8 +68,15 @@ Engine::_int CMoveZObstacle::Update_GameObject(const _float& fTimeDelta)
 
 	if (m_bArrived)
 	{
-		Move(fTimeDelta);
-		Check_Wall_Collision();
+		if (0.5f < m_fDorpTimer)
+		{
+			Move(fTimeDelta);
+			Check_Wall_Collision();
+		}
+		else
+		{
+			m_fDorpTimer += fTimeDelta;
+		}
 	}
 
 	return 0;
@@ -112,7 +119,7 @@ HRESULT CMoveZObstacle::Add_Component()
 	pComponent = m_pTransformCom = dynamic_cast<CTransform*>(Engine::Clone_Proto(L"Proto_Transform"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
 	m_mapComponent[ID_DYNAMIC].insert({ L"Proto_Transform", pComponent });
-	m_pTransformCom->m_vInfo[INFO_POS] = { 10, 1, 10 };
+	m_pTransformCom->m_vInfo[INFO_POS] = { 10, 50, 10 };
 
 	pComponent = m_pTextureCom = dynamic_cast<CTexture*>(Engine::Clone_Proto(L"Proto_ObstacleTexture"));
 	NULL_CHECK_RETURN(pComponent, E_FAIL);
