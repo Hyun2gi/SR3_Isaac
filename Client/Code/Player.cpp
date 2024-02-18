@@ -131,7 +131,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		}
 		else
 		{
-			m_pTransformCom->Set_Pos(m_vStartPos.x, fHeight + 1, m_vStartPos.z);
+			m_pTransformCom->Set_Pos(m_vStartPos.x, 0, m_vStartPos.z);
 		}
 		
 		m_bStartScene = false;
@@ -142,6 +142,7 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		}
 
 		m_bKeyBlock = false;
+
 	}
 
 	if (m_bStartAnim)
@@ -288,9 +289,15 @@ Engine::_int CPlayer::Update_GameObject(const _float& fTimeDelta)
 		m_pTransformCom->Set_Pos(playerpos);
 	}
 
-
+	if (m_pTransformCom->m_vInfo[INFO_POS].y != 1)
+	{
+		m_pTransformCom->m_vInfo[INFO_POS].y = 1;
+	}
+	
 
 	CGameObject::Update_GameObject(fTimeDelta);
+
+	//Height_OnTerrain();
 
 	if (m_bRender)
 	{
@@ -343,7 +350,7 @@ void CPlayer::LateUpdate_GameObject()
 
 	__super::LateUpdate_GameObject();
 
-	Height_OnTerrain();
+	
 
 	_vec3	vPos;
 	m_pTransformCom->Get_Info(INFO_POS, &vPos);
@@ -915,7 +922,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 	// epictarget 쓰는 상태일때는 block됨
 	if (m_bEpicTargetRun == false)
 	{
-		vDir = _vec3(vDir.x, 0, vDir.z);
+		//vDir = _vec3(vDir.x, 0, vDir.z);
 
 		if (Engine::Get_DIKeyState(DIK_W) & 0x80)
 		{
@@ -933,7 +940,6 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 					m_pTransformCom->Move_Pos(&vDir, m_fMoveSpeed, fTimeDelta);
 				}
 			}
-
 			
 
 			if (m_bShoot && m_eCurPlayerVer == P_ISAAC)
@@ -989,7 +995,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		else if (Engine::Get_DIKeyState(DIK_A) & 0x80)
 		{
 			m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
-			vDir = _vec3(vDir.x, 0, vDir.z);
+			//vDir = _vec3(vDir.x, 0, vDir.z);
 			m_eCurState = P_LEFTWALK;
 			D3DXVec3Normalize(&vDir, &vDir);
 
@@ -1027,7 +1033,7 @@ void CPlayer::Key_Input(const _float& fTimeDelta)
 		else if (Engine::Get_DIKeyState(DIK_D) & 0x80)
 		{
 			m_pTransformCom->Get_Info(INFO_RIGHT, &vDir);
-			vDir = _vec3(vDir.x, 0, vDir.z);
+			//vDir = _vec3(vDir.x, 0, vDir.z);
 			m_eCurState = P_RIGHTWALK;
 			D3DXVec3Normalize(&vDir, &vDir);
 
@@ -1296,12 +1302,6 @@ _vec3 CPlayer::Picking_OnTerrain()
 
 void CPlayer::Motion_Change()
 {
-	/*
-		case START:
-		m_tFrame.iFrameStart = 0;
-		m_tFrame.iFrameEnd = 15;
-		m_tFrame.iMotion = 0;
-	*/
 	if (m_ePreState != m_eCurState)
 	{
 		if (m_eCurPlayerVer == P_AZAZEL && ((m_ePreState == P_SHOOTIDLE && m_eCurState == P_SHOOTWALK) || (m_ePreState == P_SHOOTWALK && m_eCurState == P_SHOOTIDLE)))
@@ -1450,7 +1450,6 @@ void CPlayer::Motion_Change()
 			}
 		}
 		
-
 		m_ePreState = m_eCurState;
 	}
 }
