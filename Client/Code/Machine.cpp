@@ -59,13 +59,13 @@ _int CMachine::Update_GameObject(const _float& fTimeDelta)
 
 	CGameObject::Update_GameObject(fTimeDelta);
 
-	Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
-
 	return 0;
 }
 
 void CMachine::LateUpdate_GameObject()
 {
+	//Engine::Add_RenderGroup(RENDER_ALPHA_SORTING, this);
+
 	Motion_Change();
 
 	__super::LateUpdate_GameObject();
