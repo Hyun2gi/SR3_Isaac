@@ -139,8 +139,30 @@ void CMonstro::LateUpdate_GameObject()
 	{
 		m_iHp -= 1;
 
+		srand((unsigned)time(NULL));
+		int randnum = rand() % 3;
+		if (randnum == 0)
+		{
+			Engine::PlayEffect(L"death burst small.wav", SOUND_EFFECT_BOSS_STOPSUDDEN_SUB , 0.8f);
+		}
+		else if (randnum == 1)
+		{
+			Engine::PlayEffect(L"death burst small 2.wav", SOUND_EFFECT_BOSS_STOPSUDDEN_SUB, 0.8f);
+		}
+		else
+		{
+			Engine::PlayEffect(L"death burst small 3.wav", SOUND_EFFECT_BOSS_STOPSUDDEN_SUB, 0.8f);
+		}
+
+		
+
 		m_bHit = false;
 		m_bHitColor = true;
+
+		if (m_iHp % 80 == 0) // hp 감소 시 주기적으로 피격 소리
+		{
+			//Engine::PlayEffect(L"Monster_cry1.mp3", SOUND_EFFECT_BOSS_STOPSUDDEN_SUB, 1.f);
+		}
 
 		if (0 >= m_iHp)
 		{
@@ -148,6 +170,7 @@ void CMonstro::LateUpdate_GameObject()
 			m_pTransformCom->m_vInfo->y = CENTERY;
 			m_bDeadWait = true;
 			Engine::StopSound(SOUND_BGM);
+			Engine::PlayEffect(L"Monster_cry1.mp3", SOUND_EFFECT_BOSS_STOPSUDDEN, 1.f);
 			Engine::PlayEffect(L"BossDead.ogg", SOUND_BGM, 1.0f);
 
 			m_pTransformCom->Get_Info(INFO_POS, &m_vDeadPos);
@@ -363,7 +386,7 @@ void CMonstro::JumpTo_Player(const _float& fTimeDelta)
 		}
 		else
 		{
-			Engine::PlayEffect(L"hellboss ground pound 2.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 0.8f);
+			Engine::PlayEffect(L"hellboss ground pound 2.wav", SOUND_EFFECT_ETC_STOPSUDDEN, 1.0f);
 			//CPlayer::GetInstance()->Set_CameraShaking_Sub(0.8,1.0f);
 			CPlayer::GetInstance()->Set_CameraShaking_Rot();
 			vPos.y = CENTERY;
